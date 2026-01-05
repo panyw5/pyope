@@ -1,0 +1,41 @@
+Metadata-Version: 2.4
+Name: pyope
+Version: 0.1.0
+Summary: Python Operator Product Expansion Library for Vertex Operator Algebras
+Author: PyOPE Contributors
+License: MIT
+Project-URL: Homepage, https://github.com/pyope/pyope
+Project-URL: Documentation, https://pyope.readthedocs.io
+Project-URL: Repository, https://github.com/pyope/pyope
+Keywords: vertex operator algebra,OPE,conformal field theory,VOA
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Scientific/Engineering :: Physics
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: sympy>=1.12
+Requires-Dist: numpy>=1.24
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+Requires-Dist: black>=23.0; extra == "dev"
+Requires-Dist: mypy>=1.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+
+这是一个 `python` 版本的 OPEdef，用于计算 vertex operator algebras (VOA) 中的算符积展开 (OPE)。
+
+# 核心功能初步设想 (待完善)
+- 公共函数/算符: `OPE`，`NO`，`bracket`，`d`，`dn`
+- VOA 元素类: `Operator` 或者 `Op`
+- `OPE(A, B)`: 计算两个 VOA 元素 A 和 B 的算符积展开 $A(z)B(w)$。
+- `NO(A, B)`: 计算 A 和 B 的正则序列化 (normal ordering) $(AB)(z)$。
+- `bracket(A, B)`: 计算 A 和 B 的 $\{AB\}(z)$
+- `d(A)` 或者 `dn(n, A)`: 计算 VOA 元素 A 的导数 $∂A(z)$ 或者 $∂^n A(z)$。
+- `A.mode(n)`: 获取 VOA 元素 A 的第 n 个模态 (mode) $A_n$。
