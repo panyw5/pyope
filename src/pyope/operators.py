@@ -290,46 +290,81 @@ class NormalOrderedOperator(Operator):
 
 # 辅助函数
 
-def d(operator: Operator, order: int = 1) -> DerivativeOperator:
+def d(operator, order: int = 1):
     """
     计算算符的导数
 
+    支持对单个算符或算符的线性组合求导，利用导数的线性性质：
+    - d(c * A) = c * d(A)
+    - d(A + B) = d(A) + d(B)
+
     Args:
-        operator: 要求导的算符
+        operator: 要求导的算符或算符表达式
         order: 导数阶数（默认为 1）
 
     Returns:
-        DerivativeOperator 实例
+        DerivativeOperator 实例或 sympy 表达式
 
     Examples:
         >>> T = BasisOperator("T", bosonic=True)
         >>> dT = d(T)  # 一阶导数
         >>> d2T = d(T, 2)  # 二阶导数
         >>> d(d(T))  # 等价于 d(T, 2)
+        >>> d(2 * T)  # 2 * d(T)
+        >>> d(T + W)  # d(T) + d(W)
     """
     # 如果 operator 已经是 DerivativeOperator，累加阶数
     if isinstance(operator, DerivativeOperator):
         return DerivativeOperator(operator.base, operator.order + order)
-    return DerivativeOperator(operator, order)
+
+    # 如果是单个 Operator 实例，直接创建 DerivativeOperator
+    if isinstance(operator, Operator):
+        return DerivativeOperator(operator, order)
+
+    # 如果是 sympy 表达式，应用导数的线性性质
+    if isinstance(operator, sp.Expr):
+        # 导入 local_operator 模块的函数（避免循环导入）
+        from .local_operator import is_local_operator
+
+        # 检查是否为有效的 local operator 表达式
+        if not is_local_operator(operator):
+            raise TypeError(f"Cannot take derivative of non-local operator: {operator}")
+
+        # 对于加法：d(A + B) = d(A) + d(B)
+        if isinstance(operator, sp.Add):
+            return sp.Add(*[d(arg, order) for arg in operator.args])
+
+        # 对于乘法：d(c * A) = c * d(A)
+        if isinstance(operator, sp.Mul):
+            from .local_operator import extract_scalar_operator
+            coeff, op = extract_scalar_operator(operator)
+            return coeff * d(op, order)
+
+        # 其他情况（不应该发生）
+        raise TypeError(f"Unexpected expression type for derivative: {type(operator)}")
+
+    # 如果都不是，抛出错误
+    raise TypeError(f"Cannot take derivative of {type(operator)}: {operator}")
 
 
-def dn(order: int, operator: Operator) -> DerivativeOperator:
+def dn(order: int, operator):
     """
     计算算符的 n 阶导数（参数顺序与 d 不同）
 
+    支持对单个算符或算符的线性组合求导，利用导数的线性性质。
+
     Args:
         order: 导数阶数
-        operator: 要求导的算符
+        operator: 要求导的算符或算符表达式
 
     Returns:
-        DerivativeOperator 实例
+        DerivativeOperator 实例或 sympy 表达式
 
     Examples:
         >>> T = BasisOperator("T", bosonic=True)
         >>> d3T = dn(3, T)  # 三阶导数
         >>> dn(2, d(T))  # 等价于 dn(3, T)
+        >>> dn(2, 2 * T)  # 2 * dn(2, T)
     """
-    # 如果 operator 已经是 DerivativeOperator，累加阶数
-    if isinstance(operator, DerivativeOperator):
-        return DerivativeOperator(operator.base, operator.order + order)
-    return DerivativeOperator(operator, order)
+    # 直接调用 d 函数，参数顺序不同
+    return d(operator, order)
