@@ -281,3 +281,68 @@ class OPEData:
             pole_strs.append(f"{n}|| {self._poles[n]}")
 
         return f"<< {' '.join(pole_strs)} >>"
+
+    def to_latex(self, z: str = "z", w: str = "w") -> str:
+        """
+        Convert OPE to LaTeX format.
+
+        Args:
+            z: Name of first variable (default: "z")
+            w: Name of second variable (default: "w")
+
+        Returns:
+            LaTeX string representation of the OPE series
+        """
+        if self.is_zero():
+            return "0"
+
+        terms = []
+        for n in sorted(self._poles.keys(), reverse=True):
+            pole = self._poles[n]
+
+            # Convert pole to LaTeX using SymPy
+            pole_latex = sp.latex(pole)
+
+            # Clean up: remove " 1" from expressions like "c 1" -> "c"
+            # This handles cases where One appears in multiplication
+            pole_latex = pole_latex.replace(" 1", "")
+            # Also handle "1 " at the beginning
+            if pole_latex.startswith("1 "):
+                pole_latex = pole_latex[2:]
+
+            # Build the term
+            if n == 1:
+                # 1/(z-w) case
+                term = f"\\frac{{{pole_latex}}}{{({z}-{w})}}"
+            else:
+                # 1/(z-w)^n case
+                term = f"\\frac{{{pole_latex}}}{{({z}-{w})^{{{n}}}}}"
+
+            terms.append(term)
+
+        # Join with " + "
+        return " + ".join(terms)
+
+    def _repr_latex_(self) -> str:
+        """
+        IPython/Jupyter LaTeX representation.
+
+        This method is automatically called by Jupyter notebooks
+        to display the OPE in LaTeX format.
+        """
+        return f"$${self.to_latex()}$$"
+
+    def display(self):
+        """
+        Display OPE in LaTeX format in Jupyter notebook.
+
+        Usage:
+            result = OPE(T, T)
+            result.display()  # Shows rendered LaTeX
+        """
+        try:
+            from IPython.display import display, Math
+            display(Math(self.to_latex()))
+        except ImportError:
+            # Fallback to print if not in Jupyter
+            print(self.to_latex())

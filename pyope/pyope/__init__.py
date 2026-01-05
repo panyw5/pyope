@@ -10,7 +10,16 @@ Based on the Mathematica package OPEdefs by Kris Thielemans.
 __version__ = "0.1.0"
 __author__ = "PyOPE Contributors"
 
-# Core classes
+# Local operator base classes
+from .local_operator import (
+    LocalOperator,
+    OperatorSum,
+    OperatorProduct,
+    is_local_operator,
+    extract_scalar_operator,
+)
+
+# Core operator classes
 from .operators import (
     Operator,
     BasisOperator,
@@ -31,6 +40,13 @@ from .constants import One, Delta
 __all__ = [
     # Version
     "__version__",
+
+    # Local operator base
+    "LocalOperator",
+    "OperatorSum",
+    "OperatorProduct",
+    "is_local_operator",
+    "extract_scalar_operator",
 
     # Operator classes
     "Operator",

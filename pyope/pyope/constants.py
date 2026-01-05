@@ -28,6 +28,16 @@ class ConstantOperator(Operator):
         # Create operator with parity=0 (always bosonic)
         return Operator.__new__(cls, name, parity=0, **kwargs)
 
+    def _latex(self, printer) -> str:
+        """
+        Custom LaTeX representation for constant operators.
+
+        The unit operator 'One' is displayed as '1'.
+        """
+        if self.name == "One":
+            return "1"
+        return self.name
+
 
 # The unit operator (identity)
 One = ConstantOperator("One")

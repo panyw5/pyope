@@ -2,15 +2,16 @@
 Operator classes for PyOPE.
 
 This module defines the operator hierarchy used in OPE calculations.
-All operators inherit from sympy.Symbol for seamless integration with SymPy.
+All operators inherit from LocalOperator for unified type system.
 """
 
 from __future__ import annotations
 from typing import Optional, Union, Tuple, Any
 import sympy as sp
+from .local_operator import LocalOperator, OperatorSum, OperatorProduct
 
 
-class Operator(sp.Symbol):
+class Operator(sp.Symbol, LocalOperator):
     """
     Base class for all operators in VOA.
 
@@ -76,6 +77,47 @@ class Operator(sp.Symbol):
         if isinstance(parity, int):
             return parity % 2 == 1
         return False  # Symbolic parity
+
+    # Override arithmetic operations to return LocalOperator types
+    def __add__(self, other):
+        """Add operators: A + B."""
+        if other == 0:
+            return self
+        return OperatorSum(self, other)
+
+    def __radd__(self, other):
+        """Right addition: scalar + A."""
+        if other == 0:
+            return self
+        return OperatorSum(other, self)
+
+    def __sub__(self, other):
+        """Subtract operators: A - B."""
+        return self + (-1) * other
+
+    def __rsub__(self, other):
+        """Right subtraction: scalar - A."""
+        return other + (-1) * self
+
+    def __mul__(self, other):
+        """Multiply operator by scalar: c * A."""
+        if other == 0:
+            return sp.S.Zero
+        if other == 1:
+            return self
+        # Only allow scalar multiplication
+        if isinstance(other, (int, float, sp.Number, sp.Symbol, sp.Expr)) and not isinstance(other, Operator):
+            return OperatorProduct(other, self)
+        # For operator * operator, don't define (use NO for normal ordered product)
+        return NotImplemented
+
+    def __rmul__(self, other):
+        """Right multiplication: scalar * A."""
+        return self.__mul__(other)
+
+    def __neg__(self):
+        """Negate operator: -A."""
+        return (-1) * self
 
 
 class BasisOperator(Operator):
@@ -145,6 +187,9 @@ class BasisOperator(Operator):
 
         Returns:
             New BasisOperator with indices
+
+        Raises:
+            TypeError: If operator does not support indexing
         """
         if not self.indexed:
             raise TypeError(f"Operator {self.base_name} does not support indexing")
@@ -214,6 +259,19 @@ class DerivativeOperator(Operator):
         """Get the derivative order."""
         return self._operator_properties.get(id(self), {}).get('order', 1)
 
+    def _latex(self, printer) -> str:
+        """
+        Custom LaTeX representation for derivative operators.
+
+        ∂A is displayed as \partial A
+        ∂²A is displayed as \partial^2 A
+        """
+        base_latex = printer._print(self.base)
+        if self.order == 1:
+            return f"\\partial {base_latex}"
+        else:
+            return f"\\partial^{{{self.order}}} {base_latex}"
+
 
 class NormalOrderedOperator(Operator):
     """
@@ -269,18 +327,32 @@ class NormalOrderedOperator(Operator):
 
 # Helper functions for creating operators
 
-def d(op: Operator, order: int = 1) -> DerivativeOperator:
+def d(op, order: int = 1):
     """
-    Create derivative operator: d(A) = ∂A, d(A, 2) = ∂²A.
+    Create derivative operator or differentiate an expression.
+
+    - If op is an Operator: d(A) = ∂A, d(A, 2) = ∂²A
+    - If op is a DerivativeOperator: d(∂^n A) = ∂^(n+order) A (合并阶数)
+    - If op is an expression: d(expr) applies operator_derivative to expr
 
     Args:
-        op: Operator to differentiate
+        op: Operator or expression to differentiate
         order: Order of differentiation (default: 1)
 
     Returns:
-        DerivativeOperator
+        DerivativeOperator if op is Operator, otherwise differentiated expression
     """
-    return DerivativeOperator(op, order)
+    # Import here to avoid circular dependency
+    from .api import operator_derivative
+
+    if isinstance(op, DerivativeOperator):
+        # 合并导数阶数: d(∂^n A, m) = ∂^(n+m) A
+        return DerivativeOperator(op.base, op.order + order)
+    elif isinstance(op, Operator):
+        return DerivativeOperator(op, order)
+    else:
+        # For expressions, use operator_derivative
+        return operator_derivative(op, order)
 
 
 def dn(order: int, op: Operator) -> DerivativeOperator:
