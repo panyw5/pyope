@@ -25,6 +25,18 @@ wheels/
 .installed.cfg
 *.egg
 
+# Python for Mac and Linux (store IDLE settings here)
+Library/
+
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
 # Jupyter Notebook
 .ipynb_checkpoints
 

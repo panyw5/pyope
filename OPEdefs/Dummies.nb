@@ -1,0 +1,600 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='%s' *)
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       131,          6]
+NotebookDataLength[     17760,        594]
+NotebookOptionsPosition[     15660,        513]
+NotebookOutlinePosition[     16201,        538]
+CellTagsIndexPosition[     16158,        535]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+
+Cell["\<\
+(* :Name: Dummies` *)
+
+(* :Title:  Summation over dummy indices *)
+
+(* :Author: 
+        Kris Thielemans
+        Theoretical Physics Group
+        Imperial College
+        London SW7 2BZ
+        kris@tfdec1.fys.kuleuven.ac.be
+ *)
+
+(* :Summary:
+       This package is an attempt to implement summation over dummy indices.
+       Some simple rules for the delta symbol are defined, and functions are 
+       available which try to simplify expressions with dummy indices. 
+       However, these rules don't take symmetries into account. 
+*)
+
+(* :Context: Dummies` *) 
+
+(* :Package Version: 1.0 *)
+
+(* :Mathematica Version: 2.0 *)\
+\>", "Text"],
+
+Cell[CellGroupData[{Cell["History", "Section"],
+
+Cell["\<\
+changes in beta 2 :
+- added extra argument to DefineDummy
+- changed Renumber and NewDummies to take into account that
+  indices that occur only once (not summed over) could overlap
+  with the new indices these functions assign. Change for Renumber 
+  is efficient in time, but doesn't admit \"holes\" in the indices that are
+  used.
+beta 4:
+- added Unravel to avoid a complete Expand in DummySimplify.
+!!!
+!!! Currently, NewDummies and Renumber are only safe on Expanded 
+!!! expressions if indices are involved where no summation is implied.
+!!!
+beta 5:
+- bug removed in SumDummy which prevented summing expressions without
+  dummy indices.
+beta 6:
+- small bug removed in Unravel preventing spurious warning messages of \
+Select.
+- SumDummy still summed over dummy indices occuring only once.
+beta 7: 
+- removed support for OPEdefs (is now in OPEdefs itself)
+- added SetDummiesOption[FunctionPattern,_] 
+- replaced Unravel by Expand in Mathematica 2.3
+beta 8:
+- added ResetDummies[]
+beta 9:
+- Renumber, NewDummies and SumDummy were unsafe when
+  expressions which are not fully expanded are used.
+  Used Unravel now to prevent this problem. This is done by an
+  option Unravel->True to these functions.
+- Renumber now includes also the option Min -> number.\
+\>", "Text"]}, Open]],
+
+Cell["BeginPackage[\"Dummies`\", \"Delta`\"]", "Input",
+ InitializationCell->True],
+
+Cell["\<\
+DummiesVersion = 1.0;
+DummiesbetaVersion = 9;
+Print[\"Dummies Version \", DummiesVersion,
+      \" (beta \",DummiesbetaVersion,\") by Kris Thielemans\"]
+
+If[!NumberQ[$VersionNumber] || $VersionNumber < 2.0,
+   Dummies::Version = \"Dummies requires Mathematica 2.0 or later. Sorry.\";
+   Message[Dummies:Version]
+]\
+\>", "Input",
+ InitializationCell->True],
+
+Cell[CellGroupData[{Cell["Usages", "Section"],
+
+Cell["\<\
+DefineDummy::usage = \"DefineDummy[a] prepares the package for 
+using dummy indices of the form a[something]. DefineDummy[a,int]
+makes sure that new dummy indices will start from a[int].\";
+
+dummy::usage = \"dummy[x] makes a new dummyindex of the form x[1].
+DefineDummy[x] should be called first.\";
+
+Renumber::usage = \"Renumber[expr, {x}] renumbers the \\\"dummy\\\"
+arguments (which are of the form x[something]) in expr.
+Only indices which occur at least twice are renumbered.\\n
+The second argument can also be a list. If it is not present, 
+the list of declared dummies is used.\\n
+Renumber takes two options:\\n
+\\t-Min -> value gives the starting value of the renumbered indices.
+\\t-Min -> NewDummies gives all indices unique values
+\\t-Unravel -> True specifies that Unravel[expr,x] should be called
+first. Do not set to False if expr is not unraveled !\\n
+The second argument can also be a list. If it is not present, 
+the list of declared dummies is used.\";
+
+dimension::usage = \"dimension[k] is the length of the range over
+which k[something] indices are summed.\";
+
+NewDummies::usage = \"NewDummies[expr, {x}] gives the \\\"dummy\\\"
+arguments (which are of the form x[something]) in expr a new
+(unique) number. This is useful when e.g. multiplying identical
+expressions.\\n See Renumber for more details.\";
+
+DummySimplify::usage = \"DummySimplify[expr, {x}] renumbers the \\\"dummy\\\"
+arguments (which are of the form x[something]) in expr and applies
+some rules for Delta.\\n
+The second argument can also be a list. If it is not present, 
+the list of declared dummies is used.\";
+
+SumDummy::usage= \"SumDummy[expr,{x,start,end}] explicitly sums the
+dummy indices x[_] from start to end (where start defaults to 1).\";
+
+Unravel::usage = \"Unravel[expr,pat]  is like Expand[expr,pat], but
+much faster for big expressions.\\n
+It is also an option for Renumber, NewDummies, SumDummy\";
+
+SetDummiesOptions::usage = \"A function to set global options for the 
+Dummies` package. Current options : FunctionPattern.\"
+
+FunctionPattern::usage = \"SetDummiesOptions[FunctionPattern, pat_] can be
+used to tell Dummies` which objects it should Hold in the process of
+renumbering. The default\\n
+\\tSetDummiesOptions[FunctionPattern,NonCommutativeMultiply]\\n
+for example makes sure that rules for NonCommutativeMultiply are not
+applied in intermediate steps.\"
+
+ResetDummies::usage = \"ResetDummies[] clears previous definitions of
+dummy indices.\"\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell[CellGroupData[{Cell["Implementation", "Section"],
+
+Cell["Begin[\"Dummies`Private`\"];", "Input",
+ InitializationCell->True],
+
+Cell[CellGroupData[{Cell["SetDummiesOptions", "Subsection"],
+
+Cell["\<\
+SetDummiesOptions[FunctionPattern, pat_] :=
+   (holdpattern = pat;)
+
+SetDummiesOptions[FunctionPattern, NonCommutativeMultiply]\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell[CellGroupData[{Cell["ResetDummies, DefineDummy, dummy", "Subsection"],
+
+Cell["\<\
+dummylist = {};
+drule = {};
+
+ResetDummies[] := 
+  If[ !SameQ[dummylist, {}],
+     Message[ResetDummies::reset];
+     Delta[#[i_],#[i_]]=. & /@ dummylist;
+     dummylist = {};
+     drule = {};
+  ]
+ResetDummies::reset = \"Clearing previous definitions for dummy indices.\";
+
+ResetDummies[] 
+
+DefineDummy[a_,start_Integer:100] :=
+  Block[{i},
+     If[ MemberQ[dummylist, a], Return[]];\t
+\t dummyindex[a] = start;
+\t AppendTo[dummylist,a];
+     (* strange way of doing this because we have to be able to clear
+        this rule in ResetDummies. Otherwise problems with i$_
+     *)
+\t (Delta[#[i_],#[i_]] = dimension[#]) & /@ {a};
+\t AppendTo[drule, Delta[a[i_],aa_] x_ :> (x/.a[i]->aa) /;
+\t\t!FreeQ[x,a[i]]];
+\t AppendTo[drule, Delta[a[i_],aa_]^2 :> Delta[aa,aa]];
+  ]
+ (* drule is to be applied to Expanded expressions only !
+    Otherwise  a (x Delta[] + y) /. drule
+    will not replace dummy indices in a ! 
+  *)
+
+dummy[a_] := a[dummyindex[a]++]\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell[CellGroupData[{Cell["Unravel", "Subsection"],
+
+Cell["\<\
+Clear[Unravel,mult]
+mult[a_,b_Plus] := a #&/@ b
+mult[a_,b_] := a b
+
+(* change 3/8/95 1.0 beta 7: forget about Unravel in new versions *) 
+If[NumberQ[$VersionNumber] && $VersionNumber > 2.2,
+   Unravel[expr_,pat_] := Expand[expr,pat],
+   (* else *)
+   Unravel[a_ b_,pat_] := mult[a, Unravel[b,pat]] /; 
+\t   FreeQ[a,pat];
+   Unravel[a_Plus,pat_] := Unravel[#,pat]&/@a;
+
+   (* change 3/8/95 1.0 beta 6 
+      added the Return[] statement. In some cases, tmp is
+      already simplified to a single term (for example 0).
+      Without the Return, Select complained.
+   *)
+   Unravel[a_Times,pat_]:=
+     Block[{tmp=Unravel[#,pat]&/@ a,tmp2},
+        If[!SameQ[Head[tmp], Times], Return[tmp]];
+        tmp2=Select[tmp,SameQ[Head[#],Plus]&&!FreeQ[#,pat]&];
+        mult[tmp/tmp2,
+   \t       If[SameQ[Head[tmp2],Times],
+   \t          Outer[Times,Sequence@@tmp2],
+   \t          tmp2
+   \t       ]
+        ] 
+     ];
+   Unravel[a_,_]:=a;
+]\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell[CellGroupData[{Cell["getDummies , getUnique", "Subsection"],
+
+Cell["\<\
+Clear[extractindices, getUnique] 
+
+ (* extractindices[expr,arg] returns a list of all the 
+    subexpressions of the form arg[_]
+  *)
+(* old, slow version
+extractindices[arg_[i_],{___,arg_,___}]:={arg[i]}
+ (*extractindices[a_,arg_]:= {} /;
+\tFreeQ[a,Alternatives@@arg] 
+ *)
+ (* change 28-06-93 : Flatten -> Join*)
+extractindices[a_[b__],arg_] :=
+    Join[extractindices[a,arg],
+\t Sequence@@(extractindices[#,arg]& /@ {b})]
+extractindices[_,_] := {}
+*)
+(* faster version, but not general
+extractindices[expr_,arg_List] := Block[{ll={}},
+   Scan[If[MatchQ[#,(Alternatives@@arg)[_]],
+\t\tAppendTo[ll,#]]&,expr,{-2}];
+   ll
+]
+end of commented out version *)
+
+(* actual implementation (fastest and general) *)
+(* change 1.0 beta 7:
+   removed next rule. 
+   Purpose was to have NO's treated first in renumbering indices
+   It didn't apply always.
+   TODO: I should handle sums, lists, OPEData ,... also.
+         Use of OperatorQ is problematic.
+
+\ttestit=True;
+\textractindices[a_ b_,arg_] :=
+\t    Block[{testit=False},
+\t\tJoin[extractindices[a,arg],
+\t\t     extractindices[b,arg]]
+\t    ] /;
+\t    testit && !SameQ[Head[a],Times]&&OperatorQ[a];
+
+*)
+(* change 1.0 beta 7:
+   introduced holdpattern instead of listing NO and others by hand.
+   Hold is used to prevent reevaluation of complicated normal orderings, 
+   noncommutative multiplications...
+*)
+extractindices[expr_,arg_List]:=
+    Block[{l={}},
+\t\texpr /. {
+\t\t  x:holdpattern :> Hold[x],
+\t\t  x:(Alternatives@@arg)[_] :> (AppendTo[l,x];x)
+\t\t};
+\t\tl
+   \t]
+
+ (* getUnique is like Union, but it preserves order 
+  *)
+getUnique[l_List] :=
+    Block[{l2={}},
+       If[!MemberQ[l2,#],AppendTo[l2,#]]& /@ l;
+       l2
+    ]
+ (* getDummies[expr, arg] returns a list with 2 elements : 
+    first the dummies that occur more than once,
+    second the dummies that occur only once.
+    It is important that the first list contains indices
+    occuring in the same order as in expr.
+    !! getDummies works only correctly on Unraveled expressions
+  *)
+getDummies[expr_,arg_] :=
+    Block[{ind = extractindices[expr,arg], unind},
+\tunind = getUnique[ind];
+\tind = Select[unind, Count[ind,#]>1&];
+\t{ind, Complement[unind,ind]}
+    ]
+(* an attempt to define getDummies on 'raveled' expressions.
+   not debuged.
+
+getDummies[a_Times,arg_] :=
+   Block[{indices,onlyOnce},
+      indices = getDummies[List@@a,arg];
+      If[MatchQ[indices, {_,{}}],
+         Return[{getUnique[First/@indices],{}}]];
+      
+      onlyOnce = Join@@Transpose[indices][[2]];
+      indices = Apply[
+         Function[{summed, nosum},
+            Join[summed, Select[nosum, Count[onlyOnce,#]>1&]]
+         ],
+         indices,
+         1
+      ];
+      {indices, Complement[onlyOnce, indices]}
+   ]
+*)\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell[CellGroupData[{Cell["Renumber, NewDummies", "Subsection"],
+
+Cell["\<\
+Clear[Renumber, NewDummies]
+
+ (* Renumber renumbers all summation indices starting 
+    from 1.
+    change 1.0 beta 9:
+    Now always require a List as second argument.
+  *)
+Options[Renumber] = {Min -> 1, Unravel->True};
+
+Renumber[expr_,opts___Rule] :=
+    Renumber[expr,dummylist,opts]
+Renumber[expr_, {},opts___Rule] :=
+    expr
+
+Renumber[expr_List, arg_List,opts___Rule] :=
+    Renumber[#,arg,opts]& /@ expr
+Renumber[expr_Plus, arg_List,opts___Rule] :=
+    Renumber[#,arg,opts]& /@ expr
+Renumber[expr_, {arg1_,args___},opts___Rule] :=
+\tRenumber[
+\t   Renumber[
+\t      Unravel[expr,Alternatives[arg1,args]],
+\t      {arg1},Unravel->False,opts
+\t   ], {args},Unravel->False,opts
+\t] /; (Unravel /. {opts}/. Options[Renumber])
+
+Renumber[expr_,{arg_},opts___Rule]:=
+    expr /; FreeQ[expr,arg]
+Renumber[expr_,{arg_},opts1___Rule,Unravel->False,opts2___Rule] :=
+  Block[{ind,nosum,newind,max, intersect, start},
+    start = Min /. {opts1,opts2} /. Options[Renumber];
+    {ind,nosum}=getDummies[expr,{arg}];
+    max=Length[ind];
+\tIf[ start === NewDummies,
+\t    start = dummyindex[arg];
+\t    dummyindex[arg] += max
+\t];
+\tnewind=arg/@ Range[start,start+max-1];
+\t
+\tWhile[Length[intersect=Intersection[newind,nosum]]>0,
+\t    (* if Min->NewDummies one should never get here *)
+\t    newind = newind /. 
+\t\tThread[intersect->Map[max+#&,intersect,{2}]];
+\t\t(* make sure the indices of newind are
+\t\t   smaller than dummyindex[arg] *)
+\t\tdummyindex[arg] += max;
+\t];
+    expr /. Thread[ind->Sort[newind]]
+ ]
+
+NewDummies[expr_] := NewDummies[expr,dummylist]
+NewDummies[expr_,arg_] := Renumber[expr,arg,Min->NewDummies]
+(* change 1.0 beta 9:
+   modified Renumber to include NewDummies
+
+NewDummies[expr_, {}] := expr
+NewDummies[expr_List, arg_] := 
+     Map[NewDummies[#,arg]&, expr]
+NewDummies[expr_Plus,arg_] := NewDummies[#,arg]& /@ expr
+
+NewDummies[expr_, {arg1_,args__}] :=
+\tNewDummies[ NewDummies[expr,{arg1}], {args}]
+
+NewDummies[expr_,{arg_}] :=
+     Block[{ind, nosum, newind, max},
+        {ind,nosum}=getDummies[expr,{arg}];
+\tdummyindex[arg] += (max = Length[ind]);
+\tnewind=arg/@ 
+\t\tRange[dummyindex[arg]-max,dummyindex[arg]-1];
+\tWhile[Length[intersect=Intersection[newind,nosum]]>0,
+\t     Print[\"NewDummies:shouldn't be here. expr :\",expr];
+\t     newind = newind /. 
+\t\tThread[intersect->Map[max+#&,intersect,{2}]];
+\t\t(* make sure the indices of newind are
+\t\t   smaller than dummyindex[arg] *)
+\t\tdummyindex[arg] += max;
+
+\t];
+        expr /. Thread[ind->Sort[newind]]
+     ]
+*)\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell[CellGroupData[{Cell["DummySimplify", "Subsection"],
+
+Cell["\<\
+DummySimplify[expr_] := DummySimplify[expr,dummylist]
+
+(* change 1.0 beta 9: 
+   - now always requires a List as second argument
+   - added next rule
+ *)
+DummySimplify[expr_, {}] := expr
+DummySimplify[expr_List, arg_List] := 
+     Map[DummySimplify[#,arg]&, expr]
+
+(* change 1.0 beta 9: added Unravel->False *)
+DummySimplify[expr_,arg_] :=
+     Renumber[
+        Unravel[expr,Alternatives@@dummylist]//.drule,
+        arg, Unravel-> False
+     ]\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell[CellGroupData[{Cell["SumDummy", "Subsection"],
+
+Cell["\<\
+Clear[SumDummy]
+(* change 1.0 beta 9 : added Unravel option*)
+Options[SumDummy] = {Unravel -> True};
+
+SumDummy[expr_List, arg__] := 
+     Map[SumDummy[#,arg]&, expr]
+SumDummy[expr_Plus, arg__] := 
+     Map[SumDummy[#,arg]&, expr]
+(* change 1.0 beta 9 : added this trivial case *)
+SumDummy[expr_, opts___Rule] := expr
+SumDummy[expr_,ss:({_,__Integer}..)] :=
+   SumDummy[expr, ss, Sequence@@Options[SumDummy]]
+SumDummy[expr_,ss:({_,__Integer}..), Unravel -> True ] :=
+     SumDummy[
+         Unravel[expr,Apply[Alternatives,First/@ {ss}]],
+         ss,
+         Unravel -> False
+     ]
+     
+makeDimRule[{k_,start_:1,end_}] := dimension[k]->end-start+1
+makeSumRule[indices_List] :=
+\t{Head[#]->#}& /@ indices
+(* change 1.0 beta 5 :
+   added test to see if no dummies are present
+   change 1.0 beta 6 :
+   replace extractindices by First[getDummies]. This to prevent
+   summing over indices which occur only once.
+ *)
+SumDummy[exp_,ss:({_,__Integer}..), Unravel-> False] :=
+  Block[
+\t{ind = Union[First[getDummies[exp,{First[#]}]]]& /@ {ss}},
+    If[ SameQ[ind, {{}}],
+       Return[exp //. Map[makeDimRule,{ss}]]
+    ];
+\tSum[Release[exp //. Map[makeDimRule,{ss}]], 
+\t    Release[Sequence @@
+\t\t    Flatten[MapThread[ReplaceAll,
+\t\t\t\t{{ss},makeSumRule/@ ind}
+\t\t    ],1]
+\t    ]
+\t]
+  ]\
+\>", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell["End[];", "Input",
+ InitializationCell->True]}, Open]],
+
+Cell["EndPackage[]", "Input",
+ InitializationCell->True]
+},
+AutoGeneratedPackage->None,
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{740, 656},
+WindowMargins->{{20, Automatic}, {Automatic, 44}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False},
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[533, 21, 651, 25, 70, "Text"],
+Cell[CellGroupData[{
+Cell[1207, 48, 26, 0, 70, "Section"],
+Cell[1236, 50, 1282, 33, 70, "Text"]
+}, Closed]],
+Cell[2530, 85, 82, 1, 70, "Input",
+ InitializationCell->True],
+Cell[2615, 88, 365, 11, 70, "Input",
+ InitializationCell->True],
+Cell[CellGroupData[{
+Cell[3003, 101, 25, 0, 70, "Section"],
+Cell[3031, 103, 2506, 55, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[5569, 160, 33, 0, 70, "Section"],
+Cell[5605, 162, 72, 1, 70, "Input",
+ InitializationCell->True],
+Cell[CellGroupData[{
+Cell[5700, 165, 39, 0, 70, "Subsection"],
+Cell[5742, 167, 179, 6, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[5953, 175, 54, 0, 70, "Subsection"],
+Cell[6010, 177, 999, 35, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[7041, 214, 29, 0, 70, "Subsection"],
+Cell[7073, 216, 986, 32, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[8091, 250, 44, 0, 70, "Subsection"],
+Cell[8138, 252, 2780, 97, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[10950, 351, 42, 0, 70, "Subsection"],
+Cell[10995, 353, 2557, 83, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[13584, 438, 35, 0, 70, "Subsection"],
+Cell[13622, 440, 497, 18, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[14151, 460, 30, 0, 70, "Subsection"],
+Cell[14184, 462, 1343, 44, 70, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[15539, 508, 50, 1, 70, "Input",
+ InitializationCell->True]
+}, Open  ]],
+Cell[15601, 511, 56, 1, 70, "Input",
+ InitializationCell->True]
+}
+]
+*)
