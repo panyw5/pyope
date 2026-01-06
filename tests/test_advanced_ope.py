@@ -170,8 +170,13 @@ class TestCommutationRelations:
         Formula (OPEdefs.m line 959-972):
         OPE[B,A](q) = Sum[(-1)^l / (l-q)! * D^(l-q)[pole_l(OPE[A,B])], {l, q, maxpole}]
         """
+        from pyope import Bosonic
+
         A = BasisOperator("A", bosonic=True)
         B = BasisOperator("B", bosonic=True)
+
+        # Register operators explicitly
+        Bosonic(A, B)
 
         # Define OPE[A, B]
         OPE[A, B] = OPE.make([A, B])
@@ -182,7 +187,7 @@ class TestCommutationRelations:
         # For bosonic operators, OPE[B,A] should be related to OPE[A,B]
         # by the commutation formula
         assert not result.is_zero()
-        # Note: This test will fail until commutation is implemented
+        assert result.max_pole == 2  # Same as OPE[A, B]
 
     def test_fermionic_anticommutation(self):
         """
@@ -190,8 +195,13 @@ class TestCommutationRelations:
 
         For fermions, there's an additional sign factor.
         """
+        from pyope import Fermionic
+
         psi = BasisOperator("ψ", bosonic=False)
         chi = BasisOperator("χ", bosonic=False)
+
+        # Register operators explicitly
+        Fermionic(psi, chi)
 
         # Define OPE[ψ, χ]
         OPE[psi, chi] = OPE.make([psi])
@@ -201,7 +211,7 @@ class TestCommutationRelations:
 
         # For fermions: OPE[χ,ψ] = -OPE[ψ,χ] + regular terms
         assert not result.is_zero()
-        # Note: This test will fail until commutation is implemented
+        assert result.max_pole == 1  # Same as OPE[ψ, χ]
 
     def test_virasoro_commutation(self):
         """

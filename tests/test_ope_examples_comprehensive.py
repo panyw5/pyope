@@ -138,10 +138,10 @@ class TestOPEExamplesSugawara:
         """
         测试 Sugawara 张量的构造和 OPE
 
-        注意：当前 PyOPE 实现返回 max_pole=2，不是 4
-        这表明复合算符的 OPE 计算可能还需要进一步完善
+        修复后：PyOPE 现在正确返回 max_pole=4，包含 4 阶极点 2*One
+        这是因为修复了 _ope_composite_right 的第三项
 
-        实际结果: max_pole=2, pole(2)=4*NO(J,J), pole(1)=2*NO(J',J)+2*NO(∂J,J)
+        实际结果: max_pole=4, pole(4)=2*One, pole(2)=4*NO(J,J), pole(1)=2*NO(J',J)+2*NO(∂J,J)
         """
         J = BasisOperator("J", bosonic=True, conformal_weight=1)
         Bosonic(J)
@@ -154,8 +154,12 @@ class TestOPEExamplesSugawara:
         # 计算 TSugawara 的自 OPE
         result = OPE(TSugawara, TSugawara)
 
-        # 验证结构（根据实际实现调整）
-        assert result.max_pole == 2  # 当前实现返回 2
+        # 修复后应该返回 max_pole=4
+        assert result.max_pole == 4
+
+        # 4 阶极点应该是 2*One（来自第三项）
+        pole_4 = result.pole(4)
+        assert pole_4 == 2 * One
 
         # 2 阶极点应该是 4*NO(J,J)
         pole_2 = result.pole(2)
@@ -167,7 +171,8 @@ class TestOPEExamplesSugawara:
 
         print("✓ Sugawara construction: TSugawara = NO(J,J)")
         print(f"  OPE[TSugawara, TSugawara] max_pole = {result.max_pole}")
-        print(f"  注意：与 Mathematica 结果有差异，可能需要进一步调试")
+        print(f"  pole(4) = {pole_4}")
+        print(f"  pole(2) = {pole_2}")
 
 
 class TestOPEExamplesDerivatives:

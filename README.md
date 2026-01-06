@@ -461,16 +461,28 @@ pyope/
 - ✅ 阶段 4：核心 OPE 计算实现（包括高级规则）
 
 **测试状态**：
-- ✅ 31/31 测试全部通过
+- ✅ 137/137 测试全部通过 (重大更新！)
   - `tests/test_composite_left_ope.py`: 8/8 ✅
   - `tests/test_voa_manual_examples.py`: 8/8 ✅
   - `tests/test_ope_examples_comprehensive.py`: 17/17 ✅
   - `tests/test_simplify.py`: 14/14 ✅
+  - `tests/test_w3_algebra.py`: 10/10 ✅
+  - `tests/test_advanced_ope.py`: 17/17 ✅ (修复对易测试)
+  - 以及其他所有测试模块
+
+**重大修复 (2026-01-07)**：
+- ✅ **修复 Jacobi 恒等式实现** - 在 `_ope_composite_left` 和 `_ope_composite_right` 中添加了缺失的第三项
+- ✅ **OPE[T, NO(T,T)] 极点修正** - 现在正确返回 max_pole=6（之前错误地返回 4）
+- ✅ **Sugawara 张量计算修正** - OPE[TSugawara, TSugawara] 现在正确包含 4 阶极点 2*One
+- ✅ **算符对易关系修复** - 修复了 `test_bosonic_commutation` 和 `test_fermionic_anticommutation` 测试
+- ✅ **W₃ 代数验证** - 所有 W₃ 代数测试与 Mathematica 结果一致
 
 **最新功能**：
-- ✅ OPE 对称性自动处理 - `OPE(B,A)` 自动转换为 `OPE(A,B)`
+- ✅ OPE 对称性自动处理 - `OPE(B,A)` 自动使用对易公式从 `OPE(A,B)` 计算
 - ✅ 算符排序机制 - 按声明顺序自动排列
 - ✅ 可选的化简功能 - `simplify(expr)` 函数
+- ✅ W₃ 代数完整支持 - 包括 T-T, T-W, W-W OPE 和辅助算符 Λ
+- ✅ 正确的复合算符 OPE - 完整实现 Jacobi 恒等式的三项求和
 
 **下一步**：
 - 阶段 5：Thielemans 方程验证

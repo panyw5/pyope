@@ -306,9 +306,17 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
     """
     计算 OPE(A, NO(B,C))
 
-    使用 Jacobi 恒等式：
-    [A, [BC]_0]_q = (-1)^{|A||B|} [B, [AC]_q]_0 + [[AB]_q, C]_0
-                    + Σ_{l=1}^{q-1} C(q-1, l) [[AB]_{q-l}, C]_l
+    使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的 OPECompositeHelpRQ）：
+
+    OPE[A, NO[B,C]] =
+      (1) sign * NO[B, {AC}_q]
+      + (2) NO[{AB}_q, C]
+      + (3) Σ_{l=Max[1,q-maxAB]}^{Min[q-1, maxABC]} C(q-1, l) {{AB}_{q-l}, C}_l
+
+    其中:
+    - sign = (-1)^(|A||B|)
+    - ABC[q] = OPE[{AB}_q, C]
+    - maxq = Max[maxABC[i] + (i+1), maxAC]
 
     Args:
         left: 左侧算符 A
@@ -326,52 +334,70 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
     parity_B = _get_parity(B)
     sign = (-1) ** (parity_A * parity_B)
 
+    # 计算 OPE(A, B) 和 OPE(A, C)
+    ope_AB = _compute_ope(A, B)
+    ope_AC = _compute_ope(A, C)
+
+    max_AB = ope_AB.max_pole
+    max_AC = ope_AC.max_pole
+
+    # 计算 ABC[q] = OPE[{AB}_q, C] 对于所有 q
+    ABC = []
+    for q in range(1, max_AB + 1):
+        bracket_AB_q = ope_AB.pole(q)
+        if bracket_AB_q != 0:
+            ope_AB_q_C = _compute_ope(bracket_AB_q, C)
+            ABC.append(ope_AB_q_C)
+        else:
+            ABC.append(OPEData({}))
+
+    # 计算每个 ABC[q] 的最大极点
+    max_ABC_list = [abc.max_pole for abc in ABC]
+
+    if len(max_ABC_list) > 0:
+        max_ABC = max(max_ABC_list + [0])
+
+        # 计算 maxq
+        # maxq = Max[max_ABC_list[i] + (i+1), max_AC]
+        maxq_candidates = [max_ABC_list[i] + (i + 1) for i in range(len(max_ABC_list))] + [max_AC]
+        maxq = max(maxq_candidates + [0])
+    else:
+        max_ABC = 0
+        maxq = max_AC
+
     result = OPEData({})
 
-    # 计算 OPE(A, B)
-    ope_AB = _compute_ope(A, B)
+    # 主循环：对每个极点 q
+    for q in range(1, maxq + 1):
+        pole_sum = 0
 
-    # 对于每个极点 q
-    for q, bracket_AB_q in ope_AB.poles.items():
-        if q == 0:
-            # q=0: [[AB]_0, C]_0 = NO(NO(A,B), C)
-            no_AB = NO(A, B)
-            no_result = NO(no_AB, C)
-            result = result + OPEData({0: no_result})
-        else:
-            # 主项: [[AB]_q, C]_0
-            # 使用 NO 函数来处理标量乘法
-            no_term = NO(bracket_AB_q, C)
-            result = result + OPEData({q: no_term})
-
-            # 求和项: Σ_{l=1}^{q-1} C(q-1, l) [[AB]_{q-l}, C]_l
-            for l in range(1, q):
-                binom_coeff = binomial(q - 1, l)
-                bracket_AB_ql = ope_AB.pole(q - l)
-                if bracket_AB_ql != 0:
-                    # 计算 [[AB]_{q-l}, C]_l
-                    ope_bracket_C = _compute_ope(bracket_AB_ql, C)
-                    pole_l = ope_bracket_C.pole(l)
-                    if pole_l != 0:
-                        if q in result.poles:
-                            result._poles[q] = result._poles[q] + binom_coeff * pole_l
-                        else:
-                            result._poles[q] = binom_coeff * pole_l
-
-    # 交换项: (-1)^{|A||B|} [B, [AC]_q]_0
-    # 这需要计算所有 q 的贡献
-    for q in range(1, ope_AB.max_pole + 1):
-        # 计算 [AC]_q
-        ope_AC = _compute_ope(A, C)
+        # 第一项: sign * NO[B, {AC}_q]
         bracket_AC_q = ope_AC.pole(q)
         if bracket_AC_q != 0:
-            # 计算 [B, [AC]_q]_0 = NO(B, [AC]_q)
-            # 使用 NO 函数来处理标量乘法
             no_B_AC = NO(B, bracket_AC_q)
-            if q in result.poles:
-                result._poles[q] = result._poles[q] + sign * no_B_AC
-            else:
-                result._poles[q] = sign * no_B_AC
+            pole_sum = pole_sum + sign * no_B_AC
+
+        # 第二项: NO[{AB}_q, C]
+        bracket_AB_q = ope_AB.pole(q)
+        if bracket_AB_q != 0:
+            no_AB_C = NO(bracket_AB_q, C)
+            pole_sum = pole_sum + no_AB_C
+
+        # 第三项: Σ_{l=Max[1,q-maxAB]}^{Min[q-1, maxABC]} C(q-1, l) {{AB}_{q-l}, C}_l
+        l_min = max(1, q - max_AB)
+        l_max = min(q - 1, max_ABC)
+
+        for l in range(l_min, l_max + 1):
+            # 检查 q-l 是否在有效范围内
+            if 1 <= q - l <= len(ABC):
+                binom_coeff = binomial(q - 1, l)
+                # 获取 ABC[q-l] 的第 l 极点
+                abc_pole = ABC[q - l - 1].pole(l)  # -1 因为数组从 0 开始
+                if abc_pole != 0:
+                    pole_sum = pole_sum + binom_coeff * abc_pole
+
+        if pole_sum != 0:
+            result._poles[q] = pole_sum
 
     return result
 
@@ -383,10 +409,13 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的实现）：
 
     OPE[NO[A,B], C] =
-      Σ_{q=1}^{maxBC} Σ_{l=0}^{maxBC-q} NO[∂^l A, {BC}_{l+q}] / l!
-      + sign * Σ_{q=1}^{maxAC} Σ_{l=0}^{maxAC-q} NO[∂^l B, {AC}_{l+q}] / l!
+      (1) Σ_{q=1}^{maxBC} Σ_{l=0}^{maxBC-q} NO[∂^l A, {BC}_{l+q}] / l!
+      + sign * (2) Σ_{q=1}^{maxAC} Σ_{l=0}^{maxAC-q} NO[∂^l B, {AC}_{l+q}] / l!
+      + sign * (3) Σ_{q} Σ_{l} {B, {AC}_q}_{l}
 
-    其中 sign = (-1)^(|A||B|)
+    其中:
+    - sign = (-1)^(|A||B|)
+    - 第三项来自 Jacobi 恒等式中的 Σ_l binom(q-1, l-1) [[AB]_l C]_{p+q-l}
 
     Args:
         left: 正规序算符 NO(A,B)
@@ -460,6 +489,53 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
                 result._poles[q] = result._poles[q] + sign * pole_sum
             else:
                 result._poles[q] = sign * pole_sum
+
+    # 第三项（关键！）: sign * Σ_{q} Σ_{l} {B, {AC}_q}_{l}
+    # 这一项来自 Jacobi 恒等式，对于产生高阶极点至关重要
+
+    # 首先计算 BAC[q] = OPE[B, {AC}_q] 对于所有 q
+    BAC = []
+    for q in range(1, max_AC + 1):
+        bracket_AC_q = ope_AC.pole(q)
+        if bracket_AC_q != 0:
+            ope_B_AC_q = _compute_ope(B, bracket_AC_q)
+            BAC.append(ope_B_AC_q)
+        else:
+            BAC.append(OPEData({}))
+
+    # 计算每个 BAC[q] 的最大极点
+    max_BAC_list = [bac.max_pole for bac in BAC]
+
+    if len(max_BAC_list) > 0:
+        max_BAC = max(max_BAC_list + [0])
+
+        # 计算 maxq
+        # maxq = Max[max_BAC_list[i] + (i+1) for i in range(len(max_BAC_list))]
+        maxq_candidates = [max_BAC_list[i] + (i + 1) for i in range(len(max_BAC_list))]
+        maxq = max(maxq_candidates + [0])
+
+        # 第三项的主循环
+        for q in range(1, maxq + 1):
+            pole_sum = 0
+
+            # l 的范围: Max[1, q-maxAC] <= l <= Min[q-1, maxBAC]
+            l_min = max(1, q - max_AC)
+            l_max = min(q - 1, max_BAC)
+
+            for l in range(l_min, l_max + 1):
+                # 检查 q-l 是否在有效范围内
+                if 1 <= q - l <= len(BAC):
+                    # 获取 BAC[q-l] 的第 l 极点
+                    bac_pole = BAC[q - l - 1].pole(l)  # -1 因为数组从 0 开始
+                    if bac_pole != 0:
+                        pole_sum = pole_sum + bac_pole
+
+            if pole_sum != 0:
+                # 累加到结果中
+                if q in result._poles:
+                    result._poles[q] = result._poles[q] + sign * pole_sum
+                else:
+                    result._poles[q] = sign * pole_sum
 
     return result
 
