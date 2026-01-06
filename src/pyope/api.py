@@ -260,19 +260,20 @@ def _ope_derivative_right(left: Any, right: DerivativeOperator) -> OPEData:
     # 应用导数规则
     new_poles = {}
 
-    for q, coeff in base_ope.poles.items():
-        # 对于每个极点，应用公式
+    # 对于 base_ope 中的每个极点 p，它对 derivative_ope 中的极点 p+k 有贡献
+    for p, coeff in base_ope.poles.items():
+        # 对于每个 k，计算 [A,B]_p 对 [A,∂^n B]_{p+k} 的贡献
         for k in range(order + 1):
-            # 计算 Pochhammer 符号 (q-1)_k
+            # 新的极点阶数：q = p + k
+            new_q = p + k
+
+            # 计算 Pochhammer 符号 (q-1)_k = (p+k-1)_k
             pochhammer = 1
             for i in range(k):
-                pochhammer *= (q - 1 - i)
+                pochhammer *= (new_q - 1 - i)
 
             # 计算二项式系数 C(n, k)
             binom_coeff = binomial(order, k)
-
-            # 新的极点阶数
-            new_q = q - k
 
             # 新的系数：对原系数求 (n-k) 阶导数
             if order - k > 0:
