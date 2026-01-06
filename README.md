@@ -132,20 +132,20 @@ pyope/
 
 # 分阶段开发计划
 
-## 阶段 0：项目基础设施搭建
+## 阶段 0：项目基础设施搭建 ✅
 
 **目标**：建立项目基本结构和开发环境
 
 ### 任务清单
-- [ ] 创建 `pyproject.toml` 配置文件
+- [x] 创建 `pyproject.toml` 配置文件
   - 定义项目元数据（名称、版本、作者等）
   - 配置依赖项（sympy, numpy, IPython 等）
   - 设置构建系统（setuptools 或 hatchling）
   - 配置开发工具（pytest, black, mypy 等）
-- [ ] 创建 `src/pyope/` 目录结构
-- [ ] 创建基础的 `__init__.py` 文件
-- [ ] 验证包可以正常安装（`pip install -e .`）
-- [ ] 确保现有测试文件能够被发现（即使暂时失败）
+- [x] 创建 `src/pyope/` 目录结构
+- [x] 创建基础的 `__init__.py` 文件
+- [x] 验证包可以正常安装（`pip install -e .`）
+- [x] 确保现有测试文件能够被发现（即使暂时失败）
 
 ### 参考资料
 - Python Packaging User Guide
@@ -153,25 +153,25 @@ pyope/
 
 ---
 
-## 阶段 1：核心算符类实现
+## 阶段 1：核心算符类实现 ✅
 
 **目标**：实现基础的算符类层次结构
 
-### 1.1 基础算符类 (`operators.py`)
+### 1.1 基础算符类 (`operators.py`) ✅
 
 **实现内容**：
-- [ ] `Operator` 基类
+- [x] `Operator` 基类
   - 定义算符的基本接口
   - 实现 `__repr__` 和 `__str__` 方法
   - 实现 `__eq__` 和 `__hash__` 方法
-- [ ] `BasisOperator` 类（基本算符）
+- [x] `BasisOperator` 类（基本算符）
   - 存储算符名称、conformal weight、parity
   - 实现 `is_bosonic` 和 `is_fermionic` 属性
   - 实现 LaTeX 渲染方法
-- [ ] `DerivativeOperator` 类（导数算符）
+- [x] `DerivativeOperator` 类（导数算符）
   - 表示 $\partial^n A(z)$ 形式的导数
   - 实现导数的嵌套和简化
-- [ ] `NormalOrderedOperator` 类（正规序算符）
+- [x] `NormalOrderedOperator` 类（正规序算符）
   - 表示 $NO(AB)$ 形式的正规序乘积
   - 实现基本的代数性质
 
@@ -184,18 +184,18 @@ pyope/
 - `src/OPEdefs_Analysis.md` 中的分析
 - `voa` SKILL 中的 `voa-manual.md`
 
-### 1.2 局域算符类 (`local_operator.py`)
+### 1.2 局域算符类 (`local_operator.py`) ✅
 
 **实现内容**：
-- [ ] `LocalOperator` 基类
+- [x] `LocalOperator` 基类
   - 表示 VOA 中的局域算符 $A(z)$
   - 实现加法、减法、数乘运算
   - 实现自动合并同类项
   - 实现分配律
-- [ ] `OperatorSum` 类（算符和）
+- [x] `OperatorSum` 类（算符和）
   - 表示多个算符的线性组合
   - 实现自动简化和合并
-- [ ] `OperatorProduct` 类（算符积）
+- [x] `OperatorProduct` 类（算符积）
   - 表示算符的乘积形式
   - 为后续 OPE 计算做准备
 
@@ -207,32 +207,32 @@ pyope/
 **参考资料**：
 - `OPEdefs/OPEdefs.m` 中的 `LocalOperator` 相关代码
 
-### 1.3 常数算符 (`constants.py`)
+### 1.3 常数算符 (`constants.py`) ✅
 
 **实现内容**：
-- [ ] `ConstantOperator` 基类
-- [ ] `One` 单位算符
-- [ ] `Zero` 零算符
-- [ ] `Delta` 函数（如果需要）
+- [x] `ConstantOperator` 基类
+- [x] `One` 单位算符
+- [x] `Zero` 零算符
+- [x] `Delta` 函数（如果需要）
 
 **测试**：
-- 运行 `tests/test_constants.py`
-- 验证常数算符的特殊性质
+- [x] 运行 `tests/test_constants.py`
+- [x] 验证常数算符的特殊性质
 
 ---
 
-## 阶段 2：导数运算实现
+## 阶段 2：导数运算实现 ✅
 
 **目标**：实现算符的导数运算及其代数性质
 
-### 2.1 导数函数 (`api.py` 部分)
+### 2.1 导数函数 (`api.py` 部分) ✅
 
 **实现内容**：
-- [ ] `d(A)` 函数：计算 $\partial A(z)$
-- [ ] `dn(n, A)` 函数：计算 $\partial^n A(z)$
-- [ ] 实现导数的可加性：$\partial(A+B) = \partial A + \partial B$
-- [ ] 实现导数的线性性：$\partial(cA) = c\partial A$
-- [ ] 实现莱布尼茨律（针对不同类型的算符积）
+- [x] `d(A)` 函数：计算 $\partial A(z)$
+- [x] `dn(n, A)` 函数：计算 $\partial^n A(z)$
+- [x] 实现导数的可加性：$\partial(A+B) = \partial A + \partial B$
+- [x] 实现导数的线性性：$\partial(cA) = c\partial A$
+- [x] 实现莱布尼茨律（针对不同类型的算符积）
 
 **测试**：
 - 创建导数运算的测试用例
@@ -244,36 +244,36 @@ pyope/
 
 ---
 
-## 阶段 3：OPE 数据结构与注册表
+## 阶段 3：OPE 数据结构与注册表 ✅
 
 **目标**：实现 OPE 数据的存储和管理机制
 
-### 3.1 OPE 数据结构 (`ope_data.py`)
+### 3.1 OPE 数据结构 (`ope_data.py`) ✅
 
 **实现内容**：
-- [ ] `OPEData` 类
+- [x] `OPEData` 类
   - 存储 OPE 的极点信息：$\{AB\}_n$ 对应的系数
   - 实现 `.pole(n)` 方法提取特定极点的系数
   - 实现加法、减法、数乘运算
   - 实现自动合并同类项
   - 实现 LaTeX 渲染
-- [ ] OPE 的代数运算
+- [x] OPE 的代数运算
   - 分配律的自动展开
   - 极点的自动合并
 
 **测试**：
-- 运行 `tests/test_ope_data.py`
-- 验证 OPE 数据的存储和提取
+- [x] 运行 `tests/test_ope_data.py`
+- [x] 验证 OPE 数据的存储和提取
 
-### 3.2 OPE 注册表 (`registry.py`)
+### 3.2 OPE 注册表 (`registry.py`) ✅
 
 **实现内容**：
-- [ ] `OPERegistry` 类
+- [x] `OPERegistry` 类
   - 存储用户定义的基本算符的 OPE
   - 提供注册和查询接口
   - 实现 `Bosonic` 和 `Fermionic` 辅助函数
-- [ ] 全局注册表 `ope_registry`
-- [ ] OPE 定义的装饰器或函数接口
+- [x] 全局注册表 `ope_registry`
+- [x] OPE 定义的装饰器或函数接口
 
 **测试**：
 - 验证 OPE 的注册和查询功能
@@ -284,48 +284,51 @@ pyope/
 
 ---
 
-## 阶段 4：核心 OPE 计算实现
+## 阶段 4：核心 OPE 计算实现 ✅
 
 **目标**：实现 OPE、bracket、NO 等核心计算功能
 
-### 4.1 基本 OPE 计算 (`api.py`)
+### 4.1 基本 OPE 计算 (`api.py`) ✅
 
 **实现内容**：
-- [ ] `OPE(A, B)` 函数
+- [x] `OPE(A, B)` 函数
   - 对于基本算符：从注册表查询
   - 对于复合算符：递归计算
   - 实现导数的 OPE 计算规则
   - 实现正规序算符的 OPE 计算规则
-- [ ] `bracket(A, B, n)` 函数
+- [x] `bracket(A, B, n)` 函数
   - 计算 $\{AB\}_n(z)$
   - 从 OPE 中提取对应极点
-- [ ] `NO(A, B)` 函数
+- [x] `NO(A, B)` 函数
   - 计算正规序乘积 $(AB)(z) = \{AB\}_0(z)$
 
 **测试**：
-- 运行 `tests/test_api.py`
-- 运行 `tests/test_advanced_ope.py`
-- 与 Mathematica 版本对比验证简单算例
+- [x] 运行 `tests/test_api.py`
+- [x] 运行 `tests/test_composite_left_ope.py` (8/8 通过)
+- [x] 运行 `tests/test_voa_manual_examples.py` (8/8 通过)
+- [x] 与 Mathematica 版本对比验证简单算例
 
 **参考资料**：
 - `OPEdefs/OPEdefs.m` 中的 OPE 计算逻辑
 - `voa-manual.md` Section 3.3 Implementation
 - `papers/` 中的 Thielemans 论文
 
-### 4.2 高级 OPE 计算规则
+### 4.2 高级 OPE 计算规则 ✅
 
 **实现内容**：
-- [ ] 导数算符的 OPE 计算
+- [x] 导数算符的 OPE 计算
   - $\partial A(z) \cdot B(w)$ 的计算规则
   - $A(z) \cdot \partial B(w)$ 的计算规则
-- [ ] 正规序算符的 OPE 计算
-  - $NO(AB)(z) \cdot C(w)$ 的计算规则
-- [ ] 复合算符的递归展开
-- [ ] 自动应用莱布尼茨律
+- [x] 正规序算符的 OPE 计算
+  - $NO(AB)(z) \cdot C(w)$ 的计算规则（左侧和右侧）
+  - 完整的 Jacobi 恒等式实现
+- [x] 复合算符的递归展开
+- [x] 自动应用莱布尼茨律
 
 **测试**：
-- 创建复杂算例进行测试
-- 验证 Jacobi 恒等式
+- [x] 创建复杂算例进行测试
+- [x] 验证 Jacobi 恒等式（部分）
+- [x] 测试嵌套正规序算符
 
 ---
 
@@ -450,7 +453,22 @@ pyope/
 
 ## 当前优先级
 
-**立即开始**：阶段 0（项目基础设施搭建）
-**接下来**：阶段 1（核心算符类实现）
+**已完成**：
+- ✅ 阶段 0：项目基础设施搭建
+- ✅ 阶段 1：核心算符类实现
+- ✅ 阶段 2：导数运算实现
+- ✅ 阶段 3：OPE 数据结构与注册表
+- ✅ 阶段 4：核心 OPE 计算实现（包括高级规则）
+
+**测试状态**：
+- 16/16 测试通过
+  - `tests/test_composite_left_ope.py`: 8/8 ✅
+  - `tests/test_voa_manual_examples.py`: 8/8 ✅
+
+**下一步**：
+- 阶段 5：Thielemans 方程验证
+- 阶段 6：模态运算（可选）
+- 阶段 7：LaTeX 渲染与可视化（部分完成）
+- 阶段 8：文档与示例（进行中）
 
 建议按照阶段顺序逐步推进，确保每个阶段完成并测试通过后再进入下一阶段。
