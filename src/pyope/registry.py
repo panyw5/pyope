@@ -101,6 +101,49 @@ class OPERegistry:
         """
         return self._positions.get(operator)
 
+    def compare_operators(self, left: Any, right: Any) -> int:
+        """
+        比较两个算符的顺序
+
+        类似于 OPEdefs.m 中的 OPEOrder[A,B]
+
+        Args:
+            left: 左侧算符
+            right: 右侧算符
+
+        Returns:
+            > 0 如果 left 和 right 已经按正确顺序
+            = 0 如果 left == right
+            < 0 如果 left 和 right 需要交换
+        """
+        # 处理正规序算符：NO 总是排在最后
+        from .operators import NormalOrderedOperator
+
+        if isinstance(right, NormalOrderedOperator):
+            return 1  # left < right（left 应该在前）
+
+        if isinstance(left, NormalOrderedOperator):
+            return -1  # left > right（需要交换）
+
+        # 获取位置
+        left_pos = self._positions.get(left)
+        right_pos = self._positions.get(right)
+
+        # 如果两个算符都已注册，比较位置
+        if left_pos is not None and right_pos is not None:
+            diff = right_pos - left_pos
+            if diff == 0:
+                # 位置相同，使用 Python 的比较
+                if left == right:
+                    return 0
+                else:
+                    # 使用字符串比较作为 fallback
+                    return -1 if str(left) < str(right) else 1
+            return diff
+
+        # 如果至少有一个未注册，假设它们已经有序
+        return 0
+
     def define_ope(self, left: Any, right: Any, ope_data: OPEData) -> None:
         """
         定义两个算符的 OPE

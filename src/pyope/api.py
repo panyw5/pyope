@@ -179,6 +179,14 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     # 规则 8: 查询注册表
     # 对于基本算符，从注册表查询 OPE
     if isinstance(left, BasisOperator) and isinstance(right, BasisOperator):
+        # 首先检查算符顺序
+        order = ope_registry.compare_operators(left, right)
+
+        if order < 0:
+            # 顺序错误，需要使用对称性公式
+            return _ope_commute_help(left, right)
+
+        # 顺序正确或相同，查询注册表
         ope_data = ope_registry.get_ope(left, right)
         if ope_data is not None:
             return ope_data
@@ -573,3 +581,62 @@ def NO(left: Any, right: Any) -> Any:
 
     # 创建正规序算符
     return NormalOrderedOperator(left, right)
+
+
+def _ope_commute_help(left: Any, right: Any) -> OPEData:
+    """
+    计算 OPE(B,A) from OPE(A,B) 使用对称性公式
+
+    类似于 OPEdefs.m 中的 OPECommuteHelp
+
+    公式：
+    [BA](q) = SwapSign[A,B] * Sum[(-1)^l / (l-q)! * D^(l-q) [[AB](l)], {l,q,MaxPole[AB]}]
+
+    其中：
+    - SwapSign[A,B] = (-1)^(|A||B|)
+    - D^n 表示对 w 求 n 阶导数
+
+    Args:
+        left: 对应 OPE[B, A] 中的 B（顺序错误的左侧）
+        right: 对应 OPE[B, A] 中的 A（顺序错误的右侧）
+
+    Returns:
+        OPEData 实例表示 OPE[B, A]
+    """
+    # 计算正确顺序的 OPE: OPE[A, B]
+    ope_AB = _compute_ope(right, left)  # 注意：right 是 A，left 是 B
+
+    if ope_AB.max_pole == 0:
+        return OPEData({})
+
+    # 计算 SwapSign
+    from .local_operator import get_operator_parity
+    parity_A = get_operator_parity(right)
+    parity_B = get_operator_parity(left)
+    swap_sign = ((-1) ** (parity_A * parity_B))
+
+    # 应用公式
+    max_pole = ope_AB.max_pole
+    new_poles = {}
+
+    for q in range(max_pole, 0, -1):
+        # term[q] 累积 pole q 的系数
+        term_q = swap_sign * ((-1) ** q) * ope_AB.pole(q)
+
+        # 添加导数项的贡献
+        for l in range(q + 1, max_pole + 1):
+            # pole(l) 对 pole(q) 的贡献通过 (l-q) 阶导数
+            pole_l = ope_AB.pole(l)
+            if pole_l != 0:
+                # 计算 D^(l-q) [pole_l] / (l-q)!
+                deriv_order = l - q
+                deriv_pole = derivative(pole_l, deriv_order)
+
+                # 系数: swap_sign * (-1)^l / (l-q)!
+                coeff = swap_sign * ((-1) ** l) / sp.factorial(deriv_order)
+                term_q = term_q + coeff * deriv_pole
+
+        if term_q != 0:
+            new_poles[q] = term_q
+
+    return OPEData(new_poles)
