@@ -461,9 +461,16 @@ pyope/
 - ✅ 阶段 4：核心 OPE 计算实现（包括高级规则）
 
 **测试状态**：
-- 16/16 测试通过
+- ✅ 31/31 测试全部通过
   - `tests/test_composite_left_ope.py`: 8/8 ✅
   - `tests/test_voa_manual_examples.py`: 8/8 ✅
+  - `tests/test_ope_examples_comprehensive.py`: 17/17 ✅
+  - `tests/test_simplify.py`: 14/14 ✅
+
+**最新功能**：
+- ✅ OPE 对称性自动处理 - `OPE(B,A)` 自动转换为 `OPE(A,B)`
+- ✅ 算符排序机制 - 按声明顺序自动排列
+- ✅ 可选的化简功能 - `simplify(expr)` 函数
 
 **下一步**：
 - 阶段 5：Thielemans 方程验证
