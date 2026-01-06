@@ -206,6 +206,9 @@ def _ope_derivative_left(left: DerivativeOperator, right: Any) -> OPEData:
     公式：[∂^n A, B]_q = (-1)^n * (q-1)_n * [A,B]_{q-n}
     其中 (q-1)_n 是 Pochhammer 符号
 
+    对于 base_ope 中的 pole(p)，它对 derivative_ope 中的 pole(q) 有贡献，
+    其中 q = p + n（极点阶数增加）
+
     Args:
         left: 导数算符 ∂^n A
         right: 右侧算符 B
@@ -221,17 +224,18 @@ def _ope_derivative_left(left: DerivativeOperator, right: Any) -> OPEData:
 
     # 应用导数规则
     new_poles = {}
-    for q, coeff in base_ope.poles.items():
-        # [∂^n A, B]_q = (-1)^n * (q-1)(q-2)...(q-n) * [A,B]_{q-n}
-        if q > order:
-            # Pochhammer 符号: (q-1)_n = (q-1)(q-2)...(q-n)
-            pochhammer = 1
-            for i in range(order):
-                pochhammer *= (q - 1 - i)
+    for p, coeff in base_ope.poles.items():
+        # 对于 base_ope 的 pole(p)，它贡献到 derivative_ope 的 pole(q)
+        # 其中 q = p + order
+        q = p + order
 
-            new_q = q - order
-            new_coeff = ((-1) ** order) * pochhammer * coeff
-            new_poles[new_q] = new_coeff
+        # Pochhammer 符号: (q-1)_n = (q-1)(q-2)...(q-n)
+        pochhammer = 1
+        for i in range(order):
+            pochhammer *= (q - 1 - i)
+
+        new_coeff = ((-1) ** order) * pochhammer * coeff
+        new_poles[q] = new_coeff
 
     return OPEData(new_poles)
 

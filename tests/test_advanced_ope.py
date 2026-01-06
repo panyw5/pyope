@@ -88,8 +88,8 @@ class TestDerivativeRules:
         OPE[∂^i A, B] = (-1)^i * Sum[Pochhammer[j,i] * pole_j(OPE[A,B]), {j, maxpole, 1, -1}]
 
         For OPE[A, B] with pole(2)=A, pole(1)=B:
-        - pole(2) contributes to OPE[∂A, B] at pole(1): (-1) * (2-1) * A = -A
-        - pole(1) contributes to OPE[∂A, B] at pole(0): (-1) * (1-1) * B = 0
+        - pole(2) contributes to OPE[∂A, B] at pole(3): (-1) * (3-1) * A = -2*A
+        - pole(1) contributes to OPE[∂A, B] at pole(2): (-1) * (2-1) * B = -B
         """
         A = BasisOperator("A", bosonic=True)
         B = BasisOperator("B", bosonic=True)
@@ -101,9 +101,10 @@ class TestDerivativeRules:
         dA = d(A)
         result = OPE(dA, B)
 
-        # Expected: max_pole=1, pole(1)=-A
-        assert result.max_pole == 1
-        assert result.pole(1) == -A
+        # Expected: max_pole=3, pole(3)=-2*A, pole(2)=-B
+        assert result.max_pole == 3
+        assert result.pole(3) == -2*A
+        assert result.pole(2) == -B
 
     def test_right_derivative_simple(self):
         """
@@ -133,10 +134,10 @@ class TestDerivativeRules:
         This is a concrete example from conformal field theory.
 
         For OPE[T, T] with pole(4)=c/2, pole(3)=0, pole(2)=2*T, pole(1)=∂T:
-        - pole(4) contributes to OPE[∂T, T] at pole(3): (-1) * (4-1) * c/2 = -3*c/2
-        - pole(3) contributes to OPE[∂T, T] at pole(2): (-1) * (3-1) * 0 = 0
-        - pole(2) contributes to OPE[∂T, T] at pole(1): (-1) * (2-1) * 2*T = -2*T
-        - pole(1) contributes to OPE[∂T, T] at pole(0): (-1) * (1-1) * ∂T = 0
+        - pole(4) contributes to OPE[∂T, T] at pole(5): (-1) * (5-1) * c/2 = -2*c
+        - pole(3) contributes to OPE[∂T, T] at pole(4): (-1) * (4-1) * 0 = 0
+        - pole(2) contributes to OPE[∂T, T] at pole(3): (-1) * (3-1) * 2*T = -4*T
+        - pole(1) contributes to OPE[∂T, T] at pole(2): (-1) * (2-1) * ∂T = -∂T
         """
         T = BasisOperator("T", bosonic=True)
         c = sp.Symbol("c")
@@ -148,10 +149,11 @@ class TestDerivativeRules:
         dT = d(T)
         result = OPE(dT, T)
 
-        # Expected: max_pole=3, pole(3)=-3*c/2, pole(1)=-2*T
-        assert result.max_pole == 3
-        assert result.pole(3) == -3*c/2 * One
-        assert result.pole(1) == -2*T
+        # Expected: max_pole=5, pole(5)=-2*c, pole(3)=-4*T, pole(2)=-∂T
+        assert result.max_pole == 5
+        assert result.pole(5) == -2*c * One
+        assert result.pole(3) == -4*T
+        assert result.pole(2) == -d(T)
 
 
 class TestCommutationRelations:
