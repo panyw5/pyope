@@ -41,6 +41,9 @@ from .ope_data import OPEData
 from .registry import OPERegistry, ope_registry, Bosonic, Fermionic
 from .api import OPE, NO, bracket, MakeOPE
 
+# Simplification 模块
+from .simplify import simplify, canonicalize, collect_normal_ordered_terms
+
 __all__ = [
     # Version info
     "__version__",
@@ -78,4 +81,8 @@ __all__ = [
     "NO",
     "bracket",
     "MakeOPE",
+    # Simplification
+    "simplify",
+    "canonicalize",
+    "collect_normal_ordered_terms",
 ]
