@@ -119,21 +119,29 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
 
     # 如果是乘法表达式
     if isinstance(expr, Mul):
-        # 分离数值系数和算符部分
-        coeff = sp.Integer(1)
+        # 分离标量系数和算符部分
+        scalar_parts = []
         operator_parts = []
 
         for arg in expr.args:
-            if isinstance(arg, Number):
-                coeff *= arg
-            elif isinstance(arg, Operator):
+            if isinstance(arg, Operator):
+                # 这是一个算符
                 operator_parts.append(arg)
             else:
-                # 可能是更复杂的表达式
-                operator_parts.append(arg)
+                # 这是标量（数字或符号）
+                scalar_parts.append(arg)
 
+        # 构建标量系数
+        if len(scalar_parts) == 0:
+            coeff = sp.Integer(1)
+        elif len(scalar_parts) == 1:
+            coeff = scalar_parts[0]
+        else:
+            coeff = Mul(*scalar_parts)
+
+        # 构建算符部分
         if len(operator_parts) == 0:
-            # 纯数值
+            # 纯标量
             return (coeff, sp.Integer(1))
         elif len(operator_parts) == 1:
             return (coeff, operator_parts[0])

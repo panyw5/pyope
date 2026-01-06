@@ -25,6 +25,9 @@ from .local_operator import (
     OperatorProduct,
     is_local_operator,
     extract_scalar_operator,
+    get_operator_parity,
+    simplify_operator_expr,
+    collect_operator_terms,
 )
 from .constants import (
     ConstantOperator,
@@ -34,9 +37,9 @@ from .constants import (
 )
 from .ope_data import OPEData
 
-# 待实现的模块:
-# from .registry import OPERegistry, ope_registry
-# from .api import OPE, NO, bracket
+# Registry 和 API 模块
+from .registry import OPERegistry, ope_registry, Bosonic, Fermionic
+from .api import OPE, NO, bracket, MakeOPE
 
 __all__ = [
     # Version info
@@ -55,6 +58,9 @@ __all__ = [
     "OperatorProduct",
     "is_local_operator",
     "extract_scalar_operator",
+    "get_operator_parity",
+    "simplify_operator_expr",
+    "collect_operator_terms",
     # Constants
     "ConstantOperator",
     "One",
@@ -62,4 +68,14 @@ __all__ = [
     "Delta",
     # OPE Data
     "OPEData",
+    # Registry
+    "OPERegistry",
+    "ope_registry",
+    "Bosonic",
+    "Fermionic",
+    # API
+    "OPE",
+    "NO",
+    "bracket",
+    "MakeOPE",
 ]

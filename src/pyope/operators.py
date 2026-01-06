@@ -297,6 +297,7 @@ def d(operator, order: int = 1):
     支持对单个算符或算符的线性组合求导，利用导数的线性性质：
     - d(c * A) = c * d(A)
     - d(A + B) = d(A) + d(B)
+    - d(One) = 0 (常数算符的导数为零)
 
     Args:
         operator: 要求导的算符或算符表达式
@@ -313,6 +314,13 @@ def d(operator, order: int = 1):
         >>> d(2 * T)  # 2 * d(T)
         >>> d(T + W)  # d(T) + d(W)
     """
+    # 导入常数算符（避免循环导入）
+    from .constants import One, Zero, ConstantOperator
+
+    # 如果是常数算符，导数为 0
+    if operator == One or operator == Zero or isinstance(operator, ConstantOperator):
+        return 0
+
     # 如果 operator 已经是 DerivativeOperator，累加阶数
     if isinstance(operator, DerivativeOperator):
         return DerivativeOperator(operator.base, operator.order + order)
@@ -323,13 +331,6 @@ def d(operator, order: int = 1):
 
     # 如果是 sympy 表达式，应用导数的线性性质
     if isinstance(operator, sp.Expr):
-        # 导入 local_operator 模块的函数（避免循环导入）
-        from .local_operator import is_local_operator
-
-        # 检查是否为有效的 local operator 表达式
-        if not is_local_operator(operator):
-            raise TypeError(f"Cannot take derivative of non-local operator: {operator}")
-
         # 对于加法：d(A + B) = d(A) + d(B)
         if isinstance(operator, sp.Add):
             return sp.Add(*[d(arg, order) for arg in operator.args])
@@ -338,13 +339,18 @@ def d(operator, order: int = 1):
         if isinstance(operator, sp.Mul):
             from .local_operator import extract_scalar_operator
             coeff, op = extract_scalar_operator(operator)
+
+            # 如果算符部分是常数，整个表达式的导数为 0
+            if op == One or op == Zero or isinstance(op, ConstantOperator) or op == sp.Integer(1):
+                return 0
+
             return coeff * d(op, order)
 
-        # 其他情况（不应该发生）
-        raise TypeError(f"Unexpected expression type for derivative: {type(operator)}")
+        # 其他情况：可能是纯标量
+        return 0
 
-    # 如果都不是，抛出错误
-    raise TypeError(f"Cannot take derivative of {type(operator)}: {operator}")
+    # 如果都不是，返回 0（假设是标量）
+    return 0
 
 
 def dn(order: int, operator):
