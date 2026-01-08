@@ -8,24 +8,33 @@ OPE 计算 API 模块
 - MakeOPE: 创建 OPEData 的便捷函数
 """
 
-from typing import Union, Any, List
-import sympy as sp
-from sympy import Add, Mul, Number, Integer, binomial, factorial
+from typing import Any, List, Union
 
+import sympy as sp
+from sympy import Add, Integer, Mul, Number
+
+from .cache import (
+    cached_binomial,
+    cached_factorial,
+    cached_pochhammer,
+    get_ope_cache,
+)
+from .constants import One, Zero
+from .local_operator import (
+    extract_scalar_operator,
+    is_local_operator,
+)
+from .ope_data import OPEData
 from .operators import (
-    Operator,
     BasisOperator,
     DerivativeOperator,
     NormalOrderedOperator,
+    Operator,
+)
+from .operators import (
     d as derivative,
 )
-from .ope_data import OPEData
-from .constants import Zero, One
-from .registry import ope_registry, OPEDefiner
-from .local_operator import (
-    is_local_operator,
-    extract_scalar_operator,
-)
+from .registry import OPEDefiner, ope_registry
 
 
 class OPEComputer(OPEDefiner):
@@ -131,10 +140,18 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     Returns:
         OPEData 实例
     """
+    # 尝试从缓存获取结果
+    cache = get_ope_cache()
+    cached_result = cache.get(left, right)
+    if cached_result is not None:
+        return cached_result
+
     # 规则 1: 处理零算符
     # OPE(0, B) = 0, OPE(A, 0) = 0
     if left == 0 or left == Zero or right == 0 or right == Zero:
-        return OPEData({})
+        result = OPEData({})
+        cache.put(left, right, result)
+        return result
 
     # 规则 2: 线性性 - 右侧加法
     # OPE(A, B+C) = OPE(A,B) + OPE(A,C)
@@ -142,6 +159,7 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
         result = OPEData({})
         for term in right.args:
             result = result + _compute_ope(left, term)
+        cache.put(left, right, result)
         return result
 
     # 规则 3: 线性性 - 左侧加法
@@ -150,6 +168,7 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
         result = OPEData({})
         for term in left.args:
             result = result + _compute_ope(term, right)
+        cache.put(left, right, result)
         return result
 
     # 规则 4: 标量乘法 - 右侧
@@ -157,24 +176,32 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     if isinstance(right, Mul):
         coeff, op = extract_scalar_operator(right)
         if coeff != 1:
-            return coeff * _compute_ope(left, op)
+            result = coeff * _compute_ope(left, op)
+            cache.put(left, right, result)
+            return result
 
     # 规则 5: 标量乘法 - 左侧
     # OPE(c*A, B) = c*OPE(A,B)
     if isinstance(left, Mul):
         coeff, op = extract_scalar_operator(left)
         if coeff != 1:
-            return coeff * _compute_ope(op, right)
+            result = coeff * _compute_ope(op, right)
+            cache.put(left, right, result)
+            return result
 
     # 规则 6: 左侧导数算符
     # [∂A, B]_q = -(q-1)[A,B]_{q-1}
     if isinstance(left, DerivativeOperator):
-        return _ope_derivative_left(left, right)
+        result = _ope_derivative_left(left, right)
+        cache.put(left, right, result)
+        return result
 
     # 规则 7: 右侧导数算符
     # [A, ∂B]_q = (q-1)[A,B]_{q-1} + ∂[A,B]_q
     if isinstance(right, DerivativeOperator):
-        return _ope_derivative_right(left, right)
+        result = _ope_derivative_right(left, right)
+        cache.put(left, right, result)
+        return result
 
     # 规则 8: 查询注册表
     # 对于基本算符，从注册表查询 OPE
@@ -184,27 +211,38 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
 
         if order < 0:
             # 顺序错误，需要使用对称性公式
-            return _ope_commute_help(left, right)
+            result = _ope_commute_help(left, right)
+            cache.put(left, right, result)
+            return result
 
         # 顺序正确或相同，查询注册表
         ope_data = ope_registry.get_ope(left, right)
         if ope_data is not None:
+            cache.put(left, right, ope_data)
             return ope_data
         # 未定义的 OPE 返回零
-        return OPEData({})
+        result = OPEData({})
+        cache.put(left, right, result)
+        return result
 
     # 规则 9: 右侧正规序算符
     # OPE(A, NO(B,C)) 使用 Jacobi 恒等式
     if isinstance(right, NormalOrderedOperator):
-        return _ope_composite_right(left, right)
+        result = _ope_composite_right(left, right)
+        cache.put(left, right, result)
+        return result
 
     # 规则 10: 左侧正规序算符
     # OPE(NO(A,B), C) 使用 Jacobi 恒等式
     if isinstance(left, NormalOrderedOperator):
-        return _ope_composite_left(left, right)
+        result = _ope_composite_left(left, right)
+        cache.put(left, right, result)
+        return result
 
     # 默认：未定义的 OPE 返回零
-    return OPEData({})
+    result = OPEData({})
+    cache.put(left, right, result)
+    return result
 
 
 def _ope_derivative_left(left: DerivativeOperator, right: Any) -> OPEData:
@@ -237,10 +275,8 @@ def _ope_derivative_left(left: DerivativeOperator, right: Any) -> OPEData:
         # 其中 q = p + order
         q = p + order
 
-        # Pochhammer 符号: (q-1)_n = (q-1)(q-2)...(q-n)
-        pochhammer = 1
-        for i in range(order):
-            pochhammer *= (q - 1 - i)
+        # 使用缓存的 Pochhammer 符号: (q-1)_n = (q-1)(q-2)...(q-n)
+        pochhammer = cached_pochhammer(q, order)
 
         new_coeff = ((-1) ** order) * pochhammer * coeff
         new_poles[q] = new_coeff
@@ -279,13 +315,11 @@ def _ope_derivative_right(left: Any, right: DerivativeOperator) -> OPEData:
             # 新的极点阶数：q = p + k
             new_q = p + k
 
-            # 计算 Pochhammer 符号 (q-1)_k = (p+k-1)_k
-            pochhammer = 1
-            for i in range(k):
-                pochhammer *= (new_q - 1 - i)
+            # 使用缓存的 Pochhammer 符号 (q-1)_k = (p+k-1)_k
+            pochhammer = cached_pochhammer(new_q, k)
 
-            # 计算二项式系数 C(n, k)
-            binom_coeff = binomial(order, k)
+            # 使用缓存的二项式系数 C(n, k)
+            binom_coeff = cached_binomial(order, k)
 
             # 新的系数：对原系数求 (n-k) 阶导数
             if order - k > 0:
@@ -342,28 +376,28 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
     max_AC = ope_AC.max_pole
 
     # 计算 ABC[q] = OPE[{AB}_q, C] 对于所有 q
+    # 同时计算 max_ABC 和 maxq，避免重复遍历
     ABC = []
+    max_ABC = 0
+    maxq = max_AC
+
     for q in range(1, max_AB + 1):
         bracket_AB_q = ope_AB.pole(q)
         if bracket_AB_q != 0:
             ope_AB_q_C = _compute_ope(bracket_AB_q, C)
             ABC.append(ope_AB_q_C)
+
+            # 更新 max_ABC 和 maxq
+            abc_max_pole = ope_AB_q_C.max_pole
+            if abc_max_pole > max_ABC:
+                max_ABC = abc_max_pole
+
+            # maxq = Max[max_ABC[i] + (i+1), max_AC]
+            maxq_candidate = abc_max_pole + q
+            if maxq_candidate > maxq:
+                maxq = maxq_candidate
         else:
             ABC.append(OPEData({}))
-
-    # 计算每个 ABC[q] 的最大极点
-    max_ABC_list = [abc.max_pole for abc in ABC]
-
-    if len(max_ABC_list) > 0:
-        max_ABC = max(max_ABC_list + [0])
-
-        # 计算 maxq
-        # maxq = Max[max_ABC_list[i] + (i+1), max_AC]
-        maxq_candidates = [max_ABC_list[i] + (i + 1) for i in range(len(max_ABC_list))] + [max_AC]
-        maxq = max(maxq_candidates + [0])
-    else:
-        max_ABC = 0
-        maxq = max_AC
 
     result = OPEData({})
 
@@ -390,7 +424,7 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
         for l in range(l_min, l_max + 1):
             # 检查 q-l 是否在有效范围内
             if 1 <= q - l <= len(ABC):
-                binom_coeff = binomial(q - 1, l)
+                binom_coeff = cached_binomial(q - 1, l)
                 # 获取 ABC[q-l] 的第 l 极点
                 abc_pole = ABC[q - l - 1].pole(l)  # -1 因为数组从 0 开始
                 if abc_pole != 0:
@@ -447,41 +481,45 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     result = OPEData({})
 
     # 第一项: Σ_{q=1}^{maxBC} Σ_{l=0}^{maxBC-q} NO[∂^l A, {BC}_{l+q}] / l!
+    # 预计算 A 的导数（最多需要 max_BC-1 阶）
+    deriv_A_cache = {0: A}
+    for l in range(1, max_BC):
+        deriv_A_cache[l] = derivative(A, l)
+
     for q in range(1, max_BC + 1):
         pole_sum = 0
         for l in range(0, max_BC - q + 1):
-            # 计算 ∂^l A
-            if l == 0:
-                deriv_A = A
-            else:
-                deriv_A = derivative(A, l)
+            # 从缓存获取 ∂^l A
+            deriv_A = deriv_A_cache.get(l, A if l == 0 else derivative(A, l))
 
             # 获取 {BC}_{l+q}
             bracket_BC = ope_BC.pole(l + q)
             if bracket_BC != 0:
                 # 计算 NO[∂^l A, {BC}_{l+q}] / l!
                 no_term = NO(deriv_A, bracket_BC)
-                pole_sum = pole_sum + no_term / factorial(l)
+                pole_sum = pole_sum + no_term / cached_factorial(l)
 
         if pole_sum != 0:
             result._poles[q] = pole_sum
 
     # 第二项: sign * Σ_{q=1}^{maxAC} Σ_{l=0}^{maxAC-q} NO[∂^l B, {AC}_{l+q}] / l!
+    # 预计算 B 的导数（最多需要 max_AC-1 阶）
+    deriv_B_cache = {0: B}
+    for l in range(1, max_AC):
+        deriv_B_cache[l] = derivative(B, l)
+
     for q in range(1, max_AC + 1):
         pole_sum = 0
         for l in range(0, max_AC - q + 1):
-            # 计算 ∂^l B
-            if l == 0:
-                deriv_B = B
-            else:
-                deriv_B = derivative(B, l)
+            # 从缓存获取 ∂^l B
+            deriv_B = deriv_B_cache.get(l, B if l == 0 else derivative(B, l))
 
             # 获取 {AC}_{l+q}
             bracket_AC = ope_AC.pole(l + q)
             if bracket_AC != 0:
                 # 计算 NO[∂^l B, {AC}_{l+q}] / l!
                 no_term = NO(deriv_B, bracket_AC)
-                pole_sum = pole_sum + no_term / factorial(l)
+                pole_sum = pole_sum + no_term / cached_factorial(l)
 
         if pole_sum != 0:
             # 累加到结果中
@@ -494,26 +532,30 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     # 这一项来自 Jacobi 恒等式，对于产生高阶极点至关重要
 
     # 首先计算 BAC[q] = OPE[B, {AC}_q] 对于所有 q
+    # 同时计算 max_BAC 和 maxq，避免重复遍历
     BAC = []
+    max_BAC = 0
+    maxq = 0
+
     for q in range(1, max_AC + 1):
         bracket_AC_q = ope_AC.pole(q)
         if bracket_AC_q != 0:
             ope_B_AC_q = _compute_ope(B, bracket_AC_q)
             BAC.append(ope_B_AC_q)
+
+            # 更新 max_BAC 和 maxq
+            bac_max_pole = ope_B_AC_q.max_pole
+            if bac_max_pole > max_BAC:
+                max_BAC = bac_max_pole
+
+            # maxq = Max[max_BAC[i] + (i+1) for i in range(len(max_BAC_list))]
+            maxq_candidate = bac_max_pole + q
+            if maxq_candidate > maxq:
+                maxq = maxq_candidate
         else:
             BAC.append(OPEData({}))
 
-    # 计算每个 BAC[q] 的最大极点
-    max_BAC_list = [bac.max_pole for bac in BAC]
-
-    if len(max_BAC_list) > 0:
-        max_BAC = max(max_BAC_list + [0])
-
-        # 计算 maxq
-        # maxq = Max[max_BAC_list[i] + (i+1) for i in range(len(max_BAC_list))]
-        maxq_candidates = [max_BAC_list[i] + (i + 1) for i in range(len(max_BAC_list))]
-        maxq = max(maxq_candidates + [0])
-
+    if len(BAC) > 0:
         # 第三项的主循环
         for q in range(1, maxq + 1):
             pole_sum = 0
@@ -651,9 +693,13 @@ def NO(left: Any, right: Any) -> Any:
 
     # 确保 left 和 right 都是 Operator 实例
     if not isinstance(left, Operator):
-        raise TypeError(f"NO requires Operator instances for left operand, got {type(left)}")
+        raise TypeError(
+            f"NO requires Operator instances for left operand, got {type(left)}"
+        )
     if not isinstance(right, Operator):
-        raise TypeError(f"NO requires Operator instances for right operand, got {type(right)}")
+        raise TypeError(
+            f"NO requires Operator instances for right operand, got {type(right)}"
+        )
 
     # 创建正规序算符
     return NormalOrderedOperator(left, right)
@@ -687,9 +733,10 @@ def _ope_commute_help(left: Any, right: Any) -> OPEData:
 
     # 计算 SwapSign
     from .local_operator import get_operator_parity
+
     parity_A = get_operator_parity(right)
     parity_B = get_operator_parity(left)
-    swap_sign = ((-1) ** (parity_A * parity_B))
+    swap_sign = (-1) ** (parity_A * parity_B)
 
     # 应用公式
     max_pole = ope_AB.max_pole

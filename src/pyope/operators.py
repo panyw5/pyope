@@ -205,6 +205,22 @@ class DerivativeOperator(Operator):
         """
         return self._base.parity
 
+    @property
+    def conformal_weight(self) -> Optional[float]:
+        """
+        导数算符的共形权重是基础算符的权重加上导数阶数
+
+        在共形场论中，每次求导会使共形权重增加 1
+
+        如果基础算符的共形权重未定义，则返回 None
+        """
+        base_weight = getattr(self._base, 'conformal_weight', None)
+
+        if base_weight is None:
+            return None
+
+        return base_weight + self._order
+
     def __eq__(self, other):
         """相等性比较"""
         if not isinstance(other, DerivativeOperator):
@@ -220,6 +236,24 @@ class DerivativeOperator(Operator):
         if self._order == 1:
             return f"d({self._base})"
         return f"d^{self._order}({self._base})"
+
+    def _latex(self, printer=None):
+        """
+        LaTeX 渲染
+
+        返回 LaTeX 格式的字符串，用于 sympy 的 latex() 函数。
+
+        Returns:
+            LaTeX 格式的字符串
+        """
+        from sympy import latex
+        base_latex = latex(self._base)
+
+        if self._order == 1:
+            return rf"\partial {base_latex}"
+        else:
+            return rf"\partial^{{{self._order}}} {base_latex}"
+
 
 
 class NormalOrderedOperator(Operator):
@@ -273,6 +307,21 @@ class NormalOrderedOperator(Operator):
         """
         return (self._left.parity + self._right.parity) % 2
 
+    @property
+    def conformal_weight(self) -> Optional[float]:
+        """
+        正规序算符的共形权重是两个算符的共形权重之和
+
+        如果任一算符的共形权重未定义，则返回 None
+        """
+        left_weight = getattr(self._left, 'conformal_weight', None)
+        right_weight = getattr(self._right, 'conformal_weight', None)
+
+        if left_weight is None or right_weight is None:
+            return None
+
+        return left_weight + right_weight
+
     def __eq__(self, other):
         """相等性比较"""
         if not isinstance(other, NormalOrderedOperator):
@@ -286,6 +335,25 @@ class NormalOrderedOperator(Operator):
     def __repr__(self):
         """字符串表示"""
         return f"NO({self._left}, {self._right})"
+
+    def _latex(self, printer=None):
+        """
+        LaTeX 渲染
+
+        返回 LaTeX 格式的字符串，用于 sympy 的 latex() 函数。
+
+        使用括号表示正规序：NO(A,B) = (AB)
+
+        Returns:
+            LaTeX 格式的字符串
+        """
+        from sympy import latex
+        left_latex = latex(self._left)
+        right_latex = latex(self._right)
+
+        # 使用括号表示正规序
+        return rf"\left({left_latex} {right_latex}\right)"
+
 
 
 # 辅助函数

@@ -296,3 +296,36 @@ class OPEData:
                 terms.append(f"({coeff})/(z-w)^{n}")
 
         return " + ".join(terms)
+
+    def _repr_latex_(self) -> str:
+        """
+        Jupyter Notebook 的 LaTeX 渲染
+
+        返回 LaTeX 格式的字符串，用于在 Jupyter 中自动渲染。
+
+        Returns:
+            LaTeX 格式的字符串
+        """
+        if self.is_zero():
+            return r"$0$"
+
+        terms = []
+        for n in sorted(self._poles.keys(), reverse=True):
+            coeff = self._poles[n]
+
+            # 将系数转换为 LaTeX
+            from sympy import latex
+            coeff_latex = latex(coeff)
+
+            # 构建分式
+            if n == 1:
+                terms.append(rf"\frac{{{coeff_latex}}}{{z-w}}")
+            else:
+                terms.append(rf"\frac{{{coeff_latex}}}{{(z-w)^{{{n}}}}}")
+
+        # 用 + 连接各项
+        latex_str = " + ".join(terms)
+
+        # 包装在 $ $ 中
+        return f"${latex_str}$"
+

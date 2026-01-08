@@ -66,6 +66,24 @@ class ConstantOperator(Operator):
         """字符串表示"""
         return f"ConstantOperator('{self._name}')"
 
+    def _latex(self, printer=None):
+        """
+        LaTeX 渲染
+
+        返回 LaTeX 格式的字符串，用于 sympy 的 latex() 函数。
+
+        Returns:
+            LaTeX 格式的字符串
+        """
+        # One 渲染为 1，Zero 渲染为 0
+        if self._name == "One":
+            return "1"
+        elif self._name == "Zero":
+            return "0"
+        else:
+            return self._name
+
+
 
 # 预定义的常数算符实例
 

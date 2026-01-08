@@ -44,6 +44,12 @@ from .api import OPE, NO, bracket, MakeOPE
 # Simplification 模块
 from .simplify import simplify, canonicalize, collect_normal_ordered_terms
 
+# Jacobi 恒等式模块
+from .jacobi import check_jacobi_identity, verify_jacobi_identity
+
+# 缓存模块
+from .cache import get_ope_cache
+
 __all__ = [
     # Version info
     "__version__",
@@ -85,4 +91,9 @@ __all__ = [
     "simplify",
     "canonicalize",
     "collect_normal_ordered_terms",
+    # Jacobi identity
+    "check_jacobi_identity",
+    "verify_jacobi_identity",
+    # Cache
+    "get_ope_cache",
 ]

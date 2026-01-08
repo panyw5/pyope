@@ -172,14 +172,50 @@ def _simplify_normal_ordered(no_op: NormalOrderedOperator) -> Any:
         pass
 
     # 检查算符顺序
-    if isinstance(left, BasisOperator) and isinstance(right, BasisOperator):
+    # 只有当左右都是 BasisOperator 或 DerivativeOperator 时才进行交换
+    # 嵌套的 NO 已经在上面处理过了（虽然目前是 pass）
+    if isinstance(left, (BasisOperator, DerivativeOperator)) and \
+       isinstance(right, (BasisOperator, DerivativeOperator)):
+        
         order = ope_registry.compare_operators(left, right)
         if order < 0:
-            # 需要交换顺序
-            # NO(B, A) = SwapSign * NO(A, B) + [B,A] 的奇异部分
-            # 为了保持简单，暂时不交换
-            # 完整实现需要查询 OPE 并使用 NOCommuteHelp
-            pass
+            # 需要交换顺序: NO(B, A) -> NO(A, B) + 修正项
+            # 修正项来自 OPE(B, A) 的极点部分
+            # 公式: NO(B, A) = (-1)^{|A||B|} NO(A, B) + \sum_{n >= 1} rac{1}{n!} \partial^n \{BA\}_n
+            
+            # 1. 计算符号因子 (-1)^{|A||B|}
+            parity_sign = 1
+            if left.parity == 1 and right.parity == 1:
+                parity_sign = -1
+                
+            # 2. 计算修正项
+            # 需要计算 OPE(B, A)
+            from .api import OPE
+            from .operators import d as derivative_operator
+            
+            # 注意：这里 left 是 B，right 是 A
+            # 我们要计算 OPE(left, right)
+            try:
+                ope_data = OPE(left, right)
+                correction = 0
+                
+                # 遍历极点，计算 rac{1}{n!} \partial^n \{BA\}_n
+                # 注意：OPEData 中的极点系数就是 \{BA\}_n
+                for n, coeff in ope_data.poles.items():
+                    if n >= 1:
+                        term = derivative_operator(coeff, n) / sp.factorial(n)
+                        correction += term
+                        
+                # 递归化简修正项
+                correction = simplify(correction)
+                
+                # 返回交换后的结果
+                return parity_sign * NO(right, left) + correction
+                
+            except Exception as e:
+                # 如果无法计算 OPE（例如未定义），则不交换，或者发出警告
+                # 目前保持原样
+                pass
 
     # 创建简化的 NO
     return NO(left, right)

@@ -117,7 +117,7 @@ class OPERegistry:
             < 0 如果 left 和 right 需要交换
         """
         # 处理正规序算符：NO 总是排在最后
-        from .operators import NormalOrderedOperator
+        from .operators import NormalOrderedOperator, DerivativeOperator, BasisOperator
 
         if isinstance(right, NormalOrderedOperator):
             return 1  # left < right（left 应该在前）
@@ -125,23 +125,44 @@ class OPERegistry:
         if isinstance(left, NormalOrderedOperator):
             return -1  # left > right（需要交换）
 
+        # 处理导数算符
+        # 比较规则：
+        # 1. 比较基础算符 (base operator)
+        # 2. 如果基础算符相同，比较导数阶数 (order)
+        
+        left_base = left
+        left_order = 0
+        if isinstance(left, DerivativeOperator):
+            left_base = left.base
+            left_order = left.order
+            
+        right_base = right
+        right_order = 0
+        if isinstance(right, DerivativeOperator):
+            right_base = right.base
+            right_order = right.order
+            
+        # 比较基础算符
         # 获取位置
-        left_pos = self._positions.get(left)
-        right_pos = self._positions.get(right)
+        left_pos = self._positions.get(left_base)
+        right_pos = self._positions.get(right_base)
 
         # 如果两个算符都已注册，比较位置
         if left_pos is not None and right_pos is not None:
             diff = right_pos - left_pos
-            if diff == 0:
-                # 位置相同，使用 Python 的比较
-                if left == right:
-                    return 0
-                else:
-                    # 使用字符串比较作为 fallback
-                    return -1 if str(left) < str(right) else 1
-            return diff
-
-        # 如果至少有一个未注册，假设它们已经有序
+            if diff != 0:
+                return diff
+        else:
+            # 如果至少有一个未注册，使用字符串比较作为 fallback
+            # 但如果它们是同一个算符（即使未注册），则继续比较阶数
+            if left_base != right_base:
+                return -1 if str(left_base) < str(right_base) else 1
+        
+        # 基础算符相同，比较导数阶数
+        # 阶数小的在前
+        if left_order != right_order:
+            return right_order - left_order # 如果 right > left (order), 返回正数
+            
         return 0
 
     def define_ope(self, left: Any, right: Any, ope_data: OPEData) -> None:
