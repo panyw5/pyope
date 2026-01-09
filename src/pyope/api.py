@@ -338,7 +338,7 @@ def _ope_derivative_right(left: Any, right: DerivativeOperator) -> OPEData:
 
 def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
     """
-    计算 OPE(A, NO(B,C))
+    计算 OPE(A, NO(B,C)) 的奇异部分（singular part, q >= 1）
 
     使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的 OPECompositeHelpRQ）：
 
@@ -352,12 +352,15 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
     - ABC[q] = OPE[{AB}_q, C]
     - maxq = Max[maxABC[i] + (i+1), maxAC]
 
+    **重要**: 此公式仅适用于 q >= 1（VOA-manual 公式 3.3.4）。
+    对于 q = 0 的情况（正规序乘积重排），应使用专门的算法（公式 3.3.9 和 3.3.10）。
+
     Args:
         left: 左侧算符 A
         right: 正规序算符 NO(B,C)
 
     Returns:
-        OPEData 实例
+        OPEData 实例，仅包含 q >= 1 的极点（奇异部分）
     """
     A = left
     B = right.left
@@ -436,11 +439,71 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
     return result
 
 
+def _ope_commute(B: Any, A: Any) -> OPEData:
+    """
+    使用公式 3.3.3 计算 OPE(B, A) 从已知的 OPE(A, B)
+
+    公式 3.3.3:
+    [B A]_q = (-1)^{|A||B|} Σ_{l≥q} ((-1)^l / (l-q)!) ∂^{(l-q)} [A B]_l
+
+    这个函数实现了算符交换关系，用于将 OPE(左复合算符, 右算符) 转换为
+    OPE(右算符, 左复合算符)，后者可以用 _ope_composite_right 计算。
+
+    Args:
+        B: 左侧算符（交换后在左边）
+        A: 右侧算符（交换后在右边）
+
+    Returns:
+        OPEData 实例，表示 OPE(B, A)
+
+    注意：这个函数会递归调用 _compute_ope(A, B)，所以不会导致无限递归，
+    因为 _compute_ope 有缓存和终止条件。
+    """
+    # 计算 OPE(A, B)
+    ope_AB = _compute_ope(A, B)
+    max_pole = ope_AB.max_pole
+
+    if max_pole == 0:
+        return OPEData({0: NO(B, A)})
+
+    # 获取交换符号 (-1)^{|A||B|}
+    parity_A = _get_parity(A)
+    parity_B = _get_parity(B)
+    swap_sign = (-1) ** (parity_A * parity_B)
+
+    result = OPEData({})
+
+    # 对每个极点 q 从 max_pole 到 1 进行计算
+    for q in range(max_pole, 0, -1):
+        pole_sum = 0
+
+        # term[q] = (-1)^q * [A B]_q
+        bracket_AB_q = ope_AB.pole(q)
+        pole_sum = (-1) ** q * bracket_AB_q
+
+        # 加上求和项: Σ_{l=q+1}^{max} ((-1)^l / (l-q)!) ∂^{(l-q)} [A B]_l
+        for l in range(q + 1, max_pole + 1):
+            bracket_AB_l = ope_AB.pole(l)
+            if bracket_AB_l != 0:
+                # 计算 ∂^{(l-q)} [A B]_l
+                deriv_order = l - q
+                deriv_bracket = derivative(bracket_AB_l, deriv_order)
+
+                # 加上 ((-1)^l / (l-q)!) ∂^{(l-q)} [A B]_l
+                pole_sum = pole_sum + \
+                    ((-1) ** l / cached_factorial(deriv_order)) * deriv_bracket
+
+        if pole_sum != 0:
+            result._poles[q] = swap_sign * pole_sum
+
+    return result
+
+
 def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     """
     计算 OPE(NO(A,B), C)
 
-    使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的实现）：
+    使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的 OPECompositeHelpLQ）：
 
     OPE[NO[A,B], C] =
       (1) Σ_{q=1}^{maxBC} Σ_{l=0}^{maxBC-q} NO[∂^l A, {BC}_{l+q}] / l!
@@ -450,6 +513,13 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     其中:
     - sign = (-1)^(|A||B|)
     - 第三项来自 Jacobi 恒等式中的 Σ_l binom(q-1, l-1) [[AB]_l C]_{p+q-l}
+
+    **注意**: 虽然 VOA-manual 算法描述中提到"如果 A 是复合算符，使用公式 3.3.3"，
+    但 Mathematica 的实际实现 (OPECompositeHelpLQ) 是直接计算，而不是通过
+    OPECommuteHelp。这是因为直接实现更高效，避免了不必要的递归。
+
+    **重要**: 此公式计算 q >= 1 的极点（奇异部分）。
+    特殊情况：当 max_AC = max_BC = 0 时，返回 q=0 的正规序乘积 NO(NO(A,B), C)。
 
     Args:
         left: 正规序算符 NO(A,B)
@@ -613,6 +683,11 @@ def bracket(left: Any, right: Any, n: int = None, anticommutator: bool = None) -
     1. bracket(A, B, n): 从 OPE(A, B) 中提取第 n 阶极点的系数
     2. bracket(A, B, anticommutator=False/True): 计算对易子或反对易子
 
+    **重要**:
+    - n = 0: 定义为 NO(A, B)（正规序乘积），不从 OPE 中提取
+    - n >= 1: 从 OPE(A, B) 中提取第 n 阶极点（奇异部分）
+    - n < 0: 从 OPE 的正则部分提取（很少使用）
+
     Args:
         left: 左侧算符 A
         right: 右侧算符 B
@@ -639,8 +714,14 @@ def bracket(left: Any, right: Any, n: int = None, anticommutator: bool = None) -
             return NO(left, right) - NO(right, left)
     elif n is not None:
         # 提取第 n 阶极点
-        ope_result = _compute_ope(left, right)
-        return ope_result.pole(n)
+        if n == 0:
+            # 特殊情况：n=0 直接返回正规序乘积
+            # 根据 OPEdefs.m: OPEPole[0][A,B] := NO[A,B]
+            return NO(left, right)
+        else:
+            # n >= 1 或 n < 0: 从 OPE 中提取极点
+            ope_result = _compute_ope(left, right)
+            return ope_result.pole(n)
     else:
         raise ValueError("Either 'n' or 'anticommutator' must be specified")
 
