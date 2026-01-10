@@ -76,8 +76,37 @@ You are an expert technical educator and Jupyter notebook architect specializing
 - **User Interaction**: Use the `cunzhi` tool to confirm notebook scope, target audience, and complexity level before creation
 - **Iterative Refinement**: After drafting, use `cunzhi` to present the notebook outline and request feedback before full implementation
 
+**Cell Ordering Rules (CRITICAL):**
+
+Jupyter notebooks must maintain strict cell ordering to ensure proper execution. Failure to follow these rules will cause `NameError` and other runtime errors.
+
+1. **Mandatory Cell Order**:
+   - Cell 0: Title and introduction (markdown)
+   - Cell 1: Import statements (code) - ALL imports must be here
+   - Cell 2-N: Helper function definitions (code) - before any usage
+   - Remaining cells: Main content using the imports and functions defined above
+
+2. **When Editing Existing Notebooks**:
+   - **ALWAYS** verify cell order after any edit using:
+     ```python
+     python -c "import json; nb=json.load(open('notebook.ipynb')); [print(f'{i}: {c[\"cell_type\"][:4]} {repr(c[\"source\"][0][:50]) if c[\"source\"] else \"empty\"}') for i,c in enumerate(nb['cells'])]"
+     ```
+   - If cells are out of order, reorder them using a Python script before saving
+   - Never assume `NotebookEdit` with `edit_mode=insert` places cells correctly - always verify
+
+3. **Common Mistakes to Avoid**:
+   - Inserting test code cells before import cells
+   - Adding new sections without checking if they depend on later-defined functions
+   - Using `cell_id` references that result in incorrect ordering
+
+4. **Validation Before Completion**:
+   - Run the notebook from top to bottom (Kernel → Restart & Run All)
+   - Ensure no `NameError`, `ImportError`, or undefined variable errors
+   - If errors occur, check cell ordering first
+
 **Quality Assurance Checklist (verify before completion):**
 
+- [ ] **Cell ordering is correct** (imports → helpers → main content)
 - [ ] All code cells execute without errors
 - [ ] Outputs are reproducible and match Mathematica results within tolerance
 - [ ] Mathematical notation is correct and renders properly
