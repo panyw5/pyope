@@ -133,6 +133,8 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     5. 处理正规序算符
     6. 返回零 OPE（未定义的情况）
 
+    优化：使用 type() 代替 isinstance() 进行精确类型匹配
+
     Args:
         left: 左侧算符
         right: 右侧算符
@@ -146,16 +148,20 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     if cached_result is not None:
         return cached_result
 
-    # 规则 1: 处理零算符
+    # 获取类型（只获取一次，避免重复调用 type()）
+    left_type = type(left)
+    right_type = type(right)
+
+    # 规则 1: 处理零算符（使用 is 比较更快）
     # OPE(0, B) = 0, OPE(A, 0) = 0
-    if left == 0 or left == Zero or right == 0 or right == Zero:
+    if left == 0 or left is Zero or right == 0 or right is Zero:
         result = OPEData({})
         cache.put(left, right, result)
         return result
 
     # 规则 2: 线性性 - 右侧加法
     # OPE(A, B+C) = OPE(A,B) + OPE(A,C)
-    if isinstance(right, Add):
+    if right_type is Add:
         result = OPEData({})
         for term in right.args:
             result = result + _compute_ope(left, term)
@@ -164,7 +170,7 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
 
     # 规则 3: 线性性 - 左侧加法
     # OPE(A+B, C) = OPE(A,C) + OPE(B,C)
-    if isinstance(left, Add):
+    if left_type is Add:
         result = OPEData({})
         for term in left.args:
             result = result + _compute_ope(term, right)
@@ -173,7 +179,7 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
 
     # 规则 4: 标量乘法 - 右侧
     # OPE(A, c*B) = c*OPE(A,B)
-    if isinstance(right, Mul):
+    if right_type is Mul:
         coeff, op = extract_scalar_operator(right)
         if coeff != 1:
             result = coeff * _compute_ope(left, op)
@@ -182,7 +188,7 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
 
     # 规则 5: 标量乘法 - 左侧
     # OPE(c*A, B) = c*OPE(A,B)
-    if isinstance(left, Mul):
+    if left_type is Mul:
         coeff, op = extract_scalar_operator(left)
         if coeff != 1:
             result = coeff * _compute_ope(op, right)
@@ -191,21 +197,21 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
 
     # 规则 6: 左侧导数算符
     # [∂A, B]_q = -(q-1)[A,B]_{q-1}
-    if isinstance(left, DerivativeOperator):
+    if left_type is DerivativeOperator:
         result = _ope_derivative_left(left, right)
         cache.put(left, right, result)
         return result
 
     # 规则 7: 右侧导数算符
     # [A, ∂B]_q = (q-1)[A,B]_{q-1} + ∂[A,B]_q
-    if isinstance(right, DerivativeOperator):
+    if right_type is DerivativeOperator:
         result = _ope_derivative_right(left, right)
         cache.put(left, right, result)
         return result
 
     # 规则 8: 查询注册表
     # 对于基本算符，从注册表查询 OPE
-    if isinstance(left, BasisOperator) and isinstance(right, BasisOperator):
+    if left_type is BasisOperator and right_type is BasisOperator:
         # 首先检查算符顺序
         order = ope_registry.compare_operators(left, right)
 
@@ -227,14 +233,14 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
 
     # 规则 9: 右侧正规序算符
     # OPE(A, NO(B,C)) 使用 Jacobi 恒等式
-    if isinstance(right, NormalOrderedOperator):
+    if right_type is NormalOrderedOperator:
         result = _ope_composite_right(left, right)
         cache.put(left, right, result)
         return result
 
     # 规则 10: 左侧正规序算符
     # OPE(NO(A,B), C) 使用 Jacobi 恒等式
-    if isinstance(left, NormalOrderedOperator):
+    if left_type is NormalOrderedOperator:
         result = _ope_composite_left(left, right)
         cache.put(left, right, result)
         return result

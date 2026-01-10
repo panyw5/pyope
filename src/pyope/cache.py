@@ -2,12 +2,41 @@
 性能优化：缓存模块
 
 本模块提供 OPE 计算的缓存机制，以避免重复计算。
+
+优化策略：
+1. 使用延迟导入避免函数内部重复导入开销
+2. 使用唯一的元组键避免哈希冲突
+3. 缓存数学函数计算结果
 """
 
 from functools import lru_cache
-from typing import Any, Tuple, Hashable
+from typing import Any, Tuple, Hashable, Optional
 import sympy as sp
 from sympy import Add, Mul
+
+# 延迟导入的类型引用（避免循环导入，只导入一次）
+_types_loaded = False
+_BasisOperator = None
+_DerivativeOperator = None
+_NormalOrderedOperator = None
+_ConstantOperator = None
+_extract_scalar_operator = None
+
+
+def _ensure_types_loaded():
+    """确保类型引用已加载（延迟导入，只执行一次）"""
+    global _types_loaded, _BasisOperator, _DerivativeOperator, _NormalOrderedOperator
+    global _ConstantOperator, _extract_scalar_operator
+    if not _types_loaded:
+        from .operators import BasisOperator, DerivativeOperator, NormalOrderedOperator
+        from .constants import ConstantOperator
+        from .local_operator import extract_scalar_operator
+        _BasisOperator = BasisOperator
+        _DerivativeOperator = DerivativeOperator
+        _NormalOrderedOperator = NormalOrderedOperator
+        _ConstantOperator = ConstantOperator
+        _extract_scalar_operator = extract_scalar_operator
+        _types_loaded = True
 
 
 def make_operator_key(expr: Any) -> Hashable:
@@ -15,6 +44,7 @@ def make_operator_key(expr: Any) -> Hashable:
     为算符表达式创建可哈希的键
 
     将算符表达式转换为可用于缓存键的元组形式。
+    优化版本：使用延迟导入避免每次调用时的导入开销。
 
     Args:
         expr: 算符或表达式
@@ -29,34 +59,30 @@ def make_operator_key(expr: Any) -> Hashable:
         >>> isinstance(key, tuple)
         True
     """
-    from .operators import (
-        BasisOperator,
-        DerivativeOperator,
-        NormalOrderedOperator
-    )
-    from .constants import ConstantOperator
+    # 确保类型已加载
+    _ensure_types_loaded()
 
     # 处理 None 和零
     if expr is None or expr == 0:
         return ('zero',)
 
     # BasisOperator
-    if isinstance(expr, BasisOperator):
+    if isinstance(expr, _BasisOperator):
         return ('basis', expr.name, expr.is_bosonic, expr._conformal_weight)
 
     # DerivativeOperator
-    if isinstance(expr, DerivativeOperator):
+    if isinstance(expr, _DerivativeOperator):
         base_key = make_operator_key(expr.base)
         return ('deriv', base_key, expr.order)
 
     # NormalOrderedOperator
-    if isinstance(expr, NormalOrderedOperator):
+    if isinstance(expr, _NormalOrderedOperator):
         left_key = make_operator_key(expr.left)
         right_key = make_operator_key(expr.right)
         return ('no', left_key, right_key)
 
     # ConstantOperator
-    if isinstance(expr, ConstantOperator):
+    if isinstance(expr, _ConstantOperator):
         return ('const', expr.name)
 
     # Sympy Add (加法)
@@ -71,12 +97,10 @@ def make_operator_key(expr: Any) -> Hashable:
     # Sympy Mul (乘法)
     if isinstance(expr, Mul):
         # 提取标量和算符
-        from .local_operator import extract_scalar_operator
-        coeff, op = extract_scalar_operator(expr)
+        coeff, op = _extract_scalar_operator(expr)
 
         # 如果是纯标量
         if coeff == expr:
-            # 尝试将 sympy 表达式转换为字符串
             return ('scalar', str(expr))
 
         # 标量 * 算符
@@ -90,7 +114,7 @@ def make_operator_key(expr: Any) -> Hashable:
     # 其他类型：尝试使用字符串表示
     try:
         return ('other', str(expr), type(expr).__name__)
-    except:
+    except Exception:
         # 最后的兜底：使用 id
         return ('id', id(expr))
 
