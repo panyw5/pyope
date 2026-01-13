@@ -7,6 +7,7 @@ import pytest
 from pyope import BasisOperator, OPE, NO, bracket
 from pyope.api import derivative
 from pyope.registry import ope_registry
+from pyope.ope_data import OPEData
 
 
 def test_composite_left_sign_term1():
@@ -24,7 +25,7 @@ def test_composite_left_sign_term1():
     C = BasisOperator("C", bosonic=True)
 
     # 定义 OPE(B, C) = 1/(z^2) * A
-    ope_registry.register_ope(B, C, {2: A})
+    ope_registry.define_ope(B, C, OPEData({2: A}))
 
     # 计算 OPE(NO(A,B), C)
     result = OPE(NO(A, B), C)
@@ -55,7 +56,7 @@ def test_composite_left_sign_term2():
     C = BasisOperator("C", bosonic=True)
 
     # 定义 OPE(A, C) = 1/(z^2) * B
-    ope_registry.register_ope(A, C, {2: B})
+    ope_registry.define_ope(A, C, OPEData({2: B}))
 
     # 计算 OPE(NO(A,B), C)
     # sign = (-1)^(0*0) = 1 (两个玻色子)
@@ -71,7 +72,7 @@ def test_composite_left_sign_term2():
     phi = BasisOperator("phi", bosonic=True)
 
     # 定义 OPE(psi, phi) = 1/(z^2) * chi
-    ope_registry.register_ope(psi, phi, {2: chi})
+    ope_registry.define_ope(psi, phi, OPEData({2: chi}))
 
     # 计算 OPE(NO(psi, chi), phi)
     # sign = (-1)^(1*1) = -1 (两个费米子)
@@ -99,10 +100,10 @@ def test_composite_left_sign_term3():
     D = BasisOperator("D", bosonic=True)
 
     # 定义 OPE(A, C) = 1/(z^2) * D
-    ope_registry.register_ope(A, C, {2: D})
+    ope_registry.define_ope(A, C, OPEData({2: D}))
 
     # 定义 OPE(B, D) = 1/(z^1) * A
-    ope_registry.register_ope(B, D, {1: A})
+    ope_registry.define_ope(B, D, OPEData({1: A}))
 
     # 计算 OPE(NO(A,B), C)
     result = OPE(NO(A, B), C)

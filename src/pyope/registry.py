@@ -178,6 +178,12 @@ class OPERegistry:
             >>> T = BasisOperator("T", bosonic=True)
             >>> registry.define_ope(T, T, OPEData({2: 2*T, 1: d(T)}))
         """
+        # 自动注册算符（如果它们是 BasisOperator 且未注册）
+        if isinstance(left, BasisOperator) and not self.is_registered(left):
+            self.register_operator(left, left.parity)
+        if isinstance(right, BasisOperator) and not self.is_registered(right):
+            self.register_operator(right, right.parity)
+
         # 创建规范化的键（使用算符的字符串表示）
         key = self._make_key(left, right)
         self._opes[key] = ope_data
