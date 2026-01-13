@@ -249,6 +249,10 @@ class OPERegistry:
         self._positions.clear()
         self._position_counter = 0
 
+        # 清空全局 OPE 缓存
+        from .cache import get_ope_cache
+        get_ope_cache().clear()
+
     def __repr__(self) -> str:
         """字符串表示"""
         return f"OPERegistry(operators={len(self._parities)}, opes={len(self._opes)})"
