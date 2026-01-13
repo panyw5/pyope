@@ -154,6 +154,15 @@ class OPECache:
         self._access_count = {}
         self.hits = 0
         self.misses = 0
+        self.enabled = True  # 缓存启用标志
+
+    def disable(self):
+        """禁用缓存（用于测试）"""
+        self.enabled = False
+
+    def enable(self):
+        """启用缓存"""
+        self.enabled = True
 
     def get(self, left: Any, right: Any):
         """
@@ -166,6 +175,10 @@ class OPECache:
         Returns:
             缓存的 OPEData 或 None（未命中）
         """
+        if not self.enabled:
+            self.misses += 1
+            return None
+
         try:
             key = make_ope_cache_key(left, right)
             if key in self._cache:
@@ -189,6 +202,9 @@ class OPECache:
             right: 右侧算符
             result: OPEData 结果
         """
+        if not self.enabled:
+            return
+
         try:
             # 检查缓存大小
             if len(self._cache) >= self.maxsize:
