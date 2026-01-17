@@ -704,6 +704,113 @@ class QuantumNumberGrouper:
         """
         return self.group_operators(fock_basis, only_non_negative_m)
 
+    def group_by_m_only(
+        self,
+        operators: List[Any],
+        only_non_negative_m: bool = False
+    ) -> Dict[Fraction, List[Any]]:
+        """
+        只按 m 量子数分组（对应 Mathematica 的 mgroupstates）
+
+        这是分块对角化的第一层：按 m 守恒荷将态空间分割为独立扇区。
+        每个扇区内的态具有相同的 m 量子数，但可能有不同的 r 量子数。
+
+        物理意义：m 对应 osp(2|2) 中 gl(1) 子代数的荷，是加性守恒量。
+        利用守恒性将系数矩阵自然分块对角化，从而降低计算复杂度。
+
+        Args:
+            operators: 算符列表
+            only_non_negative_m: 是否只保留 m≥0 的算符（利用共轭对称性）
+
+        Returns:
+            字典 {m: [算符列表]}，键按 m 值排序
+
+        Example:
+            >>> grouper.group_by_m_only(operators)
+            {
+                Fraction(-3, 2): [Op1, Op2],
+                Fraction(0): [Op3, Op4, Op5],
+                Fraction(3, 2): [Op6]
+            }
+        """
+        groups = defaultdict(list)
+
+        for op in operators:
+            m, _ = self.quantum_calculator.get_quantum_numbers(op)
+
+            # 如果只保留 m≥0 的算符
+            if only_non_negative_m and m < 0:
+                continue
+
+            groups[m].append(op)
+
+        # 返回排序后的字典（Python 3.7+ 保证插入顺序）
+        return dict(sorted(groups.items()))
+
+    def group_by_r_within_m(
+        self,
+        states_by_m: Dict[Fraction, List[Any]]
+    ) -> Dict[Tuple[Fraction, Fraction], List[Any]]:
+        """
+        在 m 扇区内进一步按 r 量子数分组（对应 Mathematica 的 fullgrouping）
+
+        这是分块对角化的第二层：在每个 m 扇区内，按 r 守恒荷再次细分。
+        最终得到 (m, r) 二维扇区结构，每个扇区对应矩阵的一个独立块。
+
+        Args:
+            states_by_m: 按 m 分组的字典 {m: [states]}
+
+        Returns:
+            字典 {(m, r): [算符列表]}
+
+        Example:
+            >>> states_by_m = grouper.group_by_m_only(operators)
+            >>> grouper.group_by_r_within_m(states_by_m)
+            {
+                (Fraction(0), Fraction(-1, 2)): [Op1],
+                (Fraction(0), Fraction(1, 2)): [Op2, Op3],
+                (Fraction(3, 2), Fraction(0)): [Op4]
+            }
+        """
+        groups = {}
+
+        for m, states_in_m_sector in states_by_m.items():
+            for state in states_in_m_sector:
+                m_check, r = self.quantum_calculator.get_quantum_numbers(state)
+                assert m_check == m, f"量子数不一致: 期望 m={m}, 实际 m={m_check}"
+
+                key = (m, r)
+                if key not in groups:
+                    groups[key] = []
+                groups[key].append(state)
+
+        # 按 (m, r) 排序
+        return dict(sorted(groups.items()))
+
+    def get_m_values(
+        self,
+        operators: List[Any],
+        only_non_negative_m: bool = False
+    ) -> List[Fraction]:
+        """
+        获取所有出现的 m 量子数值（对应 Mathematica 的 mparam）
+
+        Args:
+            operators: 算符列表
+            only_non_negative_m: 是否只保留 m≥0
+
+        Returns:
+            排序后的 m 值列表
+        """
+        m_values = set()
+        for op in operators:
+            m, _ = self.quantum_calculator.get_quantum_numbers(op)
+            if only_non_negative_m and m < 0:
+                continue
+            m_values.add(m)
+
+        return sorted(m_values)
+
 
 class GroupedNullStatesCalculator:
     """
@@ -1041,12 +1148,14 @@ class OperatorEnumerator:
         对于每个生成元 g，如果 weight(g) + n = target_weight，
         则生成 ∂^n g
 
+        算符按照注册顺序排序（对应 Mathematica 的 opfields 顺序）
+
         Args:
             weight: 目标权重
             max_derivative_order: 最大导数阶数
 
         Returns:
-            该权重下的所有算符列表
+            该权重下的所有算符列表（已排序）
         """
         operators = []
 
@@ -1066,6 +1175,13 @@ class OperatorEnumerator:
                         operators.append(base_op)
                     else:
                         operators.append(d(base_op, deriv_order_int))
+
+        # 使用 ope_registry 的排序机制对算符排序
+        # 这确保了算符按照注册顺序（对应 Mathematica 的 opfields）排列
+        from .registry import ope_registry
+        from functools import cmp_to_key
+
+        operators.sort(key=cmp_to_key(lambda x, y: -ope_registry.compare_operators(x, y)))
 
         return operators
 

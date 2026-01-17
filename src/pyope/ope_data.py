@@ -252,18 +252,21 @@ class OPEData:
 
         return True
 
-    def simplify(self, simplify_func: Optional[Callable] = None) -> 'OPEData':
+    def simplify(self, simplify_func: Optional[Callable] = None, expand_derivatives: bool = True) -> 'OPEData':
         """
         简化 OPE 中的表达式
 
         Args:
-            simplify_func: 简化函数（默认使用 sympy.simplify）
+            simplify_func: 简化函数（默认使用 pyope.simplify）
+            expand_derivatives: 是否自动展开导数（默认 True）
 
         Returns:
             简化后的新 OPEData
         """
         if simplify_func is None:
-            simplify_func = sp.simplify
+            # 使用 pyope 的 simplify 而不是 sympy 的
+            from .simplify import simplify as pyope_simplify
+            simplify_func = lambda expr: pyope_simplify(expr, expand_derivatives=expand_derivatives)
 
         result_poles = {}
         for n, coeff in self._poles.items():

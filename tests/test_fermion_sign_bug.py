@@ -8,13 +8,15 @@ from pyope import BasisOperator, OPE, NO, Bosonic, Fermionic, One
 from fractions import Fraction
 
 # 定义算符
-b = BasisOperator('b', bosonic=True, conformal_weight=Fraction(2))
-c = BasisOperator('c', bosonic=True, conformal_weight=Fraction(-1))
-beta = BasisOperator('β', bosonic=False, conformal_weight=Fraction(3, 2))
-gamma = BasisOperator('γ', bosonic=False, conformal_weight=Fraction(-1, 2))
+# bc 系统：费米子（鬼场）
+b = BasisOperator('b', bosonic=False, conformal_weight=Fraction(2))
+c = BasisOperator('c', bosonic=False, conformal_weight=Fraction(-1))
+# βγ 系统：玻色子
+beta = BasisOperator('β', bosonic=True, conformal_weight=Fraction(3, 2))
+gamma = BasisOperator('γ', bosonic=True, conformal_weight=Fraction(-1, 2))
 
-Bosonic(b, c)
-Fermionic(beta, gamma)
+Fermionic(b, c)  # 修正：b, c 是费米子
+Bosonic(beta, gamma)  # 修正：beta, gamma 是玻色子
 
 # 定义基本 OPE
 OPE[b, c] = OPE.make([One])

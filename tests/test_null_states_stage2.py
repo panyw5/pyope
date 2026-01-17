@@ -36,8 +36,8 @@ beta = BasisOperator('β', bosonic=True, conformal_weight=Fraction(3, 2))
 gamma = BasisOperator('γ', bosonic=True, conformal_weight=Fraction(-1, 2))
 
 # 注册统计性
-Bosonic(b, c)
-Fermionic(beta, gamma)
+Fermionic(b, c)  # 修正：b 和 c 是费米子（bosonic=False）
+Bosonic(beta, gamma)  # 修正：beta 和 gamma 是玻色子（bosonic=True）
 
 free_fields = [b, c, beta, gamma]
 

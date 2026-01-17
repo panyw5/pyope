@@ -1,0 +1,17 @@
+{
+  "session_id": "ai-1768272863-64987",
+  "ccb_session_id": "ai-1768272863-64987",
+  "runtime_dir": "/var/folders/65/5rshty290gzg25m1qkfyvrqh0000gn/T/claude-ai-lelouch/ai-1768272863-64987/opencode",
+  "terminal": "wezterm",
+  "tmux_session": null,
+  "pane_id": "1",
+  "pane_title_marker": "CCB-Opencode",
+  "work_dir": "/Users/lelouch/pyope",
+  "active": false,
+  "started_at": "2026-01-13 10:54:23",
+  "start_cmd": "opencode; code=$?; echo; echo \"[opencode] exited with code $code. Press Enter to close...\"; read -r _; exit $code",
+  "opencode_session_id": "ses_44ab2cde4ffetUyPiu1Q59Lgiz",
+  "opencode_project_id": "464656ec2373a25ee791609ef31518123dcff0f5",
+  "updated_at": "2026-01-13 14:01:36",
+  "ended_at": "2026-01-13 16:33:54"
+}
