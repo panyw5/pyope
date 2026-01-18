@@ -496,8 +496,10 @@ def _ope_commute(B: Any, A: Any) -> OPEData:
                 deriv_bracket = derivative(bracket_AB_l, deriv_order)
 
                 # 加上 ((-1)^l / (l-q)!) ∂^{(l-q)} [A B]_l
-                pole_sum = pole_sum + \
-                    ((-1) ** l / cached_factorial(deriv_order)) * deriv_bracket
+                pole_sum = (
+                    pole_sum
+                    + ((-1) ** l / cached_factorial(deriv_order)) * deriv_bracket
+                )
 
         if pole_sum != 0:
             result._poles[q] = swap_sign * pole_sum
@@ -787,6 +789,50 @@ def NO(left: Any, right: Any) -> Any:
         raise TypeError(
             f"NO requires Operator instances for right operand, got {type(right)}"
         )
+
+    # 特殊情况：算符与自身的正规序 NO(A, A)
+    # 根据 voa-manual.md 公式 (2.3.17)，费米子需要特殊处理
+    if left == right:
+        ope_result = _compute_ope(left, right)
+
+        # 如果 OPE 有 0 阶极点，直接返回
+        pole_0 = ope_result.pole(0)
+        if pole_0 != 0:
+            return pole_0
+
+        # 如果没有 0 阶极点，检查是否为费米子
+        from .local_operator import get_operator_parity
+
+        parity = get_operator_parity(left)
+
+        if parity % 2 == 1:
+            # 费米子：应用公式 (2.3.17)
+            # [AA]_0 = sum_{k>=0} a_k ∂^{2k+1} [AA]_{2k+1}
+            # 其中 a_k 是 Bernoulli 系数
+            max_pole = ope_result.max_pole
+
+            if max_pole == 0:
+                return 0
+
+            # Bernoulli 系数: a_0=1/2, a_1=-1/24, a_2=1/240, a_3=-17/40320
+            bernoulli_coeffs = [
+                sp.Rational(1, 2),
+                sp.Rational(-1, 24),
+                sp.Rational(1, 240),
+                sp.Rational(-17, 40320),
+            ]
+
+            result = 0
+            for k in range(len(bernoulli_coeffs)):
+                pole_index = 2 * k + 1
+                if pole_index <= max_pole:
+                    bracket = ope_result.pole(pole_index)
+                    if bracket != 0:
+                        deriv_bracket = derivative(bracket, 2 * k + 1)
+                        result = result + bernoulli_coeffs[k] * deriv_bracket
+
+            return result
+        # 玻色子：如果没有 0 阶极点，继续创建 NormalOrderedOperator
 
     # 创建正规序算符
     return NormalOrderedOperator(left, right)

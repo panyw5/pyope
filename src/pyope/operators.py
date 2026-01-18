@@ -52,22 +52,44 @@ class BasisOperator(Operator):
         indices: 索引元组（仅当 indexed=True 时使用）
     """
 
-    def __new__(cls, name: str, bosonic: bool = True, indexed: bool = False,
-                conformal_weight: Optional[float] = None, indices: Optional[Tuple] = None,
-                base_name: Optional[str] = None, **assumptions):
+    def __new__(
+        cls,
+        name: str,
+        bosonic: bool = None,
+        fermionic: bool = None,
+        indexed: bool = False,
+        conformal_weight: Optional[float] = None,
+        indices: Optional[Tuple] = None,
+        base_name: Optional[str] = None,
+        **assumptions,
+    ):
         """
         创建基本算符
 
         Args:
             name: 算符名称
-            bosonic: True 表示玻色子，False 表示费米子
+            bosonic: 是否为玻色子（默认 True）
+            fermionic: 是否为费米子（默认 False）
             indexed: 是否支持索引
             conformal_weight: 共形权重
             indices: 索引元组（用于索引算符）
             base_name: 基础名称（用于索引算符保持原始名称）
+
+        Note:
+            - 如果 bosonic 和 fermionic 都未指定，默认为玻色子
+            - 如果同时指定 bosonic 和 fermionic，fermionic 优先
+            - 推荐用法：不指定参数（玻色子）或 fermionic=True（费米子）
         """
         obj = Operator.__new__(cls, name, **assumptions)
-        obj._bosonic = bosonic
+
+        # 处理 bosonic/fermionic 参数
+        if fermionic is not None:
+            obj._bosonic = not fermionic
+        elif bosonic is not None:
+            obj._bosonic = bosonic
+        else:
+            obj._bosonic = True  # 默认为玻色子
+
         obj._indexed = indexed
         obj._conformal_weight = conformal_weight
         obj._indices = indices if indices is not None else ()
@@ -135,16 +157,18 @@ class BasisOperator(Operator):
             indexed=True,
             conformal_weight=self._conformal_weight,
             indices=index,
-            base_name=self._base_name  # 保持原始的 base_name
+            base_name=self._base_name,  # 保持原始的 base_name
         )
 
     def __eq__(self, other):
         """相等性比较"""
         if not isinstance(other, BasisOperator):
             return False
-        return (self._base_name == other._base_name and
-                self._bosonic == other._bosonic and
-                self._indices == other._indices)
+        return (
+            self._base_name == other._base_name
+            and self._bosonic == other._bosonic
+            and self._indices == other._indices
+        )
 
     def __hash__(self):
         """哈希值"""
@@ -214,7 +238,7 @@ class DerivativeOperator(Operator):
 
         如果基础算符的共形权重未定义，则返回 None
         """
-        base_weight = getattr(self._base, 'conformal_weight', None)
+        base_weight = getattr(self._base, "conformal_weight", None)
 
         if base_weight is None:
             return None
@@ -247,13 +271,13 @@ class DerivativeOperator(Operator):
             LaTeX 格式的字符串
         """
         from sympy import latex
+
         base_latex = latex(self._base)
 
         if self._order == 1:
             return rf"\partial {base_latex}"
         else:
             return rf"\partial^{{{self._order}}} {base_latex}"
-
 
 
 class NormalOrderedOperator(Operator):
@@ -314,8 +338,8 @@ class NormalOrderedOperator(Operator):
 
         如果任一算符的共形权重未定义，则返回 None
         """
-        left_weight = getattr(self._left, 'conformal_weight', None)
-        right_weight = getattr(self._right, 'conformal_weight', None)
+        left_weight = getattr(self._left, "conformal_weight", None)
+        right_weight = getattr(self._right, "conformal_weight", None)
 
         if left_weight is None or right_weight is None:
             return None
@@ -348,6 +372,7 @@ class NormalOrderedOperator(Operator):
             LaTeX 格式的字符串
         """
         from sympy import latex
+
         left_latex = latex(self._left)
         right_latex = latex(self._right)
 
@@ -355,8 +380,8 @@ class NormalOrderedOperator(Operator):
         return rf"\left({left_latex} {right_latex}\right)"
 
 
-
 # 辅助函数
+
 
 def d(operator, order: int = 1):
     """
@@ -406,10 +431,16 @@ def d(operator, order: int = 1):
         # 对于乘法：d(c * A) = c * d(A)
         if isinstance(operator, sp.Mul):
             from .local_operator import extract_scalar_operator
+
             coeff, op = extract_scalar_operator(operator)
 
             # 如果算符部分是常数，整个表达式的导数为 0
-            if op == One or op == Zero or isinstance(op, ConstantOperator) or op == sp.Integer(1):
+            if (
+                op == One
+                or op == Zero
+                or isinstance(op, ConstantOperator)
+                or op == sp.Integer(1)
+            ):
                 return 0
 
             return coeff * d(op, order)
