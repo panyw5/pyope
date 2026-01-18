@@ -37,7 +37,7 @@ class TestJacobiIdentityVirasoro:
         self.c = sp.Symbol('c')
 
         # 定义 Virasoro 算符 T
-        self.T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        self.T = BasisOperator("T",  conformal_weight=2)
         Bosonic(self.T)
 
         # 定义 T 的 OPE: T(z)T(w) = c/2/(z-w)^4 + 2T(w)/(z-w)^2 + T'(w)/(z-w)
@@ -156,7 +156,7 @@ class TestJacobiIdentityProperties:
     def test_jacobi_identity_for_simple_operators(self):
         """测试简单算符的 Jacobi 恒等式"""
         # 定义一个简单的流算符 J，共形权重为 1
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         # 定义 J 的 OPE: J(z)J(w) = k/(z-w)^2

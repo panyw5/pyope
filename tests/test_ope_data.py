@@ -20,11 +20,11 @@ class TestOPEData:
 
     def test_create_from_dict(self):
         """Test creating OPE from poles dictionary."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         poles = {
             4: sp.Rational(1, 2),
             2: 2 * T,
-            1: BasisOperator("T'", bosonic=True),
+            1: BasisOperator("T'", ),
         }
         ope = OPEData(poles)
 
@@ -35,8 +35,8 @@ class TestOPEData:
 
     def test_create_from_list(self):
         """Test creating OPE from list (Mathematica style)."""
-        T = BasisOperator("T", bosonic=True)
-        dT = BasisOperator("T'", bosonic=True)
+        T = BasisOperator("T", )
+        dT = BasisOperator("T'", )
         c = sp.Symbol("c")
 
         # List: [pole_4, pole_3, pole_2, pole_1]
@@ -51,7 +51,7 @@ class TestOPEData:
 
     def test_pole_access(self):
         """Test accessing poles."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         ope = OPEData({2: T, 1: 2 * T})
 
         assert ope.pole(2) == T
@@ -62,7 +62,7 @@ class TestOPEData:
     def test_set_pole(self):
         """Test setting poles."""
         ope = OPEData()
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
 
         ope.set_pole(2, T)
         assert ope.pole(2) == T
@@ -75,8 +75,8 @@ class TestOPEData:
 
     def test_addition(self):
         """Test adding OPEData objects."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         ope1 = OPEData({2: T, 1: J})
         ope2 = OPEData({2: T, 1: -J})
@@ -87,7 +87,7 @@ class TestOPEData:
 
     def test_scalar_multiplication(self):
         """Test multiplying OPE by scalar."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         c = sp.Symbol("c")
 
         ope = OPEData({2: T, 1: 2 * T})
@@ -98,7 +98,7 @@ class TestOPEData:
 
     def test_negation(self):
         """Test negating OPE."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         ope = OPEData({2: T})
 
         result = -ope
@@ -106,7 +106,7 @@ class TestOPEData:
 
     def test_subtraction(self):
         """Test subtracting OPEData objects."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
 
         ope1 = OPEData({2: 3 * T})
         ope2 = OPEData({2: T})
@@ -116,7 +116,7 @@ class TestOPEData:
 
     def test_equality(self):
         """Test OPE equality."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
 
         ope1 = OPEData({2: T, 1: 2 * T})
         ope2 = OPEData({2: T, 1: 2 * T})
@@ -127,7 +127,7 @@ class TestOPEData:
 
     def test_simplify(self):
         """Test simplifying OPE."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         x = sp.Symbol("x")
 
         ope = OPEData({2: x**2 + 2 * x + 1})
@@ -138,7 +138,7 @@ class TestOPEData:
 
     def test_sum_support(self):
         """Test that OPEData works with sum()."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
 
         opes = [
             OPEData({2: T}),

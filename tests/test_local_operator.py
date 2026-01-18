@@ -27,8 +27,8 @@ print("=" * 60)
 
 # Test 1: Create basic operators
 print("\n1. Creating basic operators:")
-T = BasisOperator("T", bosonic=True)
-J = BasisOperator("J", bosonic=True)
+T = BasisOperator("T", )
+J = BasisOperator("J", )
 print(f"T = {T}, type = {type(T)}")
 print(f"J = {J}, type = {type(J)}")
 print(f"T is LocalOperator: {is_local_operator(T)}")
@@ -85,7 +85,7 @@ print(f"NO[2*T, J] = {no_prod}")
 
 # Test 5: Parity
 print("\n5. Testing parity:")
-psi = BasisOperator("ψ", bosonic=False)
+psi = BasisOperator("ψ", fermionic=True)
 print(f"ψ parity = {psi.parity}, is_fermionic = {psi.is_fermionic}")
 
 sum_mixed = T + psi

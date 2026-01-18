@@ -31,9 +31,9 @@ class TestCompositeLeftOPE:
     def setup_method(self):
         """设置测试环境"""
         # 创建测试用的算符
-        self.T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        self.J = BasisOperator("J", bosonic=True, conformal_weight=1)
-        self.W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        self.T = BasisOperator("T",  conformal_weight=2)
+        self.J = BasisOperator("J",  conformal_weight=1)
+        self.W = BasisOperator("W",  conformal_weight=3)
 
         # 声明算符类型
         Bosonic(self.T, self.J, self.W)
@@ -93,7 +93,7 @@ class TestCompositeLeftOPE:
     def test_composite_left_zero_ope(self):
         """测试当基本 OPE 为零时的情况"""
         # 创建一个未定义 OPE 的算符
-        X = BasisOperator("X", bosonic=True)
+        X = BasisOperator("X", )
         Bosonic(X)
 
         # OPE(NO(X,X), X) 应该返回 NO(NO(X,X), X)
@@ -137,8 +137,8 @@ class TestCompositeLeftOPE:
     def test_composite_left_parity(self):
         """测试费米算符的 parity 处理"""
         # 创建费米算符
-        psi = BasisOperator("psi", bosonic=False, conformal_weight=1.5)
-        chi = BasisOperator("chi", bosonic=False, conformal_weight=1.5)
+        psi = BasisOperator("psi", fermionic=True, conformal_weight=1.5)
+        chi = BasisOperator("chi", fermionic=True, conformal_weight=1.5)
         Fermionic(psi, chi)
 
         # 定义费米算符的 OPE

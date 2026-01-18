@@ -42,7 +42,7 @@ from .registry import OPERegistry, ope_registry, Bosonic, Fermionic
 from .api import OPE, NO, bracket, MakeOPE
 
 # Simplification 模块
-from .simplify import simplify, canonicalize, collect_normal_ordered_terms
+from .simplify import simplify, collect_normal_ordered_terms
 
 # Jacobi 恒等式模块
 from .jacobi import check_jacobi_identity, verify_jacobi_identity
@@ -105,7 +105,6 @@ __all__ = [
     "MakeOPE",
     # Simplification
     "simplify",
-    "canonicalize",
     "collect_normal_ordered_terms",
     # Jacobi identity
     "check_jacobi_identity",

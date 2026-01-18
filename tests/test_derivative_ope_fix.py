@@ -30,8 +30,8 @@ class TestDerivativeOPEFix:
         - OPE(T, ∂J) = 2J/(z-w)³ + 2∂J/(z-w)² + ∂²J/(z-w)
         """
         # 定义算符
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         # 定义 OPE(T, J) - J 是 Virasoro primary
@@ -77,8 +77,8 @@ class TestDerivativeOPEFix:
         OPE(T, ∂²J) 应该有更高阶的极点
         """
         # 定义算符
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         # 定义 OPE(T, J)
@@ -109,8 +109,8 @@ class TestDerivativeOPEFix:
         验证 [A, ∂B]_q = (q-1)[A,B]_{q-1} + ∂[A,B]_q
         """
         # 定义算符
-        A = BasisOperator("A", bosonic=True, conformal_weight=2)
-        B = BasisOperator("B", bosonic=True, conformal_weight=1)
+        A = BasisOperator("A",  conformal_weight=2)
+        B = BasisOperator("B",  conformal_weight=1)
         Bosonic(A, B)
 
         # 定义一个简单的 OPE

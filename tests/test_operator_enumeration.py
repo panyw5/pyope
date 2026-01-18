@@ -10,10 +10,10 @@ from fractions import Fraction
 import itertools
 
 # 定义自由场算符
-b = BasisOperator('b', bosonic=False, conformal_weight=Fraction(2))
-c = BasisOperator('c', bosonic=False, conformal_weight=Fraction(-1))
-beta = BasisOperator('β', bosonic=True, conformal_weight=Fraction(3, 2))
-gamma = BasisOperator('γ', bosonic=True, conformal_weight=Fraction(-1, 2))
+b = BasisOperator('b', fermionic=True, conformal_weight=Fraction(2))
+c = BasisOperator('c', fermionic=True, conformal_weight=Fraction(-1))
+beta = BasisOperator('β',  conformal_weight=Fraction(3, 2))
+gamma = BasisOperator('γ',  conformal_weight=Fraction(-1, 2))
 
 Bosonic(b, c)
 Fermionic(beta, gamma)

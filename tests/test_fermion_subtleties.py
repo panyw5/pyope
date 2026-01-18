@@ -30,8 +30,8 @@ print("准备工作：定义费米子算符")
 print("=" * 70)
 
 # 定义费米子
-b = BasisOperator('b', bosonic=False, conformal_weight=Fraction(2))
-c = BasisOperator('c', bosonic=False, conformal_weight=Fraction(-1))
+b = BasisOperator('b', fermionic=True, conformal_weight=Fraction(2))
+c = BasisOperator('c', fermionic=True, conformal_weight=Fraction(-1))
 Fermionic(b, c)
 
 # 定义 OPE

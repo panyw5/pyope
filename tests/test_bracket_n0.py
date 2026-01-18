@@ -14,8 +14,8 @@ from pyope.constants import One
 def test_bracket_n0_basic():
     """测试基本情况：bracket(A, B, 0) = NO(A, B)"""
     # 创建基础算符
-    T = BasisOperator("T", bosonic=True)
-    J = BasisOperator("J", bosonic=True)
+    T = BasisOperator("T", )
+    J = BasisOperator("J", )
 
     # 定义一个简单的 OPE（不重要，因为 n=0 不应该使用它）
     c = sp.Symbol("c")
@@ -33,8 +33,8 @@ def test_bracket_n0_basic():
 def test_bracket_n0_composite():
     """测试复合算符：bracket(A, NO(B,C), 0) = NO(A, NO(B,C))"""
     # 创建基础算符
-    T = BasisOperator("T", bosonic=True)
-    J = BasisOperator("J", bosonic=True)
+    T = BasisOperator("T", )
+    J = BasisOperator("J", )
 
     # 定义 OPE
     c = sp.Symbol("c")
@@ -60,8 +60,8 @@ def test_bracket_n0_not_from_ope():
     即使 OPE 中没有定义第 0 阶极点，bracket(A, B, 0) 也应该返回 NO(A, B)
     """
     # 创建基础算符
-    A = BasisOperator("A", bosonic=True)
-    B = BasisOperator("B", bosonic=True)
+    A = BasisOperator("A", )
+    B = BasisOperator("B", )
 
     # 定义一个只有奇异部分的 OPE（没有 q=0 项）
     OPE[A, B] = MakeOPE([A, B])  # 只有 q=2 和 q=1

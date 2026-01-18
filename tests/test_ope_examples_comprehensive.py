@@ -64,7 +64,7 @@ class TestOPEExamplesBasic:
         期望结果（来自 ope-examples.nb line 203-217）:
         << 4|| 1/2 One ||3|| 0 ||2|| 2 T ||1|| T' >>
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         # 注意：notebook 中使用 c=1/2，这里保持符号
@@ -88,7 +88,7 @@ class TestOPEExamplesBasic:
         期望结果（来自 ope-examples.nb line 70-84）:
         J(z)J(w) ~ 1/(z-w)^2
         """
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         OPE[J, J] = MakeOPE([One, 0])
@@ -108,8 +108,8 @@ class TestOPEExamplesBasic:
         期望结果（来自 ope-examples.nb line 219-231）:
         << 2|| J ||1|| J' >>
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         OPE[T, T] = MakeOPE([Rational(1, 2) * One, 0, 2*T, d(T)])
@@ -143,7 +143,7 @@ class TestOPEExamplesSugawara:
 
         实际结果: max_pole=4, pole(4)=2*One, pole(2)=4*NO(J,J), pole(1)=2*NO(J',J)+2*NO(∂J,J)
         """
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         OPE[J, J] = MakeOPE([One, 0])
@@ -192,8 +192,8 @@ class TestOPEExamplesDerivatives:
         期望结果（来自 ope-examples.nb line 233-251）:
         << 4|| 6 J ||3|| 6 J' ||2|| 3 J'' ||1|| J''' >>
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         OPE[T, T] = MakeOPE([Rational(1, 2) * One, 0, 2*T, d(T)])
@@ -218,8 +218,8 @@ class TestOPEExamplesDerivatives:
         期望结果（来自 ope-examples.nb line 253-267）:
         << 3|| -2 J ||2|| -J' ||1|| 0 >>
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         OPE[T, T] = MakeOPE([Rational(1, 2) * One, 0, 2*T, d(T)])
@@ -245,8 +245,8 @@ class TestOPEExamplesDerivatives:
 
         现在修复后应该匹配 Mathematica！
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         OPE[T, T] = MakeOPE([Rational(1, 2) * One, 0, 2*T, d(T)])
@@ -284,8 +284,8 @@ class TestOPEExamplesNormalOrdering:
         NO[T, J'] -> NO[T, J']
         NO[T', J] -> NO[T', J]
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         # 基本正规序
@@ -307,8 +307,8 @@ class TestOPEExamplesNormalOrdering:
         期望结果（来自 ope-examples.nb line 350-375）:
         展开为多个 NO 项的线性组合
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         OPE[T, T] = MakeOPE([Rational(1, 2) * One, 0, 2*T, d(T)])
@@ -332,8 +332,8 @@ class TestOPEExamplesNormalOrdering:
         期望结果（来自 ope-examples.nb line 377-472）:
         展开为复杂的 NO 项组合
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(T, J)
 
         OPE[T, T] = MakeOPE([Rational(1, 2) * One, 0, 2*T, d(T)])
@@ -364,7 +364,7 @@ class TestGeminiSuggestions_BasicOPE:
         """
         测试 U(1) current 的符号 OPE
         """
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         k = Symbol('k')
@@ -382,7 +382,7 @@ class TestGeminiSuggestions_BasicOPE:
         """
         测试 Virasoro OPE（符号中心荷）
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         c = Symbol('c')
@@ -402,8 +402,8 @@ class TestGeminiSuggestions_BasicOPE:
         """
         测试主场的 OPE
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        phi = BasisOperator("phi", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        phi = BasisOperator("phi",  conformal_weight=1)
         Bosonic(T, phi)
 
         h = 1  # conformal weight
@@ -428,7 +428,7 @@ class TestGeminiSuggestions_Fermions:
         """
         测试自由费米子 OPE: ψ(z)ψ(w) ~ 1/(z-w)
         """
-        psi = BasisOperator("psi", bosonic=False, conformal_weight=Rational(1, 2))
+        psi = BasisOperator("psi", fermionic=True, conformal_weight=Rational(1, 2))
         Fermionic(psi)
 
         OPE[psi, psi] = MakeOPE([One])
@@ -444,8 +444,8 @@ class TestGeminiSuggestions_Fermions:
         """
         测试费米子-玻色子对易性
         """
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
-        psi = BasisOperator("psi", bosonic=False, conformal_weight=Rational(1, 2))
+        J = BasisOperator("J",  conformal_weight=1)
+        psi = BasisOperator("psi", fermionic=True, conformal_weight=Rational(1, 2))
         Bosonic(J)
         Fermionic(psi)
 
@@ -473,7 +473,7 @@ class TestGeminiSuggestions_EdgeCases:
         """
         测试与单位算符的 OPE
         """
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         # OPE[J, One] 应该是正规的
@@ -485,8 +485,8 @@ class TestGeminiSuggestions_EdgeCases:
         """
         测试高阶极点
         """
-        A = BasisOperator("A", bosonic=True, conformal_weight=5)
-        B = BasisOperator("B", bosonic=True, conformal_weight=5)
+        A = BasisOperator("A",  conformal_weight=5)
+        B = BasisOperator("B",  conformal_weight=5)
         Bosonic(A, B)
 
         # 定义一个 10 阶极点的 OPE

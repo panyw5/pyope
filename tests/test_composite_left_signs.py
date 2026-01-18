@@ -20,9 +20,9 @@ def test_composite_left_sign_term1():
     ope_registry.clear()
 
     # 定义算符
-    A = BasisOperator("A", bosonic=True)
-    B = BasisOperator("B", bosonic=True)
-    C = BasisOperator("C", bosonic=True)
+    A = BasisOperator("A", )
+    B = BasisOperator("B", )
+    C = BasisOperator("C", )
 
     # 定义 OPE(B, C) = 1/(z^2) * A
     ope_registry.define_ope(B, C, OPEData({2: A}))
@@ -51,9 +51,9 @@ def test_composite_left_sign_term2():
     ope_registry.clear()
 
     # 定义算符 - A 和 B 都是玻色子
-    A = BasisOperator("A", bosonic=True)
-    B = BasisOperator("B", bosonic=True)
-    C = BasisOperator("C", bosonic=True)
+    A = BasisOperator("A", )
+    B = BasisOperator("B", )
+    C = BasisOperator("C", )
 
     # 定义 OPE(A, C) = 1/(z^2) * B
     ope_registry.define_ope(A, C, OPEData({2: B}))
@@ -67,9 +67,9 @@ def test_composite_left_sign_term2():
 
     # 现在测试费米子情况
     ope_registry.clear()
-    psi = BasisOperator("psi", bosonic=False)
-    chi = BasisOperator("chi", bosonic=False)
-    phi = BasisOperator("phi", bosonic=True)
+    psi = BasisOperator("psi", fermionic=True)
+    chi = BasisOperator("chi", fermionic=True)
+    phi = BasisOperator("phi", )
 
     # 定义 OPE(psi, phi) = 1/(z^2) * chi
     ope_registry.define_ope(psi, phi, OPEData({2: chi}))
@@ -94,10 +94,10 @@ def test_composite_left_sign_term3():
     ope_registry.clear()
 
     # 定义算符
-    A = BasisOperator("A", bosonic=True)
-    B = BasisOperator("B", bosonic=True)
-    C = BasisOperator("C", bosonic=True)
-    D = BasisOperator("D", bosonic=True)
+    A = BasisOperator("A", )
+    B = BasisOperator("B", )
+    C = BasisOperator("C", )
+    D = BasisOperator("D", )
 
     # 定义 OPE(A, C) = 1/(z^2) * D
     ope_registry.define_ope(A, C, OPEData({2: D}))

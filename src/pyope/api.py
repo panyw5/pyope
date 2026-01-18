@@ -14,6 +14,7 @@ import sympy as sp
 from sympy import Add, Integer, Mul, Number
 
 from .cache import (
+    cached_bernoulli_coeff,
     cached_binomial,
     cached_factorial,
     cached_pochhammer,
@@ -87,7 +88,7 @@ OPE = OPEComputer(ope_registry)
 3. 创建 OPEData: OPE.make([...])
 
 Examples:
-    >>> T = BasisOperator("T", bosonic=True)
+    >>> T = BasisOperator("T")
     >>> OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])
     >>> ope_result = OPE(T, T)
 """
@@ -108,7 +109,7 @@ def MakeOPE(data: Union[List, OPEData]) -> OPEData:
         OPEData 实例
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
+        >>> T = BasisOperator("T")
         >>> c = sp.Symbol("c")
         >>> ope = MakeOPE([c/2*One, 0, 2*T, d(T)])
         >>> # 等价于 OPEData({4: c/2*One, 2: 2*T, 1: d(T)})
@@ -152,9 +153,22 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     left_type = type(left)
     right_type = type(right)
 
-    # 规则 1: 处理零算符（使用 is 比较更快）
+    # 规则 1: 处理零算符和单位算符
     # OPE(0, B) = 0, OPE(A, 0) = 0
     if left == 0 or left is Zero or right == 0 or right is Zero:
+        result = OPEData({})
+        cache.put(left, right, result)
+        return result
+
+    # OPE(One, B) = 0, OPE(A, One) = 0 (常数算符没有奇异部分)
+    from .constants import One, ConstantOperator
+
+    if (
+        left is One
+        or right is One
+        or isinstance(left, ConstantOperator)
+        or isinstance(right, ConstantOperator)
+    ):
         result = OPEData({})
         cache.put(left, right, result)
         return result
@@ -706,7 +720,7 @@ def bracket(left: Any, right: Any, n: int = None, anticommutator: bool = None) -
         第 n 阶极点的系数（LocalOperator）或对易子/反对易子
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
+        >>> T = BasisOperator("T")
         >>> OPE[T, T] = MakeOPE([c/2*One, 0, 2*T, d(T)])
         >>> bracket(T, T, 2)  # 返回 2*T
         >>> bracket(T, T, 0)  # 返回 NO(T, T)
@@ -721,7 +735,7 @@ def bracket(left: Any, right: Any, n: int = None, anticommutator: bool = None) -
             # [A, B] = NO(A, B) - NO(B, A)
             return NO(left, right) - NO(right, left)
     elif n is not None:
-        # 提取第 n 阶极点
+        # 提取第 n 阶极点的系数
         if n == 0:
             # 特殊情况：n=0 直接返回正规序乘积
             # 根据 OPEdefs.m: OPEPole[0][A,B] := NO[A,B]
@@ -748,20 +762,20 @@ def NO(left: Any, right: Any) -> Any:
         NormalOrderedOperator 或简化后的表达式
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
-        >>> J = BasisOperator("J", bosonic=True)
+        >>> T = BasisOperator("T")
+        >>> J = BasisOperator("J")
         >>> NO(T, J)  # 返回 NormalOrderedOperator(T, J)
     """
-    # 处理零算符
-    if left == 0 or left == Zero:
-        return 0
-    if right == 0 or right == Zero:
-        return 0
+    # 处理零算符和整数 0
+    if left == 0 or left == Zero or (isinstance(left, (int, float)) and left == 0):
+        return Zero
+    if right == 0 or right == Zero or (isinstance(right, (int, float)) and right == 0):
+        return Zero
 
-    # 处理单位算符
-    if left == One:
+    # 处理单位算符和整数 1
+    if left == One or left == 1 or left == sp.Integer(1):
         return right
-    if right == One:
+    if right == One or right == 1 or right == sp.Integer(1):
         return left
 
     # 处理线性性
@@ -812,25 +826,32 @@ def NO(left: Any, right: Any) -> Any:
             max_pole = ope_result.max_pole
 
             if max_pole == 0:
-                return 0
-
-            # Bernoulli 系数: a_0=1/2, a_1=-1/24, a_2=1/240, a_3=-17/40320
-            bernoulli_coeffs = [
-                sp.Rational(1, 2),
-                sp.Rational(-1, 24),
-                sp.Rational(1, 240),
-                sp.Rational(-17, 40320),
-            ]
+                return Zero
 
             result = 0
-            for k in range(len(bernoulli_coeffs)):
+            k = 0
+            while True:
                 pole_index = 2 * k + 1
-                if pole_index <= max_pole:
-                    bracket = ope_result.pole(pole_index)
-                    if bracket != 0:
-                        deriv_bracket = derivative(bracket, 2 * k + 1)
-                        result = result + bernoulli_coeffs[k] * deriv_bracket
+                if pole_index > max_pole:
+                    break
 
+                bracket = ope_result.pole(pole_index)
+                if bracket != Zero and bracket != 0:
+                    a_k = cached_bernoulli_coeff(k)
+                    deriv_bracket = derivative(bracket, 2 * k + 1)
+
+                    if deriv_bracket != 0 and deriv_bracket != Zero:
+                        term = a_k * deriv_bracket
+                        result = result + term
+
+                k += 1
+
+            if result == 0:
+                return Zero
+
+            result = sp.simplify(result)
+            if result == 0:
+                return Zero
             return result
         # 玻色子：如果没有 0 阶极点，继续创建 NormalOrderedOperator
 

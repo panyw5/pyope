@@ -25,7 +25,9 @@ from .ope_data import OPEData
 from .local_operator import get_operator_parity
 
 
-def check_jacobi_identity(A: Any, B: Any, C: Any, simplify_func=None) -> List[List[Any]]:
+def check_jacobi_identity(
+    A: Any, B: Any, C: Any, simplify_func=None
+) -> List[List[Any]]:
     """
     检查三个算符的 Jacobi 恒等式
 
@@ -50,7 +52,7 @@ def check_jacobi_identity(A: Any, B: Any, C: Any, simplify_func=None) -> List[Li
         >>> from pyope import BasisOperator, check_jacobi_identity
         >>> import sympy as sp
         >>> c = sp.Symbol('c')
-        >>> T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        >>> T = BasisOperator("T", conformal_weight=2)
         >>> OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])
         >>> result = check_jacobi_identity(T, T, T)
         >>> # result 应该是全零矩阵
@@ -171,7 +173,7 @@ def verify_jacobi_identity(A: Any, B: Any, C: Any, simplify_func=None) -> bool:
         >>> from pyope import BasisOperator, verify_jacobi_identity
         >>> import sympy as sp
         >>> c = sp.Symbol('c')
-        >>> T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        >>> T = BasisOperator("T", conformal_weight=2)
         >>> OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])
         >>> verify_jacobi_identity(T, T, T)
         True

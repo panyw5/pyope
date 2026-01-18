@@ -15,10 +15,10 @@ from pyope import (
 )
 
 # 定义自由场
-b = BasisOperator("b", bosonic=False, conformal_weight=-1)
-c = BasisOperator("c", bosonic=False, conformal_weight=2)
-beta = BasisOperator("β", bosonic=False, conformal_weight=-1/2)
-gamma = BasisOperator("γ", bosonic=False, conformal_weight=3/2)
+b = BasisOperator("b", fermionic=True, conformal_weight=-1)
+c = BasisOperator("c", fermionic=True, conformal_weight=2)
+beta = BasisOperator("β", fermionic=True, conformal_weight=-1/2)
+gamma = BasisOperator("γ", fermionic=True, conformal_weight=3/2)
 
 # 声明费米子
 Fermionic(b, c, beta, gamma)

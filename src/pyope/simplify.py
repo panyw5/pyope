@@ -47,8 +47,8 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
         化简后的表达式
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
-        >>> J = BasisOperator("J", bosonic=True)
+        >>> T = BasisOperator("T")
+        >>> J = BasisOperator("J")
         >>> expr = NO(NO(T,J), J)
         >>> simplified = simplify(expr)
 
@@ -62,7 +62,7 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
     """
     # 处理零
     if expr == 0 or expr == Zero:
-        return 0
+        return Zero
 
     # 处理单位
     if expr == One:
@@ -70,6 +70,7 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
 
     # 处理 OPEData
     from .ope_data import OPEData
+
     if isinstance(expr, OPEData):
         return _simplify_ope_data(expr, expand_derivatives)
 
@@ -92,7 +93,9 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
     return expr
 
 
-def _simplify_ope_data(ope_data: 'OPEData', expand_derivatives: bool = True) -> 'OPEData':
+def _simplify_ope_data(
+    ope_data: "OPEData", expand_derivatives: bool = True
+) -> "OPEData":
     """
     化简 OPEData 对象
 
@@ -175,7 +178,9 @@ def _simplify_operator(op: Operator, expand_derivatives: bool = True) -> Any:
     return op
 
 
-def _simplify_normal_ordered(no_op: NormalOrderedOperator, expand_derivatives: bool = True) -> Any:
+def _simplify_normal_ordered(
+    no_op: NormalOrderedOperator, expand_derivatives: bool = True
+) -> Any:
     """
     化简正规序算符
 
@@ -228,78 +233,66 @@ def _simplify_normal_ordered(no_op: NormalOrderedOperator, expand_derivatives: b
     # 检查算符顺序
     # 只有当左右都是 BasisOperator 或 DerivativeOperator 时才进行交换
     # 嵌套的 NO 已经在上面处理过了（虽然目前是 pass）
-    if isinstance(left, (BasisOperator, DerivativeOperator)) and \
-       isinstance(right, (BasisOperator, DerivativeOperator)):
-        
+    if isinstance(left, (BasisOperator, DerivativeOperator)) and isinstance(
+        right, (BasisOperator, DerivativeOperator)
+    ):
         order = ope_registry.compare_operators(left, right)
         if order < 0:
-            # 需要交换顺序: NO(B, A) -> NO(A, B) + 修正项
-            # 修正项来自 OPE(B, A) 的极点部分
-            # 公式: NO(B, A) = (-1)^{|A||B|} NO(A, B) + \sum_{n >= 1} rac{1}{n!} \partial^n \{BA\}_n
-            
+            # 需要交换顺序: NO(B, A) -> 使用 eq (2.3.16) 计算
+            # 公式 (2.3.16): [BA]_q = (-1)^{|A||B|} \sum_{l >= q} \frac{(-1)^l}{(l-q)!} \partial^{(l-q)} [AB]_l
+            # 对于 q=0 (正规序): [BA]_0 = (-1)^{|A||B|} \sum_{l >= 0} \frac{(-1)^l}{l!} \partial^l [AB]_l
+
             # 1. 计算符号因子 (-1)^{|A||B|}
-            parity_sign = 1
-            if left.parity == 1 and right.parity == 1:
-                parity_sign = -1
-                
-            # 2. 计算修正项
-            # 需要计算 OPE(B, A)
+            from .local_operator import get_operator_parity
+
+            parity_A = get_operator_parity(right)  # right 是 A
+            parity_B = get_operator_parity(left)  # left 是 B
+            swap_sign = (-1) ** (parity_A * parity_B)
+
+            # 2. 计算 OPE(A, B)（注意顺序：right 是 A，left 是 B）
             from .api import OPE
             from .operators import d as derivative_operator
-            
-            # 注意：这里 left 是 B，right 是 A
-            # 我们要计算 OPE(left, right)
-            try:
-                ope_data = OPE(left, right)
-                correction = 0
-                
-                # 遍历极点，计算 rac{1}{n!} \partial^n \{BA\}_n
-                # 注意：OPEData 中的极点系数就是 \{BA\}_n
-                for n, coeff in ope_data.poles.items():
-                    if n >= 1:
-                        term = derivative_operator(coeff, n) / sp.factorial(n)
-                        correction += term
-                        
-                # 递归化简修正项
-                correction = simplify(correction, expand_derivatives)
-                
-                # 返回交换后的结果
-                return parity_sign * NO(right, left) + correction
-                
-            except Exception as e:
-                # 如果无法计算 OPE（例如未定义），则不交换，或者发出警告
-                # 目前保持原样
-                pass
+
+            ope_AB = OPE(right, left)  # OPE(A, B)
+
+            # 3. 应用公式 (2.3.16) 对 q=0
+            # [BA]_0 = (-1)^{|A||B|} \sum_{l >= 0} \frac{(-1)^l}{l!} \partial^l [AB]_l
+
+            # 检查是否有非零极点
+            max_pole = ope_AB.max_pole
+            has_nonzero_poles = any(ope_AB.pole(l) != 0 for l in range(max_pole + 1))
+
+            if not has_nonzero_poles:
+                # OPE 未定义或全为 0，直接返回正则顺序的 NO
+                # 根据 eq (2.3.16)，[BA]_0 = swap_sign * [AB]_0
+                # 当 [AB]_l = 0 对所有 l 时，[BA]_0 = swap_sign * NO(A,B)
+                return swap_sign * NO(right, left)
+
+            # 有非零极点，应用完整公式
+            from .constants import Zero as ZeroConst
+
+            result = ZeroConst
+
+            # l=0 项: [AB]_0
+            pole_0 = ope_AB.pole(0)
+            if pole_0 != 0 and pole_0 != ZeroConst:
+                result = swap_sign * pole_0
+
+            # l >= 1 项: \frac{(-1)^l}{l!} \partial^l [AB]_l
+            for l in range(1, max_pole + 1):
+                pole_l = ope_AB.pole(l)
+                if pole_l != 0 and pole_l != ZeroConst:
+                    # 计算 \partial^l [AB]_l
+                    deriv_pole = derivative_operator(pole_l, l)
+                    # 系数: swap_sign * (-1)^l / l!
+                    coeff = swap_sign * ((-1) ** l) / sp.factorial(l)
+                    result = result + coeff * deriv_pole
+
+            # 递归化简结果
+            return simplify(result, expand_derivatives)
 
     # 创建简化的 NO
     return NO(left, right)
-
-
-def canonicalize(expr: Any, expand_derivatives: bool = True) -> Any:
-    """
-    将表达式规范化
-
-    比 simplify 更激进的化简，会：
-    1. 完全展开所有嵌套的 NO
-    2. 强制按字母顺序排列算符
-    3. 合并所有同类项
-
-    Args:
-        expr: 要规范化的表达式
-        expand_derivatives: 是否展开导数
-
-    Returns:
-        规范化后的表达式
-
-    Note:
-        此函数需要完整的 OPE 信息才能正确展开
-    """
-    # TODO: 实现完整的规范化
-    # 需要：
-    # 1. NOCommuteHelp 来处理算符交换
-    # 2. NO 展开规则
-    # 3. 项的收集和合并
-    return simplify(expr, expand_derivatives)
 
 
 def collect_normal_ordered_terms(expr: Any) -> Dict[Tuple, Any]:
@@ -333,14 +326,14 @@ def collect_normal_ordered_terms(expr: Any) -> Dict[Tuple, Any]:
             terms[key] = terms.get(key, 0) + coeff
         else:
             # 非 NO 项
-            key = ('other', str(op))
+            key = ("other", str(op))
             terms[key] = terms.get(key, 0) + coeff
     elif isinstance(expr, NormalOrderedOperator):
         key = _make_no_key(expr)
         terms[key] = terms.get(key, 0) + 1
     else:
         # 其他项
-        key = ('other', str(expr))
+        key = ("other", str(expr))
         terms[key] = terms.get(key, 0) + 1
 
     return terms
@@ -358,7 +351,7 @@ def _make_no_key(no_op: NormalOrderedOperator) -> Tuple:
     """
     left_key = _operator_to_key(no_op.left)
     right_key = _operator_to_key(no_op.right)
-    return ('NO', left_key, right_key)
+    return ("NO", left_key, right_key)
 
 
 def _operator_to_key(op: Any) -> Tuple:
@@ -372,10 +365,10 @@ def _operator_to_key(op: Any) -> Tuple:
         元组键
     """
     if isinstance(op, BasisOperator):
-        return ('Basis', op.name, op.is_bosonic)
+        return ("Basis", op.name, op.is_bosonic)
     elif isinstance(op, DerivativeOperator):
-        return ('Deriv', _operator_to_key(op.base), op.order)
+        return ("Deriv", _operator_to_key(op.base), op.order)
     elif isinstance(op, NormalOrderedOperator):
         return _make_no_key(op)
     else:
-        return ('Other', str(op))
+        return ("Other", str(op))

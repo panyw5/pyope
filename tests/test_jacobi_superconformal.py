@@ -56,11 +56,12 @@ class TestJacobiIdentitySuperconformal:
 
         # 定义算符
         # T: 能动张量，玻色子，共形权重 h=2
-        self.T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        self.T = BasisOperator("T",  conformal_weight=2)
         Bosonic(self.T)
 
         # G: 超流，费米子，共形权重 h=3/2
-        self.G = BasisOperator("G", bosonic=False, conformal_weight=sp.Rational(3, 2))
+        self.G = BasisOperator("G", fermionic=True,
+                               conformal_weight=sp.Rational(3, 2))
         Fermionic(self.G)
 
         # 定义 OPE
@@ -341,8 +342,9 @@ class TestJacobiIdentityVerifyFunction:
     def setup_method(self):
         """设置测试环境"""
         self.c = sp.Symbol('c')
-        self.T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        self.G = BasisOperator("G", bosonic=False, conformal_weight=sp.Rational(3, 2))
+        self.T = BasisOperator("T",  conformal_weight=2)
+        self.G = BasisOperator("G", fermionic=True,
+                               conformal_weight=sp.Rational(3, 2))
         Bosonic(self.T)
         Fermionic(self.G)
 

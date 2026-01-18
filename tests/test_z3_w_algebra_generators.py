@@ -36,10 +36,10 @@ class TestZ3WAlgebraGenerators:
     def setup_method(self):
         """设置自由场系统和 W-代数生成元"""
         # 定义自由场
-        self.beta = BasisOperator("β", bosonic=False, conformal_weight=-1/2)
-        self.gamma = BasisOperator("γ", bosonic=False, conformal_weight=3/2)
-        self.b = BasisOperator("b", bosonic=False, conformal_weight=-1)
-        self.c = BasisOperator("c", bosonic=False, conformal_weight=2)
+        self.beta = BasisOperator("β", fermionic=True, conformal_weight=-1/2)
+        self.gamma = BasisOperator("γ", fermionic=True, conformal_weight=3/2)
+        self.b = BasisOperator("b", fermionic=True, conformal_weight=-1)
+        self.c = BasisOperator("c", fermionic=True, conformal_weight=2)
 
         # 声明费米子
         Fermionic(self.beta, self.gamma, self.b, self.c)
@@ -181,10 +181,10 @@ class TestZ3GeneratorOPEs:
     def setup_method(self):
         """设置自由场系统和 W-代数生成元"""
         # 定义自由场
-        self.beta = BasisOperator("β", bosonic=False, conformal_weight=-1/2)
-        self.gamma = BasisOperator("γ", bosonic=False, conformal_weight=3/2)
-        self.b = BasisOperator("b", bosonic=False, conformal_weight=-1)
-        self.c = BasisOperator("c", bosonic=False, conformal_weight=2)
+        self.beta = BasisOperator("β", fermionic=True, conformal_weight=-1/2)
+        self.gamma = BasisOperator("γ", fermionic=True, conformal_weight=3/2)
+        self.b = BasisOperator("b", fermionic=True, conformal_weight=-1)
+        self.c = BasisOperator("c", fermionic=True, conformal_weight=2)
 
         # 声明费米子
         Fermionic(self.beta, self.gamma, self.b, self.c)

@@ -38,7 +38,7 @@ class TestThielemansDerivativeRules:
         使用 Virasoro 代数
         """
         # 定义算符
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         c = Symbol('c')
@@ -69,7 +69,7 @@ class TestThielemansDerivativeRules:
         使用 Virasoro 代数
         """
         # 定义算符
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         c = Symbol('c')
@@ -100,7 +100,7 @@ class TestThielemansDerivativeRules:
         验证 eq 3.3.1 和 3.3.2 对于 Kac-Moody 代数
         """
         # 定义算符
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         k = Symbol('k')
@@ -141,8 +141,8 @@ class TestThielemansDerivativeRules:
         验证 eq 3.3.1 和 3.3.2 对于一般情况
         """
         # 定义 Virasoro 算符和 primary field
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        phi = BasisOperator("phi", bosonic=True, conformal_weight=1)
+        T = BasisOperator("T",  conformal_weight=2)
+        phi = BasisOperator("phi",  conformal_weight=1)
         Bosonic(T)
         Bosonic(phi)
 
@@ -179,7 +179,7 @@ class TestThielemansCompositeRules:
         这个方程已经在代码中实现，这里验证其正确性
         """
         # 使用 Virasoro 代数
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         c = Symbol('c')
@@ -204,7 +204,7 @@ class TestThielemansCompositeRules:
         验证 OPE(NO(A,B), C) 的计算与理论预期一致
         """
         # 定义算符
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         k = Symbol('k')
@@ -229,7 +229,7 @@ class TestThielemansCompositeRules:
         测试嵌套复合算符的 OPE 计算
         """
         # 定义算符
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         k = Symbol('k')

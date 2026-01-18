@@ -24,9 +24,9 @@ class TestOPEFunction:
 
     def test_ope_linearity_right(self):
         """Test OPE linearity: OPE(A, B+C) = OPE(A,B) + OPE(A,C)."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
-        K = BasisOperator("K", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
+        K = BasisOperator("K", )
 
         # Define OPEs
         OPE[T, J] = OPEData({1: J})
@@ -40,9 +40,9 @@ class TestOPEFunction:
 
     def test_ope_linearity_left(self):
         """Test OPE linearity: OPE(A+B, C) = OPE(A,C) + OPE(B,C)."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
-        K = BasisOperator("K", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
+        K = BasisOperator("K", )
 
         # Define OPEs
         OPE[T, K] = OPEData({1: T})
@@ -56,8 +56,8 @@ class TestOPEFunction:
 
     def test_ope_scalar_multiplication(self):
         """Test OPE with scalar: OPE(c*A, B) = c*OPE(A,B)."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         c = sp.Symbol("c")
 
         # Define OPE
@@ -71,7 +71,7 @@ class TestOPEFunction:
 
     def test_ope_with_zero(self):
         """Test OPE with zero."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
 
         result = OPE(T, 0)
         assert result.is_zero()
@@ -81,8 +81,8 @@ class TestOPEFunction:
 
     def test_ope_undefined(self):
         """Test OPE returns zero for undefined pairs."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         # No OPE defined
         result = OPE(T, J)
@@ -90,7 +90,7 @@ class TestOPEFunction:
 
     def test_ope_make(self):
         """Test OPE.make() function."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         dT = d(T)
         c = sp.Symbol("c")
 
@@ -108,8 +108,8 @@ class TestNOFunction:
 
     def test_no_creation(self):
         """Test creating normal ordered products."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         result = NO(T, J)
 
@@ -118,9 +118,9 @@ class TestNOFunction:
 
     def test_no_linearity(self):
         """Test NO linearity: NO(A, B+C) = NO(A,B) + NO(A,C)."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
-        K = BasisOperator("K", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
+        K = BasisOperator("K", )
 
         result = NO(T, J + K)
         # Should expand to NO(T,J) + NO(T,K)
@@ -128,8 +128,8 @@ class TestNOFunction:
 
     def test_no_scalar_multiplication(self):
         """Test NO with scalar: NO(c*A, B) = c*NO(A,B)."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         c = sp.Symbol("c")
 
         result = NO(c * T, J)
@@ -138,7 +138,7 @@ class TestNOFunction:
 
     def test_no_with_zero(self):
         """Test NO with zero."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
 
         result = NO(T, 0)
         assert result == 0
@@ -152,8 +152,8 @@ class TestBracket:
 
     def test_commutator(self):
         """Test commutator [A,B] = AB - BA."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         result = bracket(T, J, anticommutator=False)
         # Should be NO(T,J) - NO(J,T)
@@ -161,8 +161,8 @@ class TestBracket:
 
     def test_anticommutator(self):
         """Test anticommutator {A,B} = AB + BA."""
-        psi = BasisOperator("ψ", bosonic=False)
-        chi = BasisOperator("χ", bosonic=False)
+        psi = BasisOperator("ψ", fermionic=True)
+        chi = BasisOperator("χ", fermionic=True)
 
         result = bracket(psi, chi, anticommutator=True)
         # Should be NO(psi,chi) + NO(chi,psi)

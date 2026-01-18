@@ -527,17 +527,26 @@ pyope/
 
 **测试状态**：
 
-- ✅ 137/137 测试全部通过 (重大更新！)
+- ✅ 226/228 测试通过（2 个失败的测试与本次修改无关）
   - `tests/test_composite_left_ope.py`: 8/8 ✅
   - `tests/test_voa_manual_examples.py`: 8/8 ✅
   - `tests/test_ope_examples_comprehensive.py`: 17/17 ✅
   - `tests/test_simplify.py`: 14/14 ✅
   - `tests/test_w3_algebra.py`: 10/10 ✅
-  - `tests/test_advanced_ope.py`: 17/17 ✅ (修复对易测试)
+  - `tests/test_advanced_ope.py`: 17/17 ✅
+  - `tests/test_normal_ordering_canonicalization.py`: 8/8 ✅ (新增)
   - 以及其他所有测试模块
 
-**重大修复 (2026-01-07)**：
+**重大修复与更新**：
 
+**2026-01-07 (最新)**：
+- ✅ **正规序正则化实现** - 实现了基于 Thielemans eq (2.3.16) 的正规序自动排序
+  - `simplify(NO(γ, β))` 现在自动转换为 `NO(β, γ)`（按字典序）
+  - 修复了 `compare_operators` 的返回值逻辑
+  - 当 OPE 未定义时，正确应用符号因子 `(-1)^{|A||B|}`
+  - 添加了 8 个新测试验证正则化功能
+
+**2026-01-07 (早期)**：
 - ✅ **修复 Jacobi 恒等式实现** - 在 `_ope_composite_left` 和 `_ope_composite_right` 中添加了缺失的第三项
 - ✅ **OPE[T, NO(T,T)] 极点修正** - 现在正确返回 max_pole=6（之前错误地返回 4）
 - ✅ **Sugawara 张量计算修正** - OPE[TSugawara, TSugawara] 现在正确包含 4 阶极点 2*One
@@ -548,7 +557,7 @@ pyope/
 
 - ✅ OPE 对称性自动处理 - `OPE(B,A)` 自动使用对易公式从 `OPE(A,B)` 计算
 - ✅ 算符排序机制 - 按声明顺序自动排列
-- ✅ 可选的化简功能 - `simplify(expr)` 函数
+- ✅ **正规序正则化** - `simplify()` 函数自动按正则顺序排列 NO 中的算符（基于 Thielemans eq 2.3.16）
 - ✅ W₃ 代数完整支持 - 包括 T-T, T-W, W-W OPE 和辅助算符 Λ
 - ✅ 正确的复合算符 OPE - 完整实现 Jacobi 恒等式的三项求和
 - ✅ Thielemans 方程验证 - 验证了论文中的关键导数规则和 Jacobi 恒等式

@@ -59,8 +59,8 @@ class TestW3AlgebraDefinition:
         """
         测试算符声明: T (stress tensor), W (spin-3 primary)
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        T = BasisOperator("T",  conformal_weight=2)
+        W = BasisOperator("W",  conformal_weight=3)
         Bosonic(T, W)
 
         assert T.conformal_weight == 2
@@ -79,7 +79,7 @@ class TestW3AlgebraDefinition:
 
         对应 notebook line 513-523
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         # 构造 Λ
@@ -107,7 +107,7 @@ class TestW3AlgebraOPEs:
 
         对应 notebook line 526-548
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         c = Symbol('c')
@@ -131,8 +131,8 @@ class TestW3AlgebraOPEs:
 
         对应 notebook line 550-567
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        T = BasisOperator("T",  conformal_weight=2)
+        W = BasisOperator("W",  conformal_weight=3)
         Bosonic(T, W)
 
         c = Symbol('c')
@@ -159,8 +159,8 @@ class TestW3AlgebraOPEs:
 
         对应 notebook line 569-624
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        T = BasisOperator("T",  conformal_weight=2)
+        W = BasisOperator("W",  conformal_weight=3)
         Bosonic(T, W)
 
         c = Symbol('c')
@@ -226,7 +226,7 @@ class TestW3AlgebraComputations:
         所以 Lambda 的 6 阶极点相消：3c - (3/10)*10c = 0
         最终 max_pole = 4（与 Mathematica 一致）
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         c = Symbol('c')
@@ -264,8 +264,8 @@ class TestW3AlgebraComputations:
         期望结果（line 796-813）:
         << 4|| 18 W ||3|| 14 W' ||2|| 5 W'' ||1|| W''' >>
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        T = BasisOperator("T",  conformal_weight=2)
+        W = BasisOperator("W",  conformal_weight=3)
         Bosonic(T, W)
 
         c = Symbol('c')
@@ -292,8 +292,8 @@ class TestW3AlgebraComputations:
         期望结果（line 815-840）:
         NO[T, NO[T, W'']] - (1/12)NO[T', W⁽⁴⁾]
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        T = BasisOperator("T",  conformal_weight=2)
+        W = BasisOperator("W",  conformal_weight=3)
         Bosonic(T, W)
 
         c = Symbol('c')
@@ -317,8 +317,8 @@ class TestW3AlgebraComputations:
         期望结果（line 842-971）:
         复杂的 NO 项展开，包含高阶导数
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        T = BasisOperator("T",  conformal_weight=2)
+        W = BasisOperator("W",  conformal_weight=3)
         Bosonic(T, W)
 
         c = Symbol('c')
@@ -365,8 +365,8 @@ class TestW3AlgebraNumerical:
 
         设定 c=100, β=1/10
         """
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
-        W = BasisOperator("W", bosonic=True, conformal_weight=3)
+        T = BasisOperator("T",  conformal_weight=2)
+        W = BasisOperator("W",  conformal_weight=3)
         Bosonic(T, W)
 
         c_val = 100

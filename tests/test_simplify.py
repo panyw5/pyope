@@ -16,7 +16,6 @@ from pyope import (
     MakeOPE,
     Bosonic,
     simplify,
-    canonicalize,
     collect_normal_ordered_terms,
 )
 
@@ -25,6 +24,7 @@ from pyope import (
 def clear_registry():
     """每个测试前清空注册表"""
     from pyope.registry import ope_registry
+
     ope_registry.clear()
     yield
     ope_registry.clear()
@@ -44,14 +44,14 @@ class TestSimplifyBasic:
 
     def test_simplify_basis_operator(self):
         """测试基本算符的化简"""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         Bosonic(T)
 
         assert simplify(T) == T
 
     def test_simplify_derivative(self):
         """测试导数算符的化简"""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         Bosonic(T)
 
         dT = d(T)
@@ -59,7 +59,7 @@ class TestSimplifyBasic:
 
     def test_simplify_scalar_multiplication(self):
         """测试标量乘法的化简"""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         Bosonic(T)
 
         expr = 2 * T
@@ -67,8 +67,8 @@ class TestSimplifyBasic:
 
     def test_simplify_addition(self):
         """测试加法的化简"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         expr = T + J
@@ -82,8 +82,8 @@ class TestSimplifyNormalOrdered:
 
     def test_simplify_simple_no(self):
         """测试简单正规序的化简"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         no_TJ = NO(T, J)
@@ -94,7 +94,7 @@ class TestSimplifyNormalOrdered:
 
     def test_simplify_no_with_derivatives(self):
         """测试包含导数的正规序"""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         Bosonic(T)
 
         no_TdT = NO(T, d(T))
@@ -105,8 +105,8 @@ class TestSimplifyNormalOrdered:
 
     def test_simplify_no_with_scalar(self):
         """测试标量乘以正规序"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         expr = 3 * NO(T, J)
@@ -116,8 +116,8 @@ class TestSimplifyNormalOrdered:
 
     def test_simplify_sum_of_no(self):
         """测试正规序的和"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         expr = NO(T, J) + NO(J, T)
@@ -127,14 +127,16 @@ class TestSimplifyNormalOrdered:
         # 1. 保持为和的形式：NO(T,J) + NO(J,T) (Add)
         # 2. 合并为乘法形式：2*NO(T,J) (Mul)
         # 两种结果都是正确的，取决于 simplify 的实现
-        assert isinstance(result, (sp.Add, sp.Mul)), \
+        assert isinstance(result, (sp.Add, sp.Mul)), (
             f"Expected Add or Mul, got {type(result)}"
+        )
 
         # 如果是 Mul 形式，验证它等价于原表达式
         if isinstance(result, sp.Mul):
             # 应该是 2*NO(T,J) 或 2*NO(J,T)
-            assert result == 2*NO(T, J) or result == 2*NO(J, T), \
+            assert result == 2 * NO(T, J) or result == 2 * NO(J, T), (
                 f"Expected 2*NO(T,J) or 2*NO(J,T), got {result}"
+            )
 
 
 class TestSimplifyOPEData:
@@ -144,15 +146,12 @@ class TestSimplifyOPEData:
         """测试 OPEData 对象的化简"""
         from pyope import OPEData
 
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # 创建 OPEData
-        ope_data = OPEData({
-            2: 2 * T + J,
-            1: d(T)
-        })
+        ope_data = OPEData({2: 2 * T + J, 1: d(T)})
 
         result = simplify(ope_data)
 
@@ -166,8 +165,8 @@ class TestCollectNormalOrderedTerms:
 
     def test_collect_simple_terms(self):
         """测试收集简单项"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         expr = 2 * NO(T, J) + 3 * NO(T, J)
@@ -175,13 +174,13 @@ class TestCollectNormalOrderedTerms:
 
         # 应该合并同类项
         assert len(terms) == 1
-        key = ('NO', ('Basis', 'T', True), ('Basis', 'J', True))
+        key = ("NO", ("Basis", "T", True), ("Basis", "J", True))
         assert terms[key] == 5
 
     def test_collect_different_terms(self):
         """测试收集不同的项"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         expr = NO(T, J) + NO(J, T) + NO(J, J)
@@ -196,8 +195,8 @@ class TestSimplifyIntegration:
 
     def test_simplify_ope_result(self):
         """测试化简 OPE 计算结果"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # 定义 OPE
@@ -220,8 +219,8 @@ class TestSimplifyDerivativeExpansion:
 
     def test_expand_first_order_derivative(self):
         """测试一阶导数的展开：d(NO(A,B)) = NO(d(A), B) + NO(A, d(B))"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # 构造 d(NO(T, J))
@@ -237,8 +236,8 @@ class TestSimplifyDerivativeExpansion:
 
     def test_expand_second_order_derivative(self):
         """测试二阶导数的展开：d^2(NO(A,B)) = NO(d^2(A), B) + 2*NO(d(A), d(B)) + NO(A, d^2(B))"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # 构造 d^2(NO(T, J))
@@ -254,8 +253,8 @@ class TestSimplifyDerivativeExpansion:
 
     def test_expand_third_order_derivative(self):
         """测试三阶导数的展开"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # 构造 d^3(NO(T, J))
@@ -276,8 +275,8 @@ class TestSimplifyDerivativeExpansion:
 
     def test_disable_derivative_expansion(self):
         """测试禁用导数展开"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # 构造 d(NO(T, J))
@@ -291,9 +290,9 @@ class TestSimplifyDerivativeExpansion:
 
     def test_expand_nested_no(self):
         """测试嵌套 NO 的导数展开"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
-        W = BasisOperator("W", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
+        W = BasisOperator("W", )
         Bosonic(T, J, W)
 
         # 构造 d(NO(NO(T, J), W))
@@ -305,16 +304,14 @@ class TestSimplifyDerivativeExpansion:
         # 第一层展开：NO(d(NO(T,J)), W) + NO(NO(T,J), d(W))
         # 第二层展开 d(NO(T,J))：NO(d(T), J) + NO(T, d(J))
         # 最终：NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(NO(T, J), d(W))
-        expected = (
-            NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(NO(T, J), d(W))
-        )
+        expected = NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(NO(T, J), d(W))
 
         assert result == expected
 
     def test_expand_derivative_with_scalar(self):
         """测试带标量系数的导数展开"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # 构造 3 * d(NO(T, J))
@@ -330,9 +327,9 @@ class TestSimplifyDerivativeExpansion:
 
     def test_expand_sum_of_derivatives(self):
         """测试导数和的展开"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
-        W = BasisOperator("W", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
+        W = BasisOperator("W", )
         Bosonic(T, J, W)
 
         # 构造 d(NO(T, J)) + d(NO(W, J))
@@ -360,7 +357,7 @@ class TestSimplifyDerivativeExpansion:
 
     def test_derivative_of_basis_operator_unchanged(self):
         """测试基本算符的导数不受影响"""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         Bosonic(T)
 
         # d(T) 应该保持不变
@@ -371,8 +368,8 @@ class TestSimplifyDerivativeExpansion:
 
     def test_derivative_of_sum_unchanged(self):
         """测试和的导数保持线性性质"""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
         Bosonic(T, J)
 
         # d(T + J) = d(T) + d(J)

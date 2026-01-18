@@ -9,11 +9,11 @@ from fractions import Fraction
 
 # 定义算符
 # bc 系统：费米子（鬼场）
-b = BasisOperator('b', bosonic=False, conformal_weight=Fraction(2))
-c = BasisOperator('c', bosonic=False, conformal_weight=Fraction(-1))
+b = BasisOperator('b', fermionic=True, conformal_weight=Fraction(2))
+c = BasisOperator('c', fermionic=True, conformal_weight=Fraction(-1))
 # βγ 系统：玻色子
-beta = BasisOperator('β', bosonic=True, conformal_weight=Fraction(3, 2))
-gamma = BasisOperator('γ', bosonic=True, conformal_weight=Fraction(-1, 2))
+beta = BasisOperator('β',  conformal_weight=Fraction(3, 2))
+gamma = BasisOperator('γ',  conformal_weight=Fraction(-1, 2))
 
 Fermionic(b, c)  # 修正：b, c 是费米子
 Bosonic(beta, gamma)  # 修正：beta, gamma 是玻色子

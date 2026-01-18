@@ -31,6 +31,7 @@ def _ensure_types_loaded():
         from .operators import BasisOperator, DerivativeOperator, NormalOrderedOperator
         from .constants import ConstantOperator
         from .local_operator import extract_scalar_operator
+
         _BasisOperator = BasisOperator
         _DerivativeOperator = DerivativeOperator
         _NormalOrderedOperator = NormalOrderedOperator
@@ -54,7 +55,7 @@ def make_operator_key(expr: Any) -> Hashable:
 
     Examples:
         >>> from pyope import BasisOperator
-        >>> T = BasisOperator("T", bosonic=True)
+        >>> T = BasisOperator("T")
         >>> key = make_operator_key(T)
         >>> isinstance(key, tuple)
         True
@@ -64,35 +65,34 @@ def make_operator_key(expr: Any) -> Hashable:
 
     # 处理 None 和零
     if expr is None or expr == 0:
-        return ('zero',)
+        return ("zero",)
 
     # BasisOperator
     if isinstance(expr, _BasisOperator):
-        return ('basis', expr.name, expr.is_bosonic, expr._conformal_weight)
+        return ("basis", expr.name, expr.is_bosonic, expr._conformal_weight)
 
     # DerivativeOperator
     if isinstance(expr, _DerivativeOperator):
         base_key = make_operator_key(expr.base)
-        return ('deriv', base_key, expr.order)
+        return ("deriv", base_key, expr.order)
 
     # NormalOrderedOperator
     if isinstance(expr, _NormalOrderedOperator):
         left_key = make_operator_key(expr.left)
         right_key = make_operator_key(expr.right)
-        return ('no', left_key, right_key)
+        return ("no", left_key, right_key)
 
     # ConstantOperator
     if isinstance(expr, _ConstantOperator):
-        return ('const', expr.name)
+        return ("const", expr.name)
 
     # Sympy Add (加法)
     if isinstance(expr, Add):
         # 对项进行排序以确保相同表达式有相同的键
-        term_keys = tuple(sorted(
-            [make_operator_key(arg) for arg in expr.args],
-            key=str
-        ))
-        return ('add', term_keys)
+        term_keys = tuple(
+            sorted([make_operator_key(arg) for arg in expr.args], key=str)
+        )
+        return ("add", term_keys)
 
     # Sympy Mul (乘法)
     if isinstance(expr, Mul):
@@ -101,22 +101,22 @@ def make_operator_key(expr: Any) -> Hashable:
 
         # 如果是纯标量
         if coeff == expr:
-            return ('scalar', str(expr))
+            return ("scalar", str(expr))
 
         # 标量 * 算符
         op_key = make_operator_key(op)
-        return ('mul', str(coeff), op_key)
+        return ("mul", str(coeff), op_key)
 
     # Sympy Symbol 或其他表达式
     if isinstance(expr, sp.Expr):
-        return ('expr', str(expr))
+        return ("expr", str(expr))
 
     # 其他类型：尝试使用字符串表示
     try:
-        return ('other', str(expr), type(expr).__name__)
+        return ("other", str(expr), type(expr).__name__)
     except Exception:
         # 最后的兜底：使用 id
-        return ('id', id(expr))
+        return ("id", id(expr))
 
 
 def make_ope_cache_key(left: Any, right: Any) -> Tuple[Hashable, Hashable]:
@@ -245,12 +245,12 @@ class OPECache:
         hit_rate = self.hits / total if total > 0 else 0
 
         return {
-            'hits': self.hits,
-            'misses': self.misses,
-            'total_requests': total,
-            'hit_rate': hit_rate,
-            'cache_size': len(self._cache),
-            'max_size': self.maxsize
+            "hits": self.hits,
+            "misses": self.misses,
+            "total_requests": total,
+            "hit_rate": hit_rate,
+            "cache_size": len(self._cache),
+            "max_size": self.maxsize,
         }
 
 
@@ -264,6 +264,7 @@ def get_ope_cache() -> OPECache:
 
 
 # 数值计算缓存
+
 
 @lru_cache(maxsize=512)
 def cached_pochhammer(q: int, n: int) -> int:
@@ -281,7 +282,7 @@ def cached_pochhammer(q: int, n: int) -> int:
     """
     result = 1
     for i in range(n):
-        result *= (q - 1 - i)
+        result *= q - 1 - i
     return result
 
 
@@ -300,6 +301,7 @@ def cached_binomial(n: int, k: int):
         C(n, k)
     """
     from sympy import binomial
+
     return binomial(n, k)
 
 
@@ -315,4 +317,50 @@ def cached_factorial(n: int):
         n!
     """
     from sympy import factorial
+
     return factorial(n)
+
+
+@lru_cache(maxsize=128)
+def cached_bernoulli_coeff(k: int):
+    """
+    缓存的 Bernoulli 系数计算
+
+    计算费米子正规序公式中的系数 a_k：
+    a_k = 2 * B_{2k+2} * (2^(2k+2) - 1) / (2k + 2)!
+
+    其中 B_n 是第 n 个 Bernoulli 数。
+
+    这个系数用于计算费米子算符的正规序乘积：
+    [AA]_0 = Σ_{k≥0} a_k * ∂^{2k+1} [AA]_{2k+1}
+
+    Args:
+        k: 非负整数索引
+
+    Returns:
+        Bernoulli 系数 a_k (sympy 有理数)
+
+    Examples:
+        >>> cached_bernoulli_coeff(0)  # a_0 = 1/2
+        1/2
+        >>> cached_bernoulli_coeff(1)  # a_1 = -1/24
+        -1/24
+        >>> cached_bernoulli_coeff(2)  # a_2 = 1/240
+        1/240
+
+    References:
+        - VOA-manual.md 公式 (2.3.17)
+        - Thielemans 论文 Section 2.3
+    """
+    from sympy import bernoulli, factorial, Rational
+
+    # 计算 a_k = 2 * B_{2k+2} * (2^(2k+2) - 1) / (2k + 2)!
+    n = 2 * k + 2
+    B_n = bernoulli(n)
+    power_term = 2**n - 1
+    fact_term = factorial(n)
+
+    result = 2 * B_n * power_term / fact_term
+
+    # 确保返回 sympy 有理数
+    return sp.Rational(result)

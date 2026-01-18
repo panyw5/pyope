@@ -53,10 +53,36 @@ class ConstantOperator(Operator):
         return 0
 
     def __eq__(self, other):
-        """相等性比较"""
-        if not isinstance(other, ConstantOperator):
+        if isinstance(other, ConstantOperator):
+            return self._name == other._name
+        if self._name == "Zero":
+            return other == 0 or other == sp.Integer(0)
+        return False
+
+    def __bool__(self):
+        if self._name == "Zero":
             return False
-        return self._name == other._name
+        return True
+
+    def __mul__(self, other):
+        """乘法运算"""
+        if self._name == "Zero":
+            return self  # Zero * anything = Zero
+        if self._name == "One":
+            return other  # One * anything = anything
+        return sp.Mul(self, other)
+
+    def __rmul__(self, other):
+        """右乘法运算"""
+        if self._name == "Zero":
+            return self  # anything * Zero = Zero
+        if self._name == "One":
+            # 特殊处理：如果 other 是 1，返回 One
+            if other == 1 or other == sp.Integer(1):
+                return self
+            # 否则返回 sympy 乘法表达式，保持算符形式
+            return sp.Mul(other, self)
+        return sp.Mul(other, self)
 
     def __hash__(self):
         """哈希值"""
@@ -82,7 +108,6 @@ class ConstantOperator(Operator):
             return "0"
         else:
             return self._name
-
 
 
 # 预定义的常数算符实例
@@ -112,6 +137,7 @@ Zero = ConstantOperator("Zero")
 
 
 # Delta 函数
+
 
 class DeltaFunction(Function):
     """

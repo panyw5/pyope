@@ -26,14 +26,14 @@ print("=" * 80)
 # 按照 Mathematica 的 opfields 顺序定义算符
 # opfields={ww[0,1,z],jj0[0,1,z],wwb[0,1,z],tt[0,1,z],gg[0,1,z],ggt[0,1,z],ggw[0,1,z],ggwb[0,1,z]}
 
-w = BasisOperator('w', bosonic=True, conformal_weight=Fraction(3, 2))
-j0 = BasisOperator('j0', bosonic=True, conformal_weight=Fraction(1))
-wb = BasisOperator('wb', bosonic=True, conformal_weight=Fraction(3, 2))
-t = BasisOperator('t', bosonic=True, conformal_weight=Fraction(2))
-g = BasisOperator('g', bosonic=False, conformal_weight=Fraction(3, 2))
-gt = BasisOperator('gt', bosonic=False, conformal_weight=Fraction(3, 2))
-gw = BasisOperator('gw', bosonic=False, conformal_weight=Fraction(2))
-gwb = BasisOperator('gwb', bosonic=False, conformal_weight=Fraction(2))
+w = BasisOperator('w',  conformal_weight=Fraction(3, 2))
+j0 = BasisOperator('j0',  conformal_weight=Fraction(1))
+wb = BasisOperator('wb',  conformal_weight=Fraction(3, 2))
+t = BasisOperator('t',  conformal_weight=Fraction(2))
+g = BasisOperator('g', fermionic=True, conformal_weight=Fraction(3, 2))
+gt = BasisOperator('gt', fermionic=True, conformal_weight=Fraction(3, 2))
+gw = BasisOperator('gw', fermionic=True, conformal_weight=Fraction(2))
+gwb = BasisOperator('gwb', fermionic=True, conformal_weight=Fraction(2))
 
 # 按照 opfields 顺序注册算符
 # 这个顺序很关键！必须与 Mathematica 一致

@@ -28,9 +28,9 @@ print("测试 1: 系数提取 - 简单线性组合")
 print("=" * 60)
 
 # 定义测试算符
-b = BasisOperator('b', bosonic=False, conformal_weight=Fraction(2))
-c = BasisOperator('c', bosonic=False, conformal_weight=Fraction(-1))
-Fermionic(b, c)  # 修正：b 和 c 是费米子（bosonic=False）
+b = BasisOperator('b', fermionic=True, conformal_weight=Fraction(2))
+c = BasisOperator('c', fermionic=True, conformal_weight=Fraction(-1))
+Fermionic(b, c)  # 修正：b 和 c 是费米子（fermionic=True）
 
 # 测试简单线性组合
 expr1 = 2 * b + 3 * c
@@ -93,8 +93,8 @@ print("测试 4: Fock 空间基枚举 - Level 1")
 print("=" * 60)
 
 # 定义自由场
-beta = BasisOperator('β', bosonic=True, conformal_weight=Fraction(3, 2))
-gamma = BasisOperator('γ', bosonic=True, conformal_weight=Fraction(-1, 2))
+beta = BasisOperator('β',  conformal_weight=Fraction(3, 2))
+gamma = BasisOperator('γ',  conformal_weight=Fraction(-1, 2))
 Bosonic(beta, gamma)  # 修正：beta 和 gamma 是玻色子（bosonic=True）
 
 free_fields = [b, c, beta, gamma]

@@ -33,8 +33,8 @@ class TestBetaGammaSystem:
         """设置 βγ 系统"""
         # 定义 β 和 γ 算符（费米子）
         # β 的共形权重是 -1/2，γ 的共形权重是 3/2
-        self.beta = BasisOperator("β", bosonic=False, conformal_weight=-1/2)
-        self.gamma = BasisOperator("γ", bosonic=False, conformal_weight=3/2)
+        self.beta = BasisOperator("β", fermionic=True, conformal_weight=-1/2)
+        self.gamma = BasisOperator("γ", fermionic=True, conformal_weight=3/2)
 
         # 声明它们是费米子
         Fermionic(self.beta, self.gamma)
@@ -84,8 +84,8 @@ class TestBCSystem:
         """设置 bc 系统"""
         # 定义 b 和 c 算符（费米子）
         # b 的共形权重是 -1，c 的共形权重是 2
-        self.b = BasisOperator("b", bosonic=False, conformal_weight=-1)
-        self.c = BasisOperator("c", bosonic=False, conformal_weight=2)
+        self.b = BasisOperator("b", fermionic=True, conformal_weight=-1)
+        self.c = BasisOperator("c", fermionic=True, conformal_weight=2)
 
         # 声明它们是费米子
         Fermionic(self.b, self.c)
@@ -133,14 +133,14 @@ class TestFreeFieldNormalOrders:
     def setup_method(self):
         """设置自由场系统"""
         # βγ 系统
-        self.beta = BasisOperator("β", bosonic=False, conformal_weight=-1/2)
-        self.gamma = BasisOperator("γ", bosonic=False, conformal_weight=3/2)
+        self.beta = BasisOperator("β", fermionic=True, conformal_weight=-1/2)
+        self.gamma = BasisOperator("γ", fermionic=True, conformal_weight=3/2)
         Fermionic(self.beta, self.gamma)
         OPE[self.beta, self.gamma] = MakeOPE([-One])
 
         # bc 系统
-        self.b = BasisOperator("b", bosonic=False, conformal_weight=-1)
-        self.c = BasisOperator("c", bosonic=False, conformal_weight=2)
+        self.b = BasisOperator("b", fermionic=True, conformal_weight=-1)
+        self.c = BasisOperator("c", fermionic=True, conformal_weight=2)
         Fermionic(self.b, self.c)
         OPE[self.b, self.c] = MakeOPE([One])
 

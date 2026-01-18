@@ -193,7 +193,7 @@ class PerformanceBenchmark:
 def setup_virasoro():
     """设置 Virasoro 代数"""
     c = sp.Symbol('c')
-    T = BasisOperator("T", bosonic=True, conformal_weight=2)
+    T = BasisOperator("T",  conformal_weight=2)
 
     # 定义 Virasoro OPE: T(z)T(w) ~ c/2/(z-w)^4 + 2T/(z-w)^2 + ∂T/(z-w)
     OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])
@@ -204,8 +204,8 @@ def setup_virasoro():
 def setup_superconformal():
     """设置超共形代数 (N=1)"""
     c = sp.Symbol('c')
-    T = BasisOperator("T", bosonic=True, conformal_weight=2)
-    G = BasisOperator("G", bosonic=False, conformal_weight=sp.Rational(3, 2))
+    T = BasisOperator("T",  conformal_weight=2)
+    G = BasisOperator("G", fermionic=True, conformal_weight=sp.Rational(3, 2))
 
     # Virasoro OPE
     OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])

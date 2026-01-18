@@ -46,7 +46,7 @@ class BasisOperator(Operator):
 
     Attributes:
         name: 算符名称
-        bosonic: 是否为玻色算符（True）或费米算符（False）
+        fermionic: 是否为费米算符（False 表示玻色算符）
         indexed: 是否支持索引（如 J[i]）
         conformal_weight: 共形权重（可选）
         indices: 索引元组（仅当 indexed=True 时使用）
@@ -55,7 +55,6 @@ class BasisOperator(Operator):
     def __new__(
         cls,
         name: str,
-        bosonic: bool = None,
         fermionic: bool = None,
         indexed: bool = False,
         conformal_weight: Optional[float] = None,
@@ -68,25 +67,21 @@ class BasisOperator(Operator):
 
         Args:
             name: 算符名称
-            bosonic: 是否为玻色子（默认 True）
-            fermionic: 是否为费米子（默认 False）
+            fermionic: 是否为费米子（默认 False，即玻色子）
             indexed: 是否支持索引
             conformal_weight: 共形权重
             indices: 索引元组（用于索引算符）
             base_name: 基础名称（用于索引算符保持原始名称）
 
         Note:
-            - 如果 bosonic 和 fermionic 都未指定，默认为玻色子
-            - 如果同时指定 bosonic 和 fermionic，fermionic 优先
+            - 如果 fermionic 未指定，默认为玻色子
             - 推荐用法：不指定参数（玻色子）或 fermionic=True（费米子）
         """
         obj = Operator.__new__(cls, name, **assumptions)
 
-        # 处理 bosonic/fermionic 参数
+        # 处理 fermionic 参数
         if fermionic is not None:
             obj._bosonic = not fermionic
-        elif bosonic is not None:
-            obj._bosonic = bosonic
         else:
             obj._bosonic = True  # 默认为玻色子
 
@@ -178,8 +173,10 @@ class BasisOperator(Operator):
         """字符串表示"""
         if self._indices:
             indices_str = ",".join(str(i) for i in self._indices)
-            return f"BasisOperator('{self._base_name}'[{indices_str}], bosonic={self._bosonic})"
-        return f"BasisOperator('{self.name}', bosonic={self._bosonic})"
+            fermionic_str = f", fermionic=True" if not self._bosonic else ""
+            return f"BasisOperator('{self._base_name}'[{indices_str}]{fermionic_str})"
+        fermionic_str = f", fermionic=True" if not self._bosonic else ""
+        return f"BasisOperator('{self.name}'{fermionic_str})"
 
 
 class DerivativeOperator(Operator):
@@ -390,7 +387,7 @@ def d(operator, order: int = 1):
     支持对单个算符或算符的线性组合求导，利用导数的线性性质：
     - d(c * A) = c * d(A)
     - d(A + B) = d(A) + d(B)
-    - d(One) = 0 (常数算符的导数为零)
+    - d(One) = Zero (常数算符的导数为零)
 
     Args:
         operator: 要求导的算符或算符表达式
@@ -400,7 +397,7 @@ def d(operator, order: int = 1):
         DerivativeOperator 实例或 sympy 表达式
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
+        >>> T = BasisOperator("T")
         >>> dT = d(T)  # 一阶导数
         >>> d2T = d(T, 2)  # 二阶导数
         >>> d(d(T))  # 等价于 d(T, 2)
@@ -410,9 +407,9 @@ def d(operator, order: int = 1):
     # 导入常数算符（避免循环导入）
     from .constants import One, Zero, ConstantOperator
 
-    # 如果是常数算符，导数为 0
+    # 如果是常数算符，导数为 Zero
     if operator == One or operator == Zero or isinstance(operator, ConstantOperator):
-        return 0
+        return Zero
 
     # 如果 operator 已经是 DerivativeOperator，累加阶数
     if isinstance(operator, DerivativeOperator):
@@ -434,22 +431,22 @@ def d(operator, order: int = 1):
 
             coeff, op = extract_scalar_operator(operator)
 
-            # 如果算符部分是常数，整个表达式的导数为 0
+            # 如果算符部分是常数，整个表达式的导数为 Zero
             if (
                 op == One
                 or op == Zero
                 or isinstance(op, ConstantOperator)
                 or op == sp.Integer(1)
             ):
-                return 0
+                return Zero
 
             return coeff * d(op, order)
 
         # 其他情况：可能是纯标量
-        return 0
+        return Zero
 
-    # 如果都不是，返回 0（假设是标量）
-    return 0
+    # 如果都不是，返回 Zero（假设是标量）
+    return Zero
 
 
 def dn(order: int, operator):
@@ -466,7 +463,7 @@ def dn(order: int, operator):
         DerivativeOperator 实例或 sympy 表达式
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
+        >>> T = BasisOperator("T")
         >>> d3T = dn(3, T)  # 三阶导数
         >>> dn(2, d(T))  # 等价于 dn(3, T)
         >>> dn(2, 2 * T)  # 2 * dn(2, T)

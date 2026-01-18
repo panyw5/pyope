@@ -71,7 +71,7 @@ def is_local_operator(expr: Any) -> bool:
         True 如果表达式是局域算符，否则 False
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
+        >>> T = BasisOperator("T")
         >>> is_local_operator(T)  # True
         >>> is_local_operator(T + T)  # True
         >>> is_local_operator(2 * T)  # True
@@ -107,7 +107,7 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
         (scalar, operator) 元组
 
     Examples:
-        >>> T = BasisOperator("T", bosonic=True)
+        >>> T = BasisOperator("T")
         >>> extract_scalar_operator(2 * T)
         (2, T)
         >>> extract_scalar_operator(T)

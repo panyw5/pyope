@@ -31,12 +31,16 @@ class OPEData:
         Args:
             poles: 极点字典，键为阶数，值为系数（可以是算符或 sympy 表达式）
         """
+        from .utils import sympify_coefficient
+
         if poles is None:
             self._poles = {}
         else:
-            # 过滤掉零系数的极点
-            self._poles = {n: coeff for n, coeff in poles.items()
-                          if not self._is_zero(coeff)}
+            self._poles = {
+                n: sympify_coefficient(coeff)
+                for n, coeff in poles.items()
+                if not self._is_zero(coeff)
+            }
 
     @staticmethod
     def _is_zero(expr: Any) -> bool:
@@ -49,7 +53,7 @@ class OPEData:
         Returns:
             True 如果表达式为零
         """
-        if expr == 0:
+        if expr == 0 or (hasattr(expr, "_name") and getattr(expr, "_name") == "Zero"):
             return True
         if isinstance(expr, sp.Expr):
             # 使用简单的相等性检查，避免触发复杂的 sympy 简化
@@ -57,7 +61,7 @@ class OPEData:
         return False
 
     @classmethod
-    def from_list(cls, pole_list: List[Any]) -> 'OPEData':
+    def from_list(cls, pole_list: List[Any]) -> "OPEData":
         """
         从列表创建 OPEData（Mathematica 风格）
 
@@ -74,12 +78,15 @@ class OPEData:
             >>> pole_list = [c/2, 0, 2*T, dT]  # [pole_4, pole_3, pole_2, pole_1]
             >>> ope = OPEData.from_list(pole_list)
         """
+        from .utils import sympify_coefficient
+
         n = len(pole_list)
         poles = {}
         for i, coeff in enumerate(pole_list):
             pole_order = n - i
             if not cls._is_zero(coeff):
-                poles[pole_order] = coeff
+                # 自动转换系数为 SymPy 类型
+                poles[pole_order] = sympify_coefficient(coeff)
         return cls(poles)
 
     @property
@@ -107,9 +114,11 @@ class OPEData:
             n: 极点阶数
 
         Returns:
-            第 n 阶极点的系数，如果不存在则返回 0
+            第 n 阶极点的系数，如果不存在则返回 Zero
         """
-        return self._poles.get(n, 0)
+        from .constants import Zero
+
+        return self._poles.get(n, Zero)
 
     def set_pole(self, n: int, coeff: Any):
         """
@@ -134,7 +143,7 @@ class OPEData:
         """
         return len(self._poles) == 0
 
-    def __add__(self, other: 'OPEData') -> 'OPEData':
+    def __add__(self, other: "OPEData") -> "OPEData":
         """
         OPE 加法
 
@@ -177,7 +186,7 @@ class OPEData:
             return self
         return self.__add__(other)
 
-    def __mul__(self, scalar: Any) -> 'OPEData':
+    def __mul__(self, scalar: Any) -> "OPEData":
         """
         标量乘法（右乘）
 
@@ -190,7 +199,7 @@ class OPEData:
         result_poles = {n: scalar * coeff for n, coeff in self._poles.items()}
         return OPEData(result_poles)
 
-    def __rmul__(self, scalar: Any) -> 'OPEData':
+    def __rmul__(self, scalar: Any) -> "OPEData":
         """
         标量乘法（左乘）
 
@@ -202,7 +211,7 @@ class OPEData:
         """
         return self.__mul__(scalar)
 
-    def __neg__(self) -> 'OPEData':
+    def __neg__(self) -> "OPEData":
         """
         取负
 
@@ -211,7 +220,7 @@ class OPEData:
         """
         return self.__mul__(-1)
 
-    def __sub__(self, other: 'OPEData') -> 'OPEData':
+    def __sub__(self, other: "OPEData") -> "OPEData":
         """
         OPE 减法
 
@@ -244,7 +253,9 @@ class OPEData:
         for n in self._poles.keys():
             if self._poles[n] != other._poles[n]:
                 # 尝试使用 sympy 的 equals 方法
-                if isinstance(self._poles[n], sp.Expr) and isinstance(other._poles[n], sp.Expr):
+                if isinstance(self._poles[n], sp.Expr) and isinstance(
+                    other._poles[n], sp.Expr
+                ):
                     if not self._poles[n].equals(other._poles[n]):
                         return False
                 else:
@@ -252,7 +263,9 @@ class OPEData:
 
         return True
 
-    def simplify(self, simplify_func: Optional[Callable] = None, expand_derivatives: bool = True) -> 'OPEData':
+    def simplify(
+        self, simplify_func: Optional[Callable] = None, expand_derivatives: bool = True
+    ) -> "OPEData":
         """
         简化 OPE 中的表达式
 
@@ -266,7 +279,10 @@ class OPEData:
         if simplify_func is None:
             # 使用 pyope 的 simplify 而不是 sympy 的
             from .simplify import simplify as pyope_simplify
-            simplify_func = lambda expr: pyope_simplify(expr, expand_derivatives=expand_derivatives)
+
+            simplify_func = lambda expr: pyope_simplify(
+                expr, expand_derivatives=expand_derivatives
+            )
 
         result_poles = {}
         for n, coeff in self._poles.items():
@@ -282,13 +298,15 @@ class OPEData:
         if self.is_zero():
             return "OPEData({})"
 
-        pole_strs = [f"{n}: {coeff}" for n, coeff in sorted(self._poles.items(), reverse=True)]
+        pole_strs = [
+            f"{n}: {coeff}" for n, coeff in sorted(self._poles.items(), reverse=True)
+        ]
         return f"OPEData({{{', '.join(pole_strs)}}})"
 
     def __str__(self) -> str:
         """用户友好的字符串表示"""
         if self.is_zero():
-            return "0"
+            return "Zero"
 
         terms = []
         for n in sorted(self._poles.keys(), reverse=True):
@@ -310,7 +328,7 @@ class OPEData:
             LaTeX 格式的字符串
         """
         if self.is_zero():
-            return r"$0$"
+            return r"$\text{Zero}$"
 
         terms = []
         for n in sorted(self._poles.keys(), reverse=True):
@@ -318,6 +336,7 @@ class OPEData:
 
             # 将系数转换为 LaTeX
             from sympy import latex
+
             coeff_latex = latex(coeff)
 
             # 构建分式
@@ -331,4 +350,3 @@ class OPEData:
 
         # 包装在 $ $ 中
         return f"${latex_str}$"
-

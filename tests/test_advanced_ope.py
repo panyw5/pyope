@@ -39,7 +39,7 @@ class TestVirasoroAlgebra:
 
     def test_virasoro_ope_definition(self):
         """Test basic Virasoro OPE definition."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         c = sp.Symbol("c")
 
         # Define Virasoro OPE
@@ -59,8 +59,8 @@ class TestVirasoroAlgebra:
         For a primary field φ of dimension h:
         T(z)φ(w) = h φ(w) / (z-w)^2 + φ'(w) / (z-w)
         """
-        T = BasisOperator("T", bosonic=True)
-        phi = BasisOperator("φ", bosonic=True)
+        T = BasisOperator("T", )
+        phi = BasisOperator("φ", )
         h = sp.Symbol("h")
 
         # Define OPEs
@@ -91,8 +91,8 @@ class TestDerivativeRules:
         - pole(2) contributes to OPE[∂A, B] at pole(3): (-1) * (3-1) * A = -2*A
         - pole(1) contributes to OPE[∂A, B] at pole(2): (-1) * (2-1) * B = -B
         """
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
 
         # Define OPE[A, B]
         OPE[A, B] = OPE.make([A, B])  # poles at 2 and 1
@@ -113,8 +113,8 @@ class TestDerivativeRules:
         Formula (from OPEdefs.m line 937-948):
         Uses Leibniz rule with binomial coefficients and Pochhammer symbols.
         """
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
 
         # Define OPE[A, B]
         OPE[A, B] = OPE.make([A, B])
@@ -139,7 +139,7 @@ class TestDerivativeRules:
         - pole(2) contributes to OPE[∂T, T] at pole(3): (-1) * (3-1) * 2*T = -4*T
         - pole(1) contributes to OPE[∂T, T] at pole(2): (-1) * (2-1) * ∂T = -∂T
         """
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         c = sp.Symbol("c")
 
         # Define Virasoro OPE
@@ -172,8 +172,8 @@ class TestCommutationRelations:
         """
         from pyope import Bosonic
 
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
 
         # Register operators explicitly
         Bosonic(A, B)
@@ -197,8 +197,8 @@ class TestCommutationRelations:
         """
         from pyope import Fermionic
 
-        psi = BasisOperator("ψ", bosonic=False)
-        chi = BasisOperator("χ", bosonic=False)
+        psi = BasisOperator("ψ", fermionic=True)
+        chi = BasisOperator("χ", fermionic=True)
 
         # Register operators explicitly
         Fermionic(psi, chi)
@@ -219,7 +219,7 @@ class TestCommutationRelations:
 
         This is a concrete example with known result.
         """
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         c = sp.Symbol("c")
 
         # Define T(z)T(w)
@@ -250,9 +250,9 @@ class TestCompositeOperatorOPE:
         - NO[OPE[A,B], C]
         - Sum over nested OPEs
         """
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
-        C = BasisOperator("C", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
+        C = BasisOperator("C", )
 
         # Define basic OPEs
         OPE[A, B] = OPE.make([A])
@@ -273,9 +273,9 @@ class TestCompositeOperatorOPE:
         Formula (OPEdefs.m line 1028-1084):
         More complex than right composite case.
         """
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
-        C = BasisOperator("C", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
+        C = BasisOperator("C", )
 
         # Define basic OPEs
         OPE[A, C] = OPE.make([A])
@@ -304,8 +304,8 @@ class TestNormalOrderingSimplification:
         Formula (OPEdefs.m line 1520-1528):
         NOCommuteHelp[A,B] = Sum[-(-1)^m / m! * D^m[pole_m(OPE[A,B])], {m, maxpole}]
         """
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
 
         # Define OPE[A, B]
         OPE[A, B] = OPE.make([A, B])
@@ -323,9 +323,9 @@ class TestNormalOrderingSimplification:
 
         Should be rewritten using OPE formulas.
         """
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
-        C = BasisOperator("C", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
+        C = BasisOperator("C", )
 
         # Define OPEs
         OPE[A, C] = OPE.make([A])
@@ -349,7 +349,7 @@ class TestOPEPoleExtraction:
 
     def test_pole_extraction_basic(self):
         """Test extracting poles from OPEData."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         c = sp.Symbol("c")
 
         ope = OPE.make([c/2 * One, 0, 2*T, d(T)])
@@ -367,8 +367,8 @@ class TestOPEPoleExtraction:
         In OPEdefs.m, OPEPole[n][A,B] computes the n-th pole
         without first computing the full OPE.
         """
-        A = BasisOperator("A", bosonic=True)
-        B = BasisOperator("B", bosonic=True)
+        A = BasisOperator("A", )
+        B = BasisOperator("B", )
 
         # Define OPE
         OPE[A, B] = OPE.make([A, B])
@@ -395,7 +395,7 @@ class TestCurrentAlgebra:
         """
         # Use indexed operators
         i, j = sp.symbols("i j")
-        J = lambda idx: BasisOperator(f"J", bosonic=True, indices=(idx,))
+        J = lambda idx: BasisOperator(f"J",  indices=(idx,))
 
         k = sp.Symbol("k")
 
@@ -416,7 +416,7 @@ class TestExpressionSimplification:
 
     def test_collect_like_terms(self):
         """Test collecting terms with the same operator."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         c = sp.Symbol("c")
 
         # Create expression with multiple T terms
@@ -448,8 +448,8 @@ class TestExpressionSimplification:
 
     def test_ope_arithmetic(self):
         """Test arithmetic operations on OPEData."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         ope1 = OPEData({2: T, 1: J})
         ope2 = OPEData({2: T, 1: -J})

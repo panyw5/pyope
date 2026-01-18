@@ -43,26 +43,26 @@ from pyope import (
 def test_operator_basic_properties():
     """测试算符的基本属性"""
     # 创建玻色算符
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     assert T.is_bosonic == True
     assert T.is_fermionic == False
     assert T.parity == 0
     
     # 创建费米算符
-    psi = BasisOperator("psi", bosonic=False)
+    psi = BasisOperator("psi", fermionic=True)
     assert psi.is_bosonic == False
     assert psi.is_fermionic == True
     assert psi.parity == 1
     
     # 测试索引算符
     i = Symbol('i')
-    J = BasisOperator("J", bosonic=True, indexed=True)
+    J = BasisOperator("J",  indexed=True)
     J_i = J[i]
     assert J_i.base_name == "J"
     assert J_i.indices == (i,)
     
     # 测试唯一性和哈希
-    T2 = BasisOperator("T", bosonic=True)
+    T2 = BasisOperator("T", )
     assert T == T2
     assert hash(T) == hash(T2)
     
@@ -76,7 +76,7 @@ def test_operator_basic_properties():
 
 def test_derivative_operations():
     """测试导数运算的线性性质"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     
     # 测试一阶导数
     dT = d(T)
@@ -92,7 +92,7 @@ def test_derivative_operations():
     assert d(2 * T) == 2 * d(T)
     
     # 测试线性性质：d(A+B) = d(A) + d(B)
-    W = BasisOperator("W", bosonic=True)
+    W = BasisOperator("W", )
     assert d(T + W) == d(T) + d(W)
     
     # 测试嵌套导数
@@ -110,7 +110,7 @@ def test_derivative_operations():
 
 def test_ope_data_operations():
     """测试 OPEData 的基本操作"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     
     # 从字典创建 OPEData
     poles = {4: sp.Rational(1, 2), 2: 2*T, 1: d(T)}
@@ -158,7 +158,7 @@ def test_ope_data_operations():
 
 def test_local_operator_operations():
     """测试局域算符的运算"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     
     # 测试加法
     sum_op = T + T
@@ -176,7 +176,7 @@ def test_local_operator_operations():
     # 测试获取 parity
     assert get_operator_parity(T) == 0
     
-    psi = BasisOperator("psi", bosonic=False)
+    psi = BasisOperator("psi", fermionic=True)
     assert get_operator_parity(psi) == 1
     
     # 测试简化表达式
@@ -225,7 +225,7 @@ def test_ope_and_bracket_functions():
     """测试 OPE 和 bracket 功能已实现"""
     from pyope import OPE, bracket, MakeOPE, Bosonic
 
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     Bosonic(T)
 
     # 定义 OPE
@@ -247,7 +247,7 @@ def test_ope_and_bracket_functions():
 
 def test_derivative_leibniz_rule():
     """测试导数的莱布尼茨律（未完全实现）"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     
     # 当前实现只支持线性性质，不支持莱布尼茨律
     # 例如：d(NO(A,B)) 应该等于 NO(d(A),B) + NO(A,d(B))
@@ -268,8 +268,8 @@ def test_derivative_leibniz_rule():
 
 def test_normal_ordered_operator():
     """测试 NormalOrderedOperator 的基本功能"""
-    T = BasisOperator("T", bosonic=True)
-    W = BasisOperator("W", bosonic=True)
+    T = BasisOperator("T", )
+    W = BasisOperator("W", )
     
     # 创建正规序算符
     no_TW = NormalOrderedOperator(T, W)
@@ -281,7 +281,7 @@ def test_normal_ordered_operator():
     assert no_TW.parity == (T.parity + W.parity) % 2
     
     # 测试费米算符的 parity
-    psi = BasisOperator("psi", bosonic=False)
+    psi = BasisOperator("psi", fermionic=True)
     no_psi_psi = NormalOrderedOperator(psi, psi)
     assert no_psi_psi.parity == 0  # 1 + 1 = 2, 2 % 2 = 0
     
@@ -297,7 +297,7 @@ def test_normal_ordered_operator():
 
 def test_ope_data_simplify():
     """测试 OPEData 的简化功能"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     
     # 创建包含简化形式的 OPEData
     poles = {
@@ -320,8 +320,8 @@ def test_ope_data_simplify():
 
 def test_complex_expressions():
     """测试复杂的算符表达式"""
-    T = BasisOperator("T", bosonic=True)
-    W = BasisOperator("W", bosonic=True)
+    T = BasisOperator("T", )
+    W = BasisOperator("W", )
     
     # 创建复杂表达式
     expr = 2*T + 3*W - T + 2*W
@@ -344,7 +344,7 @@ def test_complex_expressions():
 
 def test_edge_cases():
     """测试边界情况"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     
     # 测试零阶导数
     d0T = d(T, 0)
@@ -373,7 +373,7 @@ def test_indexed_operators():
     i = Symbol('i')
     j = Symbol('j')
     
-    J = BasisOperator("J", bosonic=True, indexed=True)
+    J = BasisOperator("J",  indexed=True)
     
     # 创建索引算符
     J_i = J[i]
@@ -392,7 +392,7 @@ def test_indexed_operators():
     assert J_i != J_j
     
     # 测试非索引算符的索引操作
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
     try:
         T_i = T[i]
         pytest.fail("Non-indexed operator should not support indexing")
@@ -406,8 +406,8 @@ def test_indexed_operators():
 
 def test_derivative_operator_parity():
     """测试导数算符的 parity"""
-    T = BasisOperator("T", bosonic=True)
-    psi = BasisOperator("psi", bosonic=False)
+    T = BasisOperator("T", )
+    psi = BasisOperator("psi", fermionic=True)
     
     # 玻色算符的导数应该是玻色子
     dT = d(T)
@@ -428,7 +428,7 @@ def test_derivative_operator_parity():
 
 def test_ope_data_equality():
     """测试 OPEData 的相等性"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
 
     poles1 = {2: 2*T, 1: d(T)}
     poles2 = {2: 2*T, 1: d(T)}
@@ -451,7 +451,7 @@ def test_ope_data_equality():
 
 def test_ope_data_string_representation():
     """测试 OPEData 的字符串表示"""
-    T = BasisOperator("T", bosonic=True)
+    T = BasisOperator("T", )
 
     # 空 OPEData 的字符串表示是 "0"
     empty_ope = OPEData()

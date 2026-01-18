@@ -35,13 +35,13 @@ print("第 1 部分：定义自由场系统")
 print("=" * 80)
 
 # 定义自由场
-b = BasisOperator('b', bosonic=False, conformal_weight=Fraction(2))
-c = BasisOperator('c', bosonic=False, conformal_weight=Fraction(-1))
-beta = BasisOperator('β', bosonic=True, conformal_weight=Fraction(3, 2))
-gamma = BasisOperator('γ', bosonic=True, conformal_weight=Fraction(-1, 2))
+b = BasisOperator('b', fermionic=True, conformal_weight=Fraction(2))
+c = BasisOperator('c', fermionic=True, conformal_weight=Fraction(-1))
+beta = BasisOperator('β',  conformal_weight=Fraction(3, 2))
+gamma = BasisOperator('γ',  conformal_weight=Fraction(-1, 2))
 
 # 注册统计性
-Fermionic(b, c)  # 修正：b 和 c 是费米子（bosonic=False）
+Fermionic(b, c)  # 修正：b 和 c 是费米子（fermionic=True）
 Bosonic(beta, gamma)  # 修正：beta 和 gamma 是玻色子（bosonic=True）
 
 free_fields = [b, c, beta, gamma]

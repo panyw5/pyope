@@ -38,7 +38,7 @@ class TestFreeFieldsOPE:
         ∂X(z) ∂X(w) ~ 1/(z-w)^2
         """
         # 定义自由玻色子
-        dX = BasisOperator("dX", bosonic=True, conformal_weight=1)
+        dX = BasisOperator("dX",  conformal_weight=1)
         Bosonic(dX)
 
         # 定义 OPE
@@ -61,7 +61,7 @@ class TestFreeFieldsOPE:
         ψ(z) ψ(w) ~ 1/(z-w)
         """
         # 定义自由费米子
-        psi = BasisOperator("psi", bosonic=False, conformal_weight=0.5)
+        psi = BasisOperator("psi", fermionic=True, conformal_weight=0.5)
         Fermionic(psi)
 
         # 定义 OPE
@@ -91,7 +91,7 @@ class TestVirasoroAlgebra:
         T(z)T(w) ~ c/2/(z-w)^4 + 2T(w)/(z-w)^2 + ∂T(w)/(z-w)
         """
         # 定义能量-动量张量
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         # 中心荷
@@ -135,7 +135,7 @@ class TestVirasoroAlgebra:
         对于单个自由玻色子，c = 1
         """
         # 定义自由玻色子
-        dX = BasisOperator("dX", bosonic=True, conformal_weight=1)
+        dX = BasisOperator("dX",  conformal_weight=1)
         Bosonic(dX)
 
         # 定义 OPE
@@ -145,7 +145,7 @@ class TestVirasoroAlgebra:
         # 注意：这里我们直接定义 T 的 OPE，而不是从 :∂X ∂X: 计算
         # 因为完整的 Sugawara 构造需要更复杂的实现
 
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         # 对于单个自由玻色子，c = 1
@@ -179,7 +179,7 @@ class TestCompositeOperators:
         测试基本的正规序乘积
         """
         # 定义算符
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         # 创建正规序乘积
@@ -202,7 +202,7 @@ class TestCompositeOperators:
         这是我们刚刚完善的功能
         """
         # 定义算符
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         k = Symbol('k')
@@ -226,7 +226,7 @@ class TestCompositeOperators:
         测试嵌套的正规序乘积
         """
         # 定义算符
-        J = BasisOperator("J", bosonic=True, conformal_weight=1)
+        J = BasisOperator("J",  conformal_weight=1)
         Bosonic(J)
 
         k = Symbol('k')
@@ -260,7 +260,7 @@ class TestJacobiIdentity:
         这里我们测试一个简化版本
         """
         # 定义算符
-        T = BasisOperator("T", bosonic=True, conformal_weight=2)
+        T = BasisOperator("T",  conformal_weight=2)
         Bosonic(T)
 
         c = Symbol('c')

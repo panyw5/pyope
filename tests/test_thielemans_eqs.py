@@ -19,7 +19,7 @@ print("验证 Thielemans 论文 eq 3.3.1 和 3.3.2")
 print("=" * 60)
 
 # 创建算符
-T = BasisOperator("T", bosonic=True)
+T = BasisOperator("T", )
 c = sp.Symbol('c')
 
 # 定义 Virasoro OPE: T(z)T(w)

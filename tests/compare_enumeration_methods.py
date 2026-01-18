@@ -16,14 +16,14 @@ print("Level 4 算符枚举对比")
 print("=" * 80)
 
 # 定义算符（按 Mathematica opfields 顺序）
-w = BasisOperator('w', bosonic=True, conformal_weight=Fraction(3, 2))
-j0 = BasisOperator('j0', bosonic=True, conformal_weight=Fraction(1))
-wb = BasisOperator('wb', bosonic=True, conformal_weight=Fraction(3, 2))
-t = BasisOperator('t', bosonic=True, conformal_weight=Fraction(2))
-g = BasisOperator('g', bosonic=False, conformal_weight=Fraction(3, 2))
-gt = BasisOperator('gt', bosonic=False, conformal_weight=Fraction(3, 2))
-gw = BasisOperator('gw', bosonic=False, conformal_weight=Fraction(2))
-gwb = BasisOperator('gwb', bosonic=False, conformal_weight=Fraction(2))
+w = BasisOperator('w',  conformal_weight=Fraction(3, 2))
+j0 = BasisOperator('j0',  conformal_weight=Fraction(1))
+wb = BasisOperator('wb',  conformal_weight=Fraction(3, 2))
+t = BasisOperator('t',  conformal_weight=Fraction(2))
+g = BasisOperator('g', fermionic=True, conformal_weight=Fraction(3, 2))
+gt = BasisOperator('gt', fermionic=True, conformal_weight=Fraction(3, 2))
+gw = BasisOperator('gw', fermionic=True, conformal_weight=Fraction(2))
+gwb = BasisOperator('gwb', fermionic=True, conformal_weight=Fraction(2))
 
 # 注册
 Bosonic(w, j0, wb, t)

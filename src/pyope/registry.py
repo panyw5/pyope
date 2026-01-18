@@ -50,12 +50,17 @@ class OPERegistry:
             ValueError: 如果 parity 不是 0 或 1
         """
         if parity not in (0, 1):
-            raise ValueError(f"Parity must be 0 (bosonic) or 1 (fermionic), got {parity}")
+            raise ValueError(
+                f"Parity must be 0 (bosonic) or 1 (fermionic), got {parity}"
+            )
 
         # 如果算符已经注册，发出警告
         if self.is_registered(operator):
             import warnings
-            warnings.warn(f"Operator {operator} is already registered, overwriting parity")
+
+            warnings.warn(
+                f"Operator {operator} is already registered, overwriting parity"
+            )
 
         # 注册 parity
         self._parities[operator] = parity
@@ -129,19 +134,19 @@ class OPERegistry:
         # 比较规则：
         # 1. 比较基础算符 (base operator)
         # 2. 如果基础算符相同，比较导数阶数 (order)
-        
+
         left_base = left
         left_order = 0
         if isinstance(left, DerivativeOperator):
             left_base = left.base
             left_order = left.order
-            
+
         right_base = right
         right_order = 0
         if isinstance(right, DerivativeOperator):
             right_base = right.base
             right_order = right.order
-            
+
         # 比较基础算符
         # 获取位置
         left_pos = self._positions.get(left_base)
@@ -156,13 +161,14 @@ class OPERegistry:
             # 如果至少有一个未注册，使用字符串比较作为 fallback
             # 但如果它们是同一个算符（即使未注册），则继续比较阶数
             if left_base != right_base:
-                return -1 if str(left_base) < str(right_base) else 1
-        
+                # 字符串比较：如果 left < right（字典序），返回正数（顺序正确）
+                return 1 if str(left_base) < str(right_base) else -1
+
         # 基础算符相同，比较导数阶数
         # 阶数小的在前
         if left_order != right_order:
-            return right_order - left_order # 如果 right > left (order), 返回正数
-            
+            return right_order - left_order  # 如果 right > left (order), 返回正数
+
         return 0
 
     def define_ope(self, left: Any, right: Any, ope_data: OPEData) -> None:
@@ -175,7 +181,7 @@ class OPERegistry:
             ope_data: OPE 数据
 
         Examples:
-            >>> T = BasisOperator("T", bosonic=True)
+            >>> T = BasisOperator("T")
             >>> registry.define_ope(T, T, OPEData({2: 2*T, 1: d(T)}))
         """
         # 自动注册算符（如果它们是 BasisOperator 且未注册）
@@ -251,6 +257,7 @@ class OPERegistry:
 
         # 清空全局 OPE 缓存
         from .cache import get_ope_cache
+
         get_ope_cache().clear()
 
     def __repr__(self) -> str:
@@ -269,6 +276,7 @@ ope_registry = OPERegistry()
 
 
 # 辅助函数
+
 
 def Bosonic(*operators) -> None:
     """

@@ -18,7 +18,7 @@ class TestBasisOperator:
 
     def test_create_bosonic_operator(self):
         """Test creating a bosonic operator."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         assert T.name == "T"
         assert T.is_bosonic
         assert not T.is_fermionic
@@ -26,7 +26,7 @@ class TestBasisOperator:
 
     def test_create_fermionic_operator(self):
         """Test creating a fermionic operator."""
-        psi = BasisOperator("ψ", bosonic=False)
+        psi = BasisOperator("ψ", fermionic=True)
         assert psi.name == "ψ"
         assert psi.is_fermionic
         assert not psi.is_bosonic
@@ -34,17 +34,17 @@ class TestBasisOperator:
 
     def test_operator_equality(self):
         """Test operator equality."""
-        T1 = BasisOperator("T", bosonic=True)
-        T2 = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T1 = BasisOperator("T", )
+        T2 = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         assert T1 == T2
         assert T1 != J
 
     def test_operator_hash(self):
         """Test operator hashing."""
-        T1 = BasisOperator("T", bosonic=True)
-        T2 = BasisOperator("T", bosonic=True)
+        T1 = BasisOperator("T", )
+        T2 = BasisOperator("T", )
 
         # Same operators should have same hash
         assert hash(T1) == hash(T2)
@@ -55,7 +55,7 @@ class TestBasisOperator:
 
     def test_indexed_operator(self):
         """Test indexed operators."""
-        J = BasisOperator("J", bosonic=True, indexed=True)
+        J = BasisOperator("J",  indexed=True)
         i = sp.Symbol("i")
         j = sp.Symbol("j")
 
@@ -69,8 +69,8 @@ class TestBasisOperator:
 
     def test_arithmetic_operations(self):
         """Test arithmetic operations on operators."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         # Addition
         expr = T + J
@@ -90,7 +90,7 @@ class TestDerivativeOperator:
 
     def test_create_derivative(self):
         """Test creating derivative operators."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         dT = d(T)
 
         assert dT.base == T
@@ -99,7 +99,7 @@ class TestDerivativeOperator:
 
     def test_higher_order_derivative(self):
         """Test higher order derivatives."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         d2T = d(T, 2)
         d3T = dn(3, T)
 
@@ -108,7 +108,7 @@ class TestDerivativeOperator:
 
     def test_derivative_equality(self):
         """Test derivative equality."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         dT1 = d(T)
         dT2 = d(T)
 
@@ -116,7 +116,7 @@ class TestDerivativeOperator:
 
     def test_derivative_hash(self):
         """Test derivative hashing."""
-        T = BasisOperator("T", bosonic=True)
+        T = BasisOperator("T", )
         dT1 = d(T)
         dT2 = d(T)
 
@@ -128,8 +128,8 @@ class TestNormalOrderedOperator:
 
     def test_create_normal_ordered(self):
         """Test creating normal ordered operators."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         NO_TJ = NormalOrderedOperator(T, J)
 
@@ -139,8 +139,8 @@ class TestNormalOrderedOperator:
 
     def test_normal_ordered_parity(self):
         """Test parity of normal ordered operators."""
-        T = BasisOperator("T", bosonic=True)
-        psi = BasisOperator("ψ", bosonic=False)
+        T = BasisOperator("T", )
+        psi = BasisOperator("ψ", fermionic=True)
 
         NO_TT = NormalOrderedOperator(T, T)
         NO_Tpsi = NormalOrderedOperator(T, psi)
@@ -152,8 +152,8 @@ class TestNormalOrderedOperator:
 
     def test_normal_ordered_equality(self):
         """Test normal ordered equality."""
-        T = BasisOperator("T", bosonic=True)
-        J = BasisOperator("J", bosonic=True)
+        T = BasisOperator("T", )
+        J = BasisOperator("J", )
 
         NO1 = NormalOrderedOperator(T, J)
         NO2 = NormalOrderedOperator(T, J)
