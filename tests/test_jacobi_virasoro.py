@@ -17,11 +17,14 @@ Jacobi 恒等式测试 - Virasoro 代数
 
 import pytest
 import sympy as sp
+
+from pyope.simplify import simplify as pyope_simplify
 from pyope import (
     BasisOperator,
     OPE,
     d,
     One,
+    Zero,
     Bosonic,
     check_jacobi_identity,
     verify_jacobi_identity,
@@ -41,7 +44,7 @@ class TestJacobiIdentityVirasoro:
         Bosonic(self.T)
 
         # 定义 T 的 OPE: T(z)T(w) = c/2/(z-w)^4 + 2T(w)/(z-w)^2 + T'(w)/(z-w)
-        OPE[self.T, self.T] = OPE.make([self.c/2 * One, 0, 2*self.T, d(self.T)])
+        OPE[self.T, self.T] = OPE.make([self.c/2 * One, Zero, 2*self.T, d(self.T)])
 
     def test_virasoro_ope_structure(self):
         """测试 Virasoro OPE 的结构"""
@@ -49,7 +52,7 @@ class TestJacobiIdentityVirasoro:
 
         # 验证各阶极点
         assert ope_TT.pole(4) == self.c/2 * One, "Pole 4 should be c/2*One"
-        assert ope_TT.pole(3) == 0, "Pole 3 should be 0"
+        assert ope_TT.pole(3) == Zero, "Pole 3 should be Zero"
         assert ope_TT.pole(2) == 2*self.T, "Pole 2 should be 2*T"
         assert ope_TT.pole(1) == d(self.T), "Pole 1 should be d(T)"
 
@@ -73,7 +76,7 @@ class TestJacobiIdentityVirasoro:
         all_zero = True
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                if value != 0:
+                if pyope_simplify(value) != Zero and pyope_simplify(value) != 0:
                     print(f"  Non-zero entry at [{i+1},{j+1}]: {value}")
                     all_zero = False
 
@@ -85,7 +88,8 @@ class TestJacobiIdentityVirasoro:
         # 断言所有元素为 0
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                assert value == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
+                simplified = pyope_simplify(value)
+                assert simplified == Zero or simplified == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
 
         print("SUCCESS: Jacobi identity holds for Virasoro algebra!")
 
@@ -129,7 +133,7 @@ class TestJacobiIdentityVirasoro:
         print("\nComparing with Mathematica reference results...")
 
         # Mathematica 参考结果：5x5 全零矩阵
-        mathematica_result = [[0]*5 for _ in range(5)]
+        mathematica_result = [[Zero] * 5 for _ in range(5)]
 
         # pyope 计算结果
         pyope_result = check_jacobi_identity(self.T, self.T, self.T, simplify_func=sp.expand)
@@ -143,8 +147,8 @@ class TestJacobiIdentityVirasoro:
             for j in range(len(pyope_result[i])):
                 pyope_value = pyope_result[i][j]
                 mathematica_value = mathematica_result[i][j]
-
-                assert pyope_value == mathematica_value, \
+                simplified = pyope_simplify(pyope_value)
+                assert simplified == mathematica_value or simplified == 0, \
                     f"Mismatch at [{i+1},{j+1}]: pyope={pyope_value}, mathematica={mathematica_value}"
 
         print("SUCCESS: pyope results match Mathematica reference!")

@@ -33,12 +33,15 @@ OPE 公式：
 import pytest
 import sympy as sp
 import json
+
+from pyope.simplify import simplify as pyope_simplify
 from pathlib import Path
 from pyope import (
     BasisOperator,
     OPE,
     d,
     One,
+    Zero,
     Bosonic,
     Fermionic,
     check_jacobi_identity,
@@ -66,13 +69,13 @@ class TestJacobiIdentitySuperconformal:
 
         # 定义 OPE
         # 1. T(z)T(w) = c/2/(z-w)^4 + 2T(w)/(z-w)^2 + ∂T(w)/(z-w)
-        OPE[self.T, self.T] = OPE.make([self.c/2 * One, 0, 2*self.T, d(self.T)])
+        OPE[self.T, self.T] = OPE.make([self.c/2 * One, Zero, 2*self.T, d(self.T)])
 
         # 2. T(z)G(w) = (3/2)G(w)/(z-w)^2 + ∂G(w)/(z-w)
-        OPE[self.T, self.G] = OPE.make([0, sp.Rational(3, 2)*self.G, d(self.G)])
+        OPE[self.T, self.G] = OPE.make([Zero, sp.Rational(3, 2)*self.G, d(self.G)])
 
         # 3. G(z)G(w) = (2c/3)/(z-w)^3 + 2T(w)/(z-w)
-        OPE[self.G, self.G] = OPE.make([2*self.c/3 * One, 0, 2*self.T])
+        OPE[self.G, self.G] = OPE.make([2*self.c/3 * One, Zero, 2*self.T])
 
         print("\n" + "="*70)
         print("N=1 Superconformal Algebra Setup")
@@ -122,7 +125,7 @@ class TestJacobiIdentitySuperconformal:
         print(f"  Pole 2: {ope_TT.pole(2)}")
         print(f"  Pole 1: {ope_TT.pole(1)}")
         assert ope_TT.pole(4) == self.c/2 * One
-        assert ope_TT.pole(3) == 0
+        assert ope_TT.pole(3) == Zero
         assert ope_TT.pole(2) == 2*self.T
         assert ope_TT.pole(1) == d(self.T)
 
@@ -141,7 +144,7 @@ class TestJacobiIdentitySuperconformal:
         print(f"  Pole 2: {ope_GG.pole(2)}")
         print(f"  Pole 1: {ope_GG.pole(1)}")
         assert ope_GG.pole(3) == 2*self.c/3 * One
-        assert ope_GG.pole(2) == 0
+        assert ope_GG.pole(2) == Zero
         assert ope_GG.pole(1) == 2*self.T
 
         print("\nSUCCESS: All OPE structures verified!")
@@ -173,7 +176,7 @@ class TestJacobiIdentitySuperconformal:
         all_zero = True
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                if value != 0:
+                if pyope_simplify(value) != Zero and pyope_simplify(value) != 0:
                     print(f"  Non-zero entry at [{i+1},{j+1}]: {value}")
                     all_zero = False
 
@@ -187,7 +190,8 @@ class TestJacobiIdentitySuperconformal:
         # 断言所有元素为 0
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                assert value == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
+                simplified = pyope_simplify(value)
+                assert simplified == Zero or simplified == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
 
     def test_jacobi_TGG(self):
         """测试 Jacobi 恒等式 check_jacobi_identity(T, G, G)
@@ -217,7 +221,7 @@ class TestJacobiIdentitySuperconformal:
         non_zero_entries = []
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                if value != 0:
+                if pyope_simplify(value) != Zero and pyope_simplify(value) != 0:
                     print(f"  Non-zero entry at [{i+1},{j+1}]: {value}")
                     non_zero_entries.append((i+1, j+1, value))
                     all_zero = False
@@ -232,7 +236,8 @@ class TestJacobiIdentitySuperconformal:
         # 断言所有元素为 0
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                assert value == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
+                simplified = pyope_simplify(value)
+                assert simplified == Zero or simplified == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
 
     def test_jacobi_TTG(self):
         """测试 Jacobi 恒等式 check_jacobi_identity(T, T, G)
@@ -261,7 +266,7 @@ class TestJacobiIdentitySuperconformal:
         all_zero = True
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                if value != 0:
+                if pyope_simplify(value) != Zero and pyope_simplify(value) != 0:
                     print(f"  Non-zero entry at [{i+1},{j+1}]: {value}")
                     all_zero = False
 
@@ -275,7 +280,8 @@ class TestJacobiIdentitySuperconformal:
         # 断言所有元素为 0
         for i, row in enumerate(jacobi_result):
             for j, value in enumerate(row):
-                assert value == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
+                simplified = pyope_simplify(value)
+                assert simplified == Zero or simplified == 0, f"Jacobi identity violated at position [{i+1},{j+1}]: {value}"
 
     def test_comparison_with_mathematica(self):
         """与 Mathematica 参考结果对比"""
@@ -314,9 +320,9 @@ class TestJacobiIdentitySuperconformal:
 
         # 对比 all_zero 状态（这是最重要的）
         print("\nComparing all_zero status (most important):")
-        pyope_all_zero_GGG = all(val == 0 for row in pyope_GGG for val in row)
-        pyope_all_zero_TGG = all(val == 0 for row in pyope_TGG for val in row)
-        pyope_all_zero_TTG = all(val == 0 for row in pyope_TTG for val in row)
+        pyope_all_zero_GGG = all((pyope_simplify(val) == Zero or pyope_simplify(val) == 0) for row in pyope_GGG for val in row)
+        pyope_all_zero_TGG = all((pyope_simplify(val) == Zero or pyope_simplify(val) == 0) for row in pyope_TGG for val in row)
+        pyope_all_zero_TTG = all((pyope_simplify(val) == Zero or pyope_simplify(val) == 0) for row in pyope_TTG for val in row)
 
         assert pyope_all_zero_GGG == ref_data['all_zero_GGG'], "GGG all_zero status mismatch"
         print(f"  ✓ GGG all_zero matches: {pyope_all_zero_GGG}")
@@ -348,9 +354,9 @@ class TestJacobiIdentityVerifyFunction:
         Bosonic(self.T)
         Fermionic(self.G)
 
-        OPE[self.T, self.T] = OPE.make([self.c/2 * One, 0, 2*self.T, d(self.T)])
-        OPE[self.T, self.G] = OPE.make([0, sp.Rational(3, 2)*self.G, d(self.G)])
-        OPE[self.G, self.G] = OPE.make([2*self.c/3 * One, 0, 2*self.T])
+        OPE[self.T, self.T] = OPE.make([self.c/2 * One, Zero, 2*self.T, d(self.T)])
+        OPE[self.T, self.G] = OPE.make([Zero, sp.Rational(3, 2)*self.G, d(self.G)])
+        OPE[self.G, self.G] = OPE.make([2*self.c/3 * One, Zero, 2*self.T])
 
     def test_verify_jacobi_GGG(self):
         """测试 verify_jacobi_identity(G, G, G)"""

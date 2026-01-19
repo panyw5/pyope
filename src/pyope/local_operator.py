@@ -119,11 +119,23 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
 
     # 如果是乘法表达式
     if isinstance(expr, Mul):
+        # 将 One 视为标量单位元，避免产生 coeff*One*Operator 的中间形式
+        # 否则会导致导数计算与化简阶段出现不动点递归。
+        from .constants import One, ConstantOperator
+
+        has_one = False
+
         # 分离标量系数和算符部分
         scalar_parts = []
         operator_parts = []
 
         for arg in expr.args:
+            # One 作为单位元：通常丢弃（不进入 operator_parts），但要记住出现过
+            # 这样在纯标量*One 的场景还能返回 (coeff, One)，避免把 One 误当成纯数 1。
+            if arg is One or (isinstance(arg, ConstantOperator) and arg == One):
+                has_one = True
+                continue
+
             if isinstance(arg, Operator):
                 # 这是一个算符
                 operator_parts.append(arg)
@@ -140,6 +152,11 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
             coeff = Mul(*scalar_parts)
 
         # 构建算符部分
+        # 如果表达式中出现过 One，但没有其他算符因子，则把 One 作为算符部分保留。
+        # 这对应 VOA 中的恒等算符（identity operator），与纯数 1 不是一回事。
+        if len(operator_parts) == 0 and has_one:
+            operator_parts.append(One)
+
         if len(operator_parts) == 0:
             # 纯标量
             return (coeff, sp.Integer(1))

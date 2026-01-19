@@ -431,14 +431,20 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
         # 第一项: sign * NO[B, {AC}_q]
         bracket_AC_q = ope_AC.pole(q)
         if bracket_AC_q != 0:
-            no_B_AC = NO(B, bracket_AC_q)
-            pole_sum = pole_sum + sign * no_B_AC
+            if isinstance(bracket_AC_q, Operator):
+                no_B_AC = NO(B, bracket_AC_q)
+                pole_sum = pole_sum + sign * no_B_AC
+            else:
+                pole_sum = pole_sum + sign * bracket_AC_q * B
 
         # 第二项: NO[{AB}_q, C]
         bracket_AB_q = ope_AB.pole(q)
         if bracket_AB_q != 0:
-            no_AB_C = NO(bracket_AB_q, C)
-            pole_sum = pole_sum + no_AB_C
+            if isinstance(bracket_AB_q, Operator):
+                no_AB_C = NO(bracket_AB_q, C)
+                pole_sum = pole_sum + no_AB_C
+            else:
+                pole_sum = pole_sum + bracket_AB_q * C
 
         # 第三项: Σ_{l=Max[1,q-maxAB]}^{Min[q-1, maxABC]} C(q-1, l) {{AB}_{q-l}, C}_l
         l_min = max(1, q - max_AB)
@@ -588,8 +594,11 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
             bracket_BC = ope_BC.pole(l + q)
             if bracket_BC != 0:
                 # 计算 NO[∂^l A, {BC}_{l+q}] / l!
-                no_term = NO(deriv_A, bracket_BC)
-                pole_sum = pole_sum + no_term / cached_factorial(l)
+                if isinstance(bracket_BC, Operator):
+                    no_term = NO(deriv_A, bracket_BC)
+                    pole_sum = pole_sum + no_term / cached_factorial(l)
+                else:
+                    pole_sum = pole_sum + bracket_BC * deriv_A / cached_factorial(l)
 
         if pole_sum != 0:
             result._poles[q] = pole_sum
@@ -610,8 +619,11 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
             bracket_AC = ope_AC.pole(l + q)
             if bracket_AC != 0:
                 # 计算 NO[∂^l B, {AC}_{l+q}] / l!
-                no_term = NO(deriv_B, bracket_AC)
-                pole_sum = pole_sum + no_term / cached_factorial(l)
+                if isinstance(bracket_AC, Operator):
+                    no_term = NO(deriv_B, bracket_AC)
+                    pole_sum = pole_sum + no_term / cached_factorial(l)
+                else:
+                    pole_sum = pole_sum + bracket_AC * deriv_B / cached_factorial(l)
 
         if pole_sum != 0:
             # 累加到结果中
@@ -795,6 +807,21 @@ def NO(left: Any, right: Any) -> Any:
             return coeff * NO(left, op)
 
     # 确保 left 和 right 都是 Operator 实例
+    # 允许 right/left 为 Mul(Operator, Operator, ...) 的情况：把它解释为多个算符的乘积，
+    # 并左结合构造嵌套 NO。这样 simplify 阶段不会因为 Mul 而中断。
+
+    if isinstance(left, Mul) and all(isinstance(a, Operator) for a in left.args):
+        nested = left.args[0]
+        for factor in left.args[1:]:
+            nested = NO(nested, factor)
+        left = nested
+
+    if isinstance(right, Mul) and all(isinstance(a, Operator) for a in right.args):
+        nested = right.args[0]
+        for factor in right.args[1:]:
+            nested = NO(nested, factor)
+        right = nested
+
     if not isinstance(left, Operator):
         raise TypeError(
             f"NO requires Operator instances for left operand, got {type(left)}"
@@ -849,8 +876,10 @@ def NO(left: Any, right: Any) -> Any:
             if result == 0:
                 return Zero
 
-            result = sp.simplify(result)
-            if result == 0:
+            # 不要对包含 Operator 的表达式使用 sympy.simplify：
+            # sympy 的部分简化流程会尝试触发 __getitem__，与我们对索引算符的实现冲突。
+            result = sp.expand(result)
+            if result == 0 or result == Zero:
                 return Zero
             return result
         # 玻色子：如果没有 0 阶极点，继续创建 NormalOrderedOperator

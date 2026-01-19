@@ -25,6 +25,8 @@ from pyope import (
 )
 from pyope.ope_data import OPEData
 import sympy as sp
+
+from pyope.simplify import simplify as pyope_simplify
 from sympy import Symbol, factorial, expand
 
 
@@ -42,7 +44,7 @@ class TestThielemansDerivativeRules:
         Bosonic(T)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
 
         # 计算 OPE
         dT_T = OPE(d(T), T)
@@ -55,7 +57,7 @@ class TestThielemansDerivativeRules:
             rhs = -(q - 1) * T_T.pole(q - 1) if q > 1 else sp.S.Zero
             diff = expand(lhs - rhs)
             # 检查差值是否为零
-            if diff != 0:
+            if pyope_simplify(diff) != Zero and pyope_simplify(diff) != 0:
                 all_passed = False
                 print(f"  q={q}: FAILED, diff={diff}")
 
@@ -73,7 +75,7 @@ class TestThielemansDerivativeRules:
         Bosonic(T)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
 
         # 计算 OPE
         T_dT = OPE(T, d(T))
@@ -84,11 +86,11 @@ class TestThielemansDerivativeRules:
         for q in range(1, T_dT.max_pole + 1):
             lhs = T_dT.pole(q)
             term1 = (q - 1) * T_T.pole(q - 1) if q > 1 else sp.S.Zero
-            term2 = d(T_T.pole(q)) if T_T.pole(q) != 0 else sp.S.Zero
+            term2 = d(T_T.pole(q)) if (T_T.pole(q) != Zero and T_T.pole(q) != 0) else sp.S.Zero
             rhs = term1 + term2
             diff = expand(lhs - rhs)
             # 检查差值是否为零
-            if diff != 0:
+            if pyope_simplify(diff) != Zero and pyope_simplify(diff) != 0:
                 all_passed = False
                 print(f"  q={q}: FAILED, diff={diff}")
 
@@ -104,7 +106,7 @@ class TestThielemansDerivativeRules:
         Bosonic(J)
 
         k = Symbol('k')
-        OPE[J, J] = MakeOPE([k * One, 0])
+        OPE[J, J] = MakeOPE([k * One, Zero])
 
         # 验证 eq 3.3.1: [∂J, J]_q = -(q-1)[J, J]_{q-1}
         dJ_J = OPE(d(J), J)
@@ -115,7 +117,7 @@ class TestThielemansDerivativeRules:
             lhs = dJ_J.pole(q)
             rhs = -(q - 1) * J_J.pole(q - 1) if q > 1 else sp.S.Zero
             diff = expand(lhs - rhs)
-            if diff != 0:
+            if pyope_simplify(diff) != Zero and pyope_simplify(diff) != 0:
                 all_passed_1 = False
 
         # 验证 eq 3.3.2: [J, ∂J]_q = (q-1)[J, J]_{q-1} + ∂[J, J]_q
@@ -125,10 +127,10 @@ class TestThielemansDerivativeRules:
         for q in range(1, J_dJ.max_pole + 1):
             lhs = J_dJ.pole(q)
             term1 = (q - 1) * J_J.pole(q - 1) if q > 1 else sp.S.Zero
-            term2 = d(J_J.pole(q)) if J_J.pole(q) != 0 else sp.S.Zero
+            term2 = d(J_J.pole(q)) if (J_J.pole(q) != Zero and J_J.pole(q) != 0) else sp.S.Zero
             rhs = term1 + term2
             diff = expand(lhs - rhs)
-            if diff != 0:
+            if pyope_simplify(diff) != Zero and pyope_simplify(diff) != 0:
                 all_passed_2 = False
 
         assert all_passed_1 and all_passed_2, "Kac-Moody 验证失败"
@@ -149,8 +151,8 @@ class TestThielemansDerivativeRules:
         c = Symbol('c')
         h = Symbol('h')  # conformal weight of phi
 
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
-        OPE[T, phi] = MakeOPE([0, h*phi, d(phi)])  # Primary field OPE
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
+        OPE[T, phi] = MakeOPE([Zero, h*phi, d(phi)])  # Primary field OPE
 
         # 验证 eq 3.3.1: [∂T, phi]_q = -(q-1)[T, phi]_{q-1}
         dT_phi = OPE(d(T), phi)
@@ -161,7 +163,7 @@ class TestThielemansDerivativeRules:
             lhs = dT_phi.pole(q)
             rhs = -(q - 1) * T_phi.pole(q - 1) if q > 1 else sp.S.Zero
             diff = expand(lhs - rhs)
-            if diff != 0:
+            if pyope_simplify(diff) != Zero and pyope_simplify(diff) != 0:
                 all_passed = False
 
         assert all_passed, "Primary field 导数规则验证失败"
@@ -183,7 +185,7 @@ class TestThielemansCompositeRules:
         Bosonic(T)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
 
         # 创建复合算符 [TT]_0
         no_TT = NO(T, T)
@@ -208,7 +210,7 @@ class TestThielemansCompositeRules:
         Bosonic(J)
 
         k = Symbol('k')
-        OPE[J, J] = MakeOPE([k * One, 0])
+        OPE[J, J] = MakeOPE([k * One, Zero])
 
         # 创建复合算符
         no_JJ = NO(J, J)
@@ -233,7 +235,7 @@ class TestThielemansCompositeRules:
         Bosonic(J)
 
         k = Symbol('k')
-        OPE[J, J] = MakeOPE([k * One, 0])
+        OPE[J, J] = MakeOPE([k * One, Zero])
 
         # 创建嵌套复合算符
         no_JJ = NO(J, J)

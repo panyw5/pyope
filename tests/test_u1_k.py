@@ -220,7 +220,10 @@ class TestU1KComputations:
         """
         测试 OPE[J, ∂J]
 
-        预期：max_pole = 3
+        从 J(z)J(w) ~ k/(z-w)² 推导：
+        J(z)(∂J)(w) ~ ∂_w[k/(z-w)²] = 2k/(z-w)³
+
+        预期：max_pole = 3, pole(3) = 2k
         """
         J = BasisOperator("J", conformal_weight=1)
         Bosonic(J)
@@ -231,9 +234,10 @@ class TestU1KComputations:
         result = OPE(J, d(J))
 
         assert result.max_pole == 3
-        assert result.pole(3) == 0  # 因为 J-J OPE 的 1-pole 是 0
+        assert result.pole(3) == 2 * k * One
 
         print(f"✓ OPE[J, ∂J]: max_pole = {result.max_pole}")
+        print(f"  - 3-pole: {result.pole(3)}")
 
     def test_j_second_derivative_ope(self):
         """
@@ -335,31 +339,34 @@ class TestU1KProperties:
 
     def test_primary_field_under_t(self):
         """
-        测试 primary field 在 T 作用下的行为
+        测试 Sugawara 张量使 J 成为 primary field
 
-        如果 φ 是 weight h 的 primary，则：
-        T(z)φ(w) ~ h*φ/(z-w)² + ∂φ/(z-w)
+        验证 J 在 Sugawara 应力张量 T = NO(J,J)/(2k) 作用下是 weight 1 的 primary field
+
+        预期：T(z)J(w) ~ J/(z-w)² + ∂J/(z-w)
+
+        注意：这个测试从基本的 OPE[J,J] 推导出 OPE[T,J]，
+        不需要（也不能）直接注册 OPE[T,J]，因为 T 是复合算符而非 BasisOperator。
         """
         J = BasisOperator("J", conformal_weight=1)
-        phi = BasisOperator("φ", conformal_weight=2)
-        Bosonic(J, phi)
+        Bosonic(J)
 
         k = Symbol("k", positive=True)
-        h = Symbol("h")
 
         OPE[J, J] = MakeOPE([k * One, 0])
         T = NO(J, J) / (2 * k)
 
-        # 定义 φ 为 primary field
-        OPE[T, phi] = MakeOPE([h * phi, d(phi)])
+        # 计算 OPE[T, J]（从 OPE[J,J] 推导）
+        result = OPE(T, J)
 
-        result = OPE(T, phi)
-
+        # J 是 weight 1 的 primary field
         assert result.max_pole == 2
-        assert result.pole(2) == h * phi
-        assert result.pole(1) == d(phi)
+        assert result.pole(2) == J
+        assert result.pole(1) == d(J)
 
-        print("✓ Primary field 条件验证通过")
+        print("✓ Sugawara 张量使 J 成为 weight 1 的 primary field")
+        print(f"  - 2-pole: {result.pole(2)}")
+        print(f"  - 1-pole: {result.pole(1)}")
 
     def test_virasoro_from_sugawara(self):
         """

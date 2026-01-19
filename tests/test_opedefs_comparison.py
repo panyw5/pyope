@@ -120,7 +120,7 @@ def test_ope_data_operations():
     assert ope.pole(4) == sp.Rational(1, 2)
     assert ope.pole(2) == 2*T
     assert ope.pole(1) == d(T)
-    assert ope.pole(3) == 0
+    assert ope.pole(3) == Zero
     
     # 测试最高阶极点
     assert ope.max_pole == 4
@@ -139,10 +139,10 @@ def test_ope_data_operations():
     assert ope_diff.pole(2) == T
     
     # 测试从列表创建（Mathematica 风格）
-    pole_list = [sp.Rational(1, 2), 0, 2*T, d(T)]
+    pole_list = [sp.Rational(1, 2), Zero, 2*T, d(T)]
     ope_from_list = OPEData.from_list(pole_list)
     assert ope_from_list.pole(4) == sp.Rational(1, 2)
-    assert ope_from_list.pole(3) == 0
+    assert ope_from_list.pole(3) == Zero
     assert ope_from_list.pole(2) == 2*T
     assert ope_from_list.pole(1) == d(T)
     
@@ -311,7 +311,7 @@ def test_ope_data_simplify():
     # sympy.simplify 应该自动简化表达式
     assert simplified.pole(2) == 5*T
     # T - T 应该被简化为 0
-    assert simplified.pole(1) == 0 or simplified.pole(1) == sp.Integer(0)
+    assert simplified.pole(1) == Zero or simplified.pole(1) == 0
 
 
 # ============================================================================
@@ -355,13 +355,13 @@ def test_edge_cases():
     assert is_local_operator(neg_op)
     
     # 测试零算符
-    zero_op = 0 * T
-    # sympy 会自动将其简化为 0
+    zero_op = Zero * T
+    # Zero * T 应该返回 Zero
     
     # 测试空 OPEData
     empty_ope = OPEData()
     assert empty_ope.is_zero()
-    assert empty_ope.pole(1) == 0
+    assert empty_ope.pole(1) == Zero
 
 
 # ============================================================================
@@ -453,9 +453,9 @@ def test_ope_data_string_representation():
     """测试 OPEData 的字符串表示"""
     T = BasisOperator("T", )
 
-    # 空 OPEData 的字符串表示是 "0"
+    # 空 OPEData 的字符串表示是 "Zero"
     empty_ope = OPEData()
-    assert str(empty_ope) == "0"
+    assert str(empty_ope) == "Zero"
 
     # 非空 OPEData
     poles = {2: 2*T, 1: d(T)}

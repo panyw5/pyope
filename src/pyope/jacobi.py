@@ -179,11 +179,15 @@ def verify_jacobi_identity(A: Any, B: Any, C: Any, simplify_func=None) -> bool:
         True
     """
     result = check_jacobi_identity(A, B, C, simplify_func)
-
     # 检查所有元素是否为 0
+    # 注意：计算过程中可能出现 -Zero, k*Zero 等未规约形式
+    from .simplify import simplify as pyope_simplify
+    from .constants import Zero
+
     for row in result:
         for value in row:
-            if value != 0:
+            simplified = pyope_simplify(value)
+            if simplified != Zero and simplified != 0:
                 return False
 
     return True

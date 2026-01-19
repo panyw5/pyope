@@ -37,6 +37,10 @@ class Operator(Symbol):
         """
         raise NotImplementedError("Subclasses must implement parity property")
 
+    def __iter__(self):
+        """防止 Python 把算符当作可迭代对象"""
+        raise TypeError(f"{self.__class__.__name__} is not iterable")
+
 
 class BasisOperator(Operator):
     """
@@ -137,6 +141,9 @@ class BasisOperator(Operator):
         Returns:
             带索引的新 BasisOperator 实例
         """
+        if isinstance(index, int):
+            raise IndexError(f"Operator {self.name} does not support integer indexing")
+
         if not self._indexed:
             raise TypeError(f"Operator {self.name} is not indexed")
 
@@ -421,6 +428,11 @@ def d(operator, order: int = 1):
 
     # 如果是 sympy 表达式，应用导数的线性性质
     if isinstance(operator, sp.Expr):
+        # 如果表达式中不包含任何 Operator，则视为纯标量，导数为 Zero
+        # 这是防止对 coeff*One 这类纯标量表达式递归分解的关键保护。
+        if not operator.has(Operator):
+            return Zero
+
         # 对于加法：d(A + B) = d(A) + d(B)
         if isinstance(operator, sp.Add):
             return sp.Add(*[d(arg, order) for arg in operator.args])
@@ -430,6 +442,10 @@ def d(operator, order: int = 1):
             from .local_operator import extract_scalar_operator
 
             coeff, op = extract_scalar_operator(operator)
+
+            # 防止 extract_scalar_operator 无法减少表达式而导致递归
+            if op == operator:
+                return Zero
 
             # 如果算符部分是常数，整个表达式的导数为 Zero
             if (

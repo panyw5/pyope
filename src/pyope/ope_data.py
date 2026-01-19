@@ -56,6 +56,11 @@ class OPEData:
         if expr == 0 or (hasattr(expr, "_name") and getattr(expr, "_name") == "Zero"):
             return True
         if isinstance(expr, sp.Expr):
+            from .constants import Zero as ZeroOp
+
+            # 识别形如 (-1)*Zero, (k)*Zero 等未被 SymPy 自动规约的形式
+            if expr.is_Mul and any(arg == ZeroOp for arg in expr.args):
+                return True
             # 使用简单的相等性检查，避免触发复杂的 sympy 简化
             return expr == 0 or expr == sp.Integer(0)
         return False
@@ -117,8 +122,10 @@ class OPEData:
             第 n 阶极点的系数，如果不存在则返回 Zero
         """
         from .constants import Zero
+        from .simplify import normalize_identity
 
-        return self._poles.get(n, Zero)
+        result = self._poles.get(n, Zero)
+        return normalize_identity(result)
 
     def set_pole(self, n: int, coeff: Any):
         """

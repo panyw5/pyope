@@ -111,13 +111,13 @@ class TestW3AlgebraOPEs:
         Bosonic(T)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
 
         result = OPE(T, T)
 
         assert result.max_pole == 4
         assert result.pole(4) == c/2 * One
-        assert result.pole(3) == 0
+        assert result.pole(3) == Zero
         assert result.pole(2) == 2 * T
         assert result.pole(1) == d(T)
 
@@ -136,7 +136,7 @@ class TestW3AlgebraOPEs:
         Bosonic(T, W)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
         OPE[T, W] = MakeOPE([3*W, d(W)])
 
         result = OPE(T, W)
@@ -170,7 +170,7 @@ class TestW3AlgebraOPEs:
         Lambda = NO(T, T) - Rational(3, 10) * d(T, 2)
 
         # 定义基本 OPE
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
         OPE[T, W] = MakeOPE([3*W, d(W)])
 
         # W-W OPE
@@ -187,7 +187,7 @@ class TestW3AlgebraOPEs:
 
         assert result.max_pole == 6
         assert result.pole(6) == c * One
-        assert result.pole(5) == 0
+        assert result.pole(5) == Zero
         assert result.pole(4) == 2 * T
         assert result.pole(3) == d(T)
 
@@ -230,7 +230,7 @@ class TestW3AlgebraComputations:
         Bosonic(T)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
 
         # 构造 Λ
         Lambda = NO(T, T) - Rational(3, 10) * d(T, 2)
@@ -269,7 +269,7 @@ class TestW3AlgebraComputations:
         Bosonic(T, W)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
         OPE[T, W] = MakeOPE([3*W, d(W)])
 
         # 计算 OPE[T, W'']
@@ -297,7 +297,7 @@ class TestW3AlgebraComputations:
         Bosonic(T, W)
 
         c = Symbol('c')
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
         OPE[T, W] = MakeOPE([3*W, d(W)])
 
         # 计算 NO[T', NO[W'', T]]
@@ -328,7 +328,7 @@ class TestW3AlgebraComputations:
         Lambda = NO(T, T) - Rational(3, 10) * d(T, 2)
 
         # 定义完整的 W₃ OPE
-        OPE[T, T] = MakeOPE([c/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c/2 * One, Zero, 2*T, d(T)])
         OPE[T, W] = MakeOPE([3*W, d(W)])
         OPE[W, W] = MakeOPE([
             c * One,
@@ -376,7 +376,7 @@ class TestW3AlgebraNumerical:
         Lambda = NO(T, T) - Rational(3, 10) * d(T, 2)
 
         # 定义 OPE
-        OPE[T, T] = MakeOPE([c_val/2 * One, 0, 2*T, d(T)])
+        OPE[T, T] = MakeOPE([c_val/2 * One, Zero, 2*T, d(T)])
         OPE[T, W] = MakeOPE([3*W, d(W)])
         OPE[W, W] = MakeOPE([
             c_val * One,

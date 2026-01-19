@@ -76,12 +76,21 @@ class ConstantOperator(Operator):
         """右乘法运算"""
         if self._name == "Zero":
             return self  # anything * Zero = Zero
+
         if self._name == "One":
-            # 特殊处理：如果 other 是 1，返回 One
-            if other == 1 or other == sp.Integer(1):
+            other_expr = sp.sympify(other)
+
+            # 1 * One -> One
+            if other_expr == 1 or other_expr == sp.Integer(1):
                 return self
-            # 否则返回 sympy 乘法表达式，保持算符形式
-            return sp.Mul(other, self)
+
+            # (operator expression) * One -> operator expression
+            # Keep symbolic scalars (like c) as c*One.
+            if other_expr.has(Operator):
+                return other_expr
+
+            return sp.Mul(other_expr, self)
+
         return sp.Mul(other, self)
 
     def __hash__(self):
