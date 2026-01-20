@@ -24,136 +24,20 @@ from .local_operator import (
 )
 from .constants import Zero, One
 from .registry import ope_registry
+from .utils import _multiply_bracket_operator
 
 
-def normalize_identity(expr: Any) -> Any:
-    """
-    正规化表达式中的 One 常数
-
-    规则：
-    - b*One, One*b -> b (如果 b 是算符)
-    - NO(X, One), NO(One, X) -> X (如果 X 是算符)
-    - c*One -> c*One (如果 c 是纯标量，保留 One)
-    - One - 1 -> 0
-    - One + (-1) -> 0
-
-    Args:
-        expr: 要正规化的表达式
-
-    Returns:
-        正规化后的表达式
-    """
-    if expr == 0 or expr == Zero:
-        return Zero
-
-    if expr == One:
-        return One
-
-    # 处理 One - 1, One + (-1) 等
-    if isinstance(expr, Add):
-        # 检查是否有 One 和 -1 或 1 和 -One
-        has_one = One in expr.args or 1 in expr.args
-        has_neg_one = -One in expr.args or -1 in expr.args
-
-        if has_one and has_neg_one:
-            # 移除 One 和 -1 (或 1 和 -One)
-            new_args = []
-            removed_one = False
-            removed_neg_one = False
-
-            for arg in expr.args:
-                if not removed_one and (arg == One or arg == 1):
-                    removed_one = True
-                    continue
-                if not removed_neg_one and (arg == -One or arg == -1):
-                    removed_neg_one = True
-                    continue
-                new_args.append(normalize_identity(arg))
-
-            if not new_args:
-                return Zero
-            if len(new_args) == 1:
-                return new_args[0]
-            return sp.Add(*new_args)
-
-        # 递归处理每一项
-        return sp.Add(*[normalize_identity(arg) for arg in expr.args])
-
-    # 处理 Mul: b*One -> b
-    if isinstance(expr, Mul):
-        # 先递归处理每个因子（特别是 Add 类型的因子）
-        normalized_args = [normalize_identity(arg) for arg in expr.args]
-
-        # 检查是否有 Zero
-        if Zero in normalized_args or 0 in normalized_args:
-            return Zero
-
-        # 分离标量和算符
-        scalar_part = []
-        operator_part = []
-        has_one = False
-
-        for arg in normalized_args:
-            if arg == One:
-                has_one = True
-            elif isinstance(arg, Operator):
-                operator_part.append(arg)
-            else:
-                scalar_part.append(arg)
-
-        # 如果有算符，移除 One
-        if operator_part and has_one:
-            if scalar_part:
-                return sp.Mul(*scalar_part, *operator_part)
-            else:
-                if len(operator_part) == 1:
-                    return operator_part[0]
-                return sp.Mul(*operator_part)
-
-        # 如果没有算符，保留 One（纯标量情况）
-        if normalized_args != list(expr.args):
-            return sp.Mul(*normalized_args)
-        return expr
-
-    # 处理 NormalOrderedOperator: NO(X, One) -> X
-    if isinstance(expr, NormalOrderedOperator):
-        left = normalize_identity(expr.left)
-        right = normalize_identity(expr.right)
-
-        if left == One:
-            return right
-        if right == One:
-            return left
-
-        if left != expr.left or right != expr.right:
-            from .api import NO
-
-            return NO(left, right)
-
-    # 处理 Pow: Operator**n -> 嵌套的 NO
-    if isinstance(expr, Pow):
-        base = expr.base
-        exp = expr.exp
-
-        # 只处理算符的整数次幂
-        if isinstance(base, Operator) and exp.is_integer and exp >= 2:
-            from .api import NO
-
-            result = base
-            for _ in range(int(exp) - 1):
-                result = NO(result, base)
-            return result
-
-    return expr
-
-
-def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
+def simplify(
+    expr: Any, expand_derivatives: bool = True, preserve_nested_structure: bool = False
+) -> Any:
     """
     化简 OPE 表达式为规范形式
 
     将表达式化简为排序的 NO product 的线性组合。执行以下操作：
-    1. 展开嵌套的 NO 乘积
-    2. 在 NO 内部按算符顺序排列
+    1. 展开嵌套的 NO 乘积（默认将左嵌套转换为右嵌套）
+    2. 在 NO 内部按算符顺序排列（实现两种正规排序）
+       - 算符之间按标准顺序排列：NO(C, NO(A, B)) -> NO(A, NO(B, C)) + additional terms
+       - NO 化成右嵌套：NO(NO(...), ...) -> NO(..., NO(..., NO(...)))
     3. 合并同类项
     4. 标准化导数表示
     5. （可选）应用莱布尼茨法则展开正规序的导数
@@ -163,6 +47,10 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
         expand_derivatives: 是否自动展开正规序算符的导数（默认 True）
                            当为 True 时，应用莱布尼茨法则：
                            d^n(NO(A,B)) = Σ_{k=0}^{n} C(n,k) * NO(d^k(A), d^{n-k}(B))
+        preserve_nested_structure: 是否保持嵌套 NO 的结构不变（默认 False）
+                                  当为 False 时，自动将 NO(NO(A,B),C) 展开为右嵌套形式 NO(A,NO(B,C)) + 校正项
+                                  并确保所有算符按标准顺序排列
+                                  当为 True 时，仅在需要重排序时才展开嵌套 NO
 
     Returns:
         化简后的表达式
@@ -171,7 +59,10 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
         >>> T = BasisOperator("T")
         >>> J = BasisOperator("J")
         >>> expr = NO(NO(T,J), J)
-        >>> simplified = simplify(expr)
+        >>> simplified = simplify(expr)  # 默认展开为右嵌套并排序
+
+        >>> # 保持嵌套结构
+        >>> simplify(expr, preserve_nested_structure=True)  # 仅在需要排序时展开
 
         >>> # 自动展开导数（默认行为）
         >>> from pyope import d
@@ -193,11 +84,14 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
     from .ope_data import OPEData
 
     if isinstance(expr, OPEData):
-        return _simplify_ope_data(expr, expand_derivatives)
+        return _simplify_ope_data(expr, expand_derivatives, preserve_nested_structure)
 
     # 处理加法：分别化简每一项
     if isinstance(expr, Add):
-        simplified_terms = [simplify(term, expand_derivatives) for term in expr.args]
+        simplified_terms = [
+            simplify(term, expand_derivatives, preserve_nested_structure)
+            for term in expr.args
+        ]
         # 过滤掉 Zero 项
         non_zero_terms = [t for t in simplified_terms if t != Zero and t != 0]
         if not non_zero_terms:
@@ -205,8 +99,42 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
         if len(non_zero_terms) == 1:
             return non_zero_terms[0]
         return sp.Add(*non_zero_terms)
+
+    # 处理幂运算：Operator**n -> 嵌套的 NO（必须在 Mul 之前处理）
+    if isinstance(expr, Pow):
+        base = expr.base
+        exp = expr.exp
+
+        # 只处理算符的整数次幂
+        if isinstance(base, Operator) and exp.is_integer and exp >= 2:
+            from .api import NO
+
+            result = base
+            for _ in range(int(exp) - 1):
+                result = NO(result, base)
+            return simplify(result, expand_derivatives, preserve_nested_structure)
+
+        # 对于非算符的幂，递归简化 base
+        simplified_base = simplify(base, expand_derivatives, preserve_nested_structure)
+        if simplified_base != base:
+            return simplify(
+                simplified_base**exp, expand_derivatives, preserve_nested_structure
+            )
+        return expr
+
     # 处理标量乘法
     if isinstance(expr, Mul):
+        # 先递归简化所有参数（特别是 Pow）
+        simplified_args = [
+            simplify(arg, expand_derivatives, preserve_nested_structure)
+            for arg in expr.args
+        ]
+
+        # 如果有参数被简化了，重新构造表达式并递归简化
+        if simplified_args != list(expr.args):
+            new_expr = sp.Mul(*simplified_args)
+            return simplify(new_expr, expand_derivatives, preserve_nested_structure)
+
         coeff, op = extract_scalar_operator(expr)
 
         # 关键：如果 op 本身是多个算符的普通乘积 Mul(op1, op2, ...)，
@@ -224,7 +152,7 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
                 nested = NO(nested, factor)
             op = nested
 
-        simplified_op = simplify(op, expand_derivatives)
+        simplified_op = simplify(op, expand_derivatives, preserve_nested_structure)
         # 关键：把 (-1)*Zero, k*Zero 等形式规约到 Zero
         if simplified_op == Zero or simplified_op == 0:
             return Zero
@@ -233,15 +161,17 @@ def simplify(expr: Any, expand_derivatives: bool = True) -> Any:
 
     # 处理算符
     if isinstance(expr, Operator):
-        result = _simplify_operator(expr, expand_derivatives)
-        return normalize_identity(result)
+        result = _simplify_operator(expr, expand_derivatives, preserve_nested_structure)
+        return result
 
-    # 其他情况：正规化后返回
-    return normalize_identity(expr)
+    # 其他情况：直接返回
+    return expr
 
 
 def _simplify_ope_data(
-    ope_data: "OPEData", expand_derivatives: bool = True
+    ope_data: "OPEData",
+    expand_derivatives: bool = True,
+    preserve_nested_structure: bool = False,
 ) -> "OPEData":
     """
     化简 OPEData 对象
@@ -249,6 +179,7 @@ def _simplify_ope_data(
     Args:
         ope_data: OPEData 实例
         expand_derivatives: 是否展开导数
+        preserve_nested_structure: 是否保持嵌套结构
 
     Returns:
         化简后的 OPEData
@@ -257,20 +188,27 @@ def _simplify_ope_data(
 
     new_poles = {}
     for q, coeff in ope_data.poles.items():
-        simplified_coeff = simplify(coeff, expand_derivatives)
+        simplified_coeff = simplify(
+            coeff, expand_derivatives, preserve_nested_structure
+        )
         if simplified_coeff != 0 and simplified_coeff != Zero:
             new_poles[q] = simplified_coeff
 
     return OPEData(new_poles)
 
 
-def _simplify_operator(op: Operator, expand_derivatives: bool = True) -> Any:
+def _simplify_operator(
+    op: Operator,
+    expand_derivatives: bool = True,
+    preserve_nested_structure: bool = False,
+) -> Any:
     """
     化简单个算符
 
     Args:
         op: 算符实例
         expand_derivatives: 是否展开导数
+        preserve_nested_structure: 是否保持嵌套结构
 
     Returns:
         化简后的表达式
@@ -288,8 +226,8 @@ def _simplify_operator(op: Operator, expand_derivatives: bool = True) -> Any:
             from .cache import cached_binomial
 
             # 先化简左右算符
-            left = simplify(base.left, expand_derivatives)
-            right = simplify(base.right, expand_derivatives)
+            left = simplify(base.left, expand_derivatives, preserve_nested_structure)
+            right = simplify(base.right, expand_derivatives, preserve_nested_structure)
 
             # 生成莱布尼茨展开的各项
             terms = []
@@ -305,11 +243,11 @@ def _simplify_operator(op: Operator, expand_derivatives: bool = True) -> Any:
 
             # 递归化简展开后的表达式
             result = sp.Add(*terms) if len(terms) > 1 else terms[0]
-            return simplify(result, expand_derivatives)
+            return simplify(result, expand_derivatives, preserve_nested_structure)
 
         # 对于非 NO 的 base，保持 DerivativeOperator 结构
         # 但可以递归化简 base（可选）
-        simplified_base = simplify(base, expand_derivatives)
+        simplified_base = simplify(base, expand_derivatives, preserve_nested_structure)
         if simplified_base != base:
             return DerivativeOperator(simplified_base, n)
         return op
@@ -320,25 +258,30 @@ def _simplify_operator(op: Operator, expand_derivatives: bool = True) -> Any:
 
     # 处理 NormalOrderedOperator
     if isinstance(op, NormalOrderedOperator):
-        return _simplify_normal_ordered(op, expand_derivatives)
+        return _simplify_normal_ordered(
+            op, expand_derivatives, preserve_nested_structure
+        )
 
     return op
 
 
 def _simplify_normal_ordered(
-    no_op: NormalOrderedOperator, expand_derivatives: bool = True
+    no_op: NormalOrderedOperator,
+    expand_derivatives: bool = True,
+    preserve_nested_structure: bool = False,
 ) -> Any:
     """
     化简正规序算符
 
     处理：
     1. 递归化简左右算符
-    2. 展开嵌套的 NO
+    2. 展开嵌套的 NO（根据 preserve_nested_structure 参数）
     3. 排序内部算符
 
     Args:
         no_op: NormalOrderedOperator 实例
         expand_derivatives: 是否展开导数
+        preserve_nested_structure: 是否保持嵌套结构（默认 False，即默认展开左嵌套）
 
     Returns:
         化简后的表达式
@@ -346,8 +289,8 @@ def _simplify_normal_ordered(
     from .api import NO
 
     # 递归化简左右算符
-    left = simplify(no_op.left, expand_derivatives)
-    right = simplify(no_op.right, expand_derivatives)
+    left = simplify(no_op.left, expand_derivatives, preserve_nested_structure)
+    right = simplify(no_op.right, expand_derivatives, preserve_nested_structure)
 
     # 如果左侧或右侧是加法，分配（保持标量系数，避免 NO 接收到 Mul）
     if isinstance(left, Add):
@@ -405,14 +348,14 @@ def _simplify_normal_ordered(
 
     # 处理嵌套的 NO
     # 如果左侧是 NO，展开为 NO(NO(A,B), C)
-    # 参考 OPEdefs.m line 1467-1471：只在 NOOrder[A,C]>0 且有非零 OPE 时展开
+    # 默认行为（preserve_nested_structure=False）：无条件展开左嵌套为右嵌套
+    # 旧行为（preserve_nested_structure=True）：只在需要重排序且有非零 OPE 时展开
     if isinstance(left, NormalOrderedOperator):
         A, B = left.left, left.right
         C = right
-        # 检查是否需要展开：只有当 A 应该排在 C 之后时才展开
-        order_AC = ope_registry.compare_operators(A, C)
-        if order_AC > 0:
-            # 检查是否有非零的 OPE，如果没有就不展开
+
+        if not preserve_nested_structure:
+            # 新的默认行为：无条件展开左嵌套为右嵌套（使用 Jacobi 恒等式）
             from .api import OPE
 
             ope_AC = OPE(A, C)
@@ -420,29 +363,110 @@ def _simplify_normal_ordered(
             has_nonzero_ope = ope_AC.max_pole > 0 or ope_BC.max_pole > 0
 
             if has_nonzero_ope:
-                # A 应该排在 C 之后，且有非零 OPE，需要展开成 A(BC) 形式
-                return _expand_nested_no_left(A, B, C, expand_derivatives)
-            # 否则保持原结构，不展开
+                # 有非零 OPE，使用 Jacobi 恒等式展开
+                expanded = _expand_nested_no_left(A, B, C, expand_derivatives)
+                # 递归简化展开后的结果
+                return simplify(expanded, expand_derivatives, preserve_nested_structure)
+            else:
+                # 没有非零 OPE，但仍需要转换为右嵌套形式
+                # NO(NO(A,B), C) -> NO(A, NO(B,C))（带符号因子）
+                from .local_operator import get_operator_parity
 
-        # A 应该排在 C 之前或相等，或者没有非零 OPE，顺序已经正确，不需要展开
-        # 但仍需递归化简内层的 NO(A,B)
-        simplified_left = simplify(left, expand_derivatives)
-        if simplified_left != left:
-            return NO(simplified_left, right)
-        return NO(left, right)
+                parity_AB = (get_operator_parity(A) + get_operator_parity(B)) % 2
+                parity_C = get_operator_parity(C)
+                sign = (-1) ** (parity_AB * parity_C)
+                # 递归简化转换后的结果，因为 B 或 C 可能仍然是嵌套的 NO
+                result = sign * NO(A, NO(B, C))
+                return simplify(result, expand_derivatives, preserve_nested_structure)
+        else:
+            # 旧行为：只在需要重排序时才展开
+            order_AC = ope_registry.compare_operators(A, C)
+            if order_AC < 0:
+                # A 应该排在 C 之后，需要展开把 C 移到前面
+                from .api import OPE
 
-    # 如果右侧是 NO，展开为 NO(A, NO(B,C))
-    # 参考 OPEdefs.m line 1473-1475：只在需要重新排序时展开
+                ope_AC = OPE(A, C)
+                ope_BC = OPE(B, C) if not _operators_equal(A, B) else ope_AC
+                has_nonzero_ope = ope_AC.max_pole > 0 or ope_BC.max_pole > 0
+
+                if has_nonzero_ope:
+                    # 有非零 OPE，需要用 Jacobi 恒等式展开
+                    expanded = _expand_nested_no_left(A, B, C, expand_derivatives)
+                    # 递归简化展开后的结果
+                    return simplify(
+                        expanded, expand_derivatives, preserve_nested_structure
+                    )
+                # 没有非零 OPE，但仍需要交换顺序
+                # NO(NO(A,B), C) -> NO(C, NO(A,B)) (如果 A,B,C 都是玻色子则符号为 +1)
+                from .local_operator import get_operator_parity
+
+                parity_AB = (get_operator_parity(A) + get_operator_parity(B)) % 2
+                parity_C = get_operator_parity(C)
+                sign = (-1) ** (parity_AB * parity_C)
+                return sign * NO(C, NO(A, B))
+
+            # A 应该排在 C 之前或相等，顺序已经正确，不需要展开
+            # 但仍需递归化简内层的 NO(A,B)
+            simplified_left = simplify(
+                left, expand_derivatives, preserve_nested_structure
+            )
+            if simplified_left != left:
+                return NO(simplified_left, right)
+            return NO(left, right)
+
+    # 如果右侧是 NO，展开为 NO(B, NO(A,C))
+    # 需要确保所有算符都按标准顺序排列
     if isinstance(right, NormalOrderedOperator):
         A, C = right.left, right.right
-        # NOOrder[A,B]>0 意味着需要展开
-        # 在我们的实现中，compare_operators 返回相反的符号
-        order_AB = ope_registry.compare_operators(A, left)
-        if order_AB < 0:
-            # A 的 position 更小，应该在 left 之前，需要展开
-            return _expand_nested_no_right(left, A, C, expand_derivatives)
-        # 否则顺序已经正确，不需要展开
-        return NO(left, simplify(right, expand_derivatives))
+        B = left
+
+        # 检查整体是否满足标准序
+        # NO(B, NO(A, C)) 的扁平化形式是 [B, A, C]
+        # 需要检查所有相邻对的顺序
+
+        # 1. 检查 B 和 A 的顺序
+        order_BA = ope_registry.compare_operators(B, A)
+        # 2. 检查 A 和 C 的顺序（内层 NO）
+        order_AC = ope_registry.compare_operators(A, C)
+
+        # 根据 compare_operators 的语义：
+        # > 0: 顺序正确（第一个算符应该在前）
+        # = 0: 两个算符相等
+        # < 0: 需要交换（第一个算符应该在后）
+
+        # 情况 1: B 和 A 需要交换（order_BA < 0），即 A 应该排在 B 前面
+        if order_BA < 0:
+            # A 应该排在 B 前面，使用 _expand_nested_no_right 展开
+            expanded = _expand_nested_no_right(B, A, C, expand_derivatives)
+            # 递归简化展开后的结果
+            return simplify(expanded, expand_derivatives, preserve_nested_structure)
+
+        # 情况 2: B 和 A 的顺序正确，但 A 和 C 需要交换（order_AC < 0）
+        # 需要先简化内层 NO(A, C)，这会触发内层的重排
+        if order_AC < 0:
+            # 内层需要重排，递归简化内层
+            simplified_right = simplify(
+                right, expand_derivatives, preserve_nested_structure
+            )
+            if simplified_right != right:
+                # 内层被简化了，递归简化整个表达式
+                return simplify(
+                    NO(B, simplified_right),
+                    expand_derivatives,
+                    preserve_nested_structure,
+                )
+
+        # 情况 3: 所有顺序都正确，但仍需递归简化内层
+        simplified_right = simplify(
+            right, expand_derivatives, preserve_nested_structure
+        )
+        if simplified_right != right:
+            return simplify(
+                NO(B, simplified_right), expand_derivatives, preserve_nested_structure
+            )
+
+        # 顺序已经正确，不需要展开
+        return NO(left, right)
 
     # 检查算符顺序
     # 只有当左右都是 BasisOperator 或 DerivativeOperator 时才进行交换
@@ -503,7 +527,7 @@ def _simplify_normal_ordered(
                     result = result + coeff * deriv_pole
 
             # 递归化简结果
-            return simplify(result, expand_derivatives)
+            return simplify(result, expand_derivatives, preserve_nested_structure)
 
     # 创建简化的 NO
     return NO(left, right)
@@ -588,25 +612,101 @@ def _operator_to_key(op: Any) -> Tuple:
         return ("Other", str(op))
 
 
+def flatten_right_no(expr: Any) -> list:
+    """
+    将右结合的 NO 扁平化为算符列表
+
+    例如：NO(a, NO(b, NO(c, d))) -> [a, b, c, d]
+
+    Args:
+        expr: 表达式（可能是 NormalOrderedOperator 或其他算符）
+
+    Returns:
+        算符列表
+    """
+    if not isinstance(expr, NormalOrderedOperator):
+        return [expr]
+
+    left = expr.left
+    right = expr.right
+    return [left] + flatten_right_no(right)
+
+
+def is_standard_order_no(expr: Any) -> bool:
+    """
+    检查 NormalOrderedOperator 是否满足标准序（canonical order）
+
+    标准序要求：
+    1. 所有相邻算符对都满足 compare(f_i, f_{i+1}) >= 0
+    2. 即 f_i 应该排在 f_{i+1} 前面或相等
+
+    Args:
+        expr: NormalOrderedOperator 实例
+
+    Returns:
+        True 如果满足标准序，False 否则
+    """
+    if not isinstance(expr, NormalOrderedOperator):
+        return True  # 非 NO 算符总是满足标准序
+
+    factors = flatten_right_no(expr)
+
+    # 检查所有相邻对
+    for i in range(len(factors) - 1):
+        order = ope_registry.compare_operators(factors[i], factors[i + 1])
+        if order < 0:
+            # factors[i] 应该排在 factors[i+1] 后面，不满足标准序
+            return False
+
+    return True
+
+
 def _expand_nested_no_left(
     A: Any, B: Any, C: Any, expand_derivatives: bool = True
 ) -> Any:
     """
-    展开 NO(NO(A,B), C) 使用 Jacobi 恒等式
+    展开 嵌套正规序算符 NO(NO(A,B), C)
 
-    对应 OPEdefs.m 中的 NOCompositeHelpLQ
+    根据 Thielemans 文献,将 NO(NO(A,B), C) 重构为规范形式:
 
-    公式 (Thielemans eq 3.3.4):
-    (AB)C = A(BC) + Σ_{l=1}^∞ (1/l!) (∂^l A {BC}_l) + (-1)^{|A||B|} Σ_{l=1}^∞ (1/l!) (∂^l B {AC}_l)
+        NO(NO(A,B), C) → NO(A, NO(B,C)) + 校正项
+
+    展开公式 (对应 OPEdefs.m 中的 NOCompositeHelpLQ):
+
+        NO(A, NO(B,C)) +
+        Σ_{l=1}^{maxBC} 1/l! · NO(∂^l A, {BC}_l) +
+        Σ_{l=1}^{maxAC} sign · 1/l! · NO(∂^l B, {AC}_l)
+
+    其中:
+        sign = (-1)^{|A||B|} (由 A 和 B 的奇偶性决定的符号因子)
+        {BC}_l = pole(OPE(B,C), l) 是 OPE(B,C) 的 l 阶极点系数
+        {AC}_l = pole(OPE(A,C), l) 是 OPE(A,C) 的 l 阶极点系数
+        maxBC = OPE(B,C).max_pole 是 OPE(B,C) 的最大极点数
+        maxAC = OPE(A,C).max_pole 是 OPE(A,C) 的最大极点数
+        ∂^l A 表示 A 的 l 阶导数
+
+    与 Thielemans 方程的关系:
+    - 该公式对应 Thielemans eq (3.3.19)
+    - eq (3.3.19) 是 eq (2.3.24) 在 q=0 时的特殊情况，结合 eq (3.3.6) 得到
+    - 这是正规序乘积 (normal ordered product) 情形下的 Jacobi 恒等式
+    - 注意：eq (3.3.4) 是针对 [A[BC]_0]_q (q ≥ 1) 的情况，不适用于此函数
 
     Args:
-        A: NO 左侧的左算符
-        B: NO 左侧的右算符
+        A: NO 左侧的左算符 (NO(A,B) 中的 A)
+        B: NO 左侧的右算符 (NO(A,B) 中的 B)
         C: NO 右侧的算符
-        expand_derivatives: 是否展开导数
+        expand_derivatives: 是否展开导数 (当前未使用,保留以保持接口一致性)
 
     Returns:
-        展开后的表达式
+        Any: 展开后的表达式,为 NO(A, NO(B,C)) 及其校正项的和
+
+    Note:
+        该函数不会递归调用 simplify,以避免无限递归。
+        外层调用 simplify 时会继续处理展开后的结果。
+
+    See also:
+        _expand_nested_no_right: 处理 NO(A, NO(B,C)) 的展开
+        _simplify_normal_ordered: 调用此函数的化简函数
     """
     from .api import OPE, NO
     from .operators import d as derivative_operator
@@ -627,22 +727,20 @@ def _expand_nested_no_left(
         if pole_l != 0 and pole_l != ZeroConst:
             deriv_A = derivative_operator(A, l)
             coeff = sp.Rational(1, sp.factorial(l))
-            # 如果 pole_l 是算符，构造 NO；否则直接乘以标量
-            if isinstance(pole_l, Operator):
-                result = result + coeff * NO(deriv_A, pole_l)
-            else:
-                result = result + coeff * pole_l * deriv_A
+
+            # 根据 Thielemans eq (3.3.19)，所有项都应该是 NO(∂^l A, {BC}_l)
+            # 即使 pole_l 不是单个算符，也应该用 NO 包裹
+            result = result + coeff * NO(deriv_A, pole_l)
 
     for l in range(1, ope_AC.max_pole + 1):
         pole_l = ope_AC.pole(l)
         if pole_l != 0 and pole_l != ZeroConst:
             deriv_B = derivative_operator(B, l)
             coeff = sign * sp.Rational(1, sp.factorial(l))
-            # 如果 pole_l 是算符，构造 NO；否则直接乘以标量
-            if isinstance(pole_l, Operator):
-                result = result + coeff * NO(deriv_B, pole_l)
-            else:
-                result = result + coeff * pole_l * deriv_B
+
+            # 根据 Thielemans eq (3.3.19)，所有项都应该是 NO(∂^l B, {AC}_l)
+            # 即使 pole_l 不是单个算符，也应该用 NO 包裹
+            result = result + coeff * NO(deriv_B, pole_l)
 
     # 不在这里递归调用 simplify，避免无限递归
     # 返回展开的结果，让外层的 simplify 处理
@@ -653,7 +751,7 @@ def _expand_nested_no_right(
     B: Any, A: Any, C: Any, expand_derivatives: bool = True
 ) -> Any:
     """
-    展开 NO(B, NO(A,C)) 使用 Thielemans eq (3.3.9-3.3.10)
+    展开 NO(B, NO(A,C)) 使用 Thielemans eq (3.3.9) 和 (3.3.10)
 
     对应 OPEdefs.m 中的 NOCompositeHelpRQ
 
@@ -661,26 +759,38 @@ def _expand_nested_no_right(
     NOCompositeHelpRQ[B,A,C]），它可由 Thielemans eq (3.3.9-3.3.10) 交换 A/B 得到。
 
     公式:
-        B(AC) = (-1)^{|A||B|} A(BC) + (NOCommuteHelp[B,A])C
+        NO(B, NO(A,C)) = (-1)^{|A||B|} NO(A, NO(B,C)) + NO(NOCommuteHelp[B,A], C)
 
     其中 NOCommuteHelp[B,A] = NO[B,A] - (-1)^{|A||B|} NO[A,B]
 
-    这个公式来自 Thielemans 论文 eq (3.3.9-3.3.10)：
-        [A[BC]_0]_0 = (-1)^{|A||B|} [B[AC]_0]_0 +
-                      [[AB]_0 - (-1)^{|A||B|} [BA]_0] C]_0
+    这个公式来自 Thielemans 论文 eq (3.3.9) 和 (3.3.10)：
+        eq (3.3.9): [A[BC]_0]_0 = (-1)^{|A||B|} [B[AC]_0]_0 + ...
+        eq (3.3.10): ... + [([AB]_0 - (-1)^{|A||B|} [BA]_0) C]_0
 
     交换 A 和 B 的角色得到：
-        [B[AC]_0]_0 = (-1)^{|A||B|} [A[BC]_0]_0 +
-                      [[BA]_0 - (-1)^{|A||B|} [AB]_0] C]_0
+        [B[AC]_0]_0 = (-1)^{|A||B|} [A[BC]_0]_0 + [([BA]_0 - (-1)^{|A||B|} [AB]_0) C]_0
+
+    与 Thielemans 方程的关系:
+    - eq (3.3.9) 和 (3.3.10) 合起来给出正规序乘积的重排公式
+    - eq (3.3.10) 来自 eq (2.3.21)
+    - 这是用于处理 NO(B, NO(A,C)) 形式的嵌套正规序
 
     Args:
         B: NO 外层左侧的算符 (outer_left)
         A: NO 内层左侧的算符 (inner_left)
         C: NO 内层右侧的算符 (inner_right)
-        expand_derivatives: 是否展开导数
+        expand_derivatives: 是否展开导数 (当前未使用,保留以保持接口一致性)
 
     Returns:
-        展开后的表达式
+        Any: 展开后的表达式
+
+    Note:
+        该函数不会递归调用 simplify,以避免无限递归。
+        外层调用 simplify 时会继续处理展开后的结果。
+
+    See also:
+        _expand_nested_no_left: 处理 NO(NO(A,B), C) 的展开
+        _compute_no_commute_help: 计算 NOCommuteHelp[A,B]
     """
     from .api import NO
     from .local_operator import get_operator_parity
@@ -757,3 +867,244 @@ def _operators_equal(op1: Any, op2: Any) -> bool:
         )
     else:
         return op1 == op2
+
+
+def expand_nested_no(
+    expr: Any, max_depth: int = None, expand_derivatives: bool = False
+) -> Any:
+    """
+    展开嵌套正规序算符，但不进行进一步的规范化
+
+    这个函数实现 OPEdefs.m 风格的展开：应用 Thielemans 重排公式
+    将嵌套的 NO 展开为和式，但保留三重嵌套项，不继续规约到二重项。
+
+    与 simplify() 的区别：
+    - simplify(): 完全规范化，将所有嵌套 NO 规约到"标准基底"（通常是二重 NO + 导数项）
+    - expand_nested_no(): 只展开指定深度，保留中间形式（如三重嵌套 NO）
+
+    Args:
+        expr: 要展开的表达式
+        max_depth: 最大展开深度（默认 None，表示完全展开但不规约三重项）
+        expand_derivatives: 是否展开导数（默认 False，保持 d(NO(...)) 形式）
+
+    Returns:
+        展开后的表达式
+
+    Examples:
+        >>> J_plus = BasisOperator("J⁺", conformal_weight=1)
+        >>> J_zero = BasisOperator("J⁰", conformal_weight=1)
+        >>> J_minus = BasisOperator("J⁻", conformal_weight=1)
+        >>> # 设置 OPE...
+        >>> expr = NO(J_minus, NO(J_plus, J_zero))
+        >>> result = expand_nested_no(expr)
+        >>> # 返回: NO(J⁺, NO(J⁰, J⁻)) + 2*NO(J⁺, ∂J⁻) - NO(∂J⁰, J⁰)
+        >>> # 而不是 simplify 的结果: 2*NO(J⁺, ∂J⁻)
+    """
+    # 处理零和单位
+    if expr == 0 or expr == Zero:
+        return Zero
+    if expr == One:
+        return One
+
+    # 处理 OPEData
+    from .ope_data import OPEData
+
+    if isinstance(expr, OPEData):
+        new_poles = {}
+        for q, coeff in expr.poles.items():
+            expanded_coeff = expand_nested_no(coeff, max_depth, expand_derivatives)
+            if expanded_coeff != 0 and expanded_coeff != Zero:
+                new_poles[q] = expanded_coeff
+        return OPEData(new_poles)
+
+    # 处理加法：分别展开每一项
+    if isinstance(expr, Add):
+        expanded_terms = [
+            expand_nested_no(term, max_depth, expand_derivatives) for term in expr.args
+        ]
+        non_zero_terms = [t for t in expanded_terms if t != Zero and t != 0]
+        if not non_zero_terms:
+            return Zero
+        if len(non_zero_terms) == 1:
+            return non_zero_terms[0]
+        return sp.Add(*non_zero_terms)
+
+    # 处理乘法：提取标量系数
+    if isinstance(expr, Mul):
+        coeff, op = extract_scalar_operator(expr)
+        expanded_op = expand_nested_no(op, max_depth, expand_derivatives)
+        if expanded_op == Zero or expanded_op == 0:
+            return Zero
+        if coeff != 1:
+            return coeff * expanded_op
+        return expanded_op
+
+    # 处理算符
+    if isinstance(expr, Operator):
+        return _expand_nested_no_operator(expr, max_depth, expand_derivatives)
+
+    # 其他情况：直接返回
+    return expr
+
+
+def _expand_nested_no_operator(
+    op: Operator, max_depth: int = None, expand_derivatives: bool = False
+) -> Any:
+    """
+    展开单个算符中的嵌套正规序
+
+    Args:
+        op: 算符实例
+        max_depth: 最大展开深度（None 表示完全展开）
+        expand_derivatives: 是否展开导数
+
+    Returns:
+        展开后的表达式
+    """
+    from .api import NO
+
+    # 处理 DerivativeOperator
+    if isinstance(op, DerivativeOperator):
+        if expand_derivatives and isinstance(op.base, NormalOrderedOperator):
+            from .operators import d as derivative_operator
+            from .cache import cached_binomial
+
+            base = op.base
+            n = op.order
+            left = expand_nested_no(base.left, max_depth, expand_derivatives)
+            right = expand_nested_no(base.right, max_depth, expand_derivatives)
+
+            terms = []
+            for k in range(n + 1):
+                coeff = cached_binomial(n, k)
+                left_deriv = derivative_operator(left, k) if k > 0 else left
+                right_deriv = derivative_operator(right, n - k) if n - k > 0 else right
+                terms.append(coeff * NO(left_deriv, right_deriv))
+
+            result = sp.Add(*terms) if len(terms) > 1 else terms[0]
+            return expand_nested_no(result, max_depth, expand_derivatives)
+        else:
+            expanded_base = expand_nested_no(op.base, max_depth, expand_derivatives)
+            if expanded_base != op.base:
+                return DerivativeOperator(expanded_base, op.order)
+            return op
+
+    if isinstance(op, BasisOperator):
+        return op
+
+    # 处理 NormalOrderedOperator
+    if isinstance(op, NormalOrderedOperator):
+        if max_depth is not None and max_depth <= 0:
+            return op
+
+        left = op.left
+        right = op.right
+
+        # 计算下一层的深度
+        next_depth = None if max_depth is None else max_depth - 1
+
+        # 递归展开左右算符
+        left = expand_nested_no(left, next_depth, expand_derivatives)
+        right = expand_nested_no(right, next_depth, expand_derivatives)
+
+        # 处理左嵌套：NO(NO(A,B), C)
+        if isinstance(left, NormalOrderedOperator):
+            A, B = left.left, left.right
+            C = right
+
+            expanded = _expand_nested_no_left(A, B, C, expand_derivatives=False)
+            return expand_nested_no(expanded, max_depth, expand_derivatives)
+
+        # 处理右嵌套：NO(B, NO(A,C))
+        if isinstance(right, NormalOrderedOperator):
+            B = left
+            A, C = right.left, right.right
+
+            order_AB = ope_registry.compare_operators(A, B)
+            if order_AB > 0:
+                expanded = _expand_nested_no_right(B, A, C, expand_derivatives=False)
+                return expand_nested_no(expanded, max_depth, expand_derivatives)
+
+            # 即使不需要重排 B 和 A，也要检查内层 NO(A,C) 是否需要重排
+            order_AC = ope_registry.compare_operators(A, C)
+            if order_AC < 0:
+                # A 应该排在 C 后面，需要重排内层
+                # 使用完整的 OPE 公式：NO(A,C) -> NO(C,A) + 收缩项
+                # 然后将结果放入外层：NO(B, NO(A,C)) -> NO(B, NO(C,A)) + NO(B, 收缩项)
+                from .api import OPE
+                from .operators import d as derivative_operator
+                from .local_operator import get_operator_parity
+                from .constants import Zero as ZeroConst
+
+                parity_A = get_operator_parity(A)
+                parity_C = get_operator_parity(C)
+                swap_sign = (-1) ** (parity_A * parity_C)
+
+                ope_CA = OPE(C, A)
+                max_pole = ope_CA.max_pole
+
+                # 构建重排后的表达式
+                terms = []
+
+                # 第一项：NO(B, NO(C,A))（三重嵌套项，总是存在）
+                terms.append(swap_sign * NO(B, NO(C, A)))
+
+                # 收缩项：NO(B, ∂^l [CA]_l)
+                for l in range(1, max_pole + 1):
+                    pole_l = ope_CA.pole(l)
+                    if pole_l != 0 and pole_l != ZeroConst:
+                        deriv_pole = derivative_operator(pole_l, l)
+                        coeff = swap_sign * ((-1) ** l) / sp.factorial(l)
+                        terms.append(coeff * NO(B, deriv_pole))
+
+                result = sp.Add(*terms) if len(terms) > 1 else terms[0]
+                return result
+
+        return NO(left, right)
+
+    return op
+
+    # BasisOperator 已经是最简形式
+    if isinstance(op, BasisOperator):
+        return op
+
+    # 处理 NormalOrderedOperator
+    if isinstance(op, NormalOrderedOperator):
+        if max_depth <= 0:
+            # 达到最大深度，不再展开
+            return op
+
+        left = op.left
+        right = op.right
+
+        # 递归展开左右算符（深度减 1）
+        left = expand_nested_no(left, max_depth - 1, expand_derivatives)
+        right = expand_nested_no(right, max_depth - 1, expand_derivatives)
+
+        # 处理左嵌套：NO(NO(A,B), C)
+        if isinstance(left, NormalOrderedOperator):
+            A, B = left.left, left.right
+            C = right
+
+            # 使用 _expand_nested_no_left 展开
+            expanded = _expand_nested_no_left(A, B, C, expand_derivatives=False)
+            # 递归展开生成的项（但深度不减，因为我们只是在同一层级重排）
+            return expand_nested_no(expanded, max_depth, expand_derivatives)
+
+        # 处理右嵌套：NO(B, NO(A,C))
+        if isinstance(right, NormalOrderedOperator):
+            B = left
+            A, C = right.left, right.right
+
+            # 检查是否需要重排序
+            order_AB = ope_registry.compare_operators(A, B)
+            if order_AB > 0:
+                # A 应该排在 B 前面，需要展开
+                expanded = _expand_nested_no_right(B, A, C, expand_derivatives=False)
+                # 递归展开生成的项（但深度不减，因为我们只是在同一层级重排）
+                return expand_nested_no(expanded, max_depth, expand_derivatives)
+
+        # 没有嵌套或不需要展开，返回简化的 NO
+        return NO(left, right)
+
+    return op

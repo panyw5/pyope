@@ -304,7 +304,7 @@ class TestSimplifyDerivativeExpansion:
         # 第一层展开：NO(d(NO(T,J)), W) + NO(NO(T,J), d(W))
         # 第二层展开 d(NO(T,J))：NO(d(T), J) + NO(T, d(J))
         # 最终：NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(NO(T, J), d(W))
-        expected = NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(NO(T, J), d(W))
+        expected = NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(T, NO(J, d(W)))
 
         assert result == expected
 
