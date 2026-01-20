@@ -104,112 +104,112 @@ $(a)_n$  : Pochhammer symbol,  $(a)_n = \frac{\Gamma(a + n)}{\Gamma(a)} = \prod_
 
 # 3 OPEs in Mathematica 28
 
-3.1 Intention and history 28  
-3.2 Design considerations 28  
-3.3 Implementation 29  
-3.3.1 Algorithm 29  
-3.3.2 The internals of OPErefs 32  
-3.3.3Operator handling 33  
-3.3.4 Performance 37  
-3.4 User's Guide 37  
-3.5 Example : The conformal anomaly in superstring theory 39  
+3.1 Intention and history 28
+3.2 Design considerations 28
+3.3 Implementation 29
+3.3.1 Algorithm 29
+3.3.2 The internals of OPErefs 32
+3.3.3Operator handling 33
+3.3.4 Performance 37
+3.4 User's Guide 37
+3.5 Example : The conformal anomaly in superstring theory 39
 3.6 Future developments 40
 
 # 3.7 Other packages 40
 
 # 4  $\mathcal{W}$  -algebras 43
 
-4.1 Introduction 43  
-4.2 Highest weight representations and minimal models 44  
+4.1 Introduction 43
+4.2 Highest weight representations and minimal models 44
 4.3 Consequences of the global conformal group 45
 
-4.3.1 Consequences for OPEs 46  
+4.3.1 Consequences for OPEs 46
 4.3.2 Finding the quasiprimaries in an OPE 46
 
 4.4 Consequences of the full conformal group 48
 
-4.4.1 Restrictions of conformal covariance on the OPEs 48  
-4.4.2 Virasoro descendants in a quasiprimary basis 49  
-4.4.3 Virasoro descendants of the unit operator 51  
+4.4.1 Restrictions of conformal covariance on the OPEs 48
+4.4.2 Virasoro descendants in a quasiprimary basis 49
+4.4.3 Virasoro descendants of the unit operator 51
 4.4.4 Finding the primaries in an OPE 52
 
 4.5 An overview of  $\mathcal{W}$ -algebras 52
 
-4.5.1 Direct construction 52  
-4.5.2 Subalgebras of known  $\mathcal{W}$  -algebras 53  
-4.5.3 Constructing a  $\mathcal{W}$ -algebra via a realization 53  
-4.5.4 Superconformal algebras 54  
+4.5.1 Direct construction 52
+4.5.2 Subalgebras of known  $\mathcal{W}$  -algebras 53
+4.5.3 Constructing a  $\mathcal{W}$ -algebra via a realization 53
+4.5.4 Superconformal algebras 54
 4.5.5 Attempts towards a classification 54
 
 4.6 An example:  $\mathcal{W}_cB_2$  54
 
-4.6.1 The  $\mathcal{W}_cB_2$ -algebra 54  
-4.6.2 Coulomb Gas Realisation 55  
+4.6.1 The  $\mathcal{W}_cB_2$ -algebra 54
+4.6.2 Coulomb Gas Realisation 55
 4.6.3 Highest weight representations 57
 
-4.7 Discussion 57  
+4.7 Discussion 57
 4.A Appendix 57
 
 # 5 Factoring out Free Fields 62
 
 5.1 Algorithms for factorisation 62
 
-5.1.1 Free fermions 62  
-5.1.2 Symplectic bosons 63  
+5.1.1 Free fermions 62
+5.1.2 Symplectic bosons 63
 5.1.3  $U(1)$  currents 64
 
-5.2 Generating functionals 64  
+5.2 Generating functionals 64
 5.3 Examples 65
 
-5.3.1  $N = 3$  superconformal algebras 65  
+5.3.1  $N = 3$  superconformal algebras 65
 5.3.2  $N = 4$  superconformal algebras 68
 
 5.4 Discussion 70
 
 # 6  $\mathcal{W}$  -algebras and gauged WZNW models 72
 
-6.1 Classical Drinfeld-Sokolov reduction 72  
+6.1 Classical Drinfeld-Sokolov reduction 72
 6.2 Quantum reduction 74
 
-6.2.1 Gauged WZNW Model 74  
+6.2.1 Gauged WZNW Model 74
 6.2.2 The induced action 75
 
-6.3 An example:  $osp(N|2)$  76  
+6.3 An example:  $osp(N|2)$  76
 6.4 Cohomology 78
 
-6.4.1 Computing the quantum cohomology 78  
-6.4.2 Classical cohomology 80  
+6.4.1 Computing the quantum cohomology 78
+6.4.2 Classical cohomology 80
 6.4.3 The quantum  $\mathcal{W}$  -algebra 81
 
-6.5 An example:  $osp(N|2)$ , continued 82  
-6.6 Quantum corrections to the extended action 82  
+6.5 An example:  $osp(N|2)$ , continued 82
+6.6 Quantum corrections to the extended action 82
 6.7 Discussion 83
 
 # 7 Renormalisation factors in  $\mathcal{W}$  -Gravity 85
 
-7.1 Introduction 85  
-7.2 All-order results 86  
-7.3 An example:  $so(N)$ -supergravity 89  
+7.1 Introduction 85
+7.2 All-order results 86
+7.3 An example:  $so(N)$ -supergravity 89
 7.4 Semiclassical evaluation for the linear superconformal algebras 91
 
-7.4.1  $N = 1$  93  
-7.4.2  $N = 2$  94  
+7.4.1  $N = 1$  93
+7.4.2  $N = 2$  94
 7.4.3  $N = 3,4$  95
 
 7.5 Discussion 95
 
 # 8 Critical  $\mathcal{W}$  -strings 98
 
-8.1 The bosonic string 98  
-8.2  $\mathcal{W}$  -strings 99  
-8.3  $\mathcal{W}_{2,s}$  -strings 101  
+8.1 The bosonic string 98
+8.2  $\mathcal{W}$  -strings 99
+8.3  $\mathcal{W}_{2,s}$  -strings 101
 8.4 Minimal models and  $\mathcal{W}_{2,s}$  -strings 103
 
-8.4.1 The  $\mathcal{W}_{2,4}$  -string 104  
-8.4.2 The  $\mathcal{W}_{2,5}$  string 105  
+8.4.1 The  $\mathcal{W}_{2,4}$  -string 104
+8.4.2 The  $\mathcal{W}_{2,5}$  string 105
 8.4.3 The  $\mathcal{W}_{2,6}$  string 106
 
-8.5 Hierarchies of string embeddings 107  
+8.5 Hierarchies of string embeddings 107
 8.6 Conclusion and discussion 110
 
 # A Green's function for the Laplacian in 2d 112
@@ -370,7 +370,7 @@ $$
 z \rightarrow \frac {a z + b}{c z + d}, \tag {2.1.9}
 $$
 
-where  $a, b, c, d \in \mathbb{C}$  and  $ac - bd = 1$ . These transformations form a group isomorphic to  $SL(2,\mathbb{C}) \approx SO(3,1)$ .<sup>1</sup>
+where  $a, b, c, d \in \mathbb{C}$  and  $ac - bd = 1$ . These transformations form a group isomorphic to  $SL(2,\mathbb{C}) \approx SO(3,1)$ .`<sup>`1`</sup>`
 
 Definition 2.1.2 A quasiprimary field transform as eqs. (2.1.5,2.1.6) for the global transformations. A scaling field transforms this way for translations and scaling transformations.
 
@@ -612,7 +612,7 @@ $$
 : T _ {1} T _ {2} \colon \rightarrow [ T _ {1} T _ {2} ] _ {0}. \tag {2.3.7}
 $$
 
-In fact, we can use the same procedure to define all operators in the regular part of the OPE<sup>5</sup>, i.e.
+In fact, we can use the same procedure to define all operators in the regular part of the OPE`<sup>`5`</sup>`, i.e.
 
 $$
 \begin{array}{l} <   \sum_ {n \leq 0} \frac {[ T _ {1} T _ {2} ] _ {n} (w)}{(z - w) ^ {n}} X > = \\ <   \left(T _ {1} (z) T _ {2} (w) - \sum_ {n > 0} \frac {\left[ T _ {1} T _ {2} \right] _ {n} (w)}{(z - w) ^ {n}}\right) X >. \tag {2.3.8} \\ \end{array}
@@ -642,10 +642,10 @@ In this subsection, we determine the consistency requirements on the OPEs by con
 
 # Assumption 2.3.1 The correlators have the following properties:
 
-- translation and scaling invariance  
-- no singularity at infinity  
-- the correlation functions involving a chiral symmetry generator  $W(z)$  are meromorphic functions in  $z$  
-crossing symmetry
+- translation and scaling invariance
+- no singularity at infinity
+- the correlation functions involving a chiral symmetry generator  $W(z)$  are meromorphic functions in  $z$
+  crossing symmetry
 
 We now suppose that there is a map from the space of fields of the conformal field theory to a vectorspace  $\mathcal{V}$ . A  $\mathbb{Z}_2$  grading in  $\mathcal{V}$  should exist, corresponding to bosonic and fermionic operators. We denote it with  $|A|$ . There is an even linear map  $\partial$  from  $\mathcal{V}$  to  $\mathcal{V}$ , and a sequence of bilinear operations for every  $n\in \mathbb{Z}$  which we denote by  $[AB]_n$ , see eq. (2.3.3). For  $n > 0$  the bilinear operations are defined in eq. (2.3.4). We require that correlation functions can be computed by substituting the complete OPE as done for eq. (2.3.9). From this definition, we determine the properties of
 
@@ -765,7 +765,7 @@ $$
 
 where  $C_u$  denotes a contour which encircles  $u$  once anti-clockwise, not including any other points involved in the correlator. We can now use a contour deformation argument relating the contour integral in eq. (2.3.20) to a contour integral where the integration over  $w$  is performed last, see fig. 2.1. This integral has two terms: one where the  $z$  contour is around  $u$  (corresponding to the correlator  $(-1)^{|A| |B|} < [B[AC]]X >$ , and one where it is around  $w (< [[AB]C]X>)$ . Using the definition
 
-![](images/a762b8d360dd00f65fee47c1f2e8623b46fbdc8e564b9e38c2d1f75986888795.jpg)  
+![](images/a762b8d360dd00f65fee47c1f2e8623b46fbdc8e564b9e38c2d1f75986888795.jpg)
 Figure 2.1: Contour deformations
 
 (2.3.3) for the OPEs, and Cauchy's residue formula for contour integrals, we arrive at:
@@ -780,7 +780,7 @@ $$
 \begin{array}{l} [ A [ B C ] _ {p} ] _ {q} \\ = (- 1) ^ {| A | | B |} \left(\left[ B [ A C ] _ {q} \right] _ {p} - \sum_ {l > 0} \binom {p - 1} {l - 1} \left[ \left[ B A \right] _ {l} C \right] _ {p + q - l}\right). \tag {2.3.22} \\ \end{array}
 $$
 
-Both eqs. (2.3.21),(2.3.22) have to be satisfied for any  $p,q\in \mathbb{Z}$ .<sup>6</sup>
+Both eqs. (2.3.21),(2.3.22) have to be satisfied for any  $p,q\in \mathbb{Z}$ .`<sup>`6`</sup>`
 
 Similarly, by starting with:
 
@@ -960,7 +960,7 @@ If such a map exists, we call the OPA graded.
 
 Definition 2.3.8 A  $\mathcal{W}$ -algebra is a conformal OPA where one can find a set of generators which are quasiprimary.
 
-Different definitions of a  $\mathcal{W}$ -algebra exist in the literature. Sometimes one requires that the generators are primary (except  $T$  itself). In this work, we will mainly consider  $\mathcal{W}$ -algebras of this subclass, and for which the number of generators is finite. The importance of  $\mathcal{W}$ -algebras lies in the fact that the chiral symmetry generators of a conformal field theory form a  $\mathcal{W}$ -algebra<sup>7</sup>. We will treat  $\mathcal{W}$ -algebras in more detail in chapter 4.
+Different definitions of a  $\mathcal{W}$ -algebra exist in the literature. Sometimes one requires that the generators are primary (except  $T$  itself). In this work, we will mainly consider  $\mathcal{W}$ -algebras of this subclass, and for which the number of generators is finite. The importance of  $\mathcal{W}$ -algebras lies in the fact that the chiral symmetry generators of a conformal field theory form a  $\mathcal{W}$ -algebra`<sup>`7`</sup>`. We will treat  $\mathcal{W}$ -algebras in more detail in chapter 4.
 
 Finally, we introduce a notation for OPEs which lists only the operators in the singular terms, starting with the highest order pole. As an example, we will write a Virasoro OPE (2.3.2) as:
 
@@ -1198,7 +1198,7 @@ $$
 
 the action  $S + \frac{1}{\pi} \int \mu T$  is classically invariant. When gauging not only the conformal symmetry, we would expect that higher order terms in the sources have to be added to eq. (2.5.1) to obtain invariance. However, Hull [115] proved that minimal coupling (addition of only linear terms) is sufficient to gauge chiral symmetries.
 
-It is possible that the resulting local symmetry does not survive at the quantum level. For example, the Schwinger term in the transformation law of  $T$  (eq. (2.2.15)) breaks gauge invariance. In general, central terms in the transformation laws of the symmetry generators give rise to "universal" anomalies, which cannot be canceled by changing the transformation law of the gauge fields<sup>9</sup>. In this case, the induced action  $\Gamma$  is a (in general nonlocal) functional of the gauge fields  $\mu^k$  and is used in  $\mathcal{W}$ -gravity theories (see chapter 7) and non-critical  $\mathcal{W}$ -strings.
+It is possible that the resulting local symmetry does not survive at the quantum level. For example, the Schwinger term in the transformation law of  $T$  (eq. (2.2.15)) breaks gauge invariance. In general, central terms in the transformation laws of the symmetry generators give rise to "universal" anomalies, which cannot be canceled by changing the transformation law of the gauge fields`<sup>`9`</sup>`. In this case, the induced action  $\Gamma$  is a (in general nonlocal) functional of the gauge fields  $\mu^k$  and is used in  $\mathcal{W}$ -gravity theories (see chapter 7) and non-critical  $\mathcal{W}$ -strings.
 
 The Ward identities can be used to derive functional equations for the generating functionals  $Z$  and  $\Gamma$ . As an example, consider the induced action where only the energy-momentum tensor is coupled to a source (i.e. the generating functional for
 
@@ -1316,7 +1316,7 @@ $$
 \begin{array}{l} <   \partial X (z, \bar {z}) X (z _ {1}, \bar {z} _ {1}) X (z _ {2}, \bar {z} _ {2}) \dots > = \\ \frac {\lambda}{z - z _ {1}} <   X \left(z _ {2}, \bar {z} _ {2}\right) \dots > + \frac {\lambda}{z - z _ {2}} <   X \left(z _ {1}, \bar {z} _ {1}\right) \dots > + \dots \tag {2.6.4} \\ \end{array}
 $$
 
-corresponding to the OPE<sup>10</sup>:
+corresponding to the OPE`<sup>`10`</sup>`:
 
 $$
 \partial X (z) X \left(z _ {0}, \bar {z} _ {0}\right) = \frac {\lambda}{z - z _ {0}} + O \left(z - z _ {0}\right) ^ {0}. \tag {2.6.5}
@@ -1468,7 +1468,7 @@ $$
 \begin{array}{l} <   \psi (z) \psi (z _ {0}) > = \pi^ {2} \frac {\delta}{\delta \mu (z , \bar {z})} \frac {\delta}{\delta \mu (z _ {0} , \bar {z} _ {0})} Z [ \mu ] \Big | _ {\mu = 0} \\ = \frac {\lambda}{z - z _ {0}}, \tag {2.6.25} \\ \end{array}
 $$
 
-where we used left-functional derivatives. The corresponding OPE is<sup>11</sup>:
+where we used left-functional derivatives. The corresponding OPE is`<sup>`11`</sup>`:
 
 $$
 \psi (z) \psi (w) = \frac {\lambda}{z - w} + O (z - w) ^ {0}. \tag {2.6.26}
@@ -1496,7 +1496,7 @@ $$
 S _ {\mathrm {b c}} [ b, c ] = \frac {1}{\pi} \int d ^ {2} x b ^ {i} (x) _ {i} A ^ {j} \bar {\partial} (_ {j} c) (x), \tag {2.6.29}
 $$
 
-where  ${}_iA^j$  is a constant bosonic supermatrix which is invertible. We assume that it does not mix fermions and bosons. We also take  $b$  and  $c$  to be bosonic matrices<sup>12</sup>. The equations of motion again show that  $b^i, c_i$  are chiral fields. Conformal invariance requires the  $b^i$  to be primary fields with dimension  $h^i$  and  $c_i$  also to be primary such that  $\dim(_i A^j)_j c = 1 - h^i$  (and zero for  $\bar{h}$ ). We proceed now as in the previous subsection:
+where  ${}_iA^j$  is a constant bosonic supermatrix which is invertible. We assume that it does not mix fermions and bosons. We also take  $b$  and  $c$  to be bosonic matrices`<sup>`12`</sup>`. The equations of motion again show that  $b^i, c_i$  are chiral fields. Conformal invariance requires the  $b^i$  to be primary fields with dimension  $h^i$  and  $c_i$  also to be primary such that  $\dim(_i A^j)_j c = 1 - h^i$  (and zero for  $\bar{h}$ ). We proceed now as in the previous subsection:
 
 $$
 \begin{array}{l} Z [ \mu , \nu ] = \frac {1}{\mathcal {N}} \int [ d b ^ {i} ] [ d c _ {j} ] \exp - \left(S _ {\mathrm {b c}} [ b, c ] + \frac {1}{\pi} \int \mu_ {k} ^ {k} b + \nu^ {k} _ {k} c\right) \\ = \frac {1}{\mathcal {N}} \int [ d b ^ {i} ] [ d c _ {j} ] \exp \left(\frac {1}{\pi} \int (b + \bar {\partial} ^ {- 1} \nu A ^ {- 1}) A \bar {\partial} (c - (A \bar {\partial}) ^ {- 1} \mu))\right) \\ \exp \left(\frac {1}{\pi} \int (\bar {\partial} ^ {- 1} \nu) A ^ {- 1} \mu\right) \\ = \exp \left(- \frac {1}{\pi} \int d ^ {2} x d ^ {2} x _ {0} \nu^ {i} (z, \bar {z}) \frac {i (A ^ {- 1}) ^ {j}}{z - z _ {0}} j \mu \left(z _ {0}, \bar {z} _ {0}\right)\right). \tag {2.6.30} \\ \end{array}
@@ -1582,7 +1582,7 @@ $$
 \begin{array}{l} \delta_ {\eta} J _ {z} = \frac {\kappa}{2} \partial \eta + [ \eta , J _ {z} ], (2.6.42) \\ = - \int d y \left\{s t r (\eta (y) J _ {z} (y)), J _ {z} (x) \right\} _ {\mathrm {P B}} (2.6.43) \\ \end{array}
 $$
 
-where the Poisson bracket is given by<sup>13</sup>:
+where the Poisson bracket is given by`<sup>`13`</sup>`:
 
 $$
 J _ {z} ^ {a} \times J _ {z} ^ {b} = \ll - \frac {\kappa}{2} g ^ {a b} | ^ {a} g ^ {d} J _ {z c d} ^ {c} f ^ {b} \gg , \tag {2.6.44}
@@ -1714,7 +1714,7 @@ A first version of my package was used to perform the calculations on the Casimi
 
 Important improvements (version 3.0) were published in [193]. It was necessary to introduce a different syntax, to be able to make extensive changes in the future. Since then, many other small changes have been made to the package. The latest version, which will be discussed in this chapter, is 3.1.
 
-The package is freely available from the author<sup>3</sup>.
+The package is freely available from the author`<sup>`3`</sup>`.
 
 # 3.2 Design considerations
 
@@ -1790,12 +1790,12 @@ where  $q\geq 1$
 
 These rules are the only ones needed to compute every OPE in the OPA. Indeed, when computing the OPE of  $A$  with  $B$ , we apply the following procedure:
 
-- if  $A$  and  $B$  are generators whose OPE we know, return it as the result.  
-- apply linearity if necessary.  
-- if  $A$  is an operator with derivatives, use eq. (3.3.1).  
-- if  $B$  is an operator with derivatives, use eq. (3.3.2).  
-- if  $B$  is a composite, use eq. (3.3.4).  
-- if  $A$  is a composite, use eq. (3.3.3).  
+- if  $A$  and  $B$  are generators whose OPE we know, return it as the result.
+- apply linearity if necessary.
+- if  $A$  is an operator with derivatives, use eq. (3.3.1).
+- if  $B$  is an operator with derivatives, use eq. (3.3.2).
+- if  $B$  is a composite, use eq. (3.3.4).
+- if  $A$  is a composite, use eq. (3.3.3).
 - if the OPE  $B(z) A(w)$  is known, compute the OPE  $A(z) B(w)$  using eq. (3.3.3).
 
 This list should be used recursively until none of the rules applies, which means that the OPE has been calculated. The order in which we check the rules is in this case not important, but we will check them in a "top-down" order. Note that to compute an OPE of a composite with a generator, first eq. (3.3.3) is used, and eq. (3.3.4) in the next step. The question now is if this is a finite procedure.
@@ -2119,7 +2119,7 @@ OPEData[{0, A__}]:= OPEData[{A}]
 
 # Intermezzo 3.3.3
 
-In this intermezzo we explain the rule for the addition of OPData structures. The lhs of the definition makes sure that  $\{\mathbf{A1},\mathbf{A2}\}$  will be the list of all OPDatas which are added<sup>5</sup>. When adding a number of OPData structures, maxP is set to the order of the highest pole occurring in the sum. Then First extracts the lists of poles, and we add the correct number of zeroes to the left. Finally, the sum of all these lists is made and OPData wrapped around the result. As an example, consider the sum of OPData[\{\mathbf{T},0\} ] and OPData[\{\mathbf{T}'\}], we get:
+In this intermezzo we explain the rule for the addition of OPData structures. The lhs of the definition makes sure that  $\{\mathbf{A1},\mathbf{A2}\}$  will be the list of all OPDatas which are added`<sup>`5`</sup>`. When adding a number of OPData structures, maxP is set to the order of the highest pole occurring in the sum. Then First extracts the lists of poles, and we add the correct number of zeroes to the left. Finally, the sum of all these lists is made and OPData wrapped around the result. As an example, consider the sum of OPData[\{\mathbf{T},0\} ] and OPData[\{\mathbf{T}'\}], we get:
 
 ```txt
 {A1,A2} -> {OPEData[{T,0}], OPEData[{T}]]}  
@@ -2148,7 +2148,7 @@ $$
 
 However, this rule is much slower in handling sums with more than two terms. Indeed when there is a sum of  $n_1$  ( $n_2$ ) terms in the first (second) argument of OPE, this rule would have to be applied  $n_1 \times n_2$  times, while Distribute handles all cases in one application. The difference in performance is shown in fig. 3.1. During the execution of
 
-![](images/6f6992b5a07144b89951e12b361bc7b909b7ad52aa1f6e454a3080838468daa3.jpg)  
+![](images/6f6992b5a07144b89951e12b361bc7b909b7ad52aa1f6e454a3080838468daa3.jpg)
 Figure 3.1: Timings for two different rules to implement bilinearity of OPEs. The timings are for OPE[A,B] with A of a sum of 10 terms and B a sum of  $i$  terms. The plain line is for Distribute (3.3.21) and the dashed line is for the sum-rule (3.3.22).
 
 the algorithm, OPEs of sums occur frequently, hence it is important to select the most efficient rule.
@@ -2305,7 +2305,7 @@ One also needs some extra functions like OPESimplify. We do not give their imple
 
 One major ingredient of OPErefs is not yet discussed: OPEPole. For the operation of the above rules to work, only a very simple definition for the OPEPole of an OPEData is needed:
 
-![](images/3a2a72391c573cf00d4aef21f089272d96b88947f887b6436b88d9b0a432ae7f.jpg)  
+![](images/3a2a72391c573cf00d4aef21f089272d96b88947f887b6436b88d9b0a432ae7f.jpg)
 Figure 3.2: Timings for four different rules to implement extracting of scalars as a function of the number of scalars. The timings are for the evaluation of  $\mathsf{d}[\mathsf{A}\mathsf{B}]$  where  $\mathsf{A}$  is a product of  $i$  scalars and  $\mathsf{B}$  is an operator.
 
 Plain line for d[a_b_]:= bd[a] /; 0p[a], dashed line for d[a_b_]:= bd[a] /; !0p[b], dash-dot line for d[a_b_]:= ad[b] /; !0p[a], dotted line for d[a_b_]:= ad[b] /; 0p[b].
@@ -2324,7 +2324,7 @@ In table 3.1, we tabulate CPU times for computing an OPE of two of the currents,
 
 the time for evaluating the statement after loading the package and defining the realisation. The time between brackets is measured when the statement is repeated. The second execution is much faster because OPEdfs stores some of the OPEs with composites. Note that version 2.0 of Mathematica is roughly 1.4 times slower than version 1.2.
 
-Table 3.1: CPU time for the computation of the OPE of the currents corresponding to the positive simple root of  $\widehat{B_2}$  (statement 9) and the computation of the Sugawara tensor (statement 11) (see Ref. [192]) for Mathematica running on a PC 386 (25 Mhz).  
+Table 3.1: CPU time for the computation of the OPE of the currents corresponding to the positive simple root of  $\widehat{B_2}$  (statement 9) and the computation of the Sugawara tensor (statement 11) (see Ref. [192]) for Mathematica running on a PC 386 (25 Mhz).
 
 <table><tr><td>Mathematica-version
 OPErefs-version</td><td>1.2
@@ -2374,7 +2374,7 @@ $$
 
 Note the operator One which specifies the unit-operator.
 
-The second way is by giving the OPE as a Laurent series expansion, adding the symbol  $\mathsf{Ord}$  which specifies the (implicit) arguments of the operators for which the OPE is defined<sup>6</sup>. The arguments for the operators can be any Mathematica expression.
+The second way is by giving the OPE as a Laurent series expansion, adding the symbol  $\mathsf{Ord}$  which specifies the (implicit) arguments of the operators for which the OPE is defined`<sup>`6`</sup>`. The arguments for the operators can be any Mathematica expression.
 
 Warning: it is important that the operators occurring as arguments of OPE in a definition should be given in standard order (3.4.1), otherwise wrong results will be generated.
 
@@ -2456,7 +2456,7 @@ $$
 O u t [ 1 5 ] = N O [ T ^ {\prime}, T ]
 $$
 
-- MaxPole[ope_] gives the order of the highest pole in the OPE.  
+- MaxPole[ope_] gives the order of the highest pole in the OPE.
 - OPEParity[A] returns an even (odd) integer of  $A$  is bosonic (fermionic).
 
 # 3.5. Example : The conformal anomaly in superstring theory
@@ -2469,8 +2469,8 @@ $$
 
 OPESimplify[pole_, function_] does the same simplifications on sums of operators.
 
-- OPEMap[function_, ope_] maps function to all poles of ope.  
-- GetCoefficients [expr_] returns a list of all coefficients of operators in expr which can be (a list of) OPEs or poles.  
+- OPEMap[function_, ope_] maps function to all poles of ope.
+- GetCoefficients [expr_] returns a list of all coefficients of operators in expr which can be (a list of) OPEs or poles.
 - OPEJacobi[op1_, op2_, op3_] computes the Jacobi-identities (2.3.21) for the singular part of the OPEs of the three arguments. Due to the nature of eq. (2.3.21), the computing time will be smallest (in most cases) when op1 ≤ op2 ≤ op3 in the order (3.4.1). In nonlinear algebras, the computation will use rules for OPEs of composites which assume that the Jacobi identities hold. This means that the result of OPEJacobi gives only necessary conditions. In some cases, different orderings of op1-op3 have to be tried to find all conditions.
 
 The result of OPEJacobi is a double list of operators. It is generated by Table [OPEPole[n] [A, OPEPole[m] [B, C]] + corrections, {m, maxm}, {n, maxn}]
@@ -2478,26 +2478,23 @@ The result of OPEJacobi is a double list of operators. It is generated by Table 
 All elements of the list should be zero up to null operators for the OPA to be associative.
 
 - Delta[i_,j_] is the Kronecker delta symbol  $\delta_{ij}$ .
-
-- ClearOPESavedValues[] clears all stored intermediate results, but not the definition of the operators and their OPEs. To clear everything, reload the package.  
+- ClearOPESavedValues[] clears all stored intermediate results, but not the definition of the operators and their OPEs. To clear everything, reload the package.
 - OPETO Series [ope_] converts an OPE to a Laurent series expansion in  $\mathbf{z}$  and  $\mathbf{w}$ . The arguments can be set to  $\mathbf{x}$  and  $\mathbf{y}$  with:
 
 $$
 I n [ 1 7 ] := \quad \text {S e t O P E O p t i o n s} [ \text {S e r i e s A r g u m e n t s}, \{x, y \} ]
 $$
 
-- TeXForm[ope_] gives TExoutput for an OPE. The same arguments are used as in OPETOseries.  
+- TeXForm[ope_] gives TExoutput for an OPE. The same arguments are used as in OPETOseries.
 - OPESave[filename_] (with filename a string between double quotes) saves the intermediate results that OPEdfs remembers to file (see the option OPESaving below).
-
 - SetOPE0options is a function to set the global options of the package. The current options are:
-
-- SetOPEOptions[SeriesArguments, {arg1_, arg2_}]: sets arguments to be used by TeXForm and OPEToSeries. One can use any Mathematical expression for arg1 and arg2.  
-- SetOPEOptions[NOOrdering, n_]: if n is negative, order higher derivatives to the left (default), if n is positive, order them to the right.  
+- SetOPEOptions[SeriesArguments, {arg1_, arg2_}]: sets arguments to be used by TeXForm and OPEToSeries. One can use any Mathematical expression for arg1 and arg2.
+- SetOPEOptions[NOOrdering, n_]: if n is negative, order higher derivatives to the left (default), if n is positive, order them to the right.
 - SetOPEOptions[ParityMethod, 0|1]: makes it possible to use operators of an unspecified parity. When the second argument is 0 (default), all operators have to be declared to be bosonic or fermionic. When the argument is 1, OPEOperator can be used with a symbolic parity. Note that in this case, powers of  $-1$  are used to compute signs, which is slightly slower than the boolean function which is used by the first method.
 
 This option is not normally needed as the use of OPEOperator with a non-integer second argument sets this option automatically.
 
-- SetOPEOptions[OPESaving, boolean_]: if boolean evaluates to True (default), OPErefs stores the intermediate results when computing OPEs of composites and when reordering composites. This option is useful if Mathematica runs short of memory in a large calculation, or when computing with dummy indices<sup>7</sup>.  
+- SetOPEOptions[OPESaving, boolean_]: if boolean evaluates to True (default), OPErefs stores the intermediate results when computing OPEs of composites and when reordering composites. This option is useful if Mathematica runs short of memory in a large calculation, or when computing with dummy indices`<sup>`7`</sup>`.
 - SetOPEOptions[OPEMethod, method_]: with the parameter method equal to QuantumOPEs enables normal OPE computations (default setting), while ClassicalOPEs enables Poisson bracket computations. Using this option implicitly calls ClearOPESavedValues[].
 
 # 3.5 Example : The conformal anomaly in superstring theory
@@ -2564,7 +2561,7 @@ The objective in writing OPErefs, was to make a package available which is as ge
 
 OPErefs. For instance, the restriction to free fields would be very useful. Also  $\mathcal{W}$ -algebras, a conformal OPA generated by quasiprimaries, form a preferred subclass of the OPAs. In this case it would be advantageous to compute in a basis of quasiprimaries, see section 4.3. A package under development [194] collects some formulas for working with (quasi)primaries in a  $\mathcal{W}$ -algebra, but it relies on OPErefs for computing OPEs.
 
-The main restriction of OPErefs is of course the requirement of poles of integer order. In particular, vertex operators are widely used in conformal field theory. Here the order of the powers in the generalised Laurent expansion remain integer spaced. This should make it possible to extend OPErefs to handle this case. However, the notion of the singular and regular part of an OPE is not so important when using vertex operators as in other cases. Indeed, the normal ordered product of two vertex operators should not be defined as the zeroth order pole in their OPE. This makes it desirable to use a data representation which keeps the information to generate any "pole", but stores already computed results<sup>8</sup>. This would make it possible to work with vertex operators  $V_{a}$  with a symbolic weight  $a$ , and not only with fixed numbers. One could then also define an OPE between fields of (non-numeric) dimension  $h_1, h_2$ , e.g. with the unit operator at the pole of order  $h_1 + h_2$ . Finally, the extension to nonmeromorphic OPEs would allow to treat parafermions [67, 68, 95].
+The main restriction of OPErefs is of course the requirement of poles of integer order. In particular, vertex operators are widely used in conformal field theory. Here the order of the powers in the generalised Laurent expansion remain integer spaced. This should make it possible to extend OPErefs to handle this case. However, the notion of the singular and regular part of an OPE is not so important when using vertex operators as in other cases. Indeed, the normal ordered product of two vertex operators should not be defined as the zeroth order pole in their OPE. This makes it desirable to use a data representation which keeps the information to generate any "pole", but stores already computed results`<sup>`8`</sup>`. This would make it possible to work with vertex operators  $V_{a}$  with a symbolic weight  $a$ , and not only with fixed numbers. One could then also define an OPE between fields of (non-numeric) dimension  $h_1, h_2$ , e.g. with the unit operator at the pole of order  $h_1 + h_2$ . Finally, the extension to nonmeromorphic OPEs would allow to treat parafermions [67, 68, 95].
 
 We are currently working at a version for computing with super OPEs in  $N = 2$  superfields [137]. Extension to arbitrary  $N$  will not give great difficulties.
 
@@ -2630,7 +2627,7 @@ We notice that the  $\text{rhs}$  of the OPE  $[WW]$  can be written in terms of
 
 The full conformal group gives even more information. In case that the OPA is generated by primary operators and their descendants, the Jacobi identities with  $\{T,\Psi_i,\Psi_j\}$  fix the form of the OPE of two primaries  $\Psi_{i},\Psi_{j}$ . In fact, the coefficients of the descendants of the primaries occurring in the OPE now depend on the dimensions of the operators and the central charge. In the example of  $\mathcal{W}_3$ , the only primary in the singular part of the  $W(z)W(w)$  OPE is the unit operator at the sixth order pole. The rest of this OPE is then completely determined by the Jacobi identity  $\{T,W,W\}$ .
 
-It was shown in [13, 74] how the coefficients of the Virasoro descendants can be found. As they can be very complicated, automation of the computation of these coefficients is highly desirable<sup>1</sup>. However, in the basis for the descendants used in [13, 74] this computation is very CPU-intensive. We will therefore construct a basis of quasiprimaries, and give the necessary formulas to compute descendants and coefficients in this basis. A Mathematica package that implements these algorithms is now in testing phase [194].
+It was shown in [13, 74] how the coefficients of the Virasoro descendants can be found. As they can be very complicated, automation of the computation of these coefficients is highly desirable`<sup>`1`</sup>`. However, in the basis for the descendants used in [13, 74] this computation is very CPU-intensive. We will therefore construct a basis of quasiprimaries, and give the necessary formulas to compute descendants and coefficients in this basis. A Mathematica package that implements these algorithms is now in testing phase [194].
 
 The conclusion will be that we can reconstruct the OPEs of the primary generators of a  $\mathcal{W}$ -algebra from the list of the coefficients of all primaries. For primary operators  $\Psi_{i}$ , we will write symbolically:
 
@@ -2764,7 +2761,7 @@ $$
 \Phi_ {i} (z) \Phi_ {j} (w) = \sum_ {n} \left[ \Phi_ {i} \Phi_ {j} \right] _ {n} (z - w) ^ {- n}. \tag {4.3.5}
 $$
 
-From the Jacobi identities (2.3.21), or alternatively, using the commutation rules of the modes of  $\Phi_i$  with  $L_{m}$  given in eq. (2.4.7)<sup>3</sup>, gives:
+From the Jacobi identities (2.3.21), or alternatively, using the commutation rules of the modes of  $\Phi_i$  with  $L_{m}$  given in eq. (2.4.7)`<sup>`3`</sup>`, gives:
 
 $$
 L _ {1} ^ {m} \left[ \Phi_ {i} \Phi_ {j} \right] _ {n} = \left(2 h _ {i} - m - n\right) _ {m} \left[ \Phi_ {i} \Phi_ {j} \right] _ {m + n}, \tag {4.3.6}
@@ -2882,7 +2879,7 @@ $$
 \begin{array}{l} \sum_ {n \geq 1} \partial^ {n - 1} \left[ \Phi_ {i} \Phi_ {j} \right] _ {m + n} \left(a _ {n - 1} ^ {m} \left(h _ {i}, h _ {j}\right) (2 h _ {i} - n - m) + \right. \\ \left. a _ {n} ^ {m} \left(h _ {i}, h _ {j}\right) n \left(2 h _ {i} + 2 h _ {j} - 2 m - n - 1\right)\right) = 0. \tag {4.3.19} \\ \end{array}
 $$
 
-In the general case, this amounts to a recursive relation<sup>4</sup>:
+In the general case, this amounts to a recursive relation`<sup>`4`</sup>`:
 
 $$
 a _ {n} ^ {m} \left(h _ {i}, h _ {j}\right) = - \frac {2 h _ {i} - n - m}{n \left(2 h _ {i} + 2 h _ {j} - 2 m - n - 1\right)} a _ {n - 1} ^ {m} \left(h _ {i}, h _ {j}\right). \tag {4.3.20}
@@ -2912,7 +2909,7 @@ $$
 
 which is zero (except at the singularities), proving that eq. (4.3.21) provides the solution of eq. (4.3.16).
 
-As the operator  $QP^{m}(\Phi_{j},\Phi_{i})$  extracts the quasiprimary at the  $m$ -th order pole, we expect that reversing  $i$  and  $j$  does not give a new operator. Indeed, an explicit calculation gives<sup>5</sup>:
+As the operator  $QP^{m}(\Phi_{j},\Phi_{i})$  extracts the quasiprimary at the  $m$ -th order pole, we expect that reversing  $i$  and  $j$  does not give a new operator. Indeed, an explicit calculation gives`<sup>`5`</sup>`:
 
 $$
 Q P ^ {m} \left(\Phi_ {j}, \Phi_ {i}\right) = (- 1) ^ {i j + m} Q P ^ {m} \left(\Phi_ {i}, \Phi_ {j}\right), \tag {4.3.22}
@@ -3086,7 +3083,7 @@ $$
 \tilde {L} _ {m} \Psi \equiv Q P ^ {m + 2} (T, \Psi), \tag {4.4.11}
 $$
 
-for  $\Psi$  quasiprimary (see eqs. (4.3.15) and (4.3.21))<sup>6</sup> The definition of  $\tilde{L}_m$  depends on the dimension of the operator on which it is acting. This can be avoided by using  $L_0$ . However, in the normalisation we chose, one needs to introduce factors  $(2L_0 + i)^{-1}$ . To avoid this, we will write  $\tilde{L}_m(h)$  when confusion can arise.
+for  $\Psi$  quasiprimary (see eqs. (4.3.15) and (4.3.21))`<sup>`6`</sup>` The definition of  $\tilde{L}_m$  depends on the dimension of the operator on which it is acting. This can be avoided by using  $L_0$ . However, in the normalisation we chose, one needs to introduce factors  $(2L_0 + i)^{-1}$ . To avoid this, we will write  $\tilde{L}_m(h)$  when confusion can arise.
 
 The action of  $\tilde{L}_m$  is well-defined for any quasiprimary  $\Phi$ . When  $m < -1$ , the sum in eq. (4.3.15) contains only a finite number of terms because  $a_n^{m+2}(2, h_j) = 0$  for  $n \geq 2 - m$ . When  $m > 1$ ,  $L_{n+m}\Phi = [T\Phi]_{n+m+2}$  is zero for  $n$  large enough. In particular, when  $\Phi$  is a level  $N$  descendant of a primary operator,  $L_{n+m}\Phi = 0$  if  $n + m > N$ .
 
@@ -3148,7 +3145,7 @@ $$
 \tilde {S} ^ {\{2 \}, \{2 \}} (h, c) = \frac {c - 1 0 h + 2 c h + 1 6 h ^ {2}}{2 (1 + 2 h)}. \tag {4.4.18}
 $$
 
-This gives for  $\tilde{\beta}(h_i, h_j, h_k, \{2\})$  immediately the result of intermezzo 4.4.2. In contrast to when using the  $L_{-\{n\}}$  basis, no problem of inverting  $\tilde{S}$  occurs when we consider a dimension 0 operator<sup>7</sup>. We find:
+This gives for  $\tilde{\beta}(h_i, h_j, h_k, \{2\})$  immediately the result of intermezzo 4.4.2. In contrast to when using the  $L_{-\{n\}}$  basis, no problem of inverting  $\tilde{S}$  occurs when we consider a dimension 0 operator`<sup>`7`</sup>`. We find:
 
 $$
 \tilde {\beta} \left(h _ {i}, h _ {j}, 0, \{2 \}\right) = \frac {h _ {i} - 3 h _ {i} ^ {2} + h _ {j} + 6 h _ {i} h _ {j} - 3 h _ {j} ^ {2}}{c}, \tag {4.4.19}
@@ -3174,7 +3171,7 @@ The Mathematica (version 2.2 or lower) function Solve has a serious deficiency i
 
 We find the following CPU-times for the solution of the equations (4.4.10) and (4.4.17).
 
-<table><tr><td>level</td><td>β with Solve</td><td>β with LinSolve</td><td>β with Solve</td><td>β with LinSolve</td></tr><tr><td>4</td><td>6.3s</td><td>4.7s</td><td>1.6s</td><td>1.9s</td></tr><tr><td>5</td><td>* 18.4s</td><td>14.5s</td><td>1.6s</td><td>1.9s</td></tr><tr><td>6</td><td>* &gt; 400s</td><td>69.6s</td><td>* 15.3s</td><td>54.6s</td></tr></table>
+<table><tr><td>level</td><td>β with Solve</td><td>β with LinSolve</td><td>β with Solve</td><td>β with LinSolve</td></tr><tr><td>4</td><td>6.3s</td><td>4.7s</td><td>1.6s</td><td>1.9s</td></tr><tr><td>5</td><td>* 18.4s</td><td>14.5s</td><td>1.6s</td><td>1.9s</td></tr><tr><td>6</td><td>* > 400s</td><td>69.6s</td><td>* 15.3s</td><td>54.6s</td></tr></table>
 
 In this table, a star means that factorisation of the result of Solve did not succeed in a reasonable amount of time.
 
@@ -3200,12 +3197,12 @@ $$
 
 Similar relations exist at higher (not necessarily odd) levels.
 
-Remembering the rule for the number  $p_2(N)$  of independent quasiprimary descendants of  $\mathbf{1}$ , we propose<sup>8</sup>:
+Remembering the rule for the number  $p_2(N)$  of independent quasiprimary descendants of  $\mathbf{1}$ , we propose`<sup>`8`</sup>`:
 
 Conjecture 4.4.1 The partitions which give the independent descendants of the unit operator at level  $N$  can be found as follows:
 
-- Take the partitions (not containing the number 1) at level  $N - 1$  and order them in increasing lexicographic order ( $\{32\} < \{33\}$ ).  
-- "Increment" these partitions one by one, such that no partition of level  $N$  is obtained twice.  
+- Take the partitions (not containing the number 1) at level  $N - 1$  and order them in increasing lexicographic order ( $\{32\} < \{33\}$ ).
+- "Increment" these partitions one by one, such that no partition of level  $N$  is obtained twice.
 - The Virasoro descendants of  $\mathbb{1}$  at level  $N$  correspond to partitions at level  $N$  which are not in the list constructed in the previous step.
 
 With "incrementing" a partition  $\{n_1, n_2, \ldots, n_k\}$ , we mean adding a 1 at a position  $i$  where  $n_{i-1} \geq n_i + 1$ . As an example, incrementing  $\{3, 2, 2\}$  gives  $\{3, 3, 2\}$  or  $\{4, 2, 2\}$ .
@@ -3248,8 +3245,8 @@ Up to now, all efforts have been concentrated on algebras in the following class
 
 Assumption 4.5.1 The OPA is generated by a set of primary operators and the Virasoro operator.
 
-- All generators have strictly positive conformal dimension.  
-- The unit operator occurs only in OPEs between primaries of the same conformal dimension.  
+- All generators have strictly positive conformal dimension.
+- The unit operator occurs only in OPEs between primaries of the same conformal dimension.
 - Generators which are null operators are discarded.
 
 Not all  $\mathcal{W}$ -algebras of interest fall within this class. For instance, it was recently shown [136] that the (nonlinear)  $\mathcal{W}_3$  algebra and the Bershadsky algebra [160, 21] with bosonic generators of dimensions  $(2,3/2,3/2,2)$  can be viewed as subalgebras of linear algebras with a null operator as generator, and a non-primary dimension 1 operator. Yet even with the restrictions 4.5.1, no complete classification has been found yet, see [62].
@@ -3314,7 +3311,7 @@ For superconformal algebras, the extra structure given by the supersymmetry tran
 
 # 4.5.5 Attempts towards a classification
 
-The methods which rely on a construction of a  $\mathcal{W}$ -algebra, either directly or via a realisation, can give no clue if all  $\mathcal{W}$ -algebras are obtained. In [34], a first attempt is made to classify all classical positive-definite  $\mathcal{W}$ -algebras, which are algebras in the class 4.5.1 with the additional condition that the central extensions define a positive-definite metric. It is proven that the finite-dimensional algebra defined by the linearised commutators of the "vacuum preserving modes"  $(\Psi_i)_m$  for  $|m| < h_i$ , is the direct sum of a semisimple Lie algebra with an abelian algebra<sup>10</sup>. Moreover, this Lie algebra necessarily contains an  $sl(2)$  formed by the  $-1,0,+1$  modes of  $T$ . The vacuum preserving modes of  $\Psi_i$  form a spin  $h_i - 1$  representation of the  $sl(2)$ . This
+The methods which rely on a construction of a  $\mathcal{W}$ -algebra, either directly or via a realisation, can give no clue if all  $\mathcal{W}$ -algebras are obtained. In [34], a first attempt is made to classify all classical positive-definite  $\mathcal{W}$ -algebras, which are algebras in the class 4.5.1 with the additional condition that the central extensions define a positive-definite metric. It is proven that the finite-dimensional algebra defined by the linearised commutators of the "vacuum preserving modes"  $(\Psi_i)_m$  for  $|m| < h_i$ , is the direct sum of a semisimple Lie algebra with an abelian algebra`<sup>`10`</sup>`. Moreover, this Lie algebra necessarily contains an  $sl(2)$  formed by the  $-1,0,+1$  modes of  $T$ . The vacuum preserving modes of  $\Psi_i$  form a spin  $h_i - 1$  representation of the  $sl(2)$ . This
 
 means that by classifying all possible  $sl(2)$ -embeddings, the dimensions which can occur in a classical positive-definite  $\mathcal{W}$ -algebra are obtained. Ref. [34] then proceeds by investigating under which conditions a quantum  $\mathcal{W}$ -algebra has a positive-definite classical limit ( $c \to \infty$ ).
 
@@ -3344,7 +3341,7 @@ $$
 
 with  $[\mathbb{1}]$  the conformal family of the identity. From the Jacobi identities we find the symmetry property  $C_{\frac{5}{2}\frac{5}{2}}^{\frac{4}{2}} = \frac{8}{5} C_{\frac{5}{2}4}^{\frac{5}{2}} = \frac{8}{5} C_{4\frac{5}{2}}^{\frac{5}{2}}$ . The algebra generated by  $\{T,W\}$ ,
 
-for  $C_{44}^{6} = 0$ , is well known to be associative for all values of  $c$  [29]. Here we discuss the solution where  $\Psi$  is the dimension 6 Virasoro primary  $\Psi \propto P^{-1}(Q, Q) = \partial Q Q + \text{corrections}$ , see eq. (4.4.22). Using Jacobi identities (2.3.21) or the conformal bootstrap, we find that the algebra is associative for all values of the central charge<sup>11</sup> provided the couplings are given by:
+for  $C_{44}^{6} = 0$ , is well known to be associative for all values of  $c$  [29]. Here we discuss the solution where  $\Psi$  is the dimension 6 Virasoro primary  $\Psi \propto P^{-1}(Q, Q) = \partial Q Q + \text{corrections}$ , see eq. (4.4.22). Using Jacobi identities (2.3.21) or the conformal bootstrap, we find that the algebra is associative for all values of the central charge`<sup>`11`</sup>` provided the couplings are given by:
 
 $$
 \begin{array}{l} C _ {\frac {5}{2} \frac {5}{2}} ^ {4} = \sqrt {\frac {6 (1 4 c + 1 3)}{5 c + 2 2}} \epsilon_ {1}, \\ {C _ {4 4}} ^ {4} = \frac {3 \sqrt {6} (2 c ^ {2} + 8 3 c - 4 9 0)}{\sqrt {(1 4 c + 1 3) (5 c + 2 2)} (2 c + 2 5)} \epsilon_ {1}, \\ C _ {4 4} ^ {6} = \frac {1 2 \sqrt {5 (6 c + 4 9) (4 c + 1 1 5) (c - 1)} (5 c + 2 2)}{\sqrt {(1 4 c + 1 3) (7 c + 6 8) (2 c - 1) (c + 2 4)} (2 c + 2 5)} \epsilon_ {2}, \tag {4.6.2} \\ \end{array}
@@ -3372,7 +3369,7 @@ $$
 \begin{array}{l} \Psi = \mathcal {N} \left(Q \partial Q + \alpha_ {1} \partial^ {2} W + \alpha_ {2} T W + \alpha_ {3} \partial T \partial T + \right. \\ \left. \alpha_ {4} T \partial^ {2} T + \alpha_ {5} \partial^ {4} T + \alpha_ {6} (T (T T))\right), \tag {4.6.5} \\ \end{array}
 $$
 
-where the normalisation factor<sup>12</sup>:
+where the normalisation factor`<sup>`12`</sup>`:
 
 $$
 \mathcal {N} = - \sqrt {\frac {5 (2 c - 1) (c + 2 4) (7 c + 6 8)}{(c - 1) (4 c + 1 1 5) (6 c + 4 9) (1 4 c + 1 3)}} \tag {4.6.6}
@@ -3410,7 +3407,7 @@ $$
 
 It is a long and boring task to find the explicit form of the dimension 4 and dimension  $5/2$  primaries. Using OPErefs, one can try to construct the most general primary dimension four operator and require the  $W(z)W(w)$  OPE to be satisfied. This, however, leads to a system of quadratic equations which is very difficult to solve. A somewhat easier way is to construct the most general primary dimension  $5/2$  operator. This leads to a four parameter family of such primaries. The  $Q(z)Q(w)$  OPE gives (up to some discrete automorphisms) three possible solutions for these parameters, and hence also three candidate dimension four primary operators. Finally, matching the  $W(z)W(w)$  OPE eliminates two of the solutions, and yields a unique construction. We wish to stress that we have checked all these statements explicitly using OPErefs, including the appearance of the dimension 6 primary mentioned earlier.
 
-Let us now present the explicit solution<sup>13</sup>. The dimension 5/2 operator is given by:
+Let us now present the explicit solution`<sup>`13`</sup>`. The dimension 5/2 operator is given by:
 
 $$
 \begin{array}{l} Q = \xi \left(\frac {3}{2} \partial \varphi_ {1} \partial \varphi_ {1} \psi - \frac {3}{2} \partial \varphi_ {2} \partial \varphi_ {2} \psi + 4 \partial \varphi_ {1} \partial \varphi_ {2} \psi + \alpha_ {0} \partial^ {2} \varphi_ {1} \psi + \right. \\ \left. 3 \alpha_ {0} \partial^ {2} \varphi_ {2} \psi + 4 \alpha_ {0} \partial \varphi_ {1} \partial \psi + 2 \alpha_ {0} \partial \varphi_ {2} \partial \psi + 2 \alpha_ {0} ^ {2} \partial^ {2} \psi\right), \tag {4.6.10} \\ \end{array}
@@ -3460,7 +3457,7 @@ A second remark concerns the fact that, (up to some discrete automorphisms), the
 
 # 4.7. Discussion
 
-been [155] shown to be related to parafermions (at least for a specific value of the central charge). In fact, it was argued in [155] that such a realisation exists (for fixed  $c$ ) for all  $\mathcal{W}A_{n}$  algebras, and that in the limit  $n\to \infty$  it corresponds to the  $c = 2$  free field realisation of  $\mathcal{W}_{\infty}$  by Bakas and Kiritsis [8]. For  $\mathcal{W}_cB_2$ , there does not seem to be a similar construction<sup>14</sup>.
+been [155] shown to be related to parafermions (at least for a specific value of the central charge). In fact, it was argued in [155] that such a realisation exists (for fixed  $c$ ) for all  $\mathcal{W}A_{n}$  algebras, and that in the limit  $n\to \infty$  it corresponds to the  $c = 2$  free field realisation of  $\mathcal{W}_{\infty}$  by Bakas and Kiritsis [8]. For  $\mathcal{W}_cB_2$ , there does not seem to be a similar construction`<sup>`14`</sup>`.
 
 # 4.6.3 Highest weight representations
 
@@ -3638,7 +3635,7 @@ $$
 <   \Psi | (\tilde {L} _ {- n} (h)) ^ {+} (\tilde {L} _ {m} (h + n)) ^ {+} (\tilde {L} _ {n - m} (h)) ^ {+} \Psi >. \tag {4.A.13}
 $$
 
-Now, substituting the definition eq. (4.4.11) for the rightmost operator, only the term  $L_{m - n}$  of the sum remains, as  $L_{1}\Psi$  is zero. Also, the first two operators acting on the left state create a quasiprimary state, which is annihilated (from the right) by  $L_{-1}$ . Hence, we can effectively replace  $\left(\tilde{L}_{n - m}(h)\right)^{+}$  by  $\tilde{L}_{m - n}(h)$  in eq. (4.A.13). The same reasoning can be followed for the other operators, but we have to shift the dimensions<sup>15</sup>. We get:
+Now, substituting the definition eq. (4.4.11) for the rightmost operator, only the term  $L_{m - n}$  of the sum remains, as  $L_{1}\Psi$  is zero. Also, the first two operators acting on the left state create a quasiprimary state, which is annihilated (from the right) by  $L_{-1}$ . Hence, we can effectively replace  $\left(\tilde{L}_{n - m}(h)\right)^{+}$  by  $\tilde{L}_{m - n}(h)$  in eq. (4.A.13). The same reasoning can be followed for the other operators, but we have to shift the dimensions`<sup>`15`</sup>`. We get:
 
 $$
 <   \Psi | \tilde {L} _ {n} (h + n) \tilde {L} _ {- m} (h - m + n) \tilde {L} _ {m - n} (h) \Psi >. \tag {4.A.14}
@@ -4382,7 +4379,7 @@ $$
 G ^ {a} + \frac {1}{k} \varepsilon_ {a b c d} Q ^ {b} U ^ {c d} = \widetilde {G} ^ {a} - \frac {2}{k} P Q ^ {a} + \frac {4}{3 k ^ {2}} \varepsilon_ {a b c d} Q ^ {b} Q ^ {c} Q ^ {d}. \tag {5.3.36}
 $$
 
-This leads immediately to<sup>3</sup>:
+This leads immediately to`<sup>`3`</sup>`:
 
 $$
 \left\langle \exp \left(- \frac {1}{\pi} \int \left(h T + \psi_ {a} G ^ {a} + A _ {a b} U ^ {a b} + b P + \eta_ {a} Q ^ {a} + \frac {1}{k} \varepsilon_ {a b c d} \psi_ {a} Q ^ {b} U ^ {c d}\right)\right) \right\rangle =
@@ -4498,7 +4495,7 @@ $$
 
 We will now compute the reduced Poisson algebra in the highest weight gauge. This can be done in several ways. First, one can view the gauge conditions as an extra set of constraints. Because the constraints are then second class, Dirac brackets should be used. However, this approach requires inverting the matrix of the Poisson brackets of the constraints, which is in general quite difficult.
 
-A second way is by using gauge invariant polynomials. These are polynomials in the currents which are gauge invariant under eq. (6.1.2) up to the constraints (6.1.1). It can be shown [9] that for each highest weight current, there is a gauge invariant polynomial<sup>1</sup>:
+A second way is by using gauge invariant polynomials. These are polynomials in the currents which are gauge invariant under eq. (6.1.2) up to the constraints (6.1.1). It can be shown [9] that for each highest weight current, there is a gauge invariant polynomial`<sup>`1`</sup>`:
 
 $$
 \tilde {J} _ {z} ^ {(j, \alpha_ {j})} = J _ {z} ^ {(j j, \alpha_ {j})} \Big | _ {\text {c o n s t r a i n t s e q .}}. \tag {6.1.4}
@@ -4870,7 +4867,7 @@ $$
 \mathcal {S} _ {2} = \mathcal {S} _ {1} + \frac {1}{\pi} \int h T _ {s} + \psi_ {a} G ^ {a} + A _ {i} U ^ {i}, \tag {6.3.11}
 $$
 
-To preserve the gauge invariance of the resulting action, we have to modify the transformation of the gauge fields  $A_{\bar{z}}$  such that the equation of motion terms in (6.3.7) are canceled. This reflects itself in the terms proportional to the antifields  $A_{\bar{z}}^{*}$  in the Batalin-Vilkovisky action. Because the new gauge algebra closes only on-shell, we need terms quadratic in the antifields to find an extended action satisfying the BV master equation. The result is (see eq. (6.2.17), and eq. (4.20) of [181])<sup>4</sup>:
+To preserve the gauge invariance of the resulting action, we have to modify the transformation of the gauge fields  $A_{\bar{z}}$  such that the equation of motion terms in (6.3.7) are canceled. This reflects itself in the terms proportional to the antifields  $A_{\bar{z}}^{*}$  in the Batalin-Vilkovisky action. Because the new gauge algebra closes only on-shell, we need terms quadratic in the antifields to find an extended action satisfying the BV master equation. The result is (see eq. (6.2.17), and eq. (4.20) of [181])`<sup>`4`</sup>`:
 
 $$
 \mathcal {S} _ {\mathrm {B V}} = \left(\text {t e r m s i n d e p e n d e n t o f} h, \psi_ {a}, A _ {i}\right)
@@ -4952,7 +4949,7 @@ $$
 
 As illustrated in fig. 6.1, the operators  $Q_{0}$ ,  $Q_{1}$  and  $Q_{2}$ , map  $\mathcal{A}_{(m,n)}$  to  $\mathcal{A}_{(m+1,n)}$ ,  $\mathcal{A}_{(m+\frac{1}{2},n+\frac{1}{2})}$  and  $\mathcal{A}_{(m,n+1)}$  respectively.
 
-![](images/86d43b82ec87faca82ed9ba6e52e5db3e00fae4f87cac7214aa84983b1a336d8.jpg)  
+![](images/86d43b82ec87faca82ed9ba6e52e5db3e00fae4f87cac7214aa84983b1a336d8.jpg)
 Figure 6.1:  $Q_{0}$ ,  $Q_{1}$  and  $Q_{2}$  acting on  $\mathcal{A}_{\left(\frac{1}{2},\frac{3}{2}\right)}$ .
 
 It follows from  $Q^2 = 0$  that  $Q_0^2 = Q_2^2 = \{Q_0, Q_1\} = \{Q_1, Q_2\} = Q_1^2 + \{Q_0, Q_2\} = 0$ , but:
@@ -4963,7 +4960,7 @@ $$
 
 does not vanish. The presence of  $Q_{1}$  is the main difference with the case of bosonic Kac-Moody algebras treated in [43], as the auxiliary field  $\tau$  was not introduced there.
 
-![](images/91fb8ee3bebb96de9b0fcac99a70f8cd44b2022199cb9f704d2fc49e84fcb98e.jpg)  
+![](images/91fb8ee3bebb96de9b0fcac99a70f8cd44b2022199cb9f704d2fc49e84fcb98e.jpg)
 Figure 6.2:  $\hat{\mathcal{A}}$  and its filtration  $\hat{\mathcal{A}}^n$ .
 
 The action of  $Q_0$ ,  $Q_1$  and  $Q_2$  on the basic fields is given in table 6.1. Note that due to eq. (2.3.21), the BRST charges  $Q_i$  act as derivations on a normal ordered product of fields.
@@ -5016,7 +5013,7 @@ For  $j = 1/2$  this equation gets a correction term that depends only on  $\tau
 
 There is a certain ambiguity in this construction because any combination of the generators  $W^{(j,\alpha_j)}$  is still BRST invariant (and non-trivial). This corresponds to the
 
-![](images/6a37fed91d855878ef6c79ecfa5fee1c9b11df53376974136880915f67a4d12b.jpg)  
+![](images/6a37fed91d855878ef6c79ecfa5fee1c9b11df53376974136880915f67a4d12b.jpg)
 Figure 6.3: The tic-tac-toe construction for a conformal dimension 2 current.
 
 fact that  $Q_{0}$  annihilates  $\hat{J}_{z}^{(jj,\alpha_{j})}$ , and thus one can freely add at each step in the iteration (6.4.10) any combination of correct grading of these currents to  $W_{r}^{(j,\alpha_{j})}$ . We will use the notation  $W^{(j,\alpha_{j})}$  for the elements of the cohomology which reduce to a single highest weight current when discarding non-highest weight currents, more precisely:
@@ -5255,7 +5252,7 @@ $$
 
 A similar expression will be true for other nonlinear  $\mathcal{W}$ -algebras for which a classical limit  $c\to \infty$  exists, while for most linear algebras only  $\Gamma^{(0)}$  is non-zero. The subleading terms in  $1 / c$  in eq. (7.1.5) arise from a proper treatment of the composite terms in the OPEs. In [157], an explicit form for the classical term  $\Gamma^{(0)}$  of  $\mathcal{W}_3$  was obtained through the classical reduction of an  $Sl(3,\mathbf{R})$  WZNW-model. The higher order terms are more difficult to compute and do not bear any straightforward relation to  $\Gamma^{(0)}$ .
 
-This complicated behaviour seems to simplify drastically when going to the effective theory - i.e. quantising the metric and other gauge fields of the  $\mathcal{W}$ -gravity theory. The generating functional  $W$  of the connected Green's functions, which upon a Legendre transform becomes the effective action<sup>1</sup> is defined by:
+This complicated behaviour seems to simplify drastically when going to the effective theory - i.e. quantising the metric and other gauge fields of the  $\mathcal{W}$ -gravity theory. The generating functional  $W$  of the connected Green's functions, which upon a Legendre transform becomes the effective action`<sup>`1`</sup>` is defined by:
 
 $$
 \exp \left(- W [ \check {T} ]\right) = \int [ d \mu ] \exp \left(- \Gamma [ \mu ] + \frac {1}{\pi} \int \mu_ {i} \check {T} ^ {i}\right). \tag {7.1.6}
@@ -5425,7 +5422,7 @@ $$
 
 This means that we find for the effective action  $W[\tilde{T}]$  simply  $\kappa_{c}S^{-}[g]$  where the groupelements  $g$  are determined by the constraints imposed via the delta-functions.
 
-To make this more explicit, we have to specify which set of generators  $\mathcal{T}$  we choose for the  $\mathcal{W}$ -algebra. As discussed in subsection 6.4.3, it is convenient to choose  $T^{\mathrm{EM}}$ , defined in (6.4.18), for the Virasoro operator at  $(j,\alpha_{j}) = (1,0)$ . We take all other generators  $\hat{T}^{(j,\alpha_j)}$  equal to the generators of the cohomology  $\hat{W}^{(j,\alpha_j)}$ . We can write this choice of generators as<sup>3</sup>:
+To make this more explicit, we have to specify which set of generators  $\mathcal{T}$  we choose for the  $\mathcal{W}$ -algebra. As discussed in subsection 6.4.3, it is convenient to choose  $T^{\mathrm{EM}}$ , defined in (6.4.18), for the Virasoro operator at  $(j,\alpha_{j}) = (1,0)$ . We take all other generators  $\hat{T}^{(j,\alpha_j)}$  equal to the generators of the cohomology  $\hat{W}^{(j,\alpha_j)}$ . We can write this choice of generators as`<sup>`3`</sup>`:
 
 $$
 \hat {T} [ \mathcal {C} J _ {z} ] = \exp (\sqrt {\mathcal {C}} e _ {0}) \Pi_ {h w} J _ {z} \exp (- \sqrt {\mathcal {C}} e _ {0}) +
@@ -5499,7 +5496,7 @@ $$
 \frac {\kappa^ {j}}{\mathcal {C} ^ {j} \alpha_ {\kappa} ^ {j + 1}} \approx \kappa^ {- 1} \approx - \frac {c}{6 y}, \quad \text {f o r l a r g e} c, \tag {7.2.18}
 $$
 
-where we used eq. (7.2.16) in the second step. Eq. (7.2.18) is valid whatever the values of  $\mathcal{C}$  and  $\alpha_{\kappa}$  turn out to be, as their classical limit is fixed to 1 and  $\kappa$  respectively. Together with (7.2.12) and (7.2.15), this gives<sup>4</sup>:
+where we used eq. (7.2.16) in the second step. Eq. (7.2.18) is valid whatever the values of  $\mathcal{C}$  and  $\alpha_{\kappa}$  turn out to be, as their classical limit is fixed to 1 and  $\kappa$  respectively. Together with (7.2.12) and (7.2.15), this gives`<sup>`4`</sup>`:
 
 $$
 W [ \check {T} ] = - \frac {6 y (\kappa + 2 \tilde {h})}{c} W _ {c l} \left[ - \frac {c}{6 y} \frac {\kappa^ {j}}{\mathcal {C} ^ {j} \alpha_ {\kappa} ^ {j + 1}} \check {T} ^ {(j, \alpha_ {j})} _ {(j, \alpha_ {j})} t \right]. \tag {7.2.19}
@@ -6299,7 +6296,7 @@ For more details about  $\mathcal{W}$ -strings, the reader can consult the revie
 
 # 8.3  $\mathcal{W}_{2,s}$ -strings
 
-In this section, we shall investigate higher-spin string theories based on the classical symmetry algebra generated by  $T$  and a bosonic primary field  $W$  of dimension  $s$ , where  $s$  is an integer. Such a closed, nonlinear,  $\mathcal{W}_{2,s}$  algebra exists classically for all  $s \geq 3$ . The classical OPEs of the generators  $T$  and  $W$  are given by<sup>4</sup>:
+In this section, we shall investigate higher-spin string theories based on the classical symmetry algebra generated by  $T$  and a bosonic primary field  $W$  of dimension  $s$ , where  $s$  is an integer. Such a closed, nonlinear,  $\mathcal{W}_{2,s}$  algebra exists classically for all  $s \geq 3$ . The classical OPEs of the generators  $T$  and  $W$  are given by`<sup>`4`</sup>`:
 
 $$
 T \times T = \ll 2 T \mid \partial T \gg
@@ -6441,7 +6438,7 @@ $$
 T _ {\varphi} \equiv - \frac {1}{2} (\partial \varphi) ^ {2} - \alpha \partial^ {2} \varphi . \tag {8.3.12}
 $$
 
-Similar modifications to  $T_{X}$  can occur<sup>5</sup>. The equation  $Q_0^2 = 0$  requires that the total central charge vanishes:
+Similar modifications to  $T_{X}$  can occur`<sup>`5`</sup>`. The equation  $Q_0^2 = 0$  requires that the total central charge vanishes:
 
 $$
 0 = - 2 6 - 2 \left(6 s ^ {2} - 6 s + 1\right) + 1 + 1 2 \alpha^ {2} + c _ {X}, \tag {8.3.13}
@@ -6797,7 +6794,7 @@ We have looked also at string theories based on classical algebras involving a h
 
 # Green's function for the Laplacian in two dimensions
 
-In this appendix we provide some useful formulas that can be derived from the Green's function of the Laplacian<sup>1</sup>. We will first show that in two dimensions this Green's function is given by  $\frac{1}{4} \log |x - x_0|^2$ . We need to prove:
+In this appendix we provide some useful formulas that can be derived from the Green's function of the Laplacian`<sup>`1`</sup>`. We will first show that in two dimensions this Green's function is given by  $\frac{1}{4} \log |x - x_0|^2$ . We need to prove:
 
 $$
 \frac {1}{4} \nabla_ {0} ^ {2} \int d x ^ {2} f (x) \log | x - x _ {0} | ^ {2} = \pi f \left(x _ {0}\right). \tag {A.1}
@@ -6915,7 +6912,7 @@ $$
 (- 1) ^ {d} _ {c a} f ^ {d} _ {d b} f ^ {c} = - \tilde {h} _ {a} g _ {b}, \tag {B.7}
 $$
 
-where  $\tilde{h}$  is the dual Coxeter number. Though this is perfect for ordinary Lie algebras, this is not sufficient for super algebras as the dual Coxeter number might vanish in this case<sup>1</sup>. More generally, it is defined via the supertrace:
+where  $\tilde{h}$  is the dual Coxeter number. Though this is perfect for ordinary Lie algebras, this is not sufficient for super algebras as the dual Coxeter number might vanish in this case`<sup>`1`</sup>`. More generally, it is defined via the supertrace:
 
 $$
 \operatorname {s t r} \left(_ {a} t _ {b} t\right) \equiv_ {i} (_ {a} t) ^ {j} _ {j} (_ {b} t) ^ {i} (- 1) ^ {i} \equiv - x _ {a b} g, \tag {B.8}
@@ -6937,7 +6934,7 @@ where  ${}^a g^b$  is the inverse of  ${}_a g_b$ :  ${}^a g_c$ ,  ${}_c g_b = {}
 
 Table B.1 contains some properties of the (super) Lie algebras which appear in chapter 7. We denote by  $x_{\mathrm{fun}}$ , the index of the fundamental (defining) representation. For  $D(2,1,\alpha)$ , it is not clear how to define the fundamental representation. The size of the smallest representation of  $D(2,1,\alpha)$  depends on  $\alpha$ . The smallest representation which exists for generic values of  $\alpha$  is the adjoint representation.
 
-Table B.1: Properties of some (super) Lie algebras.  
+Table B.1: Properties of some (super) Lie algebras.
 
 <table><tr><td>algebra</td><td>bosonic subalgebra</td><td>dB</td><td>dF</td><td>h</td><td>xfun</td></tr><tr><td>sl(n)</td><td>sl(n)</td><td>n2-1</td><td>0</td><td>n</td><td>1/2</td></tr><tr><td>so(n)</td><td>so(n)</td><td>1/2n(n-1)</td><td>0</td><td>n-2</td><td>1</td></tr><tr><td>osp(n|2)</td><td>sl(2)+ so(n)</td><td>1/2(n2-n+6)</td><td>2n</td><td>1/2(4-n)</td><td>1/2</td></tr><tr><td>D(2,1,α)</td><td>sl(2)+ su(2)+ su(2)</td><td>9</td><td>8</td><td>0</td><td>-</td></tr><tr><td>su(1,1|2)</td><td>sl(2)+ su(2)</td><td>6</td><td>8</td><td>0</td><td>1/2</td></tr><tr><td>su(m|n) m≠n</td><td>su(m)+ su(n)+ u(1)</td><td>m2+n2-1</td><td>2mn</td><td>m-n</td><td>1/2</td></tr></table>
 
@@ -6969,7 +6966,7 @@ $$
 L (\Lambda) = \bigoplus_ {j \in \frac {1}{2} \mathbf {N}} n _ {j} (\Lambda) \underline {{2 j + 1}}, \tag {B.14}
 $$
 
-where  $n_j(\Lambda)$  denotes the multiplicity of the  $sl(2)$  representation. Taking eq. (B.14) for the adjoint representation of  $\bar{g}$ , we can make a choice for the generators of  $\bar{g}$  which reflects the  $sl(2)$  embedding:  $\{t_{(jm,\alpha_j)}\}$  where  $j \in \frac{1}{2}\mathbf{Z}$ ,  $m = -j, -j + 1, \dots, j$  and  $\alpha_j = 1, \dots, n_j$  (adjoint). We take for the  $sl(2)$  generators  $e_m = t_{(1m,0)}$ .<sup>2</sup>
+where  $n_j(\Lambda)$  denotes the multiplicity of the  $sl(2)$  representation. Taking eq. (B.14) for the adjoint representation of  $\bar{g}$ , we can make a choice for the generators of  $\bar{g}$  which reflects the  $sl(2)$  embedding:  $\{t_{(jm,\alpha_j)}\}$  where  $j \in \frac{1}{2}\mathbf{Z}$ ,  $m = -j, -j + 1, \dots, j$  and  $\alpha_j = 1, \dots, n_j$  (adjoint). We take for the  $sl(2)$  generators  $e_m = t_{(1m,0)}$ .`<sup>`2`</sup>`
 
 The algebra  $\bar{g}$  acquires a grading:
 
@@ -7088,236 +7085,236 @@ Warning: The CPU time to generate this plot is fairly small. However, rendering 
 
 # Bibliography
 
-[1] M. Ademollo et al., Supersymmetric strings and colour confinement, Phys. Lett. B62 (1976) 105.  
-M. Ademollo et al., Dual string with  $U(1)$  colorsymmetry, Nucl. Phys. B111 (1976) 77.  
-M. Ademollo et al., *Dual string models with non-abelian color and flavor symmetry*, Nucl. Phys. B114 (1976) 29.  
-[2] A. Alekseev, S. Shatashvili, Path integral quantization of the coadjoint orbits of the Virasoro group and 2D gravity, Nucl. Phys. B323 (1989) 719.  
-[3] O. Alvarez, Fermion determinants, chiral symmetry, and the Wess-Zumino anomaly, Nucl. Phys. B238 (1984) 61.  
-[4] G.E. Andrews, R.J. Baxter, P.J. Forrester, 8-Vertex SOS model and generalized Roger-Ramanujan-type identities, J. Stat. Phys. 35 (1984) 193.  
-[5] F.A. Bais, P. Bouwknegt, M. Surridge, K. Schoutens, Extensions of the Virasoro algebra constructed from Kač-Moody algebras using higher order Casimir invariants, Nucl. Phys. B304 (1988) 348.  
-[6] F.A. Bais, P. Bouwknegt, M. Surridge, K. Schoutens, Coset construction for extended Virasoro algebras, Nucl. Phys. 304(1988) 371.  
-[7] F.A. Bais, T. Tjin, P. van Driel, Coupled chiral algebras obtained by reduction of WZNW theories, Nucl. Phys. B357 (1991) 632.  
-[8] I. Bakas, E. Kiritsis, Bosonic realization of a universal  $\mathcal{W}$ -algebra and  $\mathbb{Z}_{\infty}$  parafermions, Nucl. Phys. 343 (1990) 185.  
-[9] J. Balog, L. Fehér, P. Forgács, L. O'Raifeartaigh, A. Wipf, *Toda theory and  $\mathcal{W}$ -algebra from a gauged WZNW point of view*, Ann. Phys. B203 (1990) 76.  
-J. Balog, L. Fehér, P. Forgács, L. O'Raifeartaigh, A. Wipf, Kač-Moody realization of  $\mathcal{W}$ -algebras, Phys. Lett. B44 (1990) 435.  
-[10] J.A. Batalin, G.A. Vilkovisky, Quantization of gauge theories with linearly dependent generators, Phys. Rev. D28 (1983) 2567.  
-J.A. Batalin, G.A. Vilkovisky, Closure of the gauge algebra, generalized Lie equations and Feynmann rules, Nucl. Phys. B234 (1984) 106.  
-J.A. Batalin, G.A. Vilkovisky, Correction, Phys. Rev. D30 (1984) 508.  
+[1] M. Ademollo et al., Supersymmetric strings and colour confinement, Phys. Lett. B62 (1976) 105.
+M. Ademollo et al., Dual string with  $U(1)$  colorsymmetry, Nucl. Phys. B111 (1976) 77.
+M. Ademollo et al., *Dual string models with non-abelian color and flavor symmetry*, Nucl. Phys. B114 (1976) 29.
+[2] A. Alekseev, S. Shatashvili, Path integral quantization of the coadjoint orbits of the Virasoro group and 2D gravity, Nucl. Phys. B323 (1989) 719.
+[3] O. Alvarez, Fermion determinants, chiral symmetry, and the Wess-Zumino anomaly, Nucl. Phys. B238 (1984) 61.
+[4] G.E. Andrews, R.J. Baxter, P.J. Forrester, 8-Vertex SOS model and generalized Roger-Ramanujan-type identities, J. Stat. Phys. 35 (1984) 193.
+[5] F.A. Bais, P. Bouwknegt, M. Surridge, K. Schoutens, Extensions of the Virasoro algebra constructed from Kač-Moody algebras using higher order Casimir invariants, Nucl. Phys. B304 (1988) 348.
+[6] F.A. Bais, P. Bouwknegt, M. Surridge, K. Schoutens, Coset construction for extended Virasoro algebras, Nucl. Phys. 304(1988) 371.
+[7] F.A. Bais, T. Tjin, P. van Driel, Coupled chiral algebras obtained by reduction of WZNW theories, Nucl. Phys. B357 (1991) 632.
+[8] I. Bakas, E. Kiritsis, Bosonic realization of a universal  $\mathcal{W}$ -algebra and  $\mathbb{Z}_{\infty}$  parafermions, Nucl. Phys. 343 (1990) 185.
+[9] J. Balog, L. Fehér, P. Forgács, L. O'Raifeartaigh, A. Wipf, *Toda theory and  $\mathcal{W}$ -algebra from a gauged WZNW point of view*, Ann. Phys. B203 (1990) 76.
+J. Balog, L. Fehér, P. Forgács, L. O'Raifeartaigh, A. Wipf, Kač-Moody realization of  $\mathcal{W}$ -algebras, Phys. Lett. B44 (1990) 435.
+[10] J.A. Batalin, G.A. Vilkovisky, Quantization of gauge theories with linearly dependent generators, Phys. Rev. D28 (1983) 2567.
+J.A. Batalin, G.A. Vilkovisky, Closure of the gauge algebra, generalized Lie equations and Feynmann rules, Nucl. Phys. B234 (1984) 106.
+J.A. Batalin, G.A. Vilkovisky, Correction, Phys. Rev. D30 (1984) 508.
 [11] J.A. Batalin, G.A. Vilkovisky, Existence theorem for gauge algebras, J. Math. Phys. 26 (1985) 172.
 
-[12] C. Becchi, A.Rouet, R. Stora, Renormalisation of gauge theories, Ann. Phys. 98 (1976) 287.  
-[13] A.A. Belavin, A.M. Polyakov, A.B. Zamolodchikov, Infinite conformal symmetry in two dimensional quantum field theory, Nucl. Phys. B241 (1984) 333.  
-[14] N. Berkovits, C. Vafa, On the uniqueness of string theory, Mod. Phys. Lett. A9 (1994) 653.  
-[15] N. Berkovits, M.D. Freeman, P.C. West, A  $\mathcal{W}$ -string realisation of the bosonic string, hep-th/9312013.  
-[16] E. Bergshoeff, H.J. Boonstra, M. de Roo, Realisations of  $\mathcal{W}_3$  symmetry, Phys. Lett. B292 (1992) 307.  
-[17] E. Bergshoeff, H.J. Boonstra, M. de Roo, S. Panda, A. Sevrin, On the BRST operator of  $\mathcal{W}$ -strings, Phys. Lett. B308 (1993) 34.  
-[18] E. Bergshoeff, H.J. Boonstra, M. de Roo, S. Panda, A BRST analysis of  $\mathcal{W}$  symmetries, Nucl. Phys. B411 (1994) 717.  
-[19] E. Bergshoeff, A. Sevrin, X. Shen, Noncritical  $\mathcal{W}$ -strings, Phys. Lett. B296 (1992) 95.  
-[20] M. Bershadsky, Superconformal algebras in two dimensions with arbitrary  $N$ , Phys. Lett. B174 (1986) 285.  
-[21] M. Bershadsky, Conformal field theories via hamiltonian reduction, Comm. Math. Phys. 139 (1991) 71.  
-[22] M. Bershadsky, W. Lerche, D. Nemeschansky, N.P. Warner, Extended  $N = 2$  superconformal structure of gravity and  $\mathcal{W}$ -gravity coupled to matter, preprint USC-92/021, CERN-TH.6694/92.  
-[23] M. Bershadsky, W. Lerche, D. Nemeschansky, N.P. Warner, A BRST operator for non-critical  $\mathcal{W}$ -strings, Phys. Lett. B292 (1992) 35.  
-[24] M. Bershadsky, H. Ooguri, Hidden  $SL(n)$  symmetry in conformal field theories, Comm. Math. Phys. 126 (1989) 49.  
-[25] M. Bershadsky, H. Ooguri, Hidden  $OSp(N,2)$  symmetries in superconformal field theories, Phys. Lett. B229 (1989) 374.  
-[26] R. Blumenhagen, M. Flohr, A. Kliem, W. Nahm, A. Recknagel, R. Varnhagen, W-Algebras with two and three Generators, Nucl. Phys. B361 (1991) 255.  
+[12] C. Becchi, A.Rouet, R. Stora, Renormalisation of gauge theories, Ann. Phys. 98 (1976) 287.
+[13] A.A. Belavin, A.M. Polyakov, A.B. Zamolodchikov, Infinite conformal symmetry in two dimensional quantum field theory, Nucl. Phys. B241 (1984) 333.
+[14] N. Berkovits, C. Vafa, On the uniqueness of string theory, Mod. Phys. Lett. A9 (1994) 653.
+[15] N. Berkovits, M.D. Freeman, P.C. West, A  $\mathcal{W}$ -string realisation of the bosonic string, hep-th/9312013.
+[16] E. Bergshoeff, H.J. Boonstra, M. de Roo, Realisations of  $\mathcal{W}_3$  symmetry, Phys. Lett. B292 (1992) 307.
+[17] E. Bergshoeff, H.J. Boonstra, M. de Roo, S. Panda, A. Sevrin, On the BRST operator of  $\mathcal{W}$ -strings, Phys. Lett. B308 (1993) 34.
+[18] E. Bergshoeff, H.J. Boonstra, M. de Roo, S. Panda, A BRST analysis of  $\mathcal{W}$  symmetries, Nucl. Phys. B411 (1994) 717.
+[19] E. Bergshoeff, A. Sevrin, X. Shen, Noncritical  $\mathcal{W}$ -strings, Phys. Lett. B296 (1992) 95.
+[20] M. Bershadsky, Superconformal algebras in two dimensions with arbitrary  $N$ , Phys. Lett. B174 (1986) 285.
+[21] M. Bershadsky, Conformal field theories via hamiltonian reduction, Comm. Math. Phys. 139 (1991) 71.
+[22] M. Bershadsky, W. Lerche, D. Nemeschansky, N.P. Warner, Extended  $N = 2$  superconformal structure of gravity and  $\mathcal{W}$ -gravity coupled to matter, preprint USC-92/021, CERN-TH.6694/92.
+[23] M. Bershadsky, W. Lerche, D. Nemeschansky, N.P. Warner, A BRST operator for non-critical  $\mathcal{W}$ -strings, Phys. Lett. B292 (1992) 35.
+[24] M. Bershadsky, H. Ooguri, Hidden  $SL(n)$  symmetry in conformal field theories, Comm. Math. Phys. 126 (1989) 49.
+[25] M. Bershadsky, H. Ooguri, Hidden  $OSp(N,2)$  symmetries in superconformal field theories, Phys. Lett. B229 (1989) 374.
+[26] R. Blumenhagen, M. Flohr, A. Kliem, W. Nahm, A. Recknagel, R. Varnhagen, W-Algebras with two and three Generators, Nucl. Phys. B361 (1991) 255.
 [27] R. Blumenhagen, W. Eholzer, A. Honecker, K. Hornfeck, R. Hubel, Unifying  $\mathcal{W}$ -algebras, preprint DFTT-15/94, BONN-TH-94-01, hep-th/9404113.
 
-[28] R.E. Borcherds, Vertex algebras, Kac-Moody algebras, and the Monster, Proc.Nat.Acad.Sci. (1986) 3068.  
-[29] P. Bouwknegt, Extended conformal algebras, Phys. Lett. B207 (1988) 295.  
-[30] P. Bouwknegt, J. McCarthy, K. Pilch, Semi-infinite cohomology of  $\mathcal{W}$  algebras, USC-93/11, hep-th9302086.  
-[31] P. Bouwknegt, K. Schoutens,  $\mathcal{W}$ -symmetry in conformal field theory, Phys. Rep. 223 (1993) 183.  
-[32] R. Bott, L.W. Tu, Differential Forms in Algebraic Topology, Springer Verlag, 1986.  
-[33] P. Bowcock, Quasi-primary fields and associativity of chiral algebras, Nucl. Phys. B356 (1991) 367.  
-[34] P. Bowcock, G.M.T. Watts, On the classification of quantum  $\mathcal{W}$ -algebras, Nucl. Phys. B379 (1992) 63.  
-[35] J. L. Cardy, Operator content of two dimensional conformally invariant theories, Nucl. Phys. 270 [FS16] (1986) 186.  
-[36] Char, Geddes, Leong, Monagan, Watt, Maple V Language reference material, Maple V Library Reference Manual, and First Leaves: A tutorial introduction to Maple V.  
-[37] S.R. Das, A. Dhar, S.K. Rama, Physical properties of  $\mathcal{W}$ -gravities and  $\mathcal{W}$ -strings, Mod. Phys. Lett. A6 (1991) 3055.  
-S.R. Das, A. Dhar, S.K. Rama, Physical states and scaling properties of  $\mathcal{W}$ -gravities and  $\mathcal{W}$ -strings, Int. J. Mod. Phys. A7 (1992) 2295.  
-[38] J. de Boer, J. Goeree, The covariant  $\mathcal{W}$  gravity and its moduli space from gauge theory, Nucl. Phys. B401 (1993) 369.  
-[39] J. de Boer, J. Goeree, The effective action of  $\mathcal{W}_3$  gravity to all orders, Nucl. Phys. B401 (1993) 348.  
-[40] J. de Boer, L. Fehér, A. Honecker, A Class of  $\mathcal{W}$ -algebras with Infinitely Generated Classical Limit, preprint BONN-HE-93-49, ITP-SB-93-84, depth/9312094, to appear in Nucl. Phys. B.  
-[41] J. de Boer, T. Tjin, Quantization and representation theory of finite  $\mathcal{W}$ -algebras, Comm. Math. Phys. 158 (1993) 485.  
-[42] J. de Boer, Extended Conformal Symmetry in Non-Critical String Theory, PhD. thesis, RU Utrecht (1993).  
-[43] J. de Boer, T. Tjin, The Relation between Quantum  $\mathcal{W}$ -algebras and Lie Algebras, Comm. Math. Phys. 160 (1994) 317.  
-[44] A. Deckmyn, On the generalized Miura transformation, Phys. Lett. 298B (1993) 318.  
-[45] A. Deckmyn, Extended Conformal Algebras and their Realizations, PhD. thesis, KU Leuven (1994).  
-[46] A. Deckmyn, A. Sevrin, R. Siebelinck, W. Troost, in preparation.  
+[28] R.E. Borcherds, Vertex algebras, Kac-Moody algebras, and the Monster, Proc.Nat.Acad.Sci. (1986) 3068.
+[29] P. Bouwknegt, Extended conformal algebras, Phys. Lett. B207 (1988) 295.
+[30] P. Bouwknegt, J. McCarthy, K. Pilch, Semi-infinite cohomology of  $\mathcal{W}$  algebras, USC-93/11, hep-th9302086.
+[31] P. Bouwknegt, K. Schoutens,  $\mathcal{W}$ -symmetry in conformal field theory, Phys. Rep. 223 (1993) 183.
+[32] R. Bott, L.W. Tu, Differential Forms in Algebraic Topology, Springer Verlag, 1986.
+[33] P. Bowcock, Quasi-primary fields and associativity of chiral algebras, Nucl. Phys. B356 (1991) 367.
+[34] P. Bowcock, G.M.T. Watts, On the classification of quantum  $\mathcal{W}$ -algebras, Nucl. Phys. B379 (1992) 63.
+[35] J. L. Cardy, Operator content of two dimensional conformally invariant theories, Nucl. Phys. 270 [FS16] (1986) 186.
+[36] Char, Geddes, Leong, Monagan, Watt, Maple V Language reference material, Maple V Library Reference Manual, and First Leaves: A tutorial introduction to Maple V.
+[37] S.R. Das, A. Dhar, S.K. Rama, Physical properties of  $\mathcal{W}$ -gravities and  $\mathcal{W}$ -strings, Mod. Phys. Lett. A6 (1991) 3055.
+S.R. Das, A. Dhar, S.K. Rama, Physical states and scaling properties of  $\mathcal{W}$ -gravities and  $\mathcal{W}$ -strings, Int. J. Mod. Phys. A7 (1992) 2295.
+[38] J. de Boer, J. Goeree, The covariant  $\mathcal{W}$  gravity and its moduli space from gauge theory, Nucl. Phys. B401 (1993) 369.
+[39] J. de Boer, J. Goeree, The effective action of  $\mathcal{W}_3$  gravity to all orders, Nucl. Phys. B401 (1993) 348.
+[40] J. de Boer, L. Fehér, A. Honecker, A Class of  $\mathcal{W}$ -algebras with Infinitely Generated Classical Limit, preprint BONN-HE-93-49, ITP-SB-93-84, depth/9312094, to appear in Nucl. Phys. B.
+[41] J. de Boer, T. Tjin, Quantization and representation theory of finite  $\mathcal{W}$ -algebras, Comm. Math. Phys. 158 (1993) 485.
+[42] J. de Boer, Extended Conformal Symmetry in Non-Critical String Theory, PhD. thesis, RU Utrecht (1993).
+[43] J. de Boer, T. Tjin, The Relation between Quantum  $\mathcal{W}$ -algebras and Lie Algebras, Comm. Math. Phys. 160 (1994) 317.
+[44] A. Deckmyn, On the generalized Miura transformation, Phys. Lett. 298B (1993) 318.
+[45] A. Deckmyn, Extended Conformal Algebras and their Realizations, PhD. thesis, KU Leuven (1994).
+[46] A. Deckmyn, A. Sevrin, R. Siebelinck, W. Troost, in preparation.
 [47] A. Deckmyn, K. Thielemans, Factoring out free fields, preprint KUL-TF-93/26, hep-th/9306129.
 
-[48] F. Defever, Z. Hasiewicz, W. Troost, Superconformal algebras with  $N = 5,6,7,8$ , (I), (II), Class. Quantum Grav. 8 (1991) 253, Class. Quantum Grav. 8 (1991) 257.  
-[49] F. Defever, W. Troost, Z. Hasiewicz, Superconformal algebras with quadratic nonlinearity, Phys. Lett. B273 (1991) 51.  
-[50] F. Defever, S. Schrans, K. Thielemans, Moding of superconformal algebras, Phys. Lett. B212 (1988) 467.  
-[51] F. De Jonghe, The Batalin-Vilkovisky Lagrangian quantisation scheme, with applications to the study of anomalies in gauge theories, PhD. thesis, KU Leuven (1994).  
-[52] F. Delduc, E. Ragoucy, P. Sorba, Rational  $\mathcal{W}$  algebras from composite operators, preprint ENSLAPP-AL-429/93, NORDITA-93/47-P, June 1993.  
-[53] E. del Giudice, P. Di Vecchia, S. Fubini, General properties of the dual resonance model, Ann. Phys. 70, (1972) 378.  
-[54] G.W. Delius, M.T. Grisaru, P. van Nieuwenhuizen, Induced  $(N,0)$  supergravity as a constrained  $OSp(N|2)$  WZNW model and its effective action, Nucl. Phys. B389 (1993) 25.  
-[55] B. de Witt, Supermanifolds, Cambridge University Press.  
-[56] A. Diaz, J.M. Figueroa-O'Farrill, A new explicit construction of  $\mathcal{W}_3$  from the affine algebra  $A_2(1)$ , Nucl. Phys. B349 (1991) 237.  
-[57] P. Dirac, Lectures on Quantum Mechanics, Belfer Graduate School of Science, Yeshiva Univ., NY (1964).  
-[58] P. Di Vecchia, P. Rossi, On the equivalence between the Wess-Zumino action and the free Fermi theory in 2 dimensions, Phys. Lett. B140 (1984) 344. P. Di Vecchia, B. Durhuus and J. L. Petersen, The Wess-Zumino action in 2 dimensions and the non-abelian bosonization, Phys. Lett. B144 (1984) 245.  
-[59] Vl.S. Dotsenko, V.A. Fateev, Conformal algebra and multi-point correlation functions in 2D statistical models, Nucl. Phys. B240 (1984) 312.  
-Vl.S. Dotsenko, V.A. Fateev, Four-point correlation functions and the operator algebra in 2D conformal invariant theories with central charge  $c \leq 1$ , Nucl. Phys. B251 [FS13] (1985) 691.  
-[60] V.G. Drinfeld, V.V. Sokolov, Lie algebras and equations of Korteweg-de Vries type, J. Sov. Math. 30 (1984) 1975.  
-[61] E. B. Dynkin, Semi-simple subalgebras of semi-simple Lie algebras, Amer. Math. Soc. Transl. Ser. 2 6 (1967) 111.  
-[62] W. Eholzer, A. Honecker, R. Hübel, How complete is the classification of  $\mathcal{W}$ -symmetries?, Phys. Lett. B308 (1993) 42.  
-[63] V.A. Fateev, S.L. Lukyanov, The models of two dimensional conformal quantum field theory with  $Z_{N}$ -symmetry, Int. J. Mod. Phys. A3 (1988) 507.  
+[48] F. Defever, Z. Hasiewicz, W. Troost, Superconformal algebras with  $N = 5,6,7,8$ , (I), (II), Class. Quantum Grav. 8 (1991) 253, Class. Quantum Grav. 8 (1991) 257.
+[49] F. Defever, W. Troost, Z. Hasiewicz, Superconformal algebras with quadratic nonlinearity, Phys. Lett. B273 (1991) 51.
+[50] F. Defever, S. Schrans, K. Thielemans, Moding of superconformal algebras, Phys. Lett. B212 (1988) 467.
+[51] F. De Jonghe, The Batalin-Vilkovisky Lagrangian quantisation scheme, with applications to the study of anomalies in gauge theories, PhD. thesis, KU Leuven (1994).
+[52] F. Delduc, E. Ragoucy, P. Sorba, Rational  $\mathcal{W}$  algebras from composite operators, preprint ENSLAPP-AL-429/93, NORDITA-93/47-P, June 1993.
+[53] E. del Giudice, P. Di Vecchia, S. Fubini, General properties of the dual resonance model, Ann. Phys. 70, (1972) 378.
+[54] G.W. Delius, M.T. Grisaru, P. van Nieuwenhuizen, Induced  $(N,0)$  supergravity as a constrained  $OSp(N|2)$  WZNW model and its effective action, Nucl. Phys. B389 (1993) 25.
+[55] B. de Witt, Supermanifolds, Cambridge University Press.
+[56] A. Diaz, J.M. Figueroa-O'Farrill, A new explicit construction of  $\mathcal{W}_3$  from the affine algebra  $A_2(1)$ , Nucl. Phys. B349 (1991) 237.
+[57] P. Dirac, Lectures on Quantum Mechanics, Belfer Graduate School of Science, Yeshiva Univ., NY (1964).
+[58] P. Di Vecchia, P. Rossi, On the equivalence between the Wess-Zumino action and the free Fermi theory in 2 dimensions, Phys. Lett. B140 (1984) 344. P. Di Vecchia, B. Durhuus and J. L. Petersen, The Wess-Zumino action in 2 dimensions and the non-abelian bosonization, Phys. Lett. B144 (1984) 245.
+[59] Vl.S. Dotsenko, V.A. Fateev, Conformal algebra and multi-point correlation functions in 2D statistical models, Nucl. Phys. B240 (1984) 312.
+Vl.S. Dotsenko, V.A. Fateev, Four-point correlation functions and the operator algebra in 2D conformal invariant theories with central charge  $c \leq 1$ , Nucl. Phys. B251 [FS13] (1985) 691.
+[60] V.G. Drinfeld, V.V. Sokolov, Lie algebras and equations of Korteweg-de Vries type, J. Sov. Math. 30 (1984) 1975.
+[61] E. B. Dynkin, Semi-simple subalgebras of semi-simple Lie algebras, Amer. Math. Soc. Transl. Ser. 2 6 (1967) 111.
+[62] W. Eholzer, A. Honecker, R. Hübel, How complete is the classification of  $\mathcal{W}$ -symmetries?, Phys. Lett. B308 (1993) 42.
+[63] V.A. Fateev, S.L. Lukyanov, The models of two dimensional conformal quantum field theory with  $Z_{N}$ -symmetry, Int. J. Mod. Phys. A3 (1988) 507.
 [64] V.A. Fateev, S.L. Lukyanov, Conformally invariant models of two-dimensional quantum field theory with  $Z_{N}$ -symmetry, Sov. Phys. JETP 67 (1988) 447.
 
-[65] V.A. Fateev, S.L. Lukyanov, Additional Symmetries and Exactly Soluble Models in Two-Dimensional Conformal Field Theory, I. Quantization of Hamiltonian Structures, II. W-Algebra Representation Theory, III. Minimal Models, Moscow preprints 1988-1989.  
-[66] V.A. Fateev, A.B. Zamolodchikov, Conformal quantum field theory models in two dimensions having  $Z_{3}$  symmetry, Nucl. Phys. B280 [FS18] (1987) 644.  
-[67] V.A. Fateev, A.B. Zamolidchikov, Nonlocal (parafermion) currents in two-dimensional conformal quantum field theory and self-dual critical points in  $Z_{N}$ -symmetric statistical systems, Sov. Phys. JETP 62 (1985) 215.  
-[68] V.A. Fateev, A.B. Zamolidchikov, Operator algebra and correlation functions in two dimensional  $SU(2) \times SU(2)$  chiral Wess-Zumino mode, Sov. J. Nuc. R. 43 (1986) 657.  
-[69] L. Fehér, L. O'Raifeartaigh, P. Ruelle, I. Tsutsui, A. Wipf, Generalized Toda theories and  $\mathcal{W}$ -algebras associated with integral gradings, Ann. Phys. 213 (1992) 1.  
-[70] L. Fehér, L. O'Rafeartaigh, I. Tsutsui, The Vacuum Preserving Lie Algebra of a Classical  $\mathcal{W}$ -algebra, Phys. Lett. B316 (1993) 275.  
-[71] L. Fehér, L. O'Riifeartaigh, P. Ruelle, I. Tsutsui, On the Classification of the Set of Classical  $\mathcal{W}$ -algebras obtained from DS reductions, Preprint BONN-HE-93-14, DIAS-STP-93-02, hep-th/9304125, to appear in Comm. Math. Phys.  
-[72] B.L. Feigin, E. Frenkel, Quantization of the Drinfeld-Sokolov reduction, Phys. Lett. B246 (1990) 75.  
-[73] B.L. Feigin, D.B.Fuchs, Invariant skew-symmetric differential operators on the line and Verma modules over the Virasoro algebra, Funct. Anal. Appl. 16 (1982) 114.  
-[74] J.M. Figueroa-O'Farrill, S. Schrans, The spin-6 extended conformal algebra, Phys. Lett. B245 (1990) 471.  
-[75] J.M. Figueroa-O'Farrill, S. Schrans, unpublished.  
-[76] J.M. Figueroa-O'Farrill, S. Schrans, The Conformal Bootstrap and Super  $\mathcal{W}$ -Algebras, Int. J. Mod. Phys. A7 (1992) 591.  
-[77] J. M. Figueroa-O'Farrill, S. Schrans, Extended superconformal algebras, Phys. Lett. B257 (1991) 69.  
-[78] J.M. Figueroa-O'Farrill, S. Schrans, K. Thielemans, On the Casimir Algebra of B2, Phys. Lett. B263 (1991) 378.  
-[79] J. Figueroa-O'Farrill, A comment on the magical realisations of  $\mathcal{W}_3$ , QMW- PH-94-1, hep-th/9401108.  
-[80] J. Figueroa-O'Farrill, On the universal string theory, hep-th/9310200.  
-[81] J. Figueroa-O'Farrill, S. Stanciu, Nonsemisimple Sugawara constructions, preprint QMW-PH-94-2, hep-th/9402035.  
+[65] V.A. Fateev, S.L. Lukyanov, Additional Symmetries and Exactly Soluble Models in Two-Dimensional Conformal Field Theory, I. Quantization of Hamiltonian Structures, II. W-Algebra Representation Theory, III. Minimal Models, Moscow preprints 1988-1989.
+[66] V.A. Fateev, A.B. Zamolodchikov, Conformal quantum field theory models in two dimensions having  $Z_{3}$  symmetry, Nucl. Phys. B280 [FS18] (1987) 644.
+[67] V.A. Fateev, A.B. Zamolidchikov, Nonlocal (parafermion) currents in two-dimensional conformal quantum field theory and self-dual critical points in  $Z_{N}$ -symmetric statistical systems, Sov. Phys. JETP 62 (1985) 215.
+[68] V.A. Fateev, A.B. Zamolidchikov, Operator algebra and correlation functions in two dimensional  $SU(2) \times SU(2)$  chiral Wess-Zumino mode, Sov. J. Nuc. R. 43 (1986) 657.
+[69] L. Fehér, L. O'Raifeartaigh, P. Ruelle, I. Tsutsui, A. Wipf, Generalized Toda theories and  $\mathcal{W}$ -algebras associated with integral gradings, Ann. Phys. 213 (1992) 1.
+[70] L. Fehér, L. O'Rafeartaigh, I. Tsutsui, The Vacuum Preserving Lie Algebra of a Classical  $\mathcal{W}$ -algebra, Phys. Lett. B316 (1993) 275.
+[71] L. Fehér, L. O'Riifeartaigh, P. Ruelle, I. Tsutsui, On the Classification of the Set of Classical  $\mathcal{W}$ -algebras obtained from DS reductions, Preprint BONN-HE-93-14, DIAS-STP-93-02, hep-th/9304125, to appear in Comm. Math. Phys.
+[72] B.L. Feigin, E. Frenkel, Quantization of the Drinfeld-Sokolov reduction, Phys. Lett. B246 (1990) 75.
+[73] B.L. Feigin, D.B.Fuchs, Invariant skew-symmetric differential operators on the line and Verma modules over the Virasoro algebra, Funct. Anal. Appl. 16 (1982) 114.
+[74] J.M. Figueroa-O'Farrill, S. Schrans, The spin-6 extended conformal algebra, Phys. Lett. B245 (1990) 471.
+[75] J.M. Figueroa-O'Farrill, S. Schrans, unpublished.
+[76] J.M. Figueroa-O'Farrill, S. Schrans, The Conformal Bootstrap and Super  $\mathcal{W}$ -Algebras, Int. J. Mod. Phys. A7 (1992) 591.
+[77] J. M. Figueroa-O'Farrill, S. Schrans, Extended superconformal algebras, Phys. Lett. B257 (1991) 69.
+[78] J.M. Figueroa-O'Farrill, S. Schrans, K. Thielemans, On the Casimir Algebra of B2, Phys. Lett. B263 (1991) 378.
+[79] J. Figueroa-O'Farrill, A comment on the magical realisations of  $\mathcal{W}_3$ , QMW- PH-94-1, hep-th/9401108.
+[80] J. Figueroa-O'Farrill, On the universal string theory, hep-th/9310200.
+[81] J. Figueroa-O'Farrill, S. Stanciu, Nonsemisimple Sugawara constructions, preprint QMW-PH-94-2, hep-th/9402035.
 [82] J. Fisch, M. Henneaux, J. Stasheff, C. Teitelboim, Existence, uniqueness and cohomology of the classical BRST charge with ghosts of ghosts, Comm. Math. Phys. 120 (1989) 379.
 
-[83] M. Flohr,  $\mathcal{W}$ -Algebren Quasiprimäre Felder and Nicht-Minimale Modelle, Preprint Diplomarbeit BONN-IR-91-30 (1991).  
-[84] E.S. Fradkin, T.E Fradkina, Quantization of realistic systems with constraints, Phys. Lett. B72 (1975) 343.  
-[85] E.S. Fradkin, V. Linetsky, Result of the classification of superconformal algebras in two dimensions, Phys. Lett. B291 (1992) 71.  
-[86] L. Frappat, E. Ragoucy, P. Sorba,  $\mathcal{W}$ -algebras and superalgebras from constrained WZW models: a group theoretical classification, Comm. Math. Phys. 157 (1993) 499.  
-[87] L. Frappat, E. Ragoucy, P. Sorba,  $\mathcal{W}$ -algebras and superalgebras from constrained WZW models: a group theoretical classification, Comm. Math. Phys. 157 (1993) 499.  
-[88] M.D. Freedman, D.I. Olive, BRS cohomology in string theory and the no-ghost theorem, Phys. Lett. B175 (1986) 151.  
-[89] M. Freeman, P. West,  $\mathcal{W}_3$ -string scattering, Int. J. Mod. Phys. A8 (1993) 4261.  
-[90] I.B. Frenkel, H. Garland, G. Zuckerman, Semi-infinite cohomology and string theory, Yale University preprint (1986).  
-[91] D. Friedman, E. Martinec, S. Shenker, Conformal invariance, supersymmetry and string theory, Nucl. Phys. B271 (1986) 93.  
-[92] S. Fubini, A.J. Hanson, R. Jackiw, New approach to field theory, Phys. Rev. D7 (1973) 7.  
-[93] A. Fujitsu, ope.math: operator product expansions in free field realizations on conformal field theory, Computer Phys. Comm. 79 (1994) 78.  
-[94] S. J. Gates, M. T. Grisaru, W. Siegel, M. Roček, Superspace, Benjamin/Cummings pub. comp. (1983).  
-[95] D. Gepner, Z. Qiu, Modular invariant partition functions for parafermionic field theories, Nucl. Phys. B285 [FS19] (1977) 423.  
-[96] E. Getzler, Manin triples and  $N = 2$  superconformal field theory, hep-th/9307041.  
-[97] P. Ginsparg, Applied conformal field theory, in Les Houches session XLIX, eds. E. Brezin and J. Zin-Justin, Elsevier (1988).  
-[98] P. Goddard, Meromorphic conformal field theory, in 'Infinite dimensional Lie algebras and Lie groups', ed. V. Kac, Proc. CIRM-Luminy conf. (1988), World Scientific.  
-[99] P. Goddard, A. Kent, D. Olive, Virasoro algebras and coset space models, Phys. Lett. B152 (1985) 88.  
-[100] P. Goddard, W. Nahm, D. Olive, A. Schwimmer, Vertex operators for non-simply-laced algebras, Comm. Math. Phys. 107 (1986) 179.  
-[101] P. Goddard, D. Olive, Kac-Moody and Virasoro algebras in relation to quantum physics, Int. J. Mod. Phys. A1 (1986) 303.  
+[83] M. Flohr,  $\mathcal{W}$ -Algebren Quasiprimäre Felder and Nicht-Minimale Modelle, Preprint Diplomarbeit BONN-IR-91-30 (1991).
+[84] E.S. Fradkin, T.E Fradkina, Quantization of realistic systems with constraints, Phys. Lett. B72 (1975) 343.
+[85] E.S. Fradkin, V. Linetsky, Result of the classification of superconformal algebras in two dimensions, Phys. Lett. B291 (1992) 71.
+[86] L. Frappat, E. Ragoucy, P. Sorba,  $\mathcal{W}$ -algebras and superalgebras from constrained WZW models: a group theoretical classification, Comm. Math. Phys. 157 (1993) 499.
+[87] L. Frappat, E. Ragoucy, P. Sorba,  $\mathcal{W}$ -algebras and superalgebras from constrained WZW models: a group theoretical classification, Comm. Math. Phys. 157 (1993) 499.
+[88] M.D. Freedman, D.I. Olive, BRS cohomology in string theory and the no-ghost theorem, Phys. Lett. B175 (1986) 151.
+[89] M. Freeman, P. West,  $\mathcal{W}_3$ -string scattering, Int. J. Mod. Phys. A8 (1993) 4261.
+[90] I.B. Frenkel, H. Garland, G. Zuckerman, Semi-infinite cohomology and string theory, Yale University preprint (1986).
+[91] D. Friedman, E. Martinec, S. Shenker, Conformal invariance, supersymmetry and string theory, Nucl. Phys. B271 (1986) 93.
+[92] S. Fubini, A.J. Hanson, R. Jackiw, New approach to field theory, Phys. Rev. D7 (1973) 7.
+[93] A. Fujitsu, ope.math: operator product expansions in free field realizations on conformal field theory, Computer Phys. Comm. 79 (1994) 78.
+[94] S. J. Gates, M. T. Grisaru, W. Siegel, M. Roček, Superspace, Benjamin/Cummings pub. comp. (1983).
+[95] D. Gepner, Z. Qiu, Modular invariant partition functions for parafermionic field theories, Nucl. Phys. B285 [FS19] (1977) 423.
+[96] E. Getzler, Manin triples and  $N = 2$  superconformal field theory, hep-th/9307041.
+[97] P. Ginsparg, Applied conformal field theory, in Les Houches session XLIX, eds. E. Brezin and J. Zin-Justin, Elsevier (1988).
+[98] P. Goddard, Meromorphic conformal field theory, in 'Infinite dimensional Lie algebras and Lie groups', ed. V. Kac, Proc. CIRM-Luminy conf. (1988), World Scientific.
+[99] P. Goddard, A. Kent, D. Olive, Virasoro algebras and coset space models, Phys. Lett. B152 (1985) 88.
+[100] P. Goddard, W. Nahm, D. Olive, A. Schwimmer, Vertex operators for non-simply-laced algebras, Comm. Math. Phys. 107 (1986) 179.
+[101] P. Goddard, D. Olive, Kac-Moody and Virasoro algebras in relation to quantum physics, Int. J. Mod. Phys. A1 (1986) 303.
 [102] P. Goddard, D. Olive, G. Waterson, Superalgebras, symplectic bosons and the Sugawara construction, Comm. Math. Phys. 112 (1987) 591.
 
-[103] P. Goddard, A. Schwimmer, Factoring out free fermions and superconformal algebras, Phys. Lett. B214 (1988) 209.  
-[104] T. Goto, Relativistic quantum mechanics of one-dimensional mechanical continuum and subsidiary condition of dual resonance model, Prog. Theor. Phys. 46 (1971) 1560.  
-[105] M. Green, J. Schwarz, E. Witten, Superstring Theory, Vol. I& II, Cambridge University Press (1987).  
-[106] M.T. Grisaru, W. Siegel, M. Roček, Improved methods for supergraphs, Nucl. Phys. B159 (1979) 429.  
-[107] M.T. Grisaru, R.M. Xu, Quantum supergravities in 2 dimensions, Phys. Lett. B205 (1988) 486.  
-[108] K. Hamada and M. Takao, Spin-4 current algebra, Phys. Lett. B209 (1988) 247. Erratum Phys. Lett. B213 (1988) 564.  
-[109] Z. Hasiewicz, K. Thielemans, W. Troost, Superconformal algebras and Clifford algebras, J. Math. Phys. 31, (1989) 744.  
-[110] M. Henneaux, Hamiltonian form of the path integral for theories with gauge freedoms, Phys. Rep. 126 (1985) 1.  
-[111] A. Honecker, A note on the algebraic evaluation of correlators in local chiral conformal field theory, preprint BONN-HE-92-25 (1992), hep-th/ 9209029.  
-[112] K. Hornfeck, Explicit construction of the BRST charge for  $\mathcal{W}_4$ , Phys. Lett. B315 (1993) 287.  
-[113] K. Hornfeck,  $\mathcal{W}$ -algebras with a Set of Primary Fields of Dimensions (3, 4, 5) and (3, 4, 5, 6), Nucl. Phys. B407 (1993) 237.  
-[114] K. Hornfeck, Classification of Structure Constants for  $\mathcal{W}$ -algebras from Heighest Weights, Nucl. Phys. B411 (1994) 307.  
-[115] C.M. Hull, Chiral  $\mathcal{W}$ -gravities for general extended conformal algebras, Phys. Lett. B259 (1991) 68.  
-[116] C.M. Hull, Higher-spin extended conformal algebras and  $\mathcal{W}$ -gravitaries, Nucl. Phys. B353 (1991) 707.  
-[117] C.M. Hull, Lectures on  $\mathcal{W}$ -Gravity,  $\mathcal{W}$ -Geometry and  $\mathcal{W}$ -Strings, Invited talk at Lectures given at Trieste Summer School on High Energy Physics and Cosmology, Trieste, Italy, 15 Jun - 14 Aug 1992. In “Trieste 1992, Proceedings, High energy physics and cosmology” 76-142 and London Queen Mary and Westfield Coll, (1993) QMW-93-2, hep-th/9302110.  
-[118] D.A. Huse, Exact exponents for the infinitely many new multicritical points, Phys. Rev. B30 (1984) 3908.  
-[119] T. Inami, Y. Matsuo, I. Yamanaka, Extended conformal algebras with  $N = 1$  supersymmetry, Phys. Lett. B215 (1988) 701.  
-[120] H. Ishikawa, M. Kato, Note on  $N = 0$  string as  $N = 1$  string, UT-KOMABA/93-23, hep-th/9311139.  
+[103] P. Goddard, A. Schwimmer, Factoring out free fermions and superconformal algebras, Phys. Lett. B214 (1988) 209.
+[104] T. Goto, Relativistic quantum mechanics of one-dimensional mechanical continuum and subsidiary condition of dual resonance model, Prog. Theor. Phys. 46 (1971) 1560.
+[105] M. Green, J. Schwarz, E. Witten, Superstring Theory, Vol. I& II, Cambridge University Press (1987).
+[106] M.T. Grisaru, W. Siegel, M. Roček, Improved methods for supergraphs, Nucl. Phys. B159 (1979) 429.
+[107] M.T. Grisaru, R.M. Xu, Quantum supergravities in 2 dimensions, Phys. Lett. B205 (1988) 486.
+[108] K. Hamada and M. Takao, Spin-4 current algebra, Phys. Lett. B209 (1988) 247. Erratum Phys. Lett. B213 (1988) 564.
+[109] Z. Hasiewicz, K. Thielemans, W. Troost, Superconformal algebras and Clifford algebras, J. Math. Phys. 31, (1989) 744.
+[110] M. Henneaux, Hamiltonian form of the path integral for theories with gauge freedoms, Phys. Rep. 126 (1985) 1.
+[111] A. Honecker, A note on the algebraic evaluation of correlators in local chiral conformal field theory, preprint BONN-HE-92-25 (1992), hep-th/ 9209029.
+[112] K. Hornfeck, Explicit construction of the BRST charge for  $\mathcal{W}_4$ , Phys. Lett. B315 (1993) 287.
+[113] K. Hornfeck,  $\mathcal{W}$ -algebras with a Set of Primary Fields of Dimensions (3, 4, 5) and (3, 4, 5, 6), Nucl. Phys. B407 (1993) 237.
+[114] K. Hornfeck, Classification of Structure Constants for  $\mathcal{W}$ -algebras from Heighest Weights, Nucl. Phys. B411 (1994) 307.
+[115] C.M. Hull, Chiral  $\mathcal{W}$ -gravities for general extended conformal algebras, Phys. Lett. B259 (1991) 68.
+[116] C.M. Hull, Higher-spin extended conformal algebras and  $\mathcal{W}$ -gravitaries, Nucl. Phys. B353 (1991) 707.
+[117] C.M. Hull, Lectures on  $\mathcal{W}$ -Gravity,  $\mathcal{W}$ -Geometry and  $\mathcal{W}$ -Strings, Invited talk at Lectures given at Trieste Summer School on High Energy Physics and Cosmology, Trieste, Italy, 15 Jun - 14 Aug 1992. In “Trieste 1992, Proceedings, High energy physics and cosmology” 76-142 and London Queen Mary and Westfield Coll, (1993) QMW-93-2, hep-th/9302110.
+[118] D.A. Huse, Exact exponents for the infinitely many new multicritical points, Phys. Rev. B30 (1984) 3908.
+[119] T. Inami, Y. Matsuo, I. Yamanaka, Extended conformal algebras with  $N = 1$  supersymmetry, Phys. Lett. B215 (1988) 701.
+[120] H. Ishikawa, M. Kato, Note on  $N = 0$  string as  $N = 1$  string, UT-KOMABA/93-23, hep-th/9311139.
 [121] K. Ito, Quantum Hamiltonian Reduction and  $\mathcal{W}B$  Algebra, Int. J. Mod. Phys. A7 (1992) 4885.
 
-[122] C. Itzykson, Invariance conforme et modèles critiques bidimensionelles, Cours de C. Itzykson au DEA de Physique Théorique de Marseille, preprint CNRS Marseille CTP-86/P.1915.  
-[123] R. D. Jenks, R. S. Sutor, Axiom: The Scientific Computation system, NAG, Springer Verlag (1992).  
-[124] V.G. Kač, Funct. Anal. Appl. 1 (1967) 328.  
-[125] V.G. Kač, in Lecture Notes in Physics 94, Springer-Verlag (1979).  
-[126] V. Kac, Infinite Dimensional Lie Algebras, Birkhauser (1983).  
-[127] M. Kaku, Introduction to Superstrings, Springer-Verlag (1989).  
-[128] M. Kato, S. Matsuda, Construction of singular vertex operators as degenerate primary conformal fields, Phys. Lett. B172 (1986) 216.  
-[129] H.G. Kausch, Extended conformal algebras generated by a multiplet of primary fields, Phys. Lett. B259 (1991) 448.  
-[130] H.G. Kausch, Chiral algebras in conformal field theory, Ph.D. thesis, Cambridge university, (1991).  
-[131] H.G. Kausch, G.M.T. Watts, A study of  $\mathcal{W}$ -Algebras using Jacobi Identities, Nucl. Phys. B354 (1991) 740.  
-[132] H.G. Kausch, G.M.T. Watts, Quantum Toda theory and the Casimir algebra of  $B_{2}$  and  $C_{2}$ , Int. J. Mod. Phys. A7 (1992) 4175.  
-[133] V.G. Knizhnik, Superconformal algebras in two dimensions, Theor. Math. Phys. 66 (1986) 68.  
-[134] V.G. Knizhnik, A.M. Polyakov, A.B. Zamolodchikov, Fractal structure of 2d-quantum gravity, Mod. Phys. Lett. A3 (1988) 819.  
-[135] V.G. Knizhnik, A.B. Zamolodchikov, Current algebra and Wess-Zumino model in two dimensions, Nucl. Phys. B247 (1984) 83.  
-[136] S.O. Krivonos, A. Sorin, Linearizing  $\mathcal{W}$ -algebras, ICTP preprint, hep-th/9406005.  
-[137] S.O. Krivonos, K. Thielemans, A Mathematica package for super OPEs, in preparation.  
-[138] T. Kugo, I. Ojima, Manifestly covariant canonical formulation of Yang-Mills theories, physical state subsidiary conditions and physical S-matrix unitarity, Phys. Lett. B73 (1978) 459.  
-[139] W. Lerche, Chiral rings in topological  $W$ -gravity,  $26^{th}$  workshop From superstrings to supergravity, Erice, (1992), preprint CERN-TH.6812/93.  
-[140] H. Lu, C.N. Pope, S. Schrans, K.-W. Xu, The complete spectrum of the  $\mathcal{W}(N)$  string, Nucl. Phys. B385 (1992) 99.  
-[141] H. Lu, C.N. Pope, S. Schrans, X.J. Wang, The interacting  $\mathcal{W}_3$ - string, Nucl. Phys. B403 (1993) 351.  
-[142] H. Lu, C.N. Pope, S. Schrans, X.J. Wang, On the spectrum and scattering of  $\mathcal{W}_3$  strings, Nucl. Phys. B408 (1993) 3.  
+[122] C. Itzykson, Invariance conforme et modèles critiques bidimensionelles, Cours de C. Itzykson au DEA de Physique Théorique de Marseille, preprint CNRS Marseille CTP-86/P.1915.
+[123] R. D. Jenks, R. S. Sutor, Axiom: The Scientific Computation system, NAG, Springer Verlag (1992).
+[124] V.G. Kač, Funct. Anal. Appl. 1 (1967) 328.
+[125] V.G. Kač, in Lecture Notes in Physics 94, Springer-Verlag (1979).
+[126] V. Kac, Infinite Dimensional Lie Algebras, Birkhauser (1983).
+[127] M. Kaku, Introduction to Superstrings, Springer-Verlag (1989).
+[128] M. Kato, S. Matsuda, Construction of singular vertex operators as degenerate primary conformal fields, Phys. Lett. B172 (1986) 216.
+[129] H.G. Kausch, Extended conformal algebras generated by a multiplet of primary fields, Phys. Lett. B259 (1991) 448.
+[130] H.G. Kausch, Chiral algebras in conformal field theory, Ph.D. thesis, Cambridge university, (1991).
+[131] H.G. Kausch, G.M.T. Watts, A study of  $\mathcal{W}$ -Algebras using Jacobi Identities, Nucl. Phys. B354 (1991) 740.
+[132] H.G. Kausch, G.M.T. Watts, Quantum Toda theory and the Casimir algebra of  $B_{2}$  and  $C_{2}$ , Int. J. Mod. Phys. A7 (1992) 4175.
+[133] V.G. Knizhnik, Superconformal algebras in two dimensions, Theor. Math. Phys. 66 (1986) 68.
+[134] V.G. Knizhnik, A.M. Polyakov, A.B. Zamolodchikov, Fractal structure of 2d-quantum gravity, Mod. Phys. Lett. A3 (1988) 819.
+[135] V.G. Knizhnik, A.B. Zamolodchikov, Current algebra and Wess-Zumino model in two dimensions, Nucl. Phys. B247 (1984) 83.
+[136] S.O. Krivonos, A. Sorin, Linearizing  $\mathcal{W}$ -algebras, ICTP preprint, hep-th/9406005.
+[137] S.O. Krivonos, K. Thielemans, A Mathematica package for super OPEs, in preparation.
+[138] T. Kugo, I. Ojima, Manifestly covariant canonical formulation of Yang-Mills theories, physical state subsidiary conditions and physical S-matrix unitarity, Phys. Lett. B73 (1978) 459.
+[139] W. Lerche, Chiral rings in topological  $W$ -gravity,  $26^{th}$  workshop From superstrings to supergravity, Erice, (1992), preprint CERN-TH.6812/93.
+[140] H. Lu, C.N. Pope, S. Schrans, K.-W. Xu, The complete spectrum of the  $\mathcal{W}(N)$  string, Nucl. Phys. B385 (1992) 99.
+[141] H. Lu, C.N. Pope, S. Schrans, X.J. Wang, The interacting  $\mathcal{W}_3$ - string, Nucl. Phys. B403 (1993) 351.
+[142] H. Lu, C.N. Pope, S. Schrans, X.J. Wang, On the spectrum and scattering of  $\mathcal{W}_3$  strings, Nucl. Phys. B408 (1993) 3.
 [143] H. Lu, C.N. Pope, X.J. Wang, On higher-spin generalizations of string theory, Int. J. Mod. Phys. A9 (1994) 1527.
 
-[144] H. Lu, C.N. Pope, K. Thielemans, X.J. Wang, Higher-spin string and  $\mathcal{W}$  minimal models, Class. Quantum Grav. 11 (1994) 119.  
-[145] H. Lu, C.N. Pope, X.J. Wang, S.C. Zhao, Critical and noncritical  $\mathcal{W}_{2,4}$  strings, Class. Quantum Grav. 11 (1994) 939.  
-[146] H. Lu, C.N. Pope, X.J. Wang, K.-W. Xu, The Complete Cohomology of the  $\mathcal{W}_3$  String, Class. Quantum Grav. 11 (1994) 967.  
-[147] H. Lu, C.N. Pope, X.J. Wang, S.C. Zhao, A note on  $\mathcal{W}_{2,s}$  strings, Phys. Lett. B327 (1994) 241.  
-[148] H. Lu, C.N. Pope, K. Thielemans, X.J. Wang, K.-W. Xu, Quantising Higher-spin String Theories, in preparation.  
-[149] K.A. Meissner, J. Pawełczyk, Some perturbative results for two-dimensional gravity, Mod. Phys. Lett. A5 (1990) 763.  
-[150] N. Mohammedi, General super-Virasoro construction on affine-G, Mod. Phys. Lett. A6 (1991) 2977.  
-[151] R.V. Moody, Lie algebras associated with generalized Cartan matrices, Bull. Am. Mat. Soc. 73 (1974) 217.  
-[152] Y. Nambu, Lectures at the Copenhagen Summer Symposium (1970).  
-[153] W. Nahm, Conformal quantum field theories in two dimensions, Proceedings of the Trieste Conference on Recent Developments in Conformal Field Theories, Trieste, October 1989.  
-[154] C. R. Nappi, E. Witten, Wess-Zumino-Witten model based on a nonsemisimple group, Phys. Rev. Lett. 71 371.  
-[155] F.J. Narganes-Quijano, Bosonization of Parafermions and Related Conformal Models, Brussels preprint, ULB-TH 89/09, Ann. Phys. to be published.  
-[156] S.P. Novikov, Usp. Mat. Nauk. 37 (1982) 3.  
-[157] H. Ooguri, K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, The induced action of  $\mathcal{W}_3$  gravity, Comm. Math. Phys. 145 (1992) 515.  
-[158] A.M. Polyakov, Quantum geometry of bosonic strings, Phys. Lett. B103 (1981) 207.  
-[159] A.M. Polyakov, Quantum gravity in two dimensions, Mod. Phys. Lett. A2 (1987) 893.  
-[160] A.M. Polyakov, in Physics and Mathematics of Strings, ed. L. Brink, D. Friedman, A.M. Polyakov, World Scientific (1990), p. 13.  
-[161] A.M. Polyakov, P.B. Wiegmann, Theory of nonabelian goldstone bosons in two dimensions, Phys. Lett. B131 (1983) 121  
-A.M. Polyakov, P.B. Wiegmann, Goldstone fields in 2 dimensions with multivalued actions, Phys. Lett. B141 (1984) 223.  
-[162] A.M. Polyakov, A.B. Zamolodchikov, Fractal structure of two dimensional supergravity, Mod. Phys. Lett. A3 (1988) 1213.  
-[163] C.N. Pope, L.J. Romans, K.S. Stelle, Anomaly-free  $\mathcal{W}_3$  gravity and critical  $\mathcal{W}_3$  strings, Phys. Lett. B268 (1991) 167.  
+[144] H. Lu, C.N. Pope, K. Thielemans, X.J. Wang, Higher-spin string and  $\mathcal{W}$  minimal models, Class. Quantum Grav. 11 (1994) 119.
+[145] H. Lu, C.N. Pope, X.J. Wang, S.C. Zhao, Critical and noncritical  $\mathcal{W}_{2,4}$  strings, Class. Quantum Grav. 11 (1994) 939.
+[146] H. Lu, C.N. Pope, X.J. Wang, K.-W. Xu, The Complete Cohomology of the  $\mathcal{W}_3$  String, Class. Quantum Grav. 11 (1994) 967.
+[147] H. Lu, C.N. Pope, X.J. Wang, S.C. Zhao, A note on  $\mathcal{W}_{2,s}$  strings, Phys. Lett. B327 (1994) 241.
+[148] H. Lu, C.N. Pope, K. Thielemans, X.J. Wang, K.-W. Xu, Quantising Higher-spin String Theories, in preparation.
+[149] K.A. Meissner, J. Pawełczyk, Some perturbative results for two-dimensional gravity, Mod. Phys. Lett. A5 (1990) 763.
+[150] N. Mohammedi, General super-Virasoro construction on affine-G, Mod. Phys. Lett. A6 (1991) 2977.
+[151] R.V. Moody, Lie algebras associated with generalized Cartan matrices, Bull. Am. Mat. Soc. 73 (1974) 217.
+[152] Y. Nambu, Lectures at the Copenhagen Summer Symposium (1970).
+[153] W. Nahm, Conformal quantum field theories in two dimensions, Proceedings of the Trieste Conference on Recent Developments in Conformal Field Theories, Trieste, October 1989.
+[154] C. R. Nappi, E. Witten, Wess-Zumino-Witten model based on a nonsemisimple group, Phys. Rev. Lett. 71 371.
+[155] F.J. Narganes-Quijano, Bosonization of Parafermions and Related Conformal Models, Brussels preprint, ULB-TH 89/09, Ann. Phys. to be published.
+[156] S.P. Novikov, Usp. Mat. Nauk. 37 (1982) 3.
+[157] H. Ooguri, K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, The induced action of  $\mathcal{W}_3$  gravity, Comm. Math. Phys. 145 (1992) 515.
+[158] A.M. Polyakov, Quantum geometry of bosonic strings, Phys. Lett. B103 (1981) 207.
+[159] A.M. Polyakov, Quantum gravity in two dimensions, Mod. Phys. Lett. A2 (1987) 893.
+[160] A.M. Polyakov, in Physics and Mathematics of Strings, ed. L. Brink, D. Friedman, A.M. Polyakov, World Scientific (1990), p. 13.
+[161] A.M. Polyakov, P.B. Wiegmann, Theory of nonabelian goldstone bosons in two dimensions, Phys. Lett. B131 (1983) 121
+A.M. Polyakov, P.B. Wiegmann, Goldstone fields in 2 dimensions with multivalued actions, Phys. Lett. B141 (1984) 223.
+[162] A.M. Polyakov, A.B. Zamolodchikov, Fractal structure of two dimensional supergravity, Mod. Phys. Lett. A3 (1988) 1213.
+[163] C.N. Pope, L.J. Romans, K.S. Stelle, Anomaly-free  $\mathcal{W}_3$  gravity and critical  $\mathcal{W}_3$  strings, Phys. Lett. B268 (1991) 167.
 [164] C.N. Pope, E. Sezgin, K.S. Stelle, X.J. Wang, Discrete states in the  $\mathcal{W}_3$  string, Phys. Lett. B299 (1993) 247.
 
-[165] C.N. Pope,  $\mathcal{W}$ -Strings 93, Talks given at Spring Workshop on High Energy Physics, Trieste, Italy, April 1993, and at the International Conference on Strings 93, Berkeley, CA, 24-29 May 1993, (1993) CTP-TAMU-55-93.  
-[166] K. Popper, The logic of scientific discovery, Hutchinson (London) (1960).  
-[167] E. Ragoucy,  $OSp(1|2)$  and  $Sl(2)$  reductions in generalized supertoda models and factorization of spin 1/2 fields, Nucl. Phys. B411 (1994) 778.  
-[168] L.J. Romans, Realizations of classical and quantum  $\mathcal{W}_3$  symmetry, Nucl. Phys. B352 (1991) 829.  
-[169] M.V. Savelev, A.M. Vershik, Continuum analogues of contragedient Lie algebras. (Lie algebras with a Cartan operator and nonlinear dynamical systems), Comm. Math. Phys. 126 (1989) 367.  
-[170] K. Schoutens, A non-linear representation of the  $D = 2$  SO(4)-extended superconformal algebra, Phys. Lett. B194 (1987) 75.  
-[171] K. Schoutens,  $O(N)$ -extended superconformal field theory in superspace, Nucl. Phys. B295 [FS21] (1988) 634.  
-[172] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, Quantum  $\mathcal{W}_3$  gravity in the chiral gauge, Nucl. Phys. B364 (1991) 584.  
-[173] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, On the effective action of chiral  $\mathcal{W}_3$  gravity, Nucl. Phys. B371 (1992) 315.  
-[174] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, Quantum BRST charge for quadratically nonlinear Lie algebras, Comm. Math. Phys. 124 (1989) 87.  
-[175] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, in Proceedings of the Jan. 1991 Miami Workshop on Quantum Field Theory, Statistical Mechanics, Quantum Groups and Topology, Plenum (1991).  
-[176] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, Induced gauge theories and  $\mathcal{W}$ -gravity, in the proceedings of the Stony Brook conference *Strings and Symmetries* 1991, World Scientific (1992).  
-[177] S. Schrans, Uitbreidingen van Conforme Invariantie in Tweedimensionale Quantumveldentheorie, PhD. thesis (in English), KU Leuven (1991).  
-[178] A. Schwimmer, N. Sieberg, Comments on the  $N = 2,3,4$  superconformal algebras in two dimensions, Phys. Lett. B184 191.  
-[179] W.M. Seiler, SUPERCALC, a REDUCE Package for commutator calculations, Karlsruhe preprint KA-THEP-20/90.  
-[180] A. Sevrin, R. Siebelink, W. Troost, Regularization of nonlocal actions in two-dimensional field theories, Nucl. Phys. B413 (1994) 185.  
-[181] A. Sevrin, K. Thielemans, W. Troost, Induced and effective gravity theories in  $D = 2$ , Nucl. Phys. B407 (1993) 459.  
-[182] A. Sevrin, K. Thielemans, W. Troost, The relation between linear and nonlinear  $N = 3,4$  supergravity theories, Phys. Rev. D48 (1993) 1768.  
+[165] C.N. Pope,  $\mathcal{W}$ -Strings 93, Talks given at Spring Workshop on High Energy Physics, Trieste, Italy, April 1993, and at the International Conference on Strings 93, Berkeley, CA, 24-29 May 1993, (1993) CTP-TAMU-55-93.
+[166] K. Popper, The logic of scientific discovery, Hutchinson (London) (1960).
+[167] E. Ragoucy,  $OSp(1|2)$  and  $Sl(2)$  reductions in generalized supertoda models and factorization of spin 1/2 fields, Nucl. Phys. B411 (1994) 778.
+[168] L.J. Romans, Realizations of classical and quantum  $\mathcal{W}_3$  symmetry, Nucl. Phys. B352 (1991) 829.
+[169] M.V. Savelev, A.M. Vershik, Continuum analogues of contragedient Lie algebras. (Lie algebras with a Cartan operator and nonlinear dynamical systems), Comm. Math. Phys. 126 (1989) 367.
+[170] K. Schoutens, A non-linear representation of the  $D = 2$  SO(4)-extended superconformal algebra, Phys. Lett. B194 (1987) 75.
+[171] K. Schoutens,  $O(N)$ -extended superconformal field theory in superspace, Nucl. Phys. B295 [FS21] (1988) 634.
+[172] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, Quantum  $\mathcal{W}_3$  gravity in the chiral gauge, Nucl. Phys. B364 (1991) 584.
+[173] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, On the effective action of chiral  $\mathcal{W}_3$  gravity, Nucl. Phys. B371 (1992) 315.
+[174] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, Quantum BRST charge for quadratically nonlinear Lie algebras, Comm. Math. Phys. 124 (1989) 87.
+[175] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, in Proceedings of the Jan. 1991 Miami Workshop on Quantum Field Theory, Statistical Mechanics, Quantum Groups and Topology, Plenum (1991).
+[176] K. Schoutens, A. Sevrin, P. van Nieuwenhuizen, Induced gauge theories and  $\mathcal{W}$ -gravity, in the proceedings of the Stony Brook conference *Strings and Symmetries* 1991, World Scientific (1992).
+[177] S. Schrans, Uitbreidingen van Conforme Invariantie in Tweedimensionale Quantumveldentheorie, PhD. thesis (in English), KU Leuven (1991).
+[178] A. Schwimmer, N. Sieberg, Comments on the  $N = 2,3,4$  superconformal algebras in two dimensions, Phys. Lett. B184 191.
+[179] W.M. Seiler, SUPERCALC, a REDUCE Package for commutator calculations, Karlsruhe preprint KA-THEP-20/90.
+[180] A. Sevrin, R. Siebelink, W. Troost, Regularization of nonlocal actions in two-dimensional field theories, Nucl. Phys. B413 (1994) 185.
+[181] A. Sevrin, K. Thielemans, W. Troost, Induced and effective gravity theories in  $D = 2$ , Nucl. Phys. B407 (1993) 459.
+[182] A. Sevrin, K. Thielemans, W. Troost, The relation between linear and nonlinear  $N = 3,4$  supergravity theories, Phys. Rev. D48 (1993) 1768.
 [183] A. Sevrin, K. Thielemans, W. Troost, A systematic approach to extensions of the Virasoro algebra and 2D gravities, in Proc. of the Strings '93 conference, Berkeley, World Scientific (1994).
 
-[184] A. Sevrin, W. Troost, Extensions of the Virasoro algebra and gauged WZW models, Phys. Lett. B315 (1993) 304.  
-[185] A. Sevrin, W. Troost, A. Van Proeyen, Superconformal algebras in two dimensions with  $N = 4$ , Phys. Lett. B208 (1988) 447.  
-[186] A. Sevrin, W. Troost, A. Van Proeyen, P. Spindel, Extended supersymmetric  $\sigma$ -models on group manifolds II. current algebras, Nucl. Phys. B311 (1988) 465.  
-[187] R. Siebelink, Regularisation of two-dimensional induced models and non-critical strings, PhD. thesis, KU Leuven (1994).  
-[188] L.J. Slater, Generalized hypergeometric functions, Cambridge University Press (1966).  
-[189] I.V. Tyupin, Lebedev preprint, FIAN No. 39 (1975).  
-[190] Y. Saint-Aubin, Phenomenes critiques en deux dimensions et invariance conforme, Montréal preprint CRM-1247.  
-[191] K. Symanzik, Small distance behaviour in field theory and power counting, Comm. Math. Phys. 18 (1970) 227.  
-[192] K. Thielemans, A Mathematica package for computing operator product expansions, Int. J. Mod. Phys. C Vol. 2, No. 3, (1991) 787.  
-[193] K. Thielemans, New computing techniques in Physics Research II, proceedings of the Second International Workshop on Software Engineering, Artificial Intelligence and Expert Systems in High Energy and Nuclear Physics, ed. D. Perret-Gallix, World Scientific (1992).  
-[194] K. Thielemans, in preparation.  
-[195] J. Thierry-Mieg, BRS-analysis of Zamolodchikov's spin 2 and 3 current algebra, Phys. Lett. B197 (1987) 368.  
-[196] W. Troost, P. van Nieuwenhuizen, A. Van Proeyen, Anomalies and the Batalin-Vilkovisky Lagrangian-formalism, Nucl. Phys. B333 (1990) 727.  
-[197] W. Troost, A. Van Proeyen, An introduction to Batalin-Vilkovisky Lagrangian Quantisation, Leuven University Press, in preparation.  
-[198] S. Vandoren, A. Van Proeyen, Simplifications in Lagrangian BV quantization exemplified by the anomalies of chiral  $\mathcal{W}_3$  gravity, Nucl. Phys. B411 (1994) 257.  
-[199] A. Van Proeyen, preprint KUL-TF-91/35, in the proceedings of “Strings and Symmetries 1991”, World Scientific.  
-[200] H. Verlinde, conformal field-theory, 2 dimensional quantum gravity and quantization of Teichmuller space, Nucl. Phys. B337 (1990) 652.  
-[201] D. Verstegen, On the classification of  $\mathcal{W}$ -algebras, Internal Report KU Leuven (1992).  
-[202] M. Wakimoto, Fock representations of the affine Lie algebra  $A_{1}(1)$ , Comm. Math. Phys. 104 (1986) 605.  
+[184] A. Sevrin, W. Troost, Extensions of the Virasoro algebra and gauged WZW models, Phys. Lett. B315 (1993) 304.
+[185] A. Sevrin, W. Troost, A. Van Proeyen, Superconformal algebras in two dimensions with  $N = 4$ , Phys. Lett. B208 (1988) 447.
+[186] A. Sevrin, W. Troost, A. Van Proeyen, P. Spindel, Extended supersymmetric  $\sigma$ -models on group manifolds II. current algebras, Nucl. Phys. B311 (1988) 465.
+[187] R. Siebelink, Regularisation of two-dimensional induced models and non-critical strings, PhD. thesis, KU Leuven (1994).
+[188] L.J. Slater, Generalized hypergeometric functions, Cambridge University Press (1966).
+[189] I.V. Tyupin, Lebedev preprint, FIAN No. 39 (1975).
+[190] Y. Saint-Aubin, Phenomenes critiques en deux dimensions et invariance conforme, Montréal preprint CRM-1247.
+[191] K. Symanzik, Small distance behaviour in field theory and power counting, Comm. Math. Phys. 18 (1970) 227.
+[192] K. Thielemans, A Mathematica package for computing operator product expansions, Int. J. Mod. Phys. C Vol. 2, No. 3, (1991) 787.
+[193] K. Thielemans, New computing techniques in Physics Research II, proceedings of the Second International Workshop on Software Engineering, Artificial Intelligence and Expert Systems in High Energy and Nuclear Physics, ed. D. Perret-Gallix, World Scientific (1992).
+[194] K. Thielemans, in preparation.
+[195] J. Thierry-Mieg, BRS-analysis of Zamolodchikov's spin 2 and 3 current algebra, Phys. Lett. B197 (1987) 368.
+[196] W. Troost, P. van Nieuwenhuizen, A. Van Proeyen, Anomalies and the Batalin-Vilkovisky Lagrangian-formalism, Nucl. Phys. B333 (1990) 727.
+[197] W. Troost, A. Van Proeyen, An introduction to Batalin-Vilkovisky Lagrangian Quantisation, Leuven University Press, in preparation.
+[198] S. Vandoren, A. Van Proeyen, Simplifications in Lagrangian BV quantization exemplified by the anomalies of chiral  $\mathcal{W}_3$  gravity, Nucl. Phys. B411 (1994) 257.
+[199] A. Van Proeyen, preprint KUL-TF-91/35, in the proceedings of “Strings and Symmetries 1991”, World Scientific.
+[200] H. Verlinde, conformal field-theory, 2 dimensional quantum gravity and quantization of Teichmuller space, Nucl. Phys. B337 (1990) 652.
+[201] D. Verstegen, On the classification of  $\mathcal{W}$ -algebras, Internal Report KU Leuven (1992).
+[202] M. Wakimoto, Fock representations of the affine Lie algebra  $A_{1}(1)$ , Comm. Math. Phys. 104 (1986) 605.
 A. Gerasimov, A. Marshakov, A. Morozov, M. Olshanetsky, S. Shatashvili, Wess-Zumino-Witten model as a theory for free fields, Int. J. Mod. Phys. A5 (1990) 2495.
 
-[203] G.M.T. Watts,  $\mathcal{W}$  B algebra representation theory, Nucl. Phys. 339 (1990) 177.  
-[204] G.M.T. Watts,  $\mathcal{W}$ -algebras and coset models, Phys. Lett. B245 (1990) 65.  
-[205] G.M.T. Watts,  $\mathcal{W}B_{n}$  symmetry, Hamiltonian Reduction and  $B(0,n)$  Today Theory, Cambridge preprint, DAMTP-90/23.  
-[206] P. West, A Review of  $\mathcal{W}$  Strings, preprint Göteborg-ITP-93-40.  
-[207] P.C. West,  $\mathcal{W}$  strings and cohomology in parafermionic theories, hep-th/9403185.  
-[208] K.G. Wilson, Non-Lagrangian models of current algebra, Phys. Rev. 179 (1969) 1499.  
-[209] E. Witten, Nonabelian bosonization in two dimensions, Comm. Math. Phys. 92 (1984) 455.  
-[210] S. Wolfram, Mathematica, A system for Doing Mathematics by Computer 2nd ed. (1991), Addison-Wesley Publishing Company, Inc.  
-[211] A.B. Zamolodchikov, Infinite additional symmetries in two dimensional conformal quantum field theory, Theor. Math. Phys. 63 (1985) 1205.  
-[212] A.B. Zamolodchikov, Vacuum Ward identities for higher generalisation, Nucl. Phys. B316 (1989) 573.  
+[203] G.M.T. Watts,  $\mathcal{W}$  B algebra representation theory, Nucl. Phys. 339 (1990) 177.
+[204] G.M.T. Watts,  $\mathcal{W}$ -algebras and coset models, Phys. Lett. B245 (1990) 65.
+[205] G.M.T. Watts,  $\mathcal{W}B_{n}$  symmetry, Hamiltonian Reduction and  $B(0,n)$  Today Theory, Cambridge preprint, DAMTP-90/23.
+[206] P. West, A Review of  $\mathcal{W}$  Strings, preprint Göteborg-ITP-93-40.
+[207] P.C. West,  $\mathcal{W}$  strings and cohomology in parafermionic theories, hep-th/9403185.
+[208] K.G. Wilson, Non-Lagrangian models of current algebra, Phys. Rev. 179 (1969) 1499.
+[209] E. Witten, Nonabelian bosonization in two dimensions, Comm. Math. Phys. 92 (1984) 455.
+[210] S. Wolfram, Mathematica, A system for Doing Mathematics by Computer 2nd ed. (1991), Addison-Wesley Publishing Company, Inc.
+[211] A.B. Zamolodchikov, Infinite additional symmetries in two dimensional conformal quantum field theory, Theor. Math. Phys. 63 (1985) 1205.
+[212] A.B. Zamolodchikov, Vacuum Ward identities for higher generalisation, Nucl. Phys. B316 (1989) 573.
 [213] C.J. Zhu, The BRST quantisation of the nonlinear  $\mathcal{W}B_2$  and  $\mathcal{W}_4$  algebras, SISSA/77/93/EP.

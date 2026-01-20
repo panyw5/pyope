@@ -22,7 +22,7 @@ Bosonic[T, W];
 Λ[w_] := NO[T, T][w] - (3/10) * T''[w];
 
 (* 定义 OPE 规则 *)
-Print["定义 W3 代数的 OPE..."];
+Print["Defining W3 algebra OPEs..."];
 
 (* T-T OPE *)
 OPE[T, T] := MakeOPE[
@@ -49,7 +49,7 @@ OPE[W, W] := MakeOPE[
     Ord[z, w, 0]
 ];
 
-Print["OPE 定义完成"];
+Print["OPE definitions completed"];
 Print[];
 
 (* ============================================================================ *)
@@ -77,12 +77,12 @@ Print[];
 
 Print["Test 4: OPE[T, NO[T,T] - (3/10)T'']"];
 Print["===================================="];
-Print["结果 = ", OPE[T, NO[T, T] - (3/10) * T'']];
+Print["Result = ", OPE[T, NO[T, T] - (3/10) * T'']];
 Print[];
 
 Print["Test 5: OPE[T, W'']"];
 Print["==================="];
-Print["结果 = ", OPE[T, W'']];
+Print["Result = ", OPE[T, W'']];
 
 (* ============================================================================ *)
 (* Test 6: 复合正规序 OPE *)
@@ -90,29 +90,29 @@ Print["结果 = ", OPE[T, W'']];
 
 Print["Test 6: NO[T', NO[W'', T]]"];
 Print["==========================="];
-Print["结果 = ", Expand[NO[T', NO[W'', T]]]];
+Print["Result = ", Expand[NO[T', NO[W'', T]]]];
 Print[];
 
 Print["Test 7: NO[W', NO[W'', T]]"];
 Print["==========================="];
-Print["结果 = ", Expand[NO[W', NO[W'', T]]]];
+Print["Result = ", Expand[NO[W', NO[W'', T]]]];
 Print[];
 
 (* ============================================================================ *)
 (* Test 8: 数值检验（设定 c=100, β=1/10） *)
 (* ============================================================================ *)
 
-Print["Test 8: 数值检验"];
+Print["Test 8: Numerical verification"];
 Print["================"];
-Print["设置 c=100, β=1/10"];
+Print["Setting c=100, β=1/10"];
 
 (* 替换符号参数 *)
-Print["OPE[W,W] 数值结果 = ", OPE[W, W] /. {c -> 100, β -> 1/10}];
+Print["OPE[W,W] numerical result = ", OPE[W, W] /. {c -> 100, β -> 1/10}];
 Print[];
 
 (* ============================================================================ *)
 (* 输出结果摘要 *)
 (* ============================================================================ *)
 
-Print["测试完成！"];
-Print["所有测试结果已输出，可用于对比 Python 实现"];
+Print["Tests completed!"];
+Print["All test results have been output and can be used to compare with Python implementation"];

@@ -72,6 +72,11 @@ class OPEComputer(OPEDefiner):
         if isinstance(data, OPEData):
             return data
         elif isinstance(data, list):
+            from .local_operator import assert_no_illegal_operator_mul
+
+            for i, pole in enumerate(data):
+                if pole != 0:
+                    assert_no_illegal_operator_mul(pole, context=f"OPE.make(data[{i}])")
             return OPEData.from_list(data)
         else:
             raise TypeError(f"MakeOPE expects list or OPEData, got {type(data)}")
@@ -117,6 +122,11 @@ def MakeOPE(data: Union[List, OPEData]) -> OPEData:
     if isinstance(data, OPEData):
         return data
     elif isinstance(data, list):
+        from .local_operator import assert_no_illegal_operator_mul
+
+        for i, pole in enumerate(data):
+            if pole != 0:
+                assert_no_illegal_operator_mul(pole, context=f"MakeOPE(data[{i}])")
         return OPEData.from_list(data)
     else:
         raise TypeError(f"MakeOPE expects list or OPEData, got {type(data)}")
@@ -148,6 +158,11 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     cached_result = cache.get(left, right)
     if cached_result is not None:
         return cached_result
+
+    from .local_operator import assert_no_illegal_operator_mul
+
+    assert_no_illegal_operator_mul(left, context="OPE(left)")
+    assert_no_illegal_operator_mul(right, context="OPE(right)")
 
     # 获取类型（只获取一次，避免重复调用 type()）
     left_type = type(left)
@@ -587,8 +602,7 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
             if bracket_BC is not Zero:
                 # 根据 Thielemans 公式，所有项都应该是 NO[∂^l A, {BC}_{l+q}] / l!
                 # 无论 bracket_BC 是什么形式（单个算符、算符和、含标量系数等）
-                pole_sum = pole_sum + \
-                    NO(deriv_A, bracket_BC) / cached_factorial(l)
+                pole_sum = pole_sum + NO(deriv_A, bracket_BC) / cached_factorial(l)
 
         if pole_sum != 0:
             result._poles[q] = pole_sum
@@ -610,8 +624,7 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
             if bracket_AC is not Zero:
                 # 根据 Thielemans 公式，所有项都应该是 NO[∂^l B, {AC}_{l+q}] / l!
                 # 无论 bracket_AC 是什么形式（单个算符、算符和、含标量系数等）
-                pole_sum = pole_sum + \
-                    NO(deriv_B, bracket_AC) / cached_factorial(l)
+                pole_sum = pole_sum + NO(deriv_B, bracket_AC) / cached_factorial(l)
 
         if pole_sum != 0:
             # 累加到结果中
@@ -726,6 +739,11 @@ def bracket(left: Any, right: Any, n: int = None, anticommutator: bool = None) -
         >>> bracket(T, T, 0)  # 返回 NO(T, T)
         >>> bracket(T, J, anticommutator=False)  # 返回 [T, J] = NO(T,J) - NO(J,T)
     """
+    from .local_operator import assert_no_illegal_operator_mul
+
+    assert_no_illegal_operator_mul(left, context="bracket(left)")
+    assert_no_illegal_operator_mul(right, context="bracket(right)")
+
     if anticommutator is not None:
         # 计算对易子或反对易子
         if anticommutator:
@@ -794,21 +812,10 @@ def NO(left: Any, right: Any) -> Any:
         if coeff != 1:
             return coeff * NO(left, op)
 
-    # 确保 left 和 right 都是 Operator 实例
-    # 允许 right/left 为 Mul(Operator, Operator, ...) 的情况：把它解释为多个算符的乘积，
-    # 并左结合构造嵌套 NO。这样 simplify 阶段不会因为 Mul 而中断。
+    from .local_operator import assert_no_illegal_operator_mul
 
-    if isinstance(left, Mul) and all(isinstance(a, Operator) for a in left.args):
-        nested = left.args[0]
-        for factor in left.args[1:]:
-            nested = NO(nested, factor)
-        left = nested
-
-    if isinstance(right, Mul) and all(isinstance(a, Operator) for a in right.args):
-        nested = right.args[0]
-        for factor in right.args[1:]:
-            nested = NO(nested, factor)
-        right = nested
+    assert_no_illegal_operator_mul(left, context="NO(left)")
+    assert_no_illegal_operator_mul(right, context="NO(right)")
 
     if not isinstance(left, Operator):
         raise TypeError(
@@ -882,7 +889,7 @@ def _ope_commute_help(left: Any, right: Any) -> OPEData:
 
     类似于 OPEdefs.m 中的 OPECommuteHelp
 
-    公式：
+    公式 (3.3.3) in Thielesmans
     [BA](q) = SwapSign[A,B] * Sum[(-1)^l / (l-q)! * D^(l-q) [[AB](l)], {l,q,MaxPole[AB]}]
 
     其中：

@@ -20,7 +20,9 @@ Jacobi 恒等式测试 - Virasoro 代数参考实现
 (* 加载 OPEdefs 包 *)
 Print["Loading OPEdefs.m..."];
 SetDirectory[DirectoryName[$InputFileName]];
-Get[FileNameJoin[{ParentDirectory[], "OPEdefs", "OPEdefs.m"}]];
+Import["OPEdefs.m"];
+Print["OPEdefs.m loaded successfully!"];
+Print[""];
 
 (* 定义 Virasoro 算符 T *)
 Print["Defining Virasoro operator T with central charge c..."];

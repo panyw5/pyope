@@ -7,7 +7,9 @@ Z3 W-代数 OPE 参考计算
 *)
 
 (* 加载 OPEdefs 包 *)
-<< OPEdefs`
+Import["OPEdefs.m"];
+Print["OPEdefs.m loaded successfully!"];
+Print[""];
 
 (* 定义自由场 *)
 Bosonic[\[Beta]1, \[Gamma]1];
@@ -26,7 +28,7 @@ gt = 2 NO[\[Beta]1', c1] + 3 NO[\[Beta]1, c1'];
 gw = b1;
 
 (* 计算关键 OPE *)
-Print["计算 Z3 W-代数生成元的 OPE..."];
+Print["Computing Z3 W-algebra generator OPEs..."];
 Print[""];
 
 (* 1. j0(z)j0(w) *)
@@ -92,4 +94,4 @@ results = Association[
 ];
 
 Export["tests/ref_z3_w_algebra_opes_output.json", results, "JSON"];
-Print["结果已导出到 tests/ref_z3_w_algebra_opes_output.json"];
+Print["Results exported to tests/ref_z3_w_algebra_opes_output.json"];

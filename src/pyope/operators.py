@@ -41,6 +41,28 @@ class Operator(Symbol):
         """防止 Python 把算符当作可迭代对象"""
         raise TypeError(f"{self.__class__.__name__} is not iterable")
 
+    def __mul__(self, other):
+        if isinstance(other, sp.Expr) and other.has(Operator):
+            from .exceptions import IllegalOperatorProductError
+
+            raise IllegalOperatorProductError(
+                sp.Mul(self, other, evaluate=False),
+                context=f"{self.__class__.__name__}.__mul__",
+                hint=f"Replace '{self} * {other}' with NO({self}, {other}) for normal-ordered product.",
+            )
+        return super().__mul__(other)
+
+    def __rmul__(self, other):
+        if isinstance(other, sp.Expr) and other.has(Operator):
+            from .exceptions import IllegalOperatorProductError
+
+            raise IllegalOperatorProductError(
+                sp.Mul(other, self, evaluate=False),
+                context=f"{self.__class__.__name__}.__rmul__",
+                hint=f"Replace '{other} * {self}' with NO({other}, {self}) for normal-ordered product.",
+            )
+        return super().__rmul__(other)
+
 
 class BasisOperator(Operator):
     """

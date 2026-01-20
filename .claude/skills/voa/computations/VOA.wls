@@ -13,7 +13,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 (* ::Input:: *)
 (*(* \:6ce8\:518c\:73bb\:8272\:7b97\:7b26 T *)*)
-(*Declare[{}][{T}][{}];*)
+(*Bosonic[T];*)
 
 
 (* ::Input:: *)
@@ -37,7 +37,8 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 (* ::Input:: *)
 (*(* \:6ce8\:518c\:57fa\:672c\:7b97\:7b26 *)*)
-(*Declare[{}][{\[Beta],\[Gamma]}][{b,c}];*)
+(*Bosonic[\[Beta],\[Gamma]];*)
+(*Fermionic[b,c];*)
 
 
 (* ::Input:: *)
@@ -81,7 +82,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 (* ::Input:: *)
 (*(* \:6ce8\:518c T, J *)*)
-(*Declare[{}][{T,J}][{}]*)
+(*Bosonic[T,J]*)
 
 
 (* ::Input:: *)
@@ -121,7 +122,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 
 (* ::Input:: *)
-(*Declare[{}][{Jp[_]}][{}]*)
+(*Bosonic[Jp[_]]*)
 (*OPE[Jp[a_],Jp[b_]]:=MakeOPE[(k 1/2 Delta[a,b]One[w])/(z-w)^2+I Sum[LeviCivitaTensor[3][[a,b,c]]*1/(z-w) Jp[c][w],{c,3}]+Ord[z,w,0]]*)
 
 
@@ -187,7 +188,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 (* ::Input:: *)
 (**)
-(*Declare[{}][{J3,Jplus,Jminus}][{}];*)
+(*Bosonic[J3,Jplus,Jminus];*)
 (**)
 (*OPE[J3,J3]=MakeOPE[((k/2) One[w])/(z-w)^2+Ord[z,w,0]]*)
 (*OPE[J3,Jplus]=MakeOPE[Jplus[w]/(z-w)+Ord[z,w,0]]*)
@@ -340,7 +341,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 
 (* ::Input:: *)
-(*Declare[{}][{Jp[_]}][{}]*)
+(*Bosonic[Jp[_]]*)
 (*OPE[Jp[a_],Jp[b_]]:=MakeOPE[(k 1/2 Delta[a,b]One[w])/(z-w)^2+I Sum[LeviCivitaTensor[3][[a,b,c]]*1/(z-w) Jp[c][w],{c,3}]+Ord[z,w,0]]*)
 
 
@@ -355,7 +356,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 (* ::Input:: *)
 (**)
-(*Declare[{}][{J3,Jplus,Jminus}][{}];*)
+(*Bosonic[J3,Jplus,Jminus];*)
 (**)
 (*OPE[J3,J3]=MakeOPE[((k/2) One[w])/(z-w)^2+Ord[z,w,0]]*)
 (*OPE[J3,Jplus]=MakeOPE[Jplus[w]/(z-w)+Ord[z,w,0]]*)
@@ -683,7 +684,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 (* ::Input:: *)
 (*(* \:6ce8\:518c\:4e24\:4e2a\:73bb\:8272\:7b97\:7b26 *)*)
-(*Declare[{}][{T,W}][{}]*)
+(*Bosonic[T,W]*)
 
 
 (* ::Input:: *)
@@ -714,7 +715,8 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 (* ::Input:: *)
 (*(* \:6ce8\:518c bc \[Beta]\[Gamma]  *)*)
-(*Declare[{}][{\[Beta],\[Gamma]}][{b,c}];*)
+(*Bosonic[\[Beta],\[Gamma]];*)
+(*Fermionic[b,c];*)
 (**)
 
 
@@ -794,11 +796,13 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 
 (* ::Input:: *)
-(*Declare[{}][{\[Beta],\[Gamma]}][{b,c}];*)
+(*Bosonic[\[Beta],\[Gamma]];*)
+(*Fermionic[b,c];*)
 
 
 (* ::Input:: *)
-(*Declare[{}][{\[Beta],\[Gamma]}][{b,c}];*)
+(*Bosonic[\[Beta],\[Gamma]];*)
+(*Fermionic[b,c];*)
 (*OPE[b,c]=MakeOPE[One[w]/(z-w)+Ord[z,w,0]];*)
 (*OPE[\[Beta],\[Gamma]]=MakeOPE[-(One[w]/(z-w))+Ord[z,w,0]];*)
 
@@ -1224,7 +1228,8 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 
 (* ::Input:: *)
-(*Declare[{}][{\[Beta],\[Gamma]}][{b,c}];*)
+(*Bosonic[\[Beta],\[Gamma]];*)
+(*Fermionic[b,c];*)
 (*OPE[b,c]=MakeOPE[One[w]/(z-w)+Ord[z,w,0]];*)
 (*OPE[\[Beta],\[Gamma]]=MakeOPE[One[w]/(z-w)+Ord[z,w,0]];*)
 
@@ -1271,7 +1276,7 @@ SetOptions[EvaluationNotebook[],CommonDefaultFormatTypes->{"Output"->StandardFor
 
 
 (* ::Input:: *)
-(*Declare[{}][{J[i_]}][{}]*)
+(*Bosonic[J[i_]]*)
 
 
 (* ::Input:: *)
@@ -1596,7 +1601,8 @@ a_. e1_[z_]+e2_:>(fermionicFields[e1[z]]||fermionicFields[a])&&fermionicFields[e
 ];
 
 (*
-Declare[{\[CurlyPhi]}][][{\[Psi]}]
+Bosonic[\[CurlyPhi]];
+Fermionic[\[Psi]]
 
 {IsFermionicField[\[Psi][z]]\[Equal]True,
 IsFermionicField[(\[Psi]^\[Prime])[z]]\[Equal]True,
@@ -1659,7 +1665,8 @@ If[Pochhammer[2h[O1]+2h[O2]-2m-n-1,n]!=0,
 
 
 (* ::Input:: *)
-(*Declare[{}][{\[Beta],\[Gamma]}][{b,c}]*)
+(*Bosonic[\[Beta],\[Gamma]];*)
+(*Fermionic[b,c];*)
 (*OPE[\[Beta],\[Gamma]]=MakeOPE[-One[w]/(z-w)+Ord[z,w,0]]*)
 (*OPE[b,c]=MakeOPE[One[w]/(z-w)+Ord[z,w,0]]*)
 
@@ -1676,7 +1683,7 @@ If[Pochhammer[2h[O1]+2h[O2]-2m-n-1,n]!=0,
 
 
 (* ::Input:: *)
-(*Declare[][{\[Beta],\[Gamma]}][]*)
+(*Bosonic[\[Beta],\[Gamma]]*)
 (*OPE[\[Beta],\[Gamma]]=MakeOPE[One[w]/(z-w)+Ord[z,w,0]]*)
 
 

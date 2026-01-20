@@ -35,7 +35,7 @@ Print[""];
 (* 加载 OPEdefs.m *)
 Print["Loading OPEdefs.m..."];
 SetDirectory[FileNameJoin[{Directory[], "..", "OPEdefs"}]];
-<< OPEdefs.m
+Import["OPEdefs.m"];
 Print["OPEdefs.m loaded successfully!"];
 Print[""];
 

@@ -13,7 +13,13 @@ from typing import Union, Tuple, Any
 import sympy as sp
 from sympy import Add, Mul, Number, Symbol
 
-from .operators import Operator, BasisOperator, DerivativeOperator, NormalOrderedOperator
+from .operators import (
+    Operator,
+    BasisOperator,
+    DerivativeOperator,
+    NormalOrderedOperator,
+)
+from .exceptions import IllegalOperatorProductError
 
 
 # 类型别名
@@ -31,6 +37,7 @@ class LocalOperator:
     - NormalOrderedOperator 实例
     - sympy 表达式（包含上述算符的线性组合）
     """
+
     pass
 
 
@@ -44,6 +51,7 @@ class OperatorSum(Add):
     注意：在实际使用中，sympy 会自动将算符的加法转换为 Add 表达式，
     所以这个类主要用于类型标记和文档目的。
     """
+
     pass
 
 
@@ -57,6 +65,7 @@ class OperatorProduct(Mul):
     注意：在实际使用中，sympy 会自动将算符的乘法转换为 Mul 表达式，
     所以这个类主要用于类型标记和文档目的。
     """
+
     pass
 
 
@@ -94,6 +103,40 @@ def is_local_operator(expr: Any) -> bool:
     return False
 
 
+def assert_no_illegal_operator_mul(expr: Any, context: str) -> None:
+    """
+    检测表达式中是否存在非法的算符乘积
+
+    非法的算符乘积是指 Mul 中包含两个或更多含 Operator 的因子。
+    例如：Mul(T, J)、Mul(T, Add(J, W))、Mul(NO(T,J), W) 等都是非法的。
+
+    合法的情况：
+    - Mul(2, T)：标量乘法
+    - Mul(c, T)：符号标量乘法（c 不含 Operator）
+    - Mul(2, Add(T, J))：标量乘以算符和
+
+    Args:
+        expr: 要检查的表达式
+        context: 错误发生的上下文（用于错误消息）
+
+    Raises:
+        IllegalOperatorProductError: 如果检测到非法的算符乘积
+    """
+    if not isinstance(expr, sp.Expr):
+        return
+
+    for m in expr.atoms(Mul):
+        op_like_factors = [
+            a for a in m.args if isinstance(a, sp.Expr) and a.has(Operator)
+        ]
+        if len(op_like_factors) >= 2:
+            raise IllegalOperatorProductError(
+                m,
+                context=context,
+                hint="Use NO(A, B) to represent operator products (normal ordering).",
+            )
+
+
 def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.Expr]]:
     """
     从表达式中提取标量系数和算符部分
@@ -119,31 +162,22 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
 
     # 如果是乘法表达式
     if isinstance(expr, Mul):
-        # 将 One 视为标量单位元，避免产生 coeff*One*Operator 的中间形式
-        # 否则会导致导数计算与化简阶段出现不动点递归。
         from .constants import One, ConstantOperator
 
         has_one = False
-
-        # 分离标量系数和算符部分
         scalar_parts = []
         operator_parts = []
 
         for arg in expr.args:
-            # One 作为单位元：通常丢弃（不进入 operator_parts），但要记住出现过
-            # 这样在纯标量*One 的场景还能返回 (coeff, One)，避免把 One 误当成纯数 1。
             if arg is One or (isinstance(arg, ConstantOperator) and arg == One):
                 has_one = True
                 continue
 
-            if isinstance(arg, Operator):
-                # 这是一个算符
+            if isinstance(arg, sp.Expr) and arg.has(Operator):
                 operator_parts.append(arg)
             else:
-                # 这是标量（数字或符号）
                 scalar_parts.append(arg)
 
-        # 构建标量系数
         if len(scalar_parts) == 0:
             coeff = sp.Integer(1)
         elif len(scalar_parts) == 1:
@@ -151,20 +185,19 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
         else:
             coeff = Mul(*scalar_parts)
 
-        # 构建算符部分
-        # 如果表达式中出现过 One，但没有其他算符因子，则把 One 作为算符部分保留。
-        # 这对应 VOA 中的恒等算符（identity operator），与纯数 1 不是一回事。
         if len(operator_parts) == 0 and has_one:
             operator_parts.append(One)
 
         if len(operator_parts) == 0:
-            # 纯标量
             return (coeff, sp.Integer(1))
         elif len(operator_parts) == 1:
             return (coeff, operator_parts[0])
         else:
-            # 多个算符的乘积
-            return (coeff, Mul(*operator_parts))
+            raise IllegalOperatorProductError(
+                expr,
+                context="extract_scalar_operator",
+                hint="Operator products must be represented explicitly via NO(A, B).",
+            )
 
     # 如果是加法表达式，不能简单分解
     if isinstance(expr, Add):
@@ -214,6 +247,7 @@ def get_operator_parity(expr: LocalOperatorType) -> int:
 
 
 # 为了方便，添加一些辅助函数
+
 
 def simplify_operator_expr(expr: LocalOperatorType) -> LocalOperatorType:
     """

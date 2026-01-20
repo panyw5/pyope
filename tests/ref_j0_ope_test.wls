@@ -18,13 +18,13 @@ Print["j0 = ", j0];
 Print[];
 
 (* 计算 OPE(j0, j0) *)
-Print["计算 OPE(j0, j0):"];
+Print["Computing OPE(j0, j0):"];
 ope_j0_j0 = OPE[j0, j0];
 Print["OPE(j0, j0) = ", ope_j0_j0];
 Print[];
 
 (* 提取极点 *)
-Print["极点分析:"];
+Print["Pole analysis:"];
 pole2 = GetPole[ope_j0_j0, 2];
 Print["pole(2) = ", pole2];
 Print[];
