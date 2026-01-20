@@ -509,12 +509,9 @@ def _simplify_normal_ordered(
             # 有非零极点，应用完整公式
             from .constants import Zero as ZeroConst
 
-            result = ZeroConst
-
-            # l=0 项: [AB]_0
-            pole_0 = ope_AB.pole(0)
-            if pole_0 != 0 and pole_0 != ZeroConst:
-                result = swap_sign * pole_0
+            # FIX: l=0 项是 NO(A,B)，不是 ope_AB.pole(0)
+            # 因为 OPE(A,B) 只包含奇异部分（l>=1），0 阶由 NO 定义
+            result = swap_sign * NO(right, left)
 
             # l >= 1 项: \frac{(-1)^l}{l!} \partial^l [AB]_l
             for l in range(1, max_pole + 1):

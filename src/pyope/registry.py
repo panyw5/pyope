@@ -165,9 +165,9 @@ class OPERegistry:
                 return 1 if str(left_base) < str(right_base) else -1
 
         # 基础算符相同，比较导数阶数
-        # 阶数小的在前
+        # 导数越多越靠左（阶数大的在前）
         if left_order != right_order:
-            return right_order - left_order  # 如果 right > left (order), 返回正数
+            return left_order - right_order  # 如果 left > right (order), 返回正数
 
         return 0
 
