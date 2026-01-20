@@ -284,7 +284,7 @@ def _ope_derivative_left(left: DerivativeOperator, right: Any) -> OPEData:
     """
     计算左侧导数算符的 OPE
 
-    公式：[∂^n A, B]_q = (-1)^n * (q-1)_n * [A,B]_{q-n}
+    公式 (3.3.1) [∂^n A, B]_q = (-1)^n * (q-1)_n * [A,B]_{q-n}
     其中 (q-1)_n 是 Pochhammer 符号
 
     对于 base_ope 中的 pole(p)，它对 derivative_ope 中的 pole(q) 有贡献，
@@ -323,7 +323,7 @@ def _ope_derivative_right(left: Any, right: DerivativeOperator) -> OPEData:
     """
     计算右侧导数算符的 OPE
 
-    公式：[A, ∂^n B]_q = Σ_{k=0}^{n} C(n,k) * (q-1)_k * ∂^{n-k} [A,B]_{q-k}
+    公式 (3.3.2) [A, ∂^n B]_q = Σ_{k=0}^{n} C(n,k) * (q-1)_k * ∂^{n-k} [A,B]_{q-k}
 
     简化版本（n=1）：[A, ∂B]_q = (q-1)[A,B]_{q-1} + ∂[A,B]_q
 
@@ -377,6 +377,7 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
 
     使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的 OPECompositeHelpRQ）：
 
+    eq (3.3.4)
     OPE[A, NO[B,C]] =
       (1) sign * NO[B, {AC}_q]
       + (2) NO[{AB}_q, C]
@@ -497,7 +498,7 @@ def _ope_commute(B: Any, A: Any) -> OPEData:
     max_pole = ope_AB.max_pole
 
     if max_pole == 0:
-        return OPEData({0: NO(B, A)})
+        return OPEData({})
 
     # 获取交换符号 (-1)^{|A||B|}
     parity_A = _get_parity(A)
@@ -540,6 +541,8 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
 
     使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的 OPECompositeHelpLQ）：
 
+    用 eq (3.3.18)，计算 OPE(NO[A,B], C) 的奇异部分（singular part, q >= 1）
+
     OPE[NO[A,B], C] =
       (1) Σ_{q=1}^{maxBC} Σ_{l=0}^{maxBC-q} NO[∂^l A, {BC}_{l+q}] / l!
       + sign * (2) Σ_{q=1}^{maxAC} Σ_{l=0}^{maxAC-q} NO[∂^l B, {AC}_{l+q}] / l!
@@ -553,8 +556,7 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     但 Mathematica 的实际实现 (OPECompositeHelpLQ) 是直接计算，而不是通过
     OPECommuteHelp。这是因为直接实现更高效，避免了不必要的递归。
 
-    **重要**: 此公式计算 q >= 1 的极点（奇异部分）。
-    特殊情况：当 max_AC = max_BC = 0 时，返回 q=0 的正规序乘积 NO(NO(A,B), C)。
+    特殊情况：当 max_AC = max_BC = 0 时，OPE 为正则（没有奇异部分）。
 
     Args:
         left: 正规序算符 NO(A,B)
@@ -579,7 +581,9 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     max_AC = ope_AC.max_pole
     max_BC = ope_BC.max_pole
 
-    # 如果两个 OPE 都是零，直接返回零
+    # 特殊情况：当 max_AC = max_BC = 0 时，根据 Thielemans eq. (3.3.19)
+    # [[AB]_0 C]_0 = [A[BC]_0]_0 = NO(A, NO(B,C))
+    # OPE 没有奇异部分（q >= 1），但有 q=0 的正规序乘积
     if max_AC == 0 and max_BC == 0:
         return OPEData({0: NormalOrderedOperator(left, right)})
 
