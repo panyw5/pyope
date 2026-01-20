@@ -40,26 +40,20 @@ def sympify_coefficient(coeff: Any) -> Any:
         >>> sympify_coefficient(13.0 * One)
         13*One
     """
-    # 导入算符类型（避免循环导入）
     from .operators import Operator
     from .constants import ConstantOperator
 
-    # 如果已经是算符，直接返回
     if isinstance(coeff, (Operator, ConstantOperator)):
         return coeff
 
-    # 如果已经是 SymPy 表达式，递归转换其中的浮点数
     if isinstance(coeff, sp.Expr):
-        # 如果是 SymPy 的 Float，尝试转换为 Rational
         if isinstance(coeff, sp.Float):
             rational = sp.nsimplify(coeff)
             if isinstance(rational, (sp.Rational, sp.Integer)):
                 return rational
             return coeff
 
-        # 如果是 Mul 或 Add，递归转换其参数
         if isinstance(coeff, (sp.Mul, sp.Add)):
-            # 使用 nsimplify 转换表达式中的所有浮点数
             simplified = sp.nsimplify(coeff)
             return simplified
 
@@ -131,3 +125,47 @@ def sympify_coefficient(coeff: Any) -> Any:
     except:
         # 如果 sympify 失败，返回原值
         return coeff
+
+def _multiply_bracket_operator(bracket: Any, operator: Any) -> Any:
+    """
+    计算 bracket * operator，并移除结果中的 One
+
+    当 bracket 是一个包含 One 的 sympy 表达式（如 -One = sp.Mul(-1, One)）时，
+    bracket * operator 会产生 sp.Mul(-1, One, operator)，这是不正确的。
+
+    这个函数会移除结果中的 One，返回正确的表达式。
+
+    Args:
+        bracket: bracket 系数（可能包含 One）
+        operator: 算符
+
+    Returns:
+        简化后的表达式
+    """
+    from .constants import One
+
+    # 如果 bracket 是 One，直接返回 operator
+    if bracket is One or bracket == One:
+        return operator
+
+    # 计算乘积
+    result = bracket * operator
+
+    # 如果结果是 Mul，检查是否包含 One
+    if isinstance(result, sp.Mul):
+        # 提取所有不是 One 的因子
+        new_args = []
+        for arg in result.args:
+            if arg is not One and arg != One:
+                new_args.append(arg)
+
+        # 如果移除了 One，重新构造表达式
+        if len(new_args) < len(result.args):
+            if len(new_args) == 0:
+                return operator
+            elif len(new_args) == 1:
+                return new_args[0]
+            else:
+                return sp.Mul(*new_args)
+
+    return result

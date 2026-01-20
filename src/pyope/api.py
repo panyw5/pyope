@@ -406,7 +406,7 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
 
     for q in range(1, max_AB + 1):
         bracket_AB_q = ope_AB.pole(q)
-        if bracket_AB_q != 0:
+        if bracket_AB_q is not Zero:
             ope_AB_q_C = _compute_ope(bracket_AB_q, C)
             ABC.append(ope_AB_q_C)
 
@@ -430,21 +430,13 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
 
         # 第一项: sign * NO[B, {AC}_q]
         bracket_AC_q = ope_AC.pole(q)
-        if bracket_AC_q != 0:
-            if isinstance(bracket_AC_q, Operator):
-                no_B_AC = NO(B, bracket_AC_q)
-                pole_sum = pole_sum + sign * no_B_AC
-            else:
-                pole_sum = pole_sum + sign * bracket_AC_q * B
+        if bracket_AC_q is not Zero:
+            pole_sum = pole_sum + sign * NO(B, bracket_AC_q)
 
         # 第二项: NO[{AB}_q, C]
         bracket_AB_q = ope_AB.pole(q)
-        if bracket_AB_q != 0:
-            if isinstance(bracket_AB_q, Operator):
-                no_AB_C = NO(bracket_AB_q, C)
-                pole_sum = pole_sum + no_AB_C
-            else:
-                pole_sum = pole_sum + bracket_AB_q * C
+        if bracket_AB_q is not Zero:
+            pole_sum = pole_sum + NO(bracket_AB_q, C)
 
         # 第三项: Σ_{l=Max[1,q-maxAB]}^{Min[q-1, maxABC]} C(q-1, l) {{AB}_{q-l}, C}_l
         l_min = max(1, q - max_AB)
@@ -456,7 +448,7 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
                 binom_coeff = cached_binomial(q - 1, l)
                 # 获取 ABC[q-l] 的第 l 极点
                 abc_pole = ABC[q - l - 1].pole(l)  # -1 因为数组从 0 开始
-                if abc_pole != 0:
+                if abc_pole is not Zero:
                     pole_sum = pole_sum + binom_coeff * abc_pole
 
         if pole_sum != 0:
@@ -510,7 +502,7 @@ def _ope_commute(B: Any, A: Any) -> OPEData:
         # 加上求和项: Σ_{l=q+1}^{max} ((-1)^l / (l-q)!) ∂^{(l-q)} [A B]_l
         for l in range(q + 1, max_pole + 1):
             bracket_AB_l = ope_AB.pole(l)
-            if bracket_AB_l != 0:
+            if bracket_AB_l is not Zero:
                 # 计算 ∂^{(l-q)} [A B]_l
                 deriv_order = l - q
                 deriv_bracket = derivative(bracket_AB_l, deriv_order)
@@ -592,13 +584,11 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
 
             # 获取 {BC}_{l+q}
             bracket_BC = ope_BC.pole(l + q)
-            if bracket_BC != 0:
-                # 计算 NO[∂^l A, {BC}_{l+q}] / l!
-                if isinstance(bracket_BC, Operator):
-                    no_term = NO(deriv_A, bracket_BC)
-                    pole_sum = pole_sum + no_term / cached_factorial(l)
-                else:
-                    pole_sum = pole_sum + bracket_BC * deriv_A / cached_factorial(l)
+            if bracket_BC is not Zero:
+                # 根据 Thielemans 公式，所有项都应该是 NO[∂^l A, {BC}_{l+q}] / l!
+                # 无论 bracket_BC 是什么形式（单个算符、算符和、含标量系数等）
+                pole_sum = pole_sum + \
+                    NO(deriv_A, bracket_BC) / cached_factorial(l)
 
         if pole_sum != 0:
             result._poles[q] = pole_sum
@@ -617,13 +607,11 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
 
             # 获取 {AC}_{l+q}
             bracket_AC = ope_AC.pole(l + q)
-            if bracket_AC != 0:
-                # 计算 NO[∂^l B, {AC}_{l+q}] / l!
-                if isinstance(bracket_AC, Operator):
-                    no_term = NO(deriv_B, bracket_AC)
-                    pole_sum = pole_sum + no_term / cached_factorial(l)
-                else:
-                    pole_sum = pole_sum + bracket_AC * deriv_B / cached_factorial(l)
+            if bracket_AC is not Zero:
+                # 根据 Thielemans 公式，所有项都应该是 NO[∂^l B, {AC}_{l+q}] / l!
+                # 无论 bracket_AC 是什么形式（单个算符、算符和、含标量系数等）
+                pole_sum = pole_sum + \
+                    NO(deriv_B, bracket_AC) / cached_factorial(l)
 
         if pole_sum != 0:
             # 累加到结果中
@@ -643,7 +631,7 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
 
     for q in range(1, max_AC + 1):
         bracket_AC_q = ope_AC.pole(q)
-        if bracket_AC_q != 0:
+        if bracket_AC_q is not Zero:
             ope_B_AC_q = _compute_ope(B, bracket_AC_q)
             BAC.append(ope_B_AC_q)
 
@@ -673,7 +661,7 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
                 if 1 <= q - l <= len(BAC):
                     # 获取 BAC[q-l] 的第 l 极点
                     bac_pole = BAC[q - l - 1].pole(l)  # -1 因为数组从 0 开始
-                    if bac_pole != 0:
+                    if bac_pole is not Zero:
                         pole_sum = pole_sum + bac_pole
 
             if pole_sum != 0:
@@ -838,7 +826,7 @@ def NO(left: Any, right: Any) -> Any:
 
         # 如果 OPE 有 0 阶极点，直接返回
         pole_0 = ope_result.pole(0)
-        if pole_0 != 0:
+        if pole_0 is not Zero:
             return pole_0
 
         # 如果没有 0 阶极点，检查是否为费米子
@@ -863,7 +851,7 @@ def NO(left: Any, right: Any) -> Any:
                     break
 
                 bracket = ope_result.pole(pole_index)
-                if bracket != Zero and bracket != 0:
+                if bracket is not Zero:
                     a_k = cached_bernoulli_coeff(k)
                     deriv_bracket = derivative(bracket, 2 * k + 1)
 
@@ -933,7 +921,7 @@ def _ope_commute_help(left: Any, right: Any) -> OPEData:
         for l in range(q + 1, max_pole + 1):
             # pole(l) 对 pole(q) 的贡献通过 (l-q) 阶导数
             pole_l = ope_AB.pole(l)
-            if pole_l != 0:
+            if pole_l is not Zero:
                 # 计算 D^(l-q) [pole_l] / (l-q)!
                 deriv_order = l - q
                 deriv_pole = derivative(pole_l, deriv_order)

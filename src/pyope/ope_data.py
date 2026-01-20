@@ -122,10 +122,9 @@ class OPEData:
             第 n 阶极点的系数，如果不存在则返回 Zero
         """
         from .constants import Zero
-        from .simplify import normalize_identity
 
         result = self._poles.get(n, Zero)
-        return normalize_identity(result)
+        return result
 
     def set_pole(self, n: int, coeff: Any):
         """
