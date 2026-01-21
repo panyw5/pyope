@@ -887,6 +887,41 @@ def NO(left: Any, right: Any) -> Any:
     return NormalOrderedOperator(left, right)
 
 
+def normal_product(*operators: Any) -> Any:
+    """
+    计算多个算符的嵌套正规序乘积
+
+    将 operator1 * operator2 * operator3 * ... 转化为
+    NO(operator1, NO(operator2, NO(operator3, ...)))
+
+    Args:
+        *operators: 任意数量的算符
+
+    Returns:
+        嵌套的正规序算符或简化后的表达式
+
+    Examples:
+        >>> T = BasisOperator("T")
+        >>> J = BasisOperator("J")
+        >>> normal_product(T, J, T)  # 返回 NO(T, NO(J, T))
+        >>> normal_product(T)  # 返回 T
+        >>> normal_product()  # 返回 One
+    """
+    if len(operators) == 0:
+        return One
+
+    if len(operators) == 1:
+        return operators[0]
+
+    # 从右向左构建嵌套的 NO
+    # NO(A, NO(B, NO(C, D))) 对应 A * B * C * D
+    result = operators[-1]
+    for op in reversed(operators[:-1]):
+        result = NO(op, result)
+
+    return result
+
+
 def _ope_commute_help(left: Any, right: Any) -> OPEData:
     """
     计算 OPE(B,A) from OPE(A,B) 使用对称性公式

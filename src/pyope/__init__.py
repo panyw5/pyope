@@ -39,7 +39,7 @@ from .ope_data import OPEData
 
 # Registry 和 API 模块
 from .registry import OPERegistry, ope_registry, Bosonic, Fermionic
-from .api import OPE, NO, bracket, MakeOPE
+from .api import OPE, NO, bracket, MakeOPE, normal_product
 
 # Simplification 模块
 from .simplify import simplify, collect_normal_ordered_terms, expand_nested_no
@@ -103,6 +103,7 @@ __all__ = [
     "NO",
     "bracket",
     "MakeOPE",
+    "normal_product",
     # Simplification
     "simplify",
     "collect_normal_ordered_terms",
