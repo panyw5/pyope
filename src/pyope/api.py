@@ -581,11 +581,11 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     max_AC = ope_AC.max_pole
     max_BC = ope_BC.max_pole
 
-    # 特殊情况：当 max_AC = max_BC = 0 时，根据 Thielemans eq. (3.3.19)
-    # [[AB]_0 C]_0 = [A[BC]_0]_0 = NO(A, NO(B,C))
-    # OPE 没有奇异部分（q >= 1），但有 q=0 的正规序乘积
+    # 特殊情况：当 max_AC = max_BC = 0 时，没有奇异部分
+    # 注意：虽然理论上 [[AB]_0 C]_0 = NO(A, NO(B,C)) (Thielemans eq. 3.3.19)
+    # 但 OPEData 只捕获奇异部分 (q >= 1)，正规序通过 NO() 函数获取
     if max_AC == 0 and max_BC == 0:
-        return OPEData({0: NormalOrderedOperator(left, right)})
+        return OPEData({})
 
     result = OPEData({})
 
