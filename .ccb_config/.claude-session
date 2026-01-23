@@ -1,0 +1,14 @@
+{
+  "session_id": "ai-1769144676-57186",
+  "ccb_project_id": "4940f3e21bcca213d5a56208e5fd2331087916e22bc6e9b39a6356a44af5ae96",
+  "work_dir": "/Users/lelouch/pyope",
+  "work_dir_norm": "/Users/lelouch/pyope",
+  "start_dir": "/Users/lelouch/pyope",
+  "terminal": "wezterm",
+  "active": false,
+  "started_at": "2026-01-23 13:04:24",
+  "updated_at": "2026-01-23 13:04:36",
+  "pane_id": "8",
+  "pane_title_marker": "CCB-Claude",
+  "ended_at": "2026-01-23 13:05:16"
+}

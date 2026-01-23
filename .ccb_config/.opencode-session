@@ -1,0 +1,17 @@
+{
+  "session_id": "ai-1769144676-57186",
+  "ccb_session_id": "ai-1769144676-57186",
+  "ccb_project_id": "4940f3e21bcca213d5a56208e5fd2331087916e22bc6e9b39a6356a44af5ae96",
+  "runtime_dir": "/var/folders/65/5rshty290gzg25m1qkfyvrqh0000gn/T/claude-ai-lelouch/ai-1769144676-57186/opencode",
+  "terminal": "wezterm",
+  "tmux_session": null,
+  "pane_id": "6",
+  "pane_title_marker": "CCB-OpenCode",
+  "work_dir": "/Users/lelouch/pyope",
+  "work_dir_norm": "/Users/lelouch/pyope",
+  "start_dir": "/Users/lelouch/pyope",
+  "active": false,
+  "started_at": "2026-01-23 13:04:36",
+  "start_cmd": "export CCB_MANAGED=1; export CCB_PARENT_PID=57186; export CCB_RUN_DIR=/Users/lelouch/.cache/ccb/projects/4940f3e21bcca213; export PATH=/Users/lelouch/.local/share/codex-dual/bin:/opt/homebrew/Cellar/pyenv/2.6.13/libexec:/opt/homebrew/Cellar/pyenv/2.6.13/plugins/python-build/bin:/Users/lelouch/.claude/bin:/Users/lelouch/.local/bin:/Users/lelouch/.local/bin/Antihub:/Users/lelouch/.codeium/windsurf/bin:/Users/lelouch/.antigravity/antigravity/bin:/Users/lelouch/.bun/bin:/Users/lelouch/.cargo/bin:/Users/lelouch/.pyenv/shims:/Users/lelouch/miniforge3/bin:/Users/lelouch/miniforge3/condabin:/Users/lelouch/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/TeX/texbin:/usr/local/go/bin:/Users/lelouch/.cargo/bin:/Users/lelouch/.local/bin:/Users/lelouch/.orbstack/bin:/Users/lelouch/.local/bin; opencode",
+  "ended_at": "2026-01-23 13:05:16"
+}
