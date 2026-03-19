@@ -271,7 +271,9 @@ def _simplify_normal_ordered(
     preserve_nested_structure: bool = False,
 ) -> Any:
     """
-    化简正规序算符
+    化简正规序 NO(..., ...) 算符
+    
+    其中 ... 本身可能也是 NO 算符
 
     处理：
     1. 递归化简左右算符
@@ -292,6 +294,8 @@ def _simplify_normal_ordered(
     left = simplify(no_op.left, expand_derivatives, preserve_nested_structure)
     right = simplify(no_op.right, expand_derivatives, preserve_nested_structure)
 
+    # <=================>
+    # ====== 分配律 ======
     # 如果左侧或右侧是加法，分配（保持标量系数，避免 NO 接收到 Mul）
     if isinstance(left, Add):
         terms = []
@@ -302,7 +306,9 @@ def _simplify_normal_ordered(
                     terms.append(coeff * NO(op, right))
                     continue
             terms.append(NO(term, right))
-        return sp.Add(*terms)
+        # 关键：分配后生成的新 NO 项还需要进一步规范化（重排/展开嵌套等）
+        # 否则在 Jacobi 检查等场景会残留“形式不一样但数学上为零”的表达式。
+        return simplify(sp.Add(*terms), expand_derivatives, preserve_nested_structure)
 
     if isinstance(right, Add):
         terms = []
@@ -334,7 +340,8 @@ def _simplify_normal_ordered(
                 continue
 
             terms.append(NO(left, term))
-        return sp.Add(*terms)
+        # 同上：分配后需要再跑一遍 simplify 以完成规范化。
+        return simplify(sp.Add(*terms), expand_derivatives, preserve_nested_structure)
 
     # 处理标量乘法
     if isinstance(left, Mul):
@@ -346,10 +353,17 @@ def _simplify_normal_ordered(
         if coeff != 1:
             return coeff * NO(left, op)
 
+    # ===== 分配律结束 ======
+    # <====================>
+
+    # <========================>
+    # ====== 嵌套 NO 展开 =======
+
     # 处理嵌套的 NO
-    # 如果左侧是 NO，展开为 NO(NO(A,B), C)
-    # 默认行为（preserve_nested_structure=False）：无条件展开左嵌套为右嵌套
-    # 旧行为（preserve_nested_structure=True）：只在需要重排序且有非零 OPE 时展开
+    # 如果左侧是 NO，则利用式子
+    # NO(NO(A, B), C) = NO(A, NO(B, C))
+    #                   + sum_{l=1}^maxBC 1/l NO(∂^l A, {BC}_l)
+    #                   + sum_{l=1}^maxAC sign * 1/l NO(∂^l B, {AC}_l)
     if isinstance(left, NormalOrderedOperator):
         A, B = left.left, left.right
         C = right
@@ -358,6 +372,7 @@ def _simplify_normal_ordered(
             # 新的默认行为：无条件展开左嵌套为右嵌套（使用 Jacobi 恒等式）
             from .api import OPE
 
+            # 对应 OPEdefs.m 的 maxAC, maxBC
             ope_AC = OPE(A, C)
             ope_BC = OPE(B, C) if not _operators_equal(A, B) else ope_AC
             has_nonzero_ope = ope_AC.max_pole > 0 or ope_BC.max_pole > 0
@@ -368,18 +383,13 @@ def _simplify_normal_ordered(
                 # 递归简化展开后的结果
                 return simplify(expanded, expand_derivatives, preserve_nested_structure)
             else:
-                # 没有非零 OPE，但仍需要转换为右嵌套形式
-                # NO(NO(A,B), C) -> NO(A, NO(B,C))（带符号因子）
-                from .local_operator import get_operator_parity
-
-                parity_AB = (get_operator_parity(A) + get_operator_parity(B)) % 2
-                parity_C = get_operator_parity(C)
-                sign = (-1) ** (parity_AB * parity_C)
+                # 没有非零 OPE 时，对应 OPEdefs.m 的 NOCompositeHelpLQ：
+                # NO(NO(A,B), C) -> NO(A, NO(B,C))
+                # 这里不应额外乘整体交换符号；q=0 的左复合 Jacobi 公式首项就是正号。
                 # 递归简化转换后的结果，因为 B 或 C 可能仍然是嵌套的 NO
-                result = sign * NO(A, NO(B, C))
+                result = NO(A, NO(B, C))
                 return simplify(result, expand_derivatives, preserve_nested_structure)
         else:
-            # 旧行为：只在需要重排序时才展开
             order_AC = ope_registry.compare_operators(A, C)
             if order_AC < 0:
                 # A 应该排在 C 之后，需要展开把 C 移到前面
@@ -396,8 +406,9 @@ def _simplify_normal_ordered(
                     return simplify(
                         expanded, expand_derivatives, preserve_nested_structure
                     )
-                # 没有非零 OPE，但仍需要交换顺序
-                # NO(NO(A,B), C) -> NO(C, NO(A,B)) (如果 A,B,C 都是玻色子则符号为 +1)
+                # 如果 AC 和 AB 间都**没有**非平凡 OPE，但仍需要交换顺序，利用公式
+                # (A(BC)) = (-1)^{|A| |(BC)|}((BC)A) = (-1)^{|A| |B| + |A| |C|} ((BC)A)
+                # 等价地，((AB)C) = (-1)^{|A| |B| + |A| |C|} ((BC)A)
                 from .local_operator import get_operator_parity
 
                 parity_AB = (get_operator_parity(A) + get_operator_parity(B)) % 2

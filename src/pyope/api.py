@@ -269,8 +269,13 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
 
     # 规则 10: 左侧正规序算符
     # OPE(NO(A,B), C) 使用 Jacobi 恒等式
+    # 但当 B 本身仍是复合算符时，需要像 OPEdefs.m 一样先用交换公式
+    # 把 OPE(NO(A,NO(...)), C) 改写成 OPE(C, NO(A,NO(...))) 再递归处理。
     if left_type is NormalOrderedOperator:
-        result = _ope_composite_left(left, right)
+        if isinstance(left.right, NormalOrderedOperator):
+            result = _ope_commute(left, right)
+        else:
+            result = _ope_composite_left(left, right)
         cache.put(left, right, result)
         return result
 
@@ -883,8 +888,47 @@ def NO(left: Any, right: Any) -> Any:
             return result
         # 玻色子：如果没有 0 阶极点，继续创建 NormalOrderedOperator
 
+    # 特殊情况：NO(A, NO(A, C)) 当 A 是费米子
+    # 对应 OPEdefs.m: Literal[NO[A_,NO[A_,C_]]] := 1/2 NO[NOCommuteHelp[A,A],C] /; !BosonQ[A]
+    if isinstance(right, NormalOrderedOperator) and left == right.left:
+        from .local_operator import get_operator_parity
+
+        parity = get_operator_parity(left)
+        if parity % 2 == 1:  # 费米子
+            commute = _no_commute_help(left, left)
+            if commute == 0 or commute == Zero:
+                return Zero
+            return sp.Rational(1, 2) * NO(commute, right.right)
+
     # 创建正规序算符
     return NormalOrderedOperator(left, right)
+
+
+def _no_commute_help(A: Any, B: Any) -> Any:
+    """
+    计算 NOCommuteHelp[A,B] = -Σ_{m=1}^{max} (-1)^m / m! ∂^m {AB}_m
+
+    对应 OPEdefs.m 中的 NOCommuteHelpQ。
+    此函数放在 api.py 以避免从 simplify.py 循环导入。
+
+    Args:
+        A: 第一个算符
+        B: 第二个算符
+
+    Returns:
+        对易子项（Operator 或 Zero）
+    """
+    ope_AB = _compute_ope(A, B)
+    result = Zero
+
+    for m in range(1, ope_AB.max_pole + 1):
+        pole_m = ope_AB.pole(m)
+        if pole_m != 0 and pole_m != Zero:
+            deriv_pole = derivative(pole_m, m)
+            coeff = -((-1) ** m) * sp.Rational(1, sp.factorial(m))
+            result = result + coeff * deriv_pole
+
+    return result
 
 
 def normal_product(*operators: Any) -> Any:
