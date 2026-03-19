@@ -261,14 +261,23 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
         return result
 
     # 规则 9: 右侧正规序算符
-    # OPE(A, NO(B,C)) 使用 Jacobi 恒等式
+    # OPE(A, NO(B,C)) 使用 q >= 1 的 Jacobi 公式。
+    # 对应 Thielemans/OPEdefs 的复合右算符公式：manual eq. (10)，
+    # 以及 OPErefs 3.x 里更直接的实现 OPECompositeHelpRQ。
+    # 该分支只处理奇异部分；q = 0 的正规序重排必须走 simplify() 中
+    # 的 q = 0 公式（manual eqs. (15)-(16) / shortcut eq. (19)）。
     if right_type is NormalOrderedOperator:
         result = _ope_composite_right(left, right)
         cache.put(left, right, result)
         return result
 
     # 规则 10: 左侧正规序算符
-    # OPE(NO(A,B), C) 使用 Jacobi 恒等式
+    # OPE(NO(A,B), C) 使用左复合 q >= 1 Jacobi 公式。
+    # 对应 manual eq. (18) / OPEdefs.m 的 OPECompositeHelpLQ。
+    # 使用条件：右算符 C 不能再是 composite；若 right 本身是 NO，
+    # 上一个分支已优先处理。
+    # 另外，当 B 本身还是 composite 时，OPEdefs.m 不直接套用 LQ，
+    # 而是先用交换公式 eq. (9) / OPECommuteHelp 改写后再递归处理。
     # 但当 B 本身仍是复合算符时，需要像 OPEdefs.m 一样先用交换公式
     # 把 OPE(NO(A,NO(...)), C) 改写成 OPE(C, NO(A,NO(...))) 再递归处理。
     if left_type is NormalOrderedOperator:
@@ -382,7 +391,7 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
 
     使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的 OPECompositeHelpRQ）：
 
-    eq (3.3.4)
+    eq (3.3.4) in the thesis / manual eq. (10) for q >= 1
     OPE[A, NO[B,C]] =
       (1) sign * NO[B, {AC}_q]
       + (2) NO[{AB}_q, C]
@@ -393,8 +402,10 @@ def _ope_composite_right(left: Any, right: NormalOrderedOperator) -> OPEData:
     - ABC[q] = OPE[{AB}_q, C]
     - maxq = Max[maxABC[i] + (i+1), maxAC]
 
-    **重要**: 此公式仅适用于 q >= 1（VOA-manual 公式 3.3.4）。
-    对于 q = 0 的情况（正规序乘积重排），应使用专门的算法（公式 3.3.9 和 3.3.10）。
+    **重要**: 此公式仅适用于 q >= 1（即奇异部分）。
+    对于 q = 0 的情况（正规序乘积重排），必须改用 simplify() 中
+    的 q = 0 公式：manual eqs. (15)-(16)，对应 OPEdefs.m 的
+    NOCompositeHelpRQ / NOCompositeHelpLQ。
 
     Args:
         left: 左侧算符 A
@@ -482,11 +493,12 @@ def _ope_commute(B: Any, A: Any) -> OPEData:
     """
     使用公式 3.3.3 计算 OPE(B, A) 从已知的 OPE(A, B)
 
-    公式 3.3.3:
+    公式 3.3.3 / manual eq. (9):
     [B A]_q = (-1)^{|A||B|} Σ_{l≥q} ((-1)^l / (l-q)!) ∂^{(l-q)} [A B]_l
 
-    这个函数实现了算符交换关系，用于将 OPE(左复合算符, 右算符) 转换为
-    OPE(右算符, 左复合算符)，后者可以用 _ope_composite_right 计算。
+    这个函数实现 super-commutativity，用于把不适合直接套用的 OPE
+    （例如 OPEdefs.m 中 left composite 且其右因子仍是 composite 的情形）
+    改写到可继续递归处理的方向。
 
     Args:
         B: 左侧算符（交换后在左边）
@@ -546,7 +558,7 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
 
     使用完整的 Jacobi 恒等式公式（基于 OPEdefs.m 的 OPECompositeHelpLQ）：
 
-    用 eq (3.3.18)，计算 OPE(NO[A,B], C) 的奇异部分（singular part, q >= 1）
+    用 eq (3.3.18) / manual eq. (18)，计算 OPE(NO[A,B], C) 的奇异部分。
 
     OPE[NO[A,B], C] =
       (1) Σ_{q=1}^{maxBC} Σ_{l=0}^{maxBC-q} NO[∂^l A, {BC}_{l+q}] / l!
@@ -557,9 +569,12 @@ def _ope_composite_left(left: NormalOrderedOperator, right: Any) -> OPEData:
     - sign = (-1)^(|A||B|)
     - 第三项来自 Jacobi 恒等式中的 Σ_l binom(q-1, l-1) [[AB]_l C]_{p+q-l}
 
-    **注意**: 虽然 VOA-manual 算法描述中提到"如果 A 是复合算符，使用公式 3.3.3"，
-    但 Mathematica 的实际实现 (OPECompositeHelpLQ) 是直接计算，而不是通过
-    OPECommuteHelp。这是因为直接实现更高效，避免了不必要的递归。
+    **适用条件**:
+    - 这里只实现 q >= 1 的奇异部分。
+    - 右算符 C 不能是 composite；若 C 是 NO(...)，_compute_ope() 会优先走
+      _ope_composite_right()。
+    - 若 B 本身还是 composite，OPEdefs.m 不直接应用 OPECompositeHelpLQ，
+      而是先用 eq. (9) 交换到另一侧；_compute_ope() 已在外层分支中模仿此行为。
 
     特殊情况：当 max_AC = max_BC = 0 时，OPE 为正则（没有奇异部分）。
 
@@ -836,7 +851,8 @@ def NO(left: Any, right: Any) -> Any:
         )
 
     # 特殊情况：算符与自身的正规序 NO(A, A)
-    # 根据 voa-manual.md 公式 (2.3.17)，费米子需要特殊处理
+    # 对应 manual eq. (11)：若 A 为 fermionic，则 [AA]_0 由奇数阶极点的导数决定。
+    # 这是一条 q = 0 的正规序特例，不应与 q >= 1 的 OPE 公式混用。
     if left == right:
         ope_result = _compute_ope(left, right)
 
@@ -851,7 +867,7 @@ def NO(left: Any, right: Any) -> Any:
         parity = get_operator_parity(left)
 
         if parity % 2 == 1:
-            # 费米子：应用公式 (2.3.17)
+            # 费米子：应用 manual eq. (11)
             # [AA]_0 = sum_{k>=0} a_k ∂^{2k+1} [AA]_{2k+1}
             # 其中 a_k 是 Bernoulli 系数
             max_pole = ope_result.max_pole
@@ -888,8 +904,10 @@ def NO(left: Any, right: Any) -> Any:
             return result
         # 玻色子：如果没有 0 阶极点，继续创建 NormalOrderedOperator
 
-    # 特殊情况：NO(A, NO(A, C)) 当 A 是费米子
+    # 特殊情况：NO(A, NO(A, C)) 当 A 是费米子。
     # 对应 OPEdefs.m: Literal[NO[A_,NO[A_,C_]]] := 1/2 NO[NOCommuteHelp[A,A],C] /; !BosonQ[A]
+    # 这是 q = 0 正规序重排的 fermionic shortcut，本质上来自 manual eq. (16)
+    # 与 NOCommuteHelp 的结合，不用于 q >= 1 的 Jacobi/OPE 公式。
     if isinstance(right, NormalOrderedOperator) and left == right.left:
         from .local_operator import get_operator_parity
 
@@ -908,7 +926,7 @@ def _no_commute_help(A: Any, B: Any) -> Any:
     """
     计算 NOCommuteHelp[A,B] = -Σ_{m=1}^{max} (-1)^m / m! ∂^m {AB}_m
 
-    对应 OPEdefs.m 中的 NOCommuteHelpQ。
+    对应 OPEdefs.m 中的 NOCommuteHelpQ，以及 manual eq. (14) 的导数修正项。
     此函数放在 api.py 以避免从 simplify.py 循环导入。
 
     Args:

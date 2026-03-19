@@ -272,13 +272,20 @@ def _simplify_normal_ordered(
 ) -> Any:
     """
     化简正规序 NO(..., ...) 算符
-    
+
     其中 ... 本身可能也是 NO 算符
 
     处理：
     1. 递归化简左右算符
-    2. 展开嵌套的 NO（根据 preserve_nested_structure 参数）
-    3. 排序内部算符
+    2. 对 q = 0 的正规序重排应用 Thielemans / OPEdefs 规则
+    3. 展开嵌套的 NO（根据 preserve_nested_structure 参数）
+    4. 排序内部算符
+
+    说明：
+    - 本函数只负责 q = 0 的正规序重排与规范化。
+    - q >= 1 的奇异 OPE 计算在 api.py 中完成，对应 manual eqs. (9), (10), (18)。
+    - 这里使用的 q = 0 规则对应 manual eqs. (14), (15), (16), (19)，
+      以及 OPEdefs.m 中的 NOCommuteHelpQ / NOCompositeHelpLQ / NOCompositeHelpRQ。
 
     Args:
         no_op: NormalOrderedOperator 实例
@@ -369,7 +376,8 @@ def _simplify_normal_ordered(
         C = right
 
         if not preserve_nested_structure:
-            # 新的默认行为：无条件展开左嵌套为右嵌套（使用 Jacobi 恒等式）
+            # 默认规范化路径：对左嵌套应用 q = 0 的左复合正规序公式。
+            # 对应 manual eq. (19) / OPEdefs.m 的 NOCompositeHelpLQ。
             from .api import OPE
 
             # 对应 OPEdefs.m 的 maxAC, maxBC
@@ -378,14 +386,14 @@ def _simplify_normal_ordered(
             has_nonzero_ope = ope_AC.max_pole > 0 or ope_BC.max_pole > 0
 
             if has_nonzero_ope:
-                # 有非零 OPE，使用 Jacobi 恒等式展开
+                # 只有当 OPE(A,C) 或 OPE(B,C) 含奇异部分时，eq. (19) 的修正项才非零。
                 expanded = _expand_nested_no_left(A, B, C, expand_derivatives)
                 # 递归简化展开后的结果
                 return simplify(expanded, expand_derivatives, preserve_nested_structure)
             else:
-                # 没有非零 OPE 时，对应 OPEdefs.m 的 NOCompositeHelpLQ：
-                # NO(NO(A,B), C) -> NO(A, NO(B,C))
-                # 这里不应额外乘整体交换符号；q=0 的左复合 Jacobi 公式首项就是正号。
+                # 当 OPE(A,C)=OPE(B,C)=0 时，eq. (19) 只剩首项：
+                # [[AB]_0 C]_0 = [A [BC]_0]_0。
+                # 对应 OPEdefs.m 的 NOCompositeHelpLQ 首项，不能额外乘整体 SwapSign。
                 # 递归简化转换后的结果，因为 B 或 C 可能仍然是嵌套的 NO
                 result = NO(A, NO(B, C))
                 return simplify(result, expand_derivatives, preserve_nested_structure)
@@ -406,9 +414,8 @@ def _simplify_normal_ordered(
                     return simplify(
                         expanded, expand_derivatives, preserve_nested_structure
                     )
-                # 如果 AC 和 AB 间都**没有**非平凡 OPE，但仍需要交换顺序，利用公式
-                # (A(BC)) = (-1)^{|A| |(BC)|}((BC)A) = (-1)^{|A| |B| + |A| |C|} ((BC)A)
-                # 等价地，((AB)C) = (-1)^{|A| |B| + |A| |C|} ((BC)A)
+                # 如果 A 与 C、B 与 C 都没有奇异 OPE，但又必须交换次序，
+                # 这里只剩 super-commutativity 的整体 parity 符号。
                 from .local_operator import get_operator_parity
 
                 parity_AB = (get_operator_parity(A) + get_operator_parity(B)) % 2
@@ -759,7 +766,7 @@ def _expand_nested_no_right(
     B: Any, A: Any, C: Any, expand_derivatives: bool = True
 ) -> Any:
     """
-    展开 NO(B, NO(A,C)) 使用 Thielemans eq (3.3.9) 和 (3.3.10)
+    展开 NO(B, NO(A,C)) 使用 q = 0 的右复合正规序公式。
 
     对应 OPEdefs.m 中的 NOCompositeHelpRQ
 
@@ -771,7 +778,7 @@ def _expand_nested_no_right(
 
     其中 NOCommuteHelp[B,A] = NO[B,A] - (-1)^{|A||B|} NO[A,B]
 
-    这个公式来自 Thielemans 论文 eq (3.3.9) 和 (3.3.10)：
+    这个公式对应 manual eqs. (15)-(16)（论文中对应 q = 0 Jacobi 重排）：
         eq (3.3.9): [A[BC]_0]_0 = (-1)^{|A||B|} [B[AC]_0]_0 + ...
         eq (3.3.10): ... + [([AB]_0 - (-1)^{|A||B|} [BA]_0) C]_0
 
@@ -819,10 +826,12 @@ def _compute_no_commute_help(A: Any, B: Any, expand_derivatives: bool = True) ->
     """
     计算 NOCommuteHelp[A,B] = NO[A,B] - sign * NO[B,A]
 
-    对应 OPEdefs.m 中的 NOCommuteHelpQ
+    对应 OPEdefs.m 中的 NOCommuteHelpQ，也即 manual eq. (14)
+    里除去首项 super-commutative 部分后的“导数修正项”。
+    它只适用于 q = 0 的正规序交换，不用于 q >= 1 的 OPE。
 
     使用公式: -Σ_{m=1}^∞ (-1)^m / m! ∂^m {AB}_m
-    注意：前面有负号！
+    注意：前面有负号。
 
     Args:
         A: 第一个算符

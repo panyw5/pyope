@@ -368,7 +368,9 @@ class TestSimplifyDerivativeExpansion:
         # 最终：NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(NO(T, J), d(W))
         # 注意：由于新的默认行为，左嵌套会被转换为右嵌套
         # 所以 NO(NO(T, J), d(W)) 会变成 NO(T, NO(J, d(W)))
-        expected = NO(NO(d(T), J), W) + NO(NO(T, d(J)), W) + NO(T, NO(J, d(W)))
+        # 同理：NO(NO(d(T), J), W) -> NO(d(T), NO(J, W))
+        #      NO(NO(T, d(J)), W) -> NO(T, NO(d(J), W))
+        expected = NO(d(T), NO(J, W)) + NO(T, NO(d(J), W)) + NO(T, NO(J, d(W)))
 
         assert result == expected
 
@@ -457,6 +459,63 @@ class TestSimplifyDerivativeExpansion:
         result = simplify(expr)
 
         expected = d(T) + d(J)
+        assert result == expected
+
+
+class TestNestedNOSignRegression:
+    """回归测试：嵌套 NO 的 q=0 符号与 OPEdefs.m 一致。"""
+
+    def test_left_nested_no_without_singular_ope_has_positive_leading_term(self):
+        """
+        对应 Thielemans q=0 左复合公式 / OPEdefs.m 的 NOCompositeHelpLQ 首项：
+        NO(NO(A,B), C) -> NO(A, NO(B,C))。
+
+        当 OPE(A,C) 与 OPE(B,C) 都没有奇异部分时，不应额外产生整体交换符号。
+        这是本次 sign bug 的最小回归例子。
+        """
+        b = BasisOperator("b", fermionic=True)
+        c = BasisOperator("c", fermionic=True)
+        gamma = BasisOperator("gamma")
+        Bosonic(gamma)
+
+        OPE[b, c] = MakeOPE([One])
+
+        expr = -NO(d(NO(gamma, c)), c) - NO(d(c), NO(gamma, c))
+        expected = -2 * NO(d(c), NO(c, gamma))
+
+        assert simplify(simplify(expr) - expected) == 0
+
+    def test_two_d_n4_small_sca_sign_matches_opedefs(self):
+        """
+        Mathematica / OPEdefs.m 参考值：
+            NO[gamma,NO[b,NO[c',c]]] + NO[gamma',c'] - 1/2 NO[gamma'',c]
+
+        在 pyope 的标准右嵌套规范形中，这应当化为：
+            NO(b,NO(c',NO(c,gamma))) - 1/2 NO(c,gamma'') + NO(c',gamma')
+        """
+        b = BasisOperator("b", conformal_weight=sp.Rational(3, 2), fermionic=True)
+        c = BasisOperator("c", conformal_weight=sp.Rational(-1, 2), fermionic=True)
+        beta = BasisOperator("beta", conformal_weight=1)
+        gamma = BasisOperator("gamma", conformal_weight=0)
+        Bosonic(beta, gamma)
+
+        OPE[b, c] = MakeOPE([One])
+        OPE[beta, gamma] = MakeOPE([-One])
+
+        j_minus = (
+            -NO(beta, NO(gamma, gamma))
+            - NO(gamma, NO(b, c))
+            + sp.Rational(3, 2) * d(gamma)
+        )
+        op = NO(b, NO(d(c), c))
+
+        result = simplify(OPE(j_minus, op).pole(1))
+        expected = simplify(
+            NO(gamma, NO(b, NO(d(c), c)))
+            + NO(d(gamma), d(c))
+            - sp.Rational(1, 2) * NO(d(gamma, 2), c)
+        )
+
         assert result == expected
 
 
