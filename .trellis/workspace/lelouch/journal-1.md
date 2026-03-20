@@ -215,3 +215,38 @@ Ran the full relevant test surface again and cleaned up the sparse helper implem
 
 - Prepare a commit for the local sparse relation solver changes
 - Optionally run an even broader repository test slice before commit
+
+## Session 7: Commit and push local sparse relation solver
+
+**Date**: 2026-03-21
+**Task**: `03-21-local-operator-relation-solver`
+
+### Summary
+
+Committed and pushed the local sparse relation solver work on its dedicated feature branch.
+
+### Main Changes
+
+- Staged only task-specific implementation and Trellis tracking files
+- Created commit `307121f` with message `feat: speed up local operator relation solving without basis enumeration`
+- Pushed `feat/local-operator-relation-solver` to `origin`
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `307121f` | feat: speed up local operator relation solving without basis enumeration |
+
+### Testing
+
+- [OK] Focused operator-space regression tests passed before commit
+- [OK] Branch pushed successfully to remote
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Open a pull request from `feat/local-operator-relation-solver`
+- Optionally run a broader repository test sweep before merge
