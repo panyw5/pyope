@@ -8,7 +8,7 @@ OPE 计算 API 模块
 - MakeOPE: 创建 OPEData 的便捷函数
 """
 
-from typing import Any, List, Union
+from typing import Any, List, Optional, Union, cast
 
 import sympy as sp
 from sympy import Add, Integer, Mul, Number
@@ -211,7 +211,7 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     if right_type is Mul:
         coeff, op = extract_scalar_operator(right)
         if coeff != 1:
-            result = coeff * _compute_ope(left, op)
+            result = cast(OPEData, coeff * _compute_ope(left, op))
             cache.put(left, right, result)
             return result
 
@@ -220,7 +220,7 @@ def _compute_ope(left: Any, right: Any) -> OPEData:
     if left_type is Mul:
         coeff, op = extract_scalar_operator(left)
         if coeff != 1:
-            result = coeff * _compute_ope(op, right)
+            result = cast(OPEData, coeff * _compute_ope(op, right))
             cache.put(left, right, result)
             return result
 
@@ -734,7 +734,12 @@ def _get_parity(operator: Any) -> int:
     return 0
 
 
-def bracket(left: Any, right: Any, n: int = None, anticommutator: bool = None) -> Any:
+def bracket(
+    left: Any,
+    right: Any,
+    n: Optional[int] = None,
+    anticommutator: Optional[bool] = None,
+) -> Any:
     """
     计算 bracket {AB}_n 或对易子/反对易子
 
@@ -790,7 +795,7 @@ def bracket(left: Any, right: Any, n: int = None, anticommutator: bool = None) -
         raise ValueError("Either 'n' or 'anticommutator' must be specified")
 
 
-def NO(left: Any, right: Any) -> Any:
+def _NO_binary(left: Any, right: Any) -> Any:
     """
     计算正规序乘积 (AB)
 
@@ -822,19 +827,19 @@ def NO(left: Any, right: Any) -> Any:
 
     # 处理线性性
     if isinstance(left, Add):
-        return sp.Add(*[NO(term, right) for term in left.args])
+        return sp.Add(*[_NO_binary(term, right) for term in left.args])
     if isinstance(right, Add):
-        return sp.Add(*[NO(left, term) for term in right.args])
+        return sp.Add(*[_NO_binary(left, term) for term in right.args])
 
     # 处理标量乘法
     if isinstance(left, Mul):
         coeff, op = extract_scalar_operator(left)
         if coeff != 1:
-            return coeff * NO(op, right)
+            return coeff * _NO_binary(op, right)
     if isinstance(right, Mul):
         coeff, op = extract_scalar_operator(right)
         if coeff != 1:
-            return coeff * NO(left, op)
+            return coeff * _NO_binary(left, op)
 
     from .local_operator import assert_no_illegal_operator_mul
 
@@ -916,10 +921,34 @@ def NO(left: Any, right: Any) -> Any:
             commute = _no_commute_help(left, left)
             if commute == 0 or commute == Zero:
                 return Zero
-            return sp.Rational(1, 2) * NO(commute, right.right)
+            return sp.Rational(1, 2) * _NO_binary(commute, right.right)
 
     # 创建正规序算符
     return NormalOrderedOperator(left, right)
+
+
+def NO(*operators: Any) -> Any:
+    """
+    Compute a normal-ordered product.
+
+    Supported forms:
+    - `NO(A, B)` for the binary primitive
+    - `NO(A, B, C, ...)` for right-nested products
+    - `NO([A, B, C, ...])` / `NO((A, B, C, ...))` as a convenience form
+    """
+    if len(operators) == 1 and isinstance(operators[0], (list, tuple)):
+        return NO_product(*operators[0])
+
+    if len(operators) == 0:
+        return One
+
+    if len(operators) == 1:
+        return operators[0]
+
+    if len(operators) == 2:
+        return _NO_binary(operators[0], operators[1])
+
+    return NO_product(*operators)
 
 
 def _no_commute_help(A: Any, B: Any) -> Any:
@@ -949,7 +978,7 @@ def _no_commute_help(A: Any, B: Any) -> Any:
     return result
 
 
-def normal_product(*operators: Any) -> Any:
+def NO_product(*operators: Any) -> Any:
     """
     计算多个算符的嵌套正规序乘积
 
@@ -965,9 +994,9 @@ def normal_product(*operators: Any) -> Any:
     Examples:
         >>> T = BasisOperator("T")
         >>> J = BasisOperator("J")
-        >>> normal_product(T, J, T)  # 返回 NO(T, NO(J, T))
-        >>> normal_product(T)  # 返回 T
-        >>> normal_product()  # 返回 One
+        >>> NO_product(T, J, T)  # 返回 NO(T, NO(J, T))
+        >>> NO_product(T)  # 返回 T
+        >>> NO_product()  # 返回 One
     """
     if len(operators) == 0:
         return One
@@ -979,9 +1008,14 @@ def normal_product(*operators: Any) -> Any:
     # NO(A, NO(B, NO(C, D))) 对应 A * B * C * D
     result = operators[-1]
     for op in reversed(operators[:-1]):
-        result = NO(op, result)
+        result = _NO_binary(op, result)
 
     return result
+
+
+def normal_product(*operators: Any) -> Any:
+    """Backward-compatible alias of `NO_product`."""
+    return NO_product(*operators)
 
 
 def _ope_commute_help(left: Any, right: Any) -> OPEData:

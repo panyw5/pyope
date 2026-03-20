@@ -54,6 +54,9 @@ Documentation = "https://github.com/yourusername/pyope"
 [tool.setuptools]
 package-dir = {"" = "src"}
 
+[tool.setuptools.package-data]
+pyope = ["py.typed", "*.pyi"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

@@ -47,6 +47,18 @@ class Operator(Symbol):
 
         return _realize_expr(self)
 
+    def simplifyNO(
+        self, expand_derivatives: bool = True, preserve_nested_structure: bool = False
+    ):
+        """使用 pyope 的正规序化简规则化简当前算符/表达式。"""
+        from .simplify import simplify as pyope_simplify
+
+        return pyope_simplify(
+            self,
+            expand_derivatives=expand_derivatives,
+            preserve_nested_structure=preserve_nested_structure,
+        )
+
     def __mul__(self, other):
         if isinstance(other, sp.Expr) and other.has(Operator):
             from .exceptions import IllegalOperatorProductError
@@ -454,11 +466,30 @@ def _sympy_expr_realize(self):
     return _realize_expr(self)
 
 
+def _sympy_expr_simplify_no(
+    self, expand_derivatives: bool = True, preserve_nested_structure: bool = False
+):
+    """使用 pyope 规则化简 SymPy 算符表达式。"""
+    from .simplify import simplify as pyope_simplify
+
+    return pyope_simplify(
+        self,
+        expand_derivatives=expand_derivatives,
+        preserve_nested_structure=preserve_nested_structure,
+    )
+
+
 if not hasattr(sp.Add, "realize"):
     setattr(sp.Add, "realize", _sympy_expr_realize)
 
 if not hasattr(sp.Mul, "realize"):
     setattr(sp.Mul, "realize", _sympy_expr_realize)
+
+if not hasattr(sp.Add, "simplifyNO"):
+    setattr(sp.Add, "simplifyNO", _sympy_expr_simplify_no)
+
+if not hasattr(sp.Mul, "simplifyNO"):
+    setattr(sp.Mul, "simplifyNO", _sympy_expr_simplify_no)
 
 
 # 辅助函数

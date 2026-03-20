@@ -8,6 +8,8 @@ import sympy as sp
 from pyope import (
     BasisOperator,
     NO,
+    NO_product,
+    NormalOrderedOperator,
     One,
     Zero,
     normal_product,
@@ -37,6 +39,15 @@ def test_normal_product_two_operators():
     expected = NO(T, J)
 
     assert result == expected
+
+
+def test_no_binary_returns_normal_ordered_operator_instance():
+    A = BasisOperator("A_no_binary_type", 1)
+    B = BasisOperator("B_no_binary_type", 1)
+
+    result = NO(A, B)
+
+    assert isinstance(result, NormalOrderedOperator)
 
 
 def test_normal_product_three_operators():
@@ -149,6 +160,46 @@ def test_normal_product_many_operators():
         expected = NO(op, expected)
 
     assert result == expected
+
+
+def test_no_accepts_multiple_operators():
+    A = BasisOperator("A_no_multi", 1)
+    B = BasisOperator("B_no_multi", 1)
+    C = BasisOperator("C_no_multi", 1)
+    D = BasisOperator("D_no_multi", 1)
+
+    result = NO(A, B, C, D)
+
+    assert result == NO(A, NO(B, NO(C, D)))
+
+
+def test_no_accepts_operator_list():
+    X = BasisOperator("X_no_list", 1)
+    Y = BasisOperator("Y_no_list", 1)
+    Z = BasisOperator("Z_no_list", 1)
+    U = BasisOperator("U_no_list", 1)
+
+    result = NO([X, Y, Z, U])
+
+    assert result == NO(X, NO(Y, NO(Z, U)))
+
+
+def test_no_product_matches_backward_compatible_alias():
+    T = BasisOperator("T_no_product", 2)
+    J = BasisOperator("J_no_product", 1)
+    W = BasisOperator("W_no_product", 3)
+
+    assert NO_product(T, J, W) == normal_product(T, J, W)
+    assert NO_product(T, J, W) == NO(T, J, W)
+
+
+def test_no_empty_and_singleton_forms():
+    T = BasisOperator("T_no_single", 2)
+
+    assert NO() == One
+    assert NO(T) == T
+    assert NO([]) == One
+    assert NO([T]) == T
 
 
 if __name__ == "__main__":
