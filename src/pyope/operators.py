@@ -8,7 +8,7 @@
 - NormalOrderedOperator: 正规序算符
 """
 
-from typing import Optional, Tuple, Any
+from typing import Any, Optional, Tuple
 import sympy as sp
 from sympy.core.symbol import Symbol
 
@@ -40,6 +40,12 @@ class Operator(Symbol):
     def __iter__(self):
         """防止 Python 把算符当作可迭代对象"""
         raise TypeError(f"{self.__class__.__name__} is not iterable")
+
+    def realize(self):
+        """展开当前算符中的 realized generator。"""
+        from .operator_spaces import _realize_expr
+
+        return _realize_expr(self)
 
     def __mul__(self, other):
         if isinstance(other, sp.Expr) and other.has(Operator):
@@ -78,12 +84,18 @@ class BasisOperator(Operator):
         indices: 索引元组（仅当 indexed=True 时使用）
     """
 
+    _bosonic: bool
+    _indexed: bool
+    _conformal_weight: Optional[float]
+    _indices: Tuple
+    _base_name: str
+
     def __new__(
         cls,
         name: str,
-        fermionic: bool = None,
+        fermionic: Any = None,
         indexed: bool = False,
-        conformal_weight: Optional[float] = None,
+        conformal_weight: Optional[Any] = None,
         indices: Optional[Tuple] = None,
         base_name: Optional[str] = None,
         **assumptions,
@@ -102,7 +114,17 @@ class BasisOperator(Operator):
         Note:
             - 如果 fermionic 未指定，默认为玻色子
             - 推荐用法：不指定参数（玻色子）或 fermionic=True（费米子）
+            - 向后兼容：`BasisOperator("T", 2)` 会被解释为
+              `BasisOperator("T", conformal_weight=2)`
         """
+        if (
+            conformal_weight is None
+            and fermionic is not None
+            and not isinstance(fermionic, bool)
+        ):
+            conformal_weight = fermionic
+            fermionic = None
+
         obj = Operator.__new__(cls, name, **assumptions)
 
         # 处理 fermionic 参数
@@ -219,6 +241,9 @@ class DerivativeOperator(Operator):
         order: 导数阶数
     """
 
+    _base: Operator
+    _order: int
+
     def __new__(cls, base: Operator, order: int = 1, **assumptions):
         """
         创建导数算符
@@ -318,6 +343,10 @@ class NormalOrderedOperator(Operator):
         factors: 算符元组 (left, right)
     """
 
+    _left: Operator
+    _right: Operator
+    _factors: Tuple[Operator, Operator]
+
     def __new__(cls, left: Operator, right: Operator, **assumptions):
         """
         创建正规序算符
@@ -405,11 +434,37 @@ class NormalOrderedOperator(Operator):
         # 使用括号表示正规序
         return rf"\left({left_latex} {right_latex}\right)"
 
+    def simplifyNO(
+        self, expand_derivatives: bool = True, preserve_nested_structure: bool = False
+    ):
+        """使用 pyope 的正规序化简规则化简当前 NO 对象。"""
+        from .simplify import simplify as pyope_simplify
+
+        return pyope_simplify(
+            self,
+            expand_derivatives=expand_derivatives,
+            preserve_nested_structure=preserve_nested_structure,
+        )
+
+
+def _sympy_expr_realize(self):
+    """展开 SymPy 算符表达式中的 realized generator。"""
+    from .operator_spaces import _realize_expr
+
+    return _realize_expr(self)
+
+
+if not hasattr(sp.Add, "realize"):
+    setattr(sp.Add, "realize", _sympy_expr_realize)
+
+if not hasattr(sp.Mul, "realize"):
+    setattr(sp.Mul, "realize", _sympy_expr_realize)
+
 
 # 辅助函数
 
 
-def d(operator, order: int = 1):
+def d(operator: Any, order: int = 1):
     """
     计算算符的导数
 
@@ -487,7 +542,7 @@ def d(operator, order: int = 1):
     return Zero
 
 
-def dn(order: int, operator):
+def dn(order: int, operator: Any):
     """
     计算算符的 n 阶导数（参数顺序与 d 不同）
 

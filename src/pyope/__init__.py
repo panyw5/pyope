@@ -11,7 +11,7 @@ __version__ = "0.1.0"
 __author__ = "PyOPE Contributors"
 
 # 已实现的模块
-from .api import NO, OPE, MakeOPE, bracket, normal_product
+from .api import NO, NO_product, OPE, MakeOPE, bracket, normal_product
 
 # 缓存模块
 from .cache import get_ope_cache
@@ -35,22 +35,20 @@ from .local_operator import (
     simplify_operator_expr,
 )
 
-# Null states 计算模块
-from .null_states import (
-    CoefficientExtractor,
-    CoefficientMatrixBuilder,
-    FockSpaceBasis,
-    GroupedNullStatesCalculator,
-    NullStatesCalculator,
-    OperatorEnumerator,
-    OperatorExpander,
-    QuantumNumberCalculator,
-    QuantumNumberGrouper,
-    calculate_null_states,
-    enumerate_fock_basis,
-    extract_coefficients,
-)
 from .ope_data import OPEData
+from .operator_spaces import (
+    C2NullSearcher,
+    C2Space,
+    DescendantSpace,
+    LocalOperatorBasis,
+    make_realized,
+    RealizedGenerator,
+    SingularVectorAnalyzer,
+    independent_under_realization,
+    realize,
+    realize_and_simplify,
+    realized_coordinates,
+)
 from .operators import (
     BasisOperator,
     DerivativeOperator,
@@ -61,10 +59,15 @@ from .operators import (
 )
 
 # Registry 和 API 模块
-from .registry import Bosonic, Fermionic, OPERegistry, ope_registry
+from .registry import Bosonic, Fermionic, OPERegistry, clear_registry, ope_registry
 
 # Simplification 模块
-from .simplify import collect_normal_ordered_terms, expand_nested_no, simplify
+from .simplify import (
+    collect_normal_ordered_terms,
+    combine_normal_ordered_terms,
+    expand_nested_no,
+    simplify,
+)
 
 __all__ = [
     # Version info
@@ -93,37 +96,38 @@ __all__ = [
     "Delta",
     # OPE Data
     "OPEData",
+    "C2NullSearcher",
+    "C2Space",
+    "DescendantSpace",
+    "LocalOperatorBasis",
+    "make_realized",
+    "RealizedGenerator",
+    "SingularVectorAnalyzer",
+    "realize",
+    "realize_and_simplify",
+    "realized_coordinates",
+    "independent_under_realization",
     # Registry
     "OPERegistry",
     "ope_registry",
+    "clear_registry",
     "Bosonic",
     "Fermionic",
     # API
     "OPE",
     "NO",
+    "NO_product",
     "bracket",
     "MakeOPE",
     "normal_product",
     # Simplification
     "simplify",
     "collect_normal_ordered_terms",
+    "combine_normal_ordered_terms",
     "expand_nested_no",
     # Jacobi identity
     "check_jacobi_identity",
     "verify_jacobi_identity",
     # Cache
     "get_ope_cache",
-    # Null states
-    "CoefficientExtractor",
-    "FockSpaceBasis",
-    "OperatorExpander",
-    "CoefficientMatrixBuilder",
-    "NullStatesCalculator",
-    "QuantumNumberCalculator",
-    "QuantumNumberGrouper",
-    "GroupedNullStatesCalculator",
-    "OperatorEnumerator",
-    "extract_coefficients",
-    "enumerate_fock_basis",
-    "calculate_null_states",
 ]
