@@ -206,6 +206,42 @@ def _combine_like_terms_preserving_metadata(expr: Any) -> Any:
     return sp.Add(*rebuilt_terms)
 
 
+def _zero_relations_from_vectors(
+    expressions: Iterable[Any], vector_getter: Any
+) -> list[dict[str, Any]]:
+    ordered = list(expressions)
+    if not ordered:
+        return []
+
+    columns = [vector_getter(expr) for expr in ordered]
+    matrix = sp.Matrix.hstack(*columns)
+    relations = []
+
+    for basis_vector in matrix.nullspace():
+        coefficients = [
+            sp.sympify(basis_vector[index, 0]) for index in range(len(ordered))
+        ]
+        terms = [
+            (expr, coeff) for expr, coeff in zip(ordered, coefficients) if coeff != 0
+        ]
+        relation = (
+            sp.Add(*[coeff * expr for expr, coeff in terms], evaluate=False)
+            if terms
+            else Zero
+        )
+        relations.append(
+            {
+                "operators": ordered,
+                "coefficients": coefficients,
+                "coefficient_vector": basis_vector,
+                "terms": terms,
+                "relation": relation,
+            }
+        )
+
+    return relations
+
+
 def _realize_expr(expr: Any) -> Any:
     """Recursively expand realized generators into their underlying expressions."""
     if isinstance(expr, RealizedGenerator):
@@ -259,6 +295,25 @@ def realized_coordinates(
 ) -> sp.Matrix:
     """Project an expression to coordinates after realization expansion."""
     return free_field_basis.coordinates(realize_and_simplify(expr), weight=weight)
+
+
+def list_zero_relations(
+    expressions: Iterable[Any],
+    basis_builder: "LocalOperatorBasis",
+    weight: Any = None,
+) -> list[dict[str, Any]]:
+    """Return a basis of linear relations among expressions in a basis."""
+
+    def vector_getter(expr: Any) -> sp.Matrix:
+        target_weight = weight
+        if target_weight is None:
+            target_weight = _get_conformal_weight(expr)
+            if target_weight is None:
+                raise ValueError("Could not infer conformal weight; provide weight")
+
+        return basis_builder.coordinates(expr, weight=target_weight)
+
+    return _zero_relations_from_vectors(expressions, vector_getter)
 
 
 def independent_under_realization(
@@ -391,6 +446,18 @@ class LocalOperatorBasis:
         """Filter expressions by linear independence after realization."""
         return independent_under_realization(
             expressions, free_field_basis, weight=weight
+        )
+
+    def list_zero_relations(
+        self,
+        expressions: Iterable[Any],
+        weight: Any = None,
+    ) -> list[dict[str, Any]]:
+        """Return a basis of linear relations among expressions in this basis."""
+        return list_zero_relations(
+            expressions,
+            self,
+            weight=weight,
         )
 
     @lru_cache(maxsize=None)

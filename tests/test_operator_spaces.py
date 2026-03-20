@@ -6,6 +6,7 @@ from pyope import (
     Bosonic,
     independent_under_realization,
     LocalOperatorBasis,
+    list_zero_relations,
     make_realized,
     NO,
     One,
@@ -207,6 +208,36 @@ def test_realize_and_simplify_produces_free_field_expression():
     realized = realize_and_simplify(d(W))
 
     assert realized == 2 * NO(d(J), J)
+
+
+def test_list_zero_relations_finds_dependent_linear_combination():
+    J = BasisOperator("J_zero_relation", conformal_weight=1)
+    Bosonic(J)
+
+    basis = LocalOperatorBasis([J], max_weight=2)
+    jj = NO(J, J)
+    expressions = [jj, 2 * jj, d(J)]
+
+    relations = list_zero_relations(expressions, basis, weight=2)
+
+    assert len(relations) == 1
+    relation = relations[0]
+
+    assert relation["operators"] == expressions
+    assert relation["coefficients"] == [-2, 1, 0]
+    assert relation["terms"] == [(jj, -2), (2 * jj, 1)]
+    assert basis.canonicalize(relation["relation"]) == 0
+
+
+def test_local_operator_basis_list_zero_relations_returns_same_kernel_basis():
+    J = BasisOperator("J_zero_relation_method", conformal_weight=1)
+    Bosonic(J)
+
+    basis = LocalOperatorBasis([J], max_weight=2)
+    relations = basis.list_zero_relations([NO(J, J), 2 * NO(J, J), d(J)], weight=2)
+
+    assert len(relations) == 1
+    assert relations[0]["coefficients"] == [-2, 1, 0]
 
 
 def test_independent_under_realization_filters_dependent_abstract_basis():
