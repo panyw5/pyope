@@ -118,6 +118,290 @@ def _normalize_weight(value: Any) -> sp.Expr:
     return sp.nsimplify(value)
 
 
+def _normalize_max_occurence(value: Any) -> int | None:
+    """Normalize an occurrence cutoff for nonpositive bosonic atoms."""
+    if value is None:
+        return None
+
+    normalized = sp.nsimplify(value)
+    if normalized.is_integer is False:
+        raise ValueError("max_occurence must be a nonnegative integer")
+
+    try:
+        max_occurence = int(normalized)
+    except TypeError as exc:
+        raise ValueError("max_occurence must be a nonnegative integer") from exc
+
+    if max_occurence < 0:
+        raise ValueError("max_occurence must be a nonnegative integer")
+
+    return max_occurence
+
+
+def _independent_from_vectors(
+    expressions: Iterable[Any], vector_getter: Any
+) -> list[Any]:
+    ordered = sorted(set(expressions), key=sp.srepr)
+    independent = []
+
+    if ordered:
+        sample_vector = vector_getter(ordered[0])
+        if isinstance(sample_vector, dict):
+            eliminator = _SparseIndependentEliminator()
+            if sample_vector:
+                if eliminator.insert(sample_vector):
+                    independent.append(ordered[0])
+
+            for expr in ordered[1:]:
+                vector = vector_getter(expr)
+                if eliminator.insert(vector):
+                    independent.append(expr)
+            return independent
+
+    columns = []
+
+    for expr in ordered:
+        vector = vector_getter(expr)
+        is_zero_vector = (
+            not vector
+            if isinstance(vector, dict)
+            else vector == sp.zeros(*vector.shape)
+        )
+        if not columns:
+            if not is_zero_vector:
+                independent.append(expr)
+                columns.append(vector)
+            continue
+
+        if isinstance(vector, dict):
+            current, _ = _matrix_from_sparse_vectors(columns)
+            candidate, _ = _matrix_from_sparse_vectors([*columns, vector])
+        else:
+            current = sp.Matrix.hstack(*columns)
+            candidate = sp.Matrix.hstack(*columns, vector)
+        if candidate.rank() > current.rank():
+            independent.append(expr)
+            columns.append(vector)
+
+    return independent
+
+
+class _SparseIndependentEliminator:
+    """Incremental sparse elimination for independence checks."""
+
+    def __init__(self) -> None:
+        self._pivot_vectors: dict[Any, dict[Any, sp.Expr]] = {}
+        self._pivot_order: list[Any] = []
+
+    def _pivot_key(self, monomial: Any) -> str:
+        return sp.srepr(monomial)
+
+    def _leading_term(self, vector: dict[Any, sp.Expr]) -> tuple[Any, sp.Expr] | None:
+        if not vector:
+            return None
+        monomial = max(vector, key=self._pivot_key)
+        return monomial, vector[monomial]
+
+    def reduce(self, vector: dict[Any, sp.Expr]) -> dict[Any, sp.Expr]:
+        reduced, _ = self.reduce_with_coefficients(vector)
+        return reduced
+
+    def reduce_with_coefficients(
+        self, vector: dict[Any, sp.Expr]
+    ) -> tuple[dict[Any, sp.Expr], dict[Any, sp.Expr]]:
+        reduced = {
+            monomial: sp.sympify(coeff)
+            for monomial, coeff in vector.items()
+            if coeff != 0
+        }
+        coefficients: dict[Any, sp.Expr] = {}
+
+        while reduced:
+            leading = self._leading_term(reduced)
+            if leading is None:
+                break
+
+            pivot_monomial, pivot_coeff = leading
+            pivot_vector = self._pivot_vectors.get(pivot_monomial)
+            if pivot_vector is None:
+                break
+
+            factor = sp.sympify(pivot_coeff / pivot_vector[pivot_monomial])
+            coefficients[pivot_monomial] = sp.sympify(
+                coefficients.get(pivot_monomial, 0) + factor
+            )
+            for monomial, coeff in pivot_vector.items():
+                updated = sp.sympify(reduced.get(monomial, 0) - factor * coeff)
+                if updated == 0:
+                    reduced.pop(monomial, None)
+                else:
+                    reduced[monomial] = updated
+
+        coefficients = {
+            monomial: coeff for monomial, coeff in coefficients.items() if coeff != 0
+        }
+        return reduced, coefficients
+
+    def insert(self, vector: dict[Any, sp.Expr]) -> bool:
+        reduced = self.reduce(vector)
+        return self.insert_reduced(reduced)
+
+    def insert_reduced(self, reduced: dict[Any, sp.Expr]) -> bool:
+        leading = self._leading_term(reduced)
+        if leading is None:
+            return False
+
+        pivot_monomial, pivot_coeff = leading
+        normalized = {
+            monomial: sp.sympify(coeff / pivot_coeff)
+            for monomial, coeff in reduced.items()
+        }
+        self._pivot_vectors[pivot_monomial] = normalized
+        self._pivot_order.append(pivot_monomial)
+        return True
+
+    @property
+    def pivot_order(self) -> list[Any]:
+        return list(self._pivot_order)
+
+
+def _canonical_terms(expr: Any, canonicalizer: Any) -> dict[Any, sp.Expr]:
+    """Return a sparse canonical expansion of an operator expression."""
+    canonical = canonicalizer(expr)
+    if canonical == Zero:
+        return {}
+
+    terms = {}
+    for operator, coeff in collect_operator_terms(canonical).items():
+        coeff = sp.sympify(coeff)
+        if coeff == 0:
+            continue
+
+        monomial = One if operator == 1 else operator
+        terms[monomial] = sp.sympify(terms.get(monomial, 0) + coeff)
+
+    return {monomial: coeff for monomial, coeff in terms.items() if coeff != 0}
+
+
+def _matrix_from_sparse_vectors(
+    vectors: Iterable[dict[Any, sp.Expr]],
+) -> tuple[sp.Matrix, list[Any]]:
+    """Build a dense matrix from sparse vectors over canonical monomials."""
+    vector_list = list(vectors)
+    if not vector_list:
+        return sp.zeros(0, 0), []
+
+    monomials = sorted(
+        {monomial for vector in vector_list for monomial in vector}, key=sp.srepr
+    )
+    if not monomials:
+        return sp.zeros(0, len(vector_list)), []
+
+    row_index = {monomial: idx for idx, monomial in enumerate(monomials)}
+    matrix = sp.zeros(len(monomials), len(vector_list))
+
+    for col, vector in enumerate(vector_list):
+        for monomial, coeff in vector.items():
+            matrix[row_index[monomial], col] = coeff
+
+    return matrix, monomials
+
+
+def _compressed_matrix_from_sparse_vectors(
+    vectors: Iterable[dict[Any, sp.Expr]],
+) -> tuple[sp.Matrix, list[Any]]:
+    """Build a compressed coordinate matrix using incremental sparse pivots."""
+    vector_list = list(vectors)
+    if not vector_list:
+        return sp.zeros(0, 0), []
+
+    eliminator = _SparseIndependentEliminator()
+    coordinate_columns: list[dict[Any, sp.Expr]] = []
+
+    for vector in vector_list:
+        reduced, coefficients = eliminator.reduce_with_coefficients(vector)
+        leading = eliminator._leading_term(reduced)
+
+        column = dict(coefficients)
+        if leading is not None:
+            pivot_monomial, pivot_coeff = leading
+            eliminator.insert_reduced(reduced)
+            column[pivot_monomial] = sp.sympify(
+                column.get(pivot_monomial, 0) + pivot_coeff
+            )
+
+        coordinate_columns.append(
+            {key: value for key, value in column.items() if value != 0}
+        )
+
+    pivots = eliminator.pivot_order
+    if not pivots:
+        return sp.zeros(0, len(vector_list)), []
+
+    row_index = {pivot: idx for idx, pivot in enumerate(pivots)}
+    matrix = sp.zeros(len(pivots), len(vector_list))
+    for col, vector in enumerate(coordinate_columns):
+        for pivot, coeff in vector.items():
+            matrix[row_index[pivot], col] = coeff
+
+    return matrix, pivots
+
+
+def _zero_relations_from_vectors(
+    expressions: Iterable[Any], vector_getter: Any
+) -> list[dict[str, Any]]:
+    ordered = list(expressions)
+    if not ordered:
+        return []
+
+    columns = [vector_getter(expr) for expr in ordered]
+    if not columns:
+        return []
+
+    first = columns[0]
+    if isinstance(first, dict):
+        matrix, _ = _compressed_matrix_from_sparse_vectors(columns)
+    else:
+        matrix = sp.Matrix.hstack(*columns)
+    relations = []
+
+    for basis_vector in matrix.nullspace():
+        coefficients = [
+            sp.sympify(basis_vector[index, 0]) for index in range(len(ordered))
+        ]
+        terms = [
+            (expr, coeff) for expr, coeff in zip(ordered, coefficients) if coeff != 0
+        ]
+        relation = (
+            sp.Add(*[coeff * expr for expr, coeff in terms], evaluate=False)
+            if terms
+            else Zero
+        )
+        relations.append(
+            {
+                "operators": ordered,
+                "coefficients": coefficients,
+                "coefficient_vector": basis_vector,
+                "terms": terms,
+                "relation": relation,
+            }
+        )
+
+    return relations
+
+
+def _validate_expression_weight(expr: Any, weight: Any = None) -> None:
+    """Validate an expression against an optional requested conformal weight."""
+    if weight is None:
+        return
+
+    expr_weight = _get_conformal_weight(expr)
+    if expr_weight is not None and not _weights_equal(
+        expr_weight, _normalize_weight(weight)
+    ):
+        raise ValueError("Expression weight does not match requested weight")
+
+
 def _weights_equal(left: Any, right: Any) -> bool:
     return sp.simplify(_normalize_weight(left) - _normalize_weight(right)) == 0
 
@@ -206,42 +490,6 @@ def _combine_like_terms_preserving_metadata(expr: Any) -> Any:
     return sp.Add(*rebuilt_terms)
 
 
-def _zero_relations_from_vectors(
-    expressions: Iterable[Any], vector_getter: Any
-) -> list[dict[str, Any]]:
-    ordered = list(expressions)
-    if not ordered:
-        return []
-
-    columns = [vector_getter(expr) for expr in ordered]
-    matrix = sp.Matrix.hstack(*columns)
-    relations = []
-
-    for basis_vector in matrix.nullspace():
-        coefficients = [
-            sp.sympify(basis_vector[index, 0]) for index in range(len(ordered))
-        ]
-        terms = [
-            (expr, coeff) for expr, coeff in zip(ordered, coefficients) if coeff != 0
-        ]
-        relation = (
-            sp.Add(*[coeff * expr for expr, coeff in terms], evaluate=False)
-            if terms
-            else Zero
-        )
-        relations.append(
-            {
-                "operators": ordered,
-                "coefficients": coefficients,
-                "coefficient_vector": basis_vector,
-                "terms": terms,
-                "relation": relation,
-            }
-        )
-
-    return relations
-
-
 def _realize_expr(expr: Any) -> Any:
     """Recursively expand realized generators into their underlying expressions."""
     if isinstance(expr, RealizedGenerator):
@@ -291,27 +539,45 @@ def realize_and_simplify(expr: Any) -> Any:
 
 
 def realized_coordinates(
-    expr: Any, free_field_basis: "LocalOperatorBasis", weight: Any = None
+    expr: Any,
+    free_field_basis: "LocalOperatorBasis",
+    weight: Any = None,
+    max_occurence: Any = None,
 ) -> sp.Matrix:
     """Project an expression to coordinates after realization expansion."""
-    return free_field_basis.coordinates(realize_and_simplify(expr), weight=weight)
+    return free_field_basis.coordinates(
+        realize_and_simplify(expr),
+        weight=weight,
+        max_occurence=max_occurence,
+    )
+
+
+def list_independent_ops(
+    expressions: Iterable[Any],
+    basis_builder: "LocalOperatorBasis",
+    weight: Any = None,
+    max_occurence: Any = None,
+) -> list[Any]:
+    """Return a linearly independent subset via local canonical expansions."""
+
+    def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
+        _validate_expression_weight(expr, weight)
+        return _canonical_terms(expr, basis_builder.canonicalize)
+
+    return _independent_from_vectors(expressions, vector_getter)
 
 
 def list_zero_relations(
     expressions: Iterable[Any],
     basis_builder: "LocalOperatorBasis",
     weight: Any = None,
+    max_occurence: Any = None,
 ) -> list[dict[str, Any]]:
-    """Return a basis of linear relations among expressions in a basis."""
+    """Return a basis of linear relations via local canonical expansions."""
 
-    def vector_getter(expr: Any) -> sp.Matrix:
-        target_weight = weight
-        if target_weight is None:
-            target_weight = _get_conformal_weight(expr)
-            if target_weight is None:
-                raise ValueError("Could not infer conformal weight; provide weight")
-
-        return basis_builder.coordinates(expr, weight=target_weight)
+    def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
+        _validate_expression_weight(expr, weight)
+        return _canonical_terms(expr, basis_builder.canonicalize)
 
     return _zero_relations_from_vectors(expressions, vector_getter)
 
@@ -320,13 +586,11 @@ def independent_under_realization(
     expressions: Iterable[Any],
     free_field_basis: "LocalOperatorBasis",
     weight: Any = None,
+    max_occurence: Any = None,
 ) -> list[Any]:
     """Return expressions that stay linearly independent after realization."""
-    ordered = sorted(set(expressions), key=sp.srepr)
-    independent = []
-    columns = []
 
-    for expr in ordered:
+    def vector_getter(expr: Any) -> sp.Matrix:
         target_weight = weight
         if target_weight is None:
             target_weight = _get_conformal_weight(expr)
@@ -335,41 +599,57 @@ def independent_under_realization(
                     "Could not infer conformal weight under realization; provide weight"
                 )
 
-        vector = realized_coordinates(expr, free_field_basis, weight=target_weight)
-        if not columns:
-            if vector != sp.zeros(*vector.shape):
-                independent.append(expr)
-                columns.append(vector)
-            continue
+        return realized_coordinates(
+            expr,
+            free_field_basis,
+            weight=target_weight,
+            max_occurence=max_occurence,
+        )
 
-        current = sp.Matrix.hstack(*columns)
-        candidate = sp.Matrix.hstack(*columns, vector)
-        if candidate.rank() > current.rank():
-            independent.append(expr)
-            columns.append(vector)
-
-    return independent
+    return _independent_from_vectors(expressions, vector_getter)
 
 
 class LocalOperatorBasis:
     """Build canonical fixed-weight bases of local operators."""
 
-    def __init__(self, generators: Iterable[Operator], max_weight: Any = None):
+    def __init__(
+        self,
+        generators: Iterable[Operator],
+        max_weight: Any = None,
+        max_occurence: Any = None,
+    ):
         self.generators = tuple(generators)
         self.max_weight = None if max_weight is None else _normalize_weight(max_weight)
+        self.max_occurence = _normalize_max_occurence(max_occurence)
 
         if not self.generators:
             raise ValueError("LocalOperatorBasis requires at least one generator")
 
+        has_nonpositive_generator = False
         for generator in self.generators:
             if not isinstance(generator, Operator):
                 raise TypeError(
                     "LocalOperatorBasis generators must be Operator instances"
                 )
-            if _get_conformal_weight(generator) is None:
+            generator_weight = _get_conformal_weight(generator)
+            if generator_weight is None:
                 raise ValueError(
                     f"Generator {generator} must define a conformal weight"
                 )
+            if generator_weight <= 0:
+                has_nonpositive_generator = True
+
+        if has_nonpositive_generator and self.max_occurence is None:
+            raise ValueError(
+                "LocalOperatorBasis requires max_occurence when generators include "
+                "nonpositive conformal weights"
+            )
+
+    def _resolve_max_occurence(self, value: Any = None) -> int | None:
+        normalized = _normalize_max_occurence(value)
+        if normalized is None:
+            return self.max_occurence
+        return normalized
 
     def canonicalize(self, expr: Any) -> Any:
         """Canonicalize an operator expression for basis comparisons."""
@@ -385,17 +665,23 @@ class LocalOperatorBasis:
         if self.max_weight is not None and normalized_weight > self.max_weight:
             raise ValueError("Requested weight exceeds configured max_weight")
 
-        basis_terms = self._basis_terms(normalized_weight)
+        basis_terms = self._basis_terms(
+            normalized_weight, self._resolve_max_occurence()
+        )
         return list(basis_terms)
 
-    def basis(self, weight: Any) -> list[Any]:
+    def basis(self, weight: Any, max_occurence: Any = None) -> list[Any]:
         """Return a canonical basis of operator monomials at fixed weight."""
         normalized_weight = _normalize_weight(weight)
-        return list(self._basis_terms(normalized_weight))
+        normalized_max_occurence = self._resolve_max_occurence(max_occurence)
+        return list(self._basis_terms(normalized_weight, normalized_max_occurence))
 
-    def coordinates(self, expr: Any, weight: Any = None) -> sp.Matrix:
+    def coordinates(
+        self, expr: Any, weight: Any = None, max_occurence: Any = None
+    ) -> sp.Matrix:
         """Return basis coordinates of an operator expression as a column vector."""
         canonical = self.canonicalize(expr)
+        normalized_max_occurence = self._resolve_max_occurence(max_occurence)
 
         if canonical == Zero:
             if weight is None:
@@ -403,7 +689,7 @@ class LocalOperatorBasis:
                 if inferred_weight is None:
                     raise ValueError("Weight is required for the zero expression")
                 weight = inferred_weight
-            basis = self.basis(weight)
+            basis = self.basis(weight, max_occurence=normalized_max_occurence)
             return sp.zeros(len(basis), 1)
 
         expr_weight = _get_conformal_weight(canonical)
@@ -416,7 +702,7 @@ class LocalOperatorBasis:
         if expr_weight is not None and not _weights_equal(expr_weight, target_weight):
             raise ValueError("Expression weight does not match requested basis weight")
 
-        basis = self.basis(target_weight)
+        basis = self.basis(target_weight, max_occurence=normalized_max_occurence)
         index = {op: i for i, op in enumerate(basis)}
         vector = sp.zeros(len(basis), 1)
 
@@ -432,40 +718,78 @@ class LocalOperatorBasis:
         return vector
 
     def realized_coordinates(
-        self, expr: Any, free_field_basis: "LocalOperatorBasis", weight: Any = None
+        self,
+        expr: Any,
+        free_field_basis: "LocalOperatorBasis",
+        weight: Any = None,
+        max_occurence: Any = None,
     ) -> sp.Matrix:
         """Project an expression after expanding realized generators."""
-        return realized_coordinates(expr, free_field_basis, weight=weight)
+        return realized_coordinates(
+            expr,
+            free_field_basis,
+            weight=weight,
+            max_occurence=max_occurence,
+        )
 
     def independent_under_realization(
         self,
         expressions: Iterable[Any],
         free_field_basis: "LocalOperatorBasis",
         weight: Any = None,
+        max_occurence: Any = None,
     ) -> list[Any]:
         """Filter expressions by linear independence after realization."""
         return independent_under_realization(
-            expressions, free_field_basis, weight=weight
+            expressions,
+            free_field_basis,
+            weight=weight,
+            max_occurence=max_occurence,
+        )
+
+    def list_independent_ops(
+        self,
+        expressions: Iterable[Any],
+        weight: Any = None,
+        max_occurence: Any = None,
+    ) -> list[Any]:
+        """Filter expressions by linear independence in this basis."""
+        return list_independent_ops(
+            expressions,
+            self,
+            weight=weight,
+            max_occurence=max_occurence,
         )
 
     def list_zero_relations(
         self,
         expressions: Iterable[Any],
         weight: Any = None,
+        max_occurence: Any = None,
     ) -> list[dict[str, Any]]:
         """Return a basis of linear relations among expressions in this basis."""
         return list_zero_relations(
             expressions,
             self,
             weight=weight,
+            max_occurence=max_occurence,
         )
 
     @lru_cache(maxsize=None)
-    def _basis_terms(self, weight: sp.Expr) -> tuple[Any, ...]:
-        atomic_operators = self._atomic_operators(weight)
+    def _basis_terms(
+        self, weight: sp.Expr, max_occurence: int | None = None
+    ) -> tuple[Any, ...]:
+        atomic_operators = self._atomic_operators(weight, max_occurence)
         canonical_terms: set[Any] = set()
+        nonpositive_bosonic_counts = tuple(0 for _ in atomic_operators)
 
-        for factors in self._factor_tuples(weight, 0, atomic_operators):
+        for factors in self._factor_tuples(
+            weight,
+            0,
+            atomic_operators,
+            max_occurence=max_occurence,
+            nonpositive_bosonic_counts=nonpositive_bosonic_counts,
+        ):
             if len(factors) == 0:
                 canonical_terms.add(One)
                 continue
@@ -483,7 +807,7 @@ class LocalOperatorBasis:
         return tuple(sorted(canonical_terms, key=sp.srepr))
 
     def _atomic_operators(
-        self, target_weight: sp.Expr
+        self, target_weight: sp.Expr, max_occurence: int | None = None
     ) -> list[tuple[Operator, sp.Expr, bool]]:
         atoms = []
         min_fermionic_compensation = self._min_fermionic_compensation()
@@ -509,10 +833,11 @@ class LocalOperatorBasis:
                 if operator_weight is None:
                     continue
                 fermionic = bool(get_operator_parity(operator))
-                if operator_weight <= 0 and not fermionic:
+                if operator_weight <= 0 and not fermionic and max_occurence is None:
                     raise ValueError(
                         "LocalOperatorBasis cannot unrestrictedly enumerate fixed-weight spaces "
-                        "with nonpositive bosonic atomic operators; got "
+                        "with nonpositive bosonic atomic operators; provide max_occurence "
+                        "to truncate nonpositive bosonic atoms; got "
                         f"{operator} with weight {operator_weight}"
                     )
                 if operator_weight <= max_atomic_weight:
@@ -548,38 +873,77 @@ class LocalOperatorBasis:
         remaining_weight: sp.Expr,
         start_index: int,
         atomic_operators: list[tuple[Operator, sp.Expr, bool]],
+        max_occurence: int | None = None,
+        nonpositive_bosonic_counts: tuple[int, ...] = (),
     ) -> list[tuple[Operator, ...]]:
-        tuples: list[tuple[Operator, ...]] = [tuple()] if remaining_weight == 0 else []
-        for index in range(start_index, len(atomic_operators)):
-            operator, operator_weight, fermionic = atomic_operators[index]
-            if remaining_weight < 0 and operator_weight >= 0:
-                continue
+        atomic_ops = tuple(atomic_operators)
 
-            next_remaining = sp.simplify(remaining_weight - operator_weight)
-            next_start_index = index + 1 if fermionic else index
-            min_future_compensation = self._min_suffix_compensation(
-                next_start_index, atomic_operators
-            )
-            if next_remaining < min_future_compensation:
-                continue
+        @lru_cache(maxsize=None)
+        def helper(
+            remaining: sp.Expr,
+            start: int,
+            counts: tuple[int, ...],
+        ) -> tuple[tuple[Operator, ...], ...]:
+            tuples: list[tuple[Operator, ...]] = [tuple()] if remaining == 0 else []
 
-            for suffix in self._factor_tuples(
-                next_remaining, next_start_index, atomic_operators
-            ):
-                tuples.append((operator,) + suffix)
+            for index in range(start, len(atomic_ops)):
+                operator, operator_weight, fermionic = atomic_ops[index]
+                if operator_weight <= 0 and not fermionic:
+                    if max_occurence is None:
+                        continue
+                    if counts[index] >= max_occurence:
+                        continue
 
-        return tuples
+                next_remaining = sp.simplify(remaining - operator_weight)
+                next_start = index + 1 if fermionic else index
+                next_counts = counts
+                if operator_weight <= 0 and not fermionic:
+                    mutable_counts = list(counts)
+                    mutable_counts[index] += 1
+                    next_counts = tuple(mutable_counts)
+
+                min_future_compensation = self._min_suffix_compensation(
+                    next_start,
+                    atomic_operators,
+                    max_occurence=max_occurence,
+                    nonpositive_bosonic_counts=next_counts,
+                )
+                if next_remaining < min_future_compensation:
+                    continue
+
+                for suffix in helper(next_remaining, next_start, next_counts):
+                    tuples.append((operator,) + suffix)
+
+            return tuple(tuples)
+
+        return list(helper(remaining_weight, start_index, nonpositive_bosonic_counts))
 
     def _min_suffix_compensation(
         self,
         start_index: int,
         atomic_operators: list[tuple[Operator, sp.Expr, bool]],
+        max_occurence: int | None = None,
+        nonpositive_bosonic_counts: tuple[int, ...] = (),
     ) -> sp.Expr:
         compensation = sp.Integer(0)
 
-        for _, operator_weight, _ in atomic_operators[start_index:]:
-            if operator_weight < 0:
+        for index in range(start_index, len(atomic_operators)):
+            _, operator_weight, fermionic = atomic_operators[index]
+            if operator_weight >= 0:
+                continue
+
+            if fermionic:
                 compensation += operator_weight
+                continue
+
+            if max_occurence is None:
+                continue
+
+            used = (
+                nonpositive_bosonic_counts[index] if nonpositive_bosonic_counts else 0
+            )
+            remaining = max(0, max_occurence - used)
+            compensation += remaining * operator_weight
 
         return sp.simplify(compensation)
 
