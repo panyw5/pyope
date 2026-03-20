@@ -130,9 +130,9 @@ def test_betagamma_stress_tensor_definition_lambda_3_2():
     """
     lam_val = Rational(3, 2)
 
-    beta = BasisOperator("β", conformal_weight=lam_val, fermionic=True)
-    gamma = BasisOperator("γ", conformal_weight=1 - lam_val, fermionic=True)
-    Fermionic(beta, gamma)
+    # βγ twisted ghost 系统是玻色子（与 tests/test_bc_betagamma.py 的约定一致）
+    beta = BasisOperator("β", conformal_weight=lam_val, fermionic=False)
+    gamma = BasisOperator("γ", conformal_weight=1 - lam_val, fermionic=False)
 
     OPE[beta, gamma] = MakeOPE([-One])
 

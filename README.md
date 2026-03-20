@@ -12,7 +12,7 @@ PyOPE 是一个面向顶点算符代数 (VOA) / 共形场论 (CFT) 的符号计�
 - 导数：`d(A)` / `dn(n, A)`，并在 OPE 里自动应用导数规则
 - 代数化简：`simplify(expr)` 将表达式规范化、重排并合并同类项
 - Jacobi 恒等式检查：`check_jacobi_identity` / `verify_jacobi_identity`
-- Null states（实验性）：`calculate_null_states` 等工具
+- Null states（实验性案例）：参见 `demo/null_states_case.py` 与 `demo/w_algebra_null_states_demo.ipynb`
 
 ## 安装
 

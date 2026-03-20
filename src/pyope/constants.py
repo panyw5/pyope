@@ -8,7 +8,7 @@
 - Delta: Kronecker delta 函数
 """
 
-from typing import Any
+from typing import Any, Union
 import sympy as sp
 from sympy import Function, KroneckerDelta
 
@@ -26,6 +26,8 @@ class ConstantOperator(Operator):
         name: 算符名称
     """
 
+    _name: str  # 类型注解，告诉类型检查器这个属性存在
+
     def __new__(cls, name: str, **assumptions):
         """
         创建常数算符
@@ -34,7 +36,7 @@ class ConstantOperator(Operator):
             name: 算符名称
         """
         obj = Operator.__new__(cls, name, **assumptions)
-        obj._name = name
+        obj._name = name  # type: ignore[attr-defined]
         return obj
 
     @property
@@ -54,30 +56,30 @@ class ConstantOperator(Operator):
 
     def __eq__(self, other):
         if isinstance(other, ConstantOperator):
-            return self._name == other._name
-        if self._name == "Zero":
+            return self._name == other._name  # type: ignore[attr-defined]
+        if self._name == "Zero":  # type: ignore[attr-defined]
             return other == 0 or other == sp.Integer(0)
         return False
 
     def __bool__(self):
-        if self._name == "Zero":
+        if self._name == "Zero":  # type: ignore[attr-defined]
             return False
         return True
 
-    def __mul__(self, other):
+    def __mul__(self, other) -> sp.Expr:
         """乘法运算"""
-        if self._name == "Zero":
+        if self._name == "Zero":  # type: ignore[attr-defined]
             return self  # Zero * anything = Zero
-        if self._name == "One":
+        if self._name == "One":  # type: ignore[attr-defined]
             return other  # One * anything = anything
         return sp.Mul(self, other)
 
-    def __rmul__(self, other):
+    def __rmul__(self, other) -> sp.Expr:
         """右乘法运算"""
-        if self._name == "Zero":
+        if self._name == "Zero":  # type: ignore[attr-defined]
             return self  # anything * Zero = Zero
 
-        if self._name == "One":
+        if self._name == "One":  # type: ignore[attr-defined]
             other_expr = sp.sympify(other)
 
             # 1 * One -> One
@@ -95,11 +97,11 @@ class ConstantOperator(Operator):
 
     def __hash__(self):
         """哈希值"""
-        return hash(self._name)
+        return hash(self._name)  # type: ignore[attr-defined]
 
     def __repr__(self):
         """字符串表示"""
-        return f"ConstantOperator('{self._name}')"
+        return f"ConstantOperator('{self._name}')"  # type: ignore[attr-defined]
 
     def _latex(self, printer=None):
         """
@@ -111,12 +113,12 @@ class ConstantOperator(Operator):
             LaTeX 格式的字符串
         """
         # One 渲染为 1，Zero 渲染为 0
-        if self._name == "One":
+        if self._name == "One":  # type: ignore[attr-defined]
             return "1"
-        elif self._name == "Zero":
+        elif self._name == "Zero":  # type: ignore[attr-defined]
             return "0"
         else:
-            return self._name
+            return self._name  # type: ignore[attr-defined]
 
 
 # 预定义的常数算符实例
@@ -161,7 +163,7 @@ class DeltaFunction(Function):
     """
 
     @classmethod
-    def eval(cls, i, j):
+    def eval(cls, i, j):  # type: ignore[override]
         """
         计算 Delta(i, j)
 

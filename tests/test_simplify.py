@@ -8,6 +8,7 @@ from sympy import Symbol
 
 from pyope import (
     BasisOperator,
+    combine_normal_ordered_terms,
     d,
     One,
     Zero,
@@ -134,6 +135,42 @@ class TestSimplifyNormalOrdered:
 
         assert result == 3 * NO(T, J)
 
+    def test_no_method_delegates_to_pyope_simplify(self):
+        """测试 NO.simplifyNO() 委托给 pyope.simplify()"""
+        T = BasisOperator(
+            "T",
+        )
+        Bosonic(T)
+
+        expr = NO(T, d(T))
+
+        assert expr.simplifyNO() == simplify(expr)
+        assert expr.simplifyNO() == NO(d(T), T)
+
+    def test_no_method_preserves_optional_flags(self):
+        """测试 NO.simplifyNO() 透传可选参数"""
+        T = BasisOperator(
+            "T",
+        )
+        J = BasisOperator(
+            "J",
+        )
+        W = BasisOperator(
+            "W",
+        )
+        Bosonic(T, J, W)
+
+        expr = d(NO(T, J))
+
+        assert expr.simplifyNO(expand_derivatives=False) == simplify(
+            expr, expand_derivatives=False
+        )
+
+        nested = NO(NO(T, J), W)
+        assert nested.simplifyNO(preserve_nested_structure=True) == simplify(
+            nested, preserve_nested_structure=True
+        )
+
     def test_simplify_sum_of_no(self):
         """测试正规序的和"""
         T = BasisOperator(
@@ -224,6 +261,52 @@ class TestCollectNormalOrderedTerms:
 
         # 应该有三个不同的键
         assert len(terms) == 3
+
+
+class TestCombineNormalOrderedTerms:
+    """测试 NO 线性组合的合并。"""
+
+    def test_combine_identical_no_terms(self):
+        T = BasisOperator("T")
+        J = BasisOperator("J")
+        Bosonic(T, J)
+
+        expr = 2 * NO(T, J) + 3 * NO(T, J) - NO(J, J)
+        result = combine_normal_ordered_terms(expr)
+
+        assert result == 5 * NO(T, J) - NO(J, J)
+
+    def test_combine_cancels_to_zero(self):
+        T = BasisOperator("T")
+        J = BasisOperator("J")
+        Bosonic(T, J)
+
+        expr = NO(T, J) - NO(T, J)
+
+        assert combine_normal_ordered_terms(expr) == 0
+
+    def test_combine_preserves_non_no_terms_with_unicode_repr(self):
+        T = BasisOperator("T")
+        beta = BasisOperator("β")
+        gamma = BasisOperator("γ")
+        Bosonic(T, beta, gamma)
+
+        expr = d(gamma) + 2 * NO(beta, gamma) + 3 * NO(beta, gamma)
+        result = combine_normal_ordered_terms(expr)
+
+        assert result == d(gamma) + 5 * NO(beta, gamma)
+
+    def test_combine_distributes_scalar_over_sum_of_no_terms(self):
+        a = sp.Symbol("a")
+        T = BasisOperator("T")
+        J = BasisOperator("J")
+        W = BasisOperator("W")
+        Bosonic(T, J, W)
+
+        expr = NO(T, J) - a * (2 * NO(T, J) + NO(W, J))
+        result = combine_normal_ordered_terms(expr)
+
+        assert result == (1 - 2 * a) * NO(T, J) - a * NO(W, J)
 
 
 class TestSimplifyIntegration:

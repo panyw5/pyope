@@ -169,10 +169,10 @@ def simplify(
 
 
 def _simplify_ope_data(
-    ope_data: "OPEData",
+    ope_data: Any,
     expand_derivatives: bool = True,
     preserve_nested_structure: bool = False,
-) -> "OPEData":
+) -> Any:
     """
     化简 OPEData 对象
 
@@ -574,22 +574,66 @@ def collect_normal_ordered_terms(expr: Any) -> Dict[Tuple, Any]:
                 terms[key] = terms.get(key, 0) + coeff
     elif isinstance(expr, Mul):
         coeff, op = extract_scalar_operator(expr)
+        if isinstance(op, Add):
+            distributed = sp.Add(*[coeff * term for term in op.args])
+            return collect_normal_ordered_terms(distributed)
         if isinstance(op, NormalOrderedOperator):
             key = _make_no_key(op)
             terms[key] = terms.get(key, 0) + coeff
         else:
             # 非 NO 项
-            key = ("other", str(op))
+            key = ("other", op)
             terms[key] = terms.get(key, 0) + coeff
     elif isinstance(expr, NormalOrderedOperator):
         key = _make_no_key(expr)
         terms[key] = terms.get(key, 0) + 1
     else:
         # 其他项
-        key = ("other", str(expr))
+        key = ("other", expr)
         terms[key] = terms.get(key, 0) + 1
 
     return terms
+
+
+def combine_normal_ordered_terms(expr: Any) -> Any:
+    """
+    合并表达式中多个 NO 项的线性组合。
+
+    这个函数会把结构完全相同的正规序项视为同类项，并把它们的系数相加；
+    非 NO 项也会按表达式本身合并。
+
+    Args:
+        expr: 输入表达式
+
+    Returns:
+        合并同类项后的表达式
+
+    Examples:
+        >>> expr = 2*NO(T, J) + 3*NO(T, J) - NO(J, J)
+        >>> combine_normal_ordered_terms(expr)
+        5*NO(T, J) - NO(J, J)
+    """
+    terms = collect_normal_ordered_terms(expr)
+
+    rebuilt_terms = []
+    for key, coeff in terms.items():
+        coeff = sp.sympify(coeff)
+        if coeff == 0:
+            continue
+
+        operator = _key_to_expr(key)
+        if operator == One:
+            rebuilt_terms.append(coeff)
+        elif coeff == 1:
+            rebuilt_terms.append(operator)
+        else:
+            rebuilt_terms.append(coeff * operator)
+
+    if not rebuilt_terms:
+        return Zero
+    if len(rebuilt_terms) == 1:
+        return rebuilt_terms[0]
+    return sp.Add(*rebuilt_terms)
 
 
 def _make_no_key(no_op: NormalOrderedOperator) -> Tuple:
@@ -624,7 +668,26 @@ def _operator_to_key(op: Any) -> Tuple:
     elif isinstance(op, NormalOrderedOperator):
         return _make_no_key(op)
     else:
-        return ("Other", str(op))
+        return ("Other", op)
+
+
+def _key_to_expr(key: Tuple) -> Any:
+    """将 collect_normal_ordered_terms 生成的键还原为表达式。"""
+    from .api import NO
+
+    key_type = key[0]
+
+    if key_type == "NO":
+        return NO(_key_to_expr(key[1]), _key_to_expr(key[2]))
+    if key_type == "Basis":
+        name, is_bosonic = key[1], key[2]
+        return BasisOperator(name, fermionic=not is_bosonic)
+    if key_type == "Deriv":
+        return DerivativeOperator(_key_to_expr(key[1]), key[2])
+    if key_type in {"Other", "other"}:
+        return key[1]
+
+    raise ValueError(f"Unknown normal-ordered term key type: {key_type}")
 
 
 def flatten_right_no(expr: Any) -> list:
@@ -887,7 +950,7 @@ def _operators_equal(op1: Any, op2: Any) -> bool:
 
 
 def expand_nested_no(
-    expr: Any, max_depth: int = None, expand_derivatives: bool = False
+    expr: Any, max_depth: Any = None, expand_derivatives: bool = False
 ) -> Any:
     """
     展开嵌套正规序算符，但不进行进一步的规范化
@@ -965,7 +1028,7 @@ def expand_nested_no(
 
 
 def _expand_nested_no_operator(
-    op: Operator, max_depth: int = None, expand_derivatives: bool = False
+    op: Operator, max_depth: Any = None, expand_derivatives: bool = False
 ) -> Any:
     """
     展开单个算符中的嵌套正规序

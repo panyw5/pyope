@@ -1,11 +1,8 @@
 """
-Null States 计算模块
+Null states 案例模块。
 
-本模块实现 W-algebra null states 的计算功能，包括：
-1. 算符展开到自由场表示
-2. 系数提取
-3. 自由场 Fock 空间基枚举
-4. 矩阵构建和秩计算
+这个文件保留了一个面向特定 null-state 问题的完整计算流程示例，
+不再作为 pyope 的公共 API 暴露。
 """
 
 from typing import Dict, List, Tuple, Set, Any
@@ -13,11 +10,11 @@ from fractions import Fraction
 from collections import defaultdict
 import itertools
 
-from .operators import BasisOperator, d
-from .api import NO
-from .simplify import simplify
-from .constants import One
-from .local_operator import OperatorSum, OperatorProduct
+from pyope.operators import BasisOperator, d
+from pyope.api import NO
+from pyope.simplify import simplify
+from pyope.constants import One
+from pyope.local_operator import OperatorSum, OperatorProduct
 
 
 def integer_partitions(n: Fraction) -> List[List[Fraction]]:
@@ -141,6 +138,7 @@ class CoefficientExtractor:
     def _is_scalar(self, obj) -> bool:
         """判断对象是否为标量（数字）"""
         import sympy as sp
+
         return isinstance(obj, (int, float, Fraction, complex, sp.Number))
 
 
@@ -157,10 +155,7 @@ class FockSpaceBasis:
             free_fields: 自由场列表（如 [b, c, beta, gamma]）
         """
         self.free_fields = free_fields
-        self.field_weights = {
-            field: field.conformal_weight
-            for field in free_fields
-        }
+        self.field_weights = {field: field.conformal_weight for field in free_fields}
 
     def enumerate_basis(self, level: Fraction, max_count: int = 1000) -> List[Any]:
         """
@@ -286,9 +281,9 @@ def extract_coefficients(expr) -> Dict[Any, Any]:
     return extractor.extract(expr)
 
 
-def enumerate_fock_basis(free_fields: List[BasisOperator],
-                         level: Fraction,
-                         max_count: int = 1000) -> List[Any]:
+def enumerate_fock_basis(
+    free_fields: List[BasisOperator], level: Fraction, max_count: int = 1000
+) -> List[Any]:
     """
     便捷函数：枚举自由场 Fock 空间基
 
@@ -330,7 +325,8 @@ class OperatorExpander:
             字典 {自由场基: 系数}
         """
         # 使用 simplify 简化算符
-        from .simplify import simplify
+        from pyope.simplify import simplify
+
         simplified = simplify(operator)
 
         # 提取系数
@@ -426,7 +422,7 @@ class CoefficientMatrixBuilder:
             for val in row:
                 if isinstance(val, Fraction):
                     numeric_row.append(float(val))
-                elif hasattr(val, 'evalf'):  # sympy 表达式
+                elif hasattr(val, "evalf"):  # sympy 表达式
                     numeric_row.append(float(val.evalf()))
                 else:
                     numeric_row.append(float(val))
@@ -459,10 +455,7 @@ class NullStatesCalculator:
         self.free_fields = free_fields
 
     def calculate_null_states(
-        self,
-        level: Fraction,
-        abstract_operators: List[Any],
-        max_fock_basis: int = 1000
+        self, level: Fraction, abstract_operators: List[Any], max_fock_basis: int = 1000
     ) -> Dict[str, Any]:
         """
         计算给定 level 的 null states
@@ -484,9 +477,7 @@ class NullStatesCalculator:
         """
         # 1. 枚举 Fock 空间基
         fock_basis = enumerate_fock_basis(
-            self.free_fields,
-            level,
-            max_count=max_fock_basis
+            self.free_fields, level, max_count=max_fock_basis
         )
 
         # 2. 构建系数矩阵
@@ -501,20 +492,17 @@ class NullStatesCalculator:
         n_null_states = n_abstract - rank
 
         return {
-            'level': level,
-            'n_abstract': n_abstract,
-            'n_fock_basis': len(fock_basis),
-            'rank': rank,
-            'n_null_states': n_null_states,
-            'fock_basis': fock_basis,
-            'matrix': matrix
+            "level": level,
+            "n_abstract": n_abstract,
+            "n_fock_basis": len(fock_basis),
+            "rank": rank,
+            "n_null_states": n_null_states,
+            "fock_basis": fock_basis,
+            "matrix": matrix,
         }
 
     def calculate_character(
-        self,
-        max_level: Fraction,
-        generator_func,
-        step: Fraction = Fraction(1, 2)
+        self, max_level: Fraction, generator_func, step: Fraction = Fraction(1, 2)
     ) -> Dict[Fraction, Dict[str, Any]]:
         """
         计算真空特征（vacuum character）到给定 level
@@ -547,7 +535,7 @@ def calculate_null_states(
     free_fields: List[BasisOperator],
     level: Fraction,
     abstract_operators: List[Any],
-    max_fock_basis: int = 1000
+    max_fock_basis: int = 1000,
 ) -> Dict[str, Any]:
     """
     便捷函数：计算 null states
@@ -589,8 +577,8 @@ class QuantumNumberCalculator:
         Returns:
             (m, r) 量子数元组
         """
-        from .operators import DerivativeOperator, NormalOrderedOperator
-        from .local_operator import OperatorSum
+        from pyope.operators import DerivativeOperator, NormalOrderedOperator
+        from pyope.local_operator import OperatorSum
 
         # 处理导数算符
         if isinstance(operator, DerivativeOperator):
@@ -615,6 +603,7 @@ class QuantumNumberCalculator:
 
         # 处理 SymPy Add 表达式（算符的线性组合）
         import sympy as sp
+
         if isinstance(operator, sp.Add):
             # SymPy Add：所有项应该有相同的量子数
             # 取第一项的量子数
@@ -660,9 +649,7 @@ class QuantumNumberGrouper:
         self.quantum_calculator = quantum_calculator
 
     def group_operators(
-        self,
-        operators: List[Any],
-        only_non_negative_m: bool = False
+        self, operators: List[Any], only_non_negative_m: bool = False
     ) -> Dict[Tuple[Fraction, Fraction], List[Any]]:
         """
         按量子数对算符分组
@@ -688,9 +675,7 @@ class QuantumNumberGrouper:
         return dict(groups)
 
     def group_fock_basis(
-        self,
-        fock_basis: List[Any],
-        only_non_negative_m: bool = False
+        self, fock_basis: List[Any], only_non_negative_m: bool = False
     ) -> Dict[Tuple[Fraction, Fraction], List[Any]]:
         """
         按量子数对 Fock 基分组
@@ -705,9 +690,7 @@ class QuantumNumberGrouper:
         return self.group_operators(fock_basis, only_non_negative_m)
 
     def group_by_m_only(
-        self,
-        operators: List[Any],
-        only_non_negative_m: bool = False
+        self, operators: List[Any], only_non_negative_m: bool = False
     ) -> Dict[Fraction, List[Any]]:
         """
         只按 m 量子数分组（对应 Mathematica 的 mgroupstates）
@@ -748,8 +731,7 @@ class QuantumNumberGrouper:
         return dict(sorted(groups.items()))
 
     def group_by_r_within_m(
-        self,
-        states_by_m: Dict[Fraction, List[Any]]
+        self, states_by_m: Dict[Fraction, List[Any]]
     ) -> Dict[Tuple[Fraction, Fraction], List[Any]]:
         """
         在 m 扇区内进一步按 r 量子数分组（对应 Mathematica 的 fullgrouping）
@@ -788,9 +770,7 @@ class QuantumNumberGrouper:
         return dict(sorted(groups.items()))
 
     def get_m_values(
-        self,
-        operators: List[Any],
-        only_non_negative_m: bool = False
+        self, operators: List[Any], only_non_negative_m: bool = False
     ) -> List[Fraction]:
         """
         获取所有出现的 m 量子数值（对应 Mathematica 的 mparam）
@@ -822,7 +802,7 @@ class GroupedNullStatesCalculator:
     def __init__(
         self,
         free_fields: List[BasisOperator],
-        quantum_number_map: Dict[Any, Tuple[Fraction, Fraction]]
+        quantum_number_map: Dict[Any, Tuple[Fraction, Fraction]],
     ):
         """
         Args:
@@ -834,9 +814,7 @@ class GroupedNullStatesCalculator:
         self.grouper = QuantumNumberGrouper(self.quantum_calculator)
 
     def _filter_linearly_independent(
-        self,
-        operators: List[Any],
-        fock_basis: List[Any]
+        self, operators: List[Any], fock_basis: List[Any]
     ) -> List[Any]:
         """
         过滤出线性独立的算符
@@ -878,7 +856,7 @@ class GroupedNullStatesCalculator:
         abstract_operators: List[Any],
         max_fock_basis: int = 1000,
         only_non_negative_m: bool = False,
-        filter_linearly_independent: bool = True
+        filter_linearly_independent: bool = True,
     ) -> Dict[str, Any]:
         """
         按量子数分组计算 null states
@@ -901,20 +879,14 @@ class GroupedNullStatesCalculator:
         """
         # 1. 枚举 Fock 空间基
         fock_basis = enumerate_fock_basis(
-            self.free_fields,
-            level,
-            max_count=max_fock_basis
+            self.free_fields, level, max_count=max_fock_basis
         )
 
         # 2. 按量子数分组
         operator_groups = self.grouper.group_operators(
-            abstract_operators,
-            only_non_negative_m
+            abstract_operators, only_non_negative_m
         )
-        fock_groups = self.grouper.group_fock_basis(
-            fock_basis,
-            only_non_negative_m
-        )
+        fock_groups = self.grouper.group_fock_basis(fock_basis, only_non_negative_m)
 
         # 3. 对每个量子数扇区计算
         group_results = {}
@@ -934,7 +906,9 @@ class GroupedNullStatesCalculator:
 
             # 过滤线性独立的算符（如果启用）
             if filter_linearly_independent:
-                ops_in_group = self._filter_linearly_independent(ops_in_group, fock_in_group)
+                ops_in_group = self._filter_linearly_independent(
+                    ops_in_group, fock_in_group
+                )
 
             # 构建该扇区的矩阵
             matrix_builder = CoefficientMatrixBuilder(fock_in_group, ops_in_group)
@@ -946,14 +920,14 @@ class GroupedNullStatesCalculator:
             n_null = n_abstract - rank
 
             group_results[quantum_numbers] = {
-                'quantum_numbers': quantum_numbers,
-                'n_abstract': n_abstract,
-                'n_fock_basis': len(fock_in_group),
-                'rank': rank,
-                'n_null_states': n_null,
-                'operators': ops_in_group,
-                'fock_basis': fock_in_group,
-                'matrix': matrix
+                "quantum_numbers": quantum_numbers,
+                "n_abstract": n_abstract,
+                "n_fock_basis": len(fock_in_group),
+                "rank": rank,
+                "n_null_states": n_null,
+                "operators": ops_in_group,
+                "fock_basis": fock_in_group,
+                "matrix": matrix,
             }
 
             total_n_abstract += n_abstract
@@ -962,13 +936,13 @@ class GroupedNullStatesCalculator:
         total_n_null_states = total_n_abstract - total_rank
 
         return {
-            'level': level,
-            'groups': group_results,
-            'total_n_abstract': total_n_abstract,
-            'total_rank': total_rank,
-            'total_n_null_states': total_n_null_states,
-            'only_non_negative_m': only_non_negative_m,
-            'filtered': filter_linearly_independent
+            "level": level,
+            "groups": group_results,
+            "total_n_abstract": total_n_abstract,
+            "total_rank": total_rank,
+            "total_n_null_states": total_n_null_states,
+            "only_non_negative_m": only_non_negative_m,
+            "filtered": filter_linearly_independent,
         }
 
 
@@ -995,7 +969,7 @@ class OperatorEnumerator:
         self,
         level: Fraction,
         max_derivative_order: int = 10,
-        use_partition_method: bool = True
+        use_partition_method: bool = True,
     ) -> List[Any]:
         """
         枚举给定 level 的所有算符
@@ -1014,8 +988,12 @@ class OperatorEnumerator:
         else:
             # 旧方法：只支持单个和两个生成元
             operators = []
-            operators.extend(self._enumerate_single_generators(level, max_derivative_order))
-            operators.extend(self._enumerate_two_generator_products(level, max_derivative_order))
+            operators.extend(
+                self._enumerate_single_generators(level, max_derivative_order)
+            )
+            operators.extend(
+                self._enumerate_two_generator_products(level, max_derivative_order)
+            )
 
         # 去重（使用字符串表示）
         unique_ops = []
@@ -1029,9 +1007,7 @@ class OperatorEnumerator:
         return unique_ops
 
     def _enumerate_partition_based(
-        self,
-        level: Fraction,
-        max_derivative_order: int
+        self, level: Fraction, max_derivative_order: int
     ) -> List[Any]:
         """
         基于整数分拆的算符枚举（类似 Mathematica 的方法）
@@ -1071,7 +1047,9 @@ class OperatorEnumerator:
                 # 为排列中的每个权重生成算符列表
                 operator_lists = []
                 for weight in perm:
-                    ops_at_weight = self._generate_operators_at_weight(weight, max_derivative_order)
+                    ops_at_weight = self._generate_operators_at_weight(
+                        weight, max_derivative_order
+                    )
                     if ops_at_weight:
                         operator_lists.append(ops_at_weight)
 
@@ -1091,7 +1069,9 @@ class OperatorEnumerator:
 
         return operators
 
-    def _get_unique_permutations(self, partition: List[Fraction]) -> List[List[Fraction]]:
+    def _get_unique_permutations(
+        self, partition: List[Fraction]
+    ) -> List[List[Fraction]]:
         """
         生成分拆的所有唯一排列
 
@@ -1138,9 +1118,7 @@ class OperatorEnumerator:
             return NO(operators[0], self._build_nested_no(operators[1:]))
 
     def _generate_operators_at_weight(
-        self,
-        weight: Fraction,
-        max_derivative_order: int
+        self, weight: Fraction, max_derivative_order: int
     ) -> List[Any]:
         """
         生成指定权重的所有可能算符（包括导数）
@@ -1160,8 +1138,8 @@ class OperatorEnumerator:
         operators = []
 
         for name, gen_info in self.generators.items():
-            base_op = gen_info['op']
-            base_weight = gen_info['weight']
+            base_op = gen_info["op"]
+            base_weight = gen_info["weight"]
 
             # 计算需要的导数阶数
             deriv_order = weight - base_weight
@@ -1178,17 +1156,17 @@ class OperatorEnumerator:
 
         # 使用 ope_registry 的排序机制对算符排序
         # 这确保了算符按照注册顺序（对应 Mathematica 的 opfields）排列
-        from .registry import ope_registry
+        from pyope.registry import ope_registry
         from functools import cmp_to_key
 
-        operators.sort(key=cmp_to_key(lambda x, y: -ope_registry.compare_operators(x, y)))
+        operators.sort(
+            key=cmp_to_key(lambda x, y: -ope_registry.compare_operators(x, y))
+        )
 
         return operators
 
     def _enumerate_single_generators(
-        self,
-        level: Fraction,
-        max_derivative_order: int
+        self, level: Fraction, max_derivative_order: int
     ) -> List[Any]:
         """
         枚举单个生成元的所有可能导数
@@ -1199,8 +1177,8 @@ class OperatorEnumerator:
         operators = []
 
         for name, gen_info in self.generators.items():
-            base_op = gen_info['op']
-            base_weight = gen_info['weight']
+            base_op = gen_info["op"]
+            base_weight = gen_info["weight"]
 
             # 枚举所有可能的导数阶数
             for deriv_order in range(max_derivative_order + 1):
@@ -1215,9 +1193,7 @@ class OperatorEnumerator:
         return operators
 
     def _enumerate_two_generator_products(
-        self,
-        level: Fraction,
-        max_derivative_order: int
+        self, level: Fraction, max_derivative_order: int
     ) -> List[Any]:
         """
         枚举两个生成元的正规序乘积（优化版）
@@ -1241,25 +1217,22 @@ class OperatorEnumerator:
                 for d1 in range(max_derivative_order + 1):
                     # 枚举第二个生成元的导数阶数
                     for d2 in range(max_derivative_order + 1):
-                        weight1 = gen1['weight'] + d1
-                        weight2 = gen2['weight'] + d2
+                        weight1 = gen1["weight"] + d1
+                        weight2 = gen2["weight"] + d2
                         product_weight = weight1 + weight2
 
                         # 情况 1: NO(∂^d1 g1, ∂^d2 g2) 本身
                         if product_weight == level:
-                            op1 = d(gen1['op'], d1) if d1 > 0 else gen1['op']
-                            op2 = d(gen2['op'], d2) if d2 > 0 else gen2['op']
+                            op1 = d(gen1["op"], d1) if d1 > 0 else gen1["op"]
+                            op2 = d(gen2["op"], d2) if d2 > 0 else gen2["op"]
                             operators.append(NO(op1, op2))
 
                         # 情况 2: ∂^m NO(∂^d1 g1, ∂^d2 g2)
                         for outer_deriv in range(1, max_derivative_order + 1):
                             if product_weight + outer_deriv == level:
-                                op1 = d(gen1['op'], d1) if d1 > 0 else gen1['op']
-                                op2 = d(gen2['op'], d2) if d2 > 0 else gen2['op']
+                                op1 = d(gen1["op"], d1) if d1 > 0 else gen1["op"]
+                                op2 = d(gen2["op"], d2) if d2 > 0 else gen2["op"]
                                 no_product = NO(op1, op2)
                                 operators.append(d(no_product, outer_deriv))
 
         return operators
-
-
-

@@ -5,6 +5,7 @@ OPE 注册表模块
 - OPERegistry: 注册表类，存储算符的 parity 和 OPE 定义
 - ope_registry: 全局注册表实例
 - Bosonic, Fermionic: 声明算符类型的辅助函数
+- clear_registry: 清空全局注册表状态的辅助函数
 """
 
 from typing import Dict, Tuple, Optional, Any, Union
@@ -249,7 +250,7 @@ class OPERegistry:
         return (left_key, right_key)
 
     def clear(self) -> None:
-        """清空注册表（主要用于测试）"""
+        """清空注册表、已定义 OPE 和全局 OPE 缓存。"""
         self._opes.clear()
         self._parities.clear()
         self._positions.clear()
@@ -312,6 +313,24 @@ def Fermionic(*operators) -> None:
     """
     for op in operators:
         ope_registry.register_operator(op, parity=1)
+
+
+def clear_registry() -> None:
+    """
+    清空全局注册表中的所有已注册算符、OPE 定义和缓存。
+
+    这个函数适合在 notebook 或长时间运行的 kernel 中使用：
+    当你想重新声明同名算符或重写 OPE 定义时，可以先调用它，
+    避免残留的注册状态触发重复注册警告。
+
+    Examples:
+        >>> from pyope import BasisOperator, Fermionic, clear_registry
+        >>> b = BasisOperator("b", fermionic=True)
+        >>> Fermionic(b)
+        >>> clear_registry()
+        >>> Fermionic(b)
+    """
+    ope_registry.clear()
 
 
 class OPEDefiner:

@@ -25,6 +25,32 @@ from .ope_data import OPEData
 from .local_operator import get_operator_parity
 
 
+def _normalize_jacobi_value(value: Any, simplify_func=None) -> Any:
+    """归一 Jacobi 检查结果中的零值表示，统一返回 Zero 算符。"""
+    from .constants import Zero
+    from .simplify import simplify as pyope_simplify
+
+    if simplify_func is not None and value != 0:
+        value = simplify_func(value)
+
+    if isinstance(value, OPEData):
+        value = value.simplify()
+        return Zero if value.is_zero() else value
+
+    # pyope.simplify() 可能不是一次就达到不动点（例如导数展开后触发新的 NO 重排机会）。
+    # 这里做有限次迭代，避免 Jacobi 检查残留“形式非零但可化简为 0”的项。
+    prev = None
+    for _ in range(5):
+        value = pyope_simplify(value)
+        if value == Zero or value == 0:
+            return Zero
+        if prev is not None and value == prev:
+            break
+        prev = value
+
+    return Zero if value == Zero or value == 0 else value
+
+
 def check_jacobi_identity(
     A: Any, B: Any, C: Any, simplify_func=None
 ) -> List[List[Any]]:
@@ -46,7 +72,7 @@ def check_jacobi_identity(
 
     Returns:
         二维列表，每个元素是 Jacobi 恒等式在特定 (m, n) 处的值
-        如果恒等式成立，所有元素应该为 0
+        如果恒等式成立，所有元素应该为 Zero（零算符）
 
     Examples:
         >>> from pyope import BasisOperator, check_jacobi_identity
@@ -146,11 +172,7 @@ def check_jacobi_identity(
             # Jacobi 恒等式
             jacobi_value = term1 - term2 - term3
 
-            # 简化
-            if simplify_func is not None and jacobi_value != 0:
-                jacobi_value = simplify_func(jacobi_value)
-
-            row.append(jacobi_value)
+            row.append(_normalize_jacobi_value(jacobi_value, simplify_func))
         result.append(row)
 
     return result
@@ -167,7 +189,7 @@ def verify_jacobi_identity(A: Any, B: Any, C: Any, simplify_func=None) -> bool:
         simplify_func: 简化函数（可选）
 
     Returns:
-        True 如果 Jacobi 恒等式成立（所有项为 0），否则 False
+        True 如果 Jacobi 恒等式成立（所有项为 Zero），否则 False
 
     Examples:
         >>> from pyope import BasisOperator, verify_jacobi_identity
@@ -179,15 +201,11 @@ def verify_jacobi_identity(A: Any, B: Any, C: Any, simplify_func=None) -> bool:
         True
     """
     result = check_jacobi_identity(A, B, C, simplify_func)
-    # 检查所有元素是否为 0
-    # 注意：计算过程中可能出现 -Zero, k*Zero 等未规约形式
-    from .simplify import simplify as pyope_simplify
     from .constants import Zero
 
     for row in result:
         for value in row:
-            simplified = pyope_simplify(value)
-            if simplified != Zero and simplified != 0:
+            if value != Zero:
                 return False
 
     return True
