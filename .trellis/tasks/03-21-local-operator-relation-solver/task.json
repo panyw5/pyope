@@ -3,18 +3,18 @@
   "name": "local-operator-relation-solver",
   "title": "Implement local operator relation solver",
   "description": "Replace basis-enumeration-based linear dependence checks with a local canonical sparse relation solver for local operators.",
-  "status": "planning",
+  "status": "completed",
   "dev_type": "feature",
   "scope": "core",
   "priority": "P2",
   "creator": "lelouch",
   "assignee": "lelouch",
   "createdAt": "2026-03-21",
-  "completedAt": null,
+  "completedAt": "2026-03-21",
   "branch": "feat/local-operator-relation-solver",
   "base_branch": "main",
   "worktree_path": null,
-  "current_phase": 0,
+  "current_phase": 4,
   "next_action": [
     {
       "phase": 1,
@@ -33,15 +33,35 @@
       "action": "create-pr"
     }
   ],
-  "commit": null,
+  "commit": "307121f",
   "pr_url": null,
-  "subtasks": [],
+  "subtasks": [
+    {
+      "name": "Implement sparse local relation solver core",
+      "status": "completed"
+    },
+    {
+      "name": "Run focused operator-space regression tests",
+      "status": "completed"
+    },
+    {
+      "name": "Record completion in Trellis workspace journal",
+      "status": "completed"
+    },
+    {
+      "name": "Open pull request from feature branch",
+      "status": "cancelled"
+    }
+  ],
   "children": [],
   "parent": null,
   "relatedFiles": [
     "src/pyope/operator_spaces.py",
     "tests/test_operator_spaces.py"
   ],
-  "notes": "Implement local sparse linear-algebra workflow for list_zero_relations and list_independent_ops without requiring full basis enumeration or explicit weight in the common case.",
-  "meta": {}
+  "notes": "Completed implementation of local sparse linear-algebra workflows for list_zero_relations and list_independent_ops without requiring full basis enumeration in the common case. Completion is recorded in the Trellis workspace journal; commit 307121f was pushed on feat/local-operator-relation-solver. Any later optimization, PR handling, or broader follow-up should be tracked separately instead of reopening this task.",
+  "meta": {
+    "last_reviewed": "2026-03-23",
+    "completion_basis": "Aligned with workspace journal Session 7 and commit history including 307121f and docs follow-up 99cd042."
+  }
 }

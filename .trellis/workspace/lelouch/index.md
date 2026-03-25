@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 7
-- **Last Active**: 2026-03-21
+- **Total Sessions**: 8
+- **Last Active**: 2026-03-25
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~202 | Active |
+| `journal-1.md` | ~282 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits |
 |---|------|-------|---------|
+| 8 | 2026-03-25 | N=3 stress tensor nilpotency analysis | - |
 | 1 | 2026-03-21 | Start local operator relation solver | - |
 | 2 | 2026-03-21 | Land local sparse expansion path | - |
 | 3 | 2026-03-21 | Verify regression surface | - |

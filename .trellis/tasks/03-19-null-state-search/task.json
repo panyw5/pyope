@@ -1,0 +1,89 @@
+{
+  "id": "null-state-search",
+  "name": "null-state-search",
+  "title": "Advance null state search API",
+  "description": "Track implementation of a local-operator and OPE based API for searching singular descendants and C2 null relations, including sparse reducers, quotient prechecks, migration bridges, and follow-up C2 subspace work.",
+  "status": "in_progress",
+  "dev_type": "feature",
+  "scope": "core",
+  "priority": "P2",
+  "creator": "lelouch",
+  "assignee": "lelouch",
+  "createdAt": "2026-03-19",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "current_phase": 1,
+  "next_action": [
+    {
+      "phase": 1,
+      "action": "implement"
+    },
+    {
+      "phase": 2,
+      "action": "check"
+    },
+    {
+      "phase": 3,
+      "action": "finish"
+    },
+    {
+      "phase": 4,
+      "action": "create-pr"
+    }
+  ],
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [
+    {
+      "name": "Sparse linear infrastructure and GenericC2Reducer MVP",
+      "status": "completed"
+    },
+    {
+      "name": "Quotient precheck and structured null-search result API",
+      "status": "completed"
+    },
+    {
+      "name": "Legacy C2Space/C2NullSearcher compatibility bridge",
+      "status": "in_progress"
+    },
+    {
+      "name": "Descendant and singularity module extraction",
+      "status": "in_progress"
+    },
+    {
+      "name": "Free-field C2 backend first pass",
+      "status": "in_progress"
+    },
+    {
+      "name": "Explicit known null-state witness recovery",
+      "status": "pending"
+    }
+  ],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/03-19-null-state-search/prd.md",
+    ".trellis/tasks/03-19-null-state-search/null-c2-search-plan.md",
+    ".trellis/tasks/03-19-null-state-search/c2-migration-plan.md",
+    "src/pyope/c2.py",
+    "src/pyope/null_search.py",
+    "src/pyope/descendants.py",
+    "src/pyope/singularity.py",
+    "src/pyope/realizations.py",
+    "src/pyope/free_field_c2.py",
+    "src/pyope/operator_spaces.py",
+    "tests/test_sparse_c2_api.py",
+    "tests/test_free_field_c2.py"
+  ],
+  "notes": "Task has moved beyond planning. Recent project work landed the sparse linear infrastructure, GenericC2Reducer, structured quotient precheck/null-search APIs, legacy C2 compatibility bridges, descendant/singularity module extraction, and a first derivative-killing free-field backend. Remaining work centers on deeper C2 subspace progress: reducing remaining basis-dependent lift logic, enriching realization-aware quotient rules, and recovering explicit known null-state witnesses.",
+  "meta": {
+    "plan_docs": [
+      "null-c2-search-plan.md",
+      "c2-migration-plan.md"
+    ],
+    "last_reviewed": "2026-03-23",
+    "progress_basis": "Updated after reviewing recent repository commits and current task-related source/test changes."
+  }
+}

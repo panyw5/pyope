@@ -1,0 +1,7 @@
+{"file": ".trellis/workflow.md", "reason": "Project workflow and conventions"}
+{"file": ".trellis/spec/backend/index.md", "reason": "Backend development guide"}
+{"file": ".trellis/tasks/03-19-null-state-search/prd.md", "reason": "Task requirements and acceptance criteria"}
+{"file": ".trellis/tasks/03-19-null-state-search/null-c2-search-plan.md", "reason": "Detailed API planning document"}
+{"file": ".trellis/tasks/03-19-null-state-search/c2-migration-plan.md", "reason": "Concrete migration plan from legacy C2 APIs to reducer-based APIs"}
+{"file": "README.md", "reason": "Existing public API and null-state references"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse existing abstractions before adding new APIs"}
