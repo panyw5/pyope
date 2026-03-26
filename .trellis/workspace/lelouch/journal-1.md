@@ -261,8 +261,81 @@ Committed and pushed the local sparse relation solver work on its dedicated feat
 
 Proved T is NOT nilpotent in R(V) = V/C2(V) for the rank-1 N=3 SCFT chiral algebra
 
+### Context
+
+Investigated stress-tensor nilpotency in the Zhu C2 algebra R(V) = V/C2(V) for the
+rank-1 N=3 SCFT chiral algebra, realized in the bcβγ free-field system.
+
+The question: does there exist n such that [T^n] = 0 in R(V), i.e., a null state
+N_T = NO(T,...,T) + φ with φ ∈ C2(V)?
+
+### Method
+
+Used a **free-field C2(F) syntactic exclusion test**:
+- C2(V) ⊆ C2(F), so ρ(T^n) ∉ C2(F) ⟹ [T^n] ≠ 0 in V/C2
+- For free-field algebras, C2(F) has an exact syntactic characterization:
+  monomial ∈ C2(F) iff outermost NO has derivative on left factor
+- Only requires ONE realization per n (the target T^n itself)
+
+### Results
+
+| n | Weight | Total terms | Non-C2 terms | Result |
+|---|--------|-------------|--------------|--------|
+| 2 | 4      | 15          | 5            | [T²]≠0 |
+| 3 | 6      | 47          | 13           | [T³]≠0 |
+| 4 | 8      | 135         | 33           | [T⁴]≠0 |
+| 5 | 10     | 356         | 80           | [T⁵]≠0 |
+| 6 | 12     | 888         | 186          | [T⁶]≠0 |
+
+Non-C2 terms grow at rate ~×2.4 per order. T has irreducible non-C2 components
+NO(b,∂c) and NO(β,∂γ) that propagate through all powers.
+
+Also computed dim(R(V))_{bos,J=0} via full V/C2 quotient:
+- Weight 4: dim = 5 (from 17 J=0 bosonic monomials, 4 zero relations)
+- Weight 6: dim = 9 (from 83 J=0 bosonic monomials, 35 zero relations)
+
+### Conclusion
+
+**T is NOT nilpotent in R(V)**. No null state of the form NO(T,...,T) + C2 exists.
+The associated variety has positive dimension (≥1 in the T-direction).
+
+### Key Scripts
+
+- `tmp_null_search_fast.py`: Fast C2(F) syntactic exclusion test (main result)
+- `tmp_null_search_n3_debug.py`: Full V/C2 computation at weight 6 with numpy rank
+- `tmp_null_search_v2.py`: Two-phase search with J-charge filtering
+
+### Status
+
+[OK] **Completed** — conclusive negative result
+
+### Next Steps
+
+- Consider other generators (W, Wbar, J) for nilpotency
+- Compute dim(R(V)) to determine associated variety dimension
+- Analyze full R(V) algebra structure (generators and relations)
+
+
+## Session 9: OPEdefs-only BP null search progress
+
+**Date**: 2026-03-26
+**Task**: OPEdefs-only BP null search progress
+
+### Summary
+
+Switched the Bershadsky-Polyakov level-six null search to an OPEdefs-only workflow and established that :TTT: lies in a larger null-descendant span modulo manifest C2, but the final manifest-C2 representative is still incomplete.
+
 ### Main Changes
 
+- Replaced the earlier mixed `pyope`/free-field route with an `OPEdefs.m`-only search based on the Bershadsky-Polyakov OPEs at `k=-1` and standard Virasoro normalization `T(z)T(w) ~ c/2 (z-w)^(-4) + 2T(w) (z-w)^(-2) + T'(w)/(z-w)`.
+- Confirmed that the handwritten weight-six candidates were insufficient, then built an automated descendant-closure script `tmp_bp_generate_desc_ungraded.wls` starting from the paper Higgs-null representative `NH` and closing under `Derivative[1]`, `NO[g, -]`, and `OPEPole[q][g, -]` for `g in {Z, X, Y, T}` up to closure depth 3.
+- Generated 4278 descendant candidates in OPEdefs and exported them to `/tmp/bp_desc_ungraded.txt`.
+- Projected the closure onto the weight-6, charge-0, non-manifestly-C2 monomial sector in Python; found 19 relevant bad monomials, 153 useful descendant columns, and an 18-dimensional effective span.
+- Solved the quotient linear algebra and found a 13-term descendant combination showing that `:TTT:` is already in the larger OPEdefs null-descendant span modulo manifest C2.
+- Reconstructed an exact OPEdefs combination from the selected closure basis and then solved an additional 4-term correction to cancel a first batch of remaining non-manifest bad monomials.
+- Current best exact reconstruction still leaves 14 non-manifestly-C2 terms, so the final representative `N_final = :TTT: + phi` with `phi` written entirely in manifest C2 form has not yet been completed.
+- Current blocking issue is no longer existence of a relation, but basis completeness / exact reconstruction: the automated closure proves the relation is present, yet the present descendant basis is still not rich enough to reorganize every remaining bad term into explicit `NO[Derivative[1][a], b]` form.
+- Relevant scratch scripts and artifacts: `tmp_bp_generate_desc_ungraded.wls`, `tmp_bp_exact_final.wls`, `tmp_bp_exact_final2.wls`, `/tmp/bp_desc_ungraded.txt`, `/tmp/bp_exact_final2.txt`.
 
 
 ### Git Commits
