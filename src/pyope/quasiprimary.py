@@ -9,14 +9,7 @@ from .constants import One, Zero
 from .local_operator import extract_scalar_operator
 from .operators import Operator, d
 from .simplify import simplify
-
-
-def _ascending_pochhammer(value: Any, order: int) -> sp.Expr:
-    result = sp.Integer(1)
-    base = sp.sympify(value)
-    for k in range(order):
-        result *= base + k
-    return sp.simplify(result)
+from .utils import _ascending_pochhammer
 
 
 def _infer_conformal_weight(expr: Any) -> sp.Expr | None:

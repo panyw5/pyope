@@ -7,14 +7,7 @@ import sympy as sp
 from .constants import Zero
 from .operators import d
 from .simplify import simplify
-
-
-def _ascending_pochhammer(value: Any, order: int) -> sp.Expr:
-    result = sp.Integer(1)
-    base = sp.sympify(value)
-    for k in range(order):
-        result *= base + k
-    return sp.simplify(result)
+from .utils import _ascending_pochhammer
 
 
 def compact_family_poles(

@@ -575,7 +575,7 @@ def _combine_like_terms_preserving_metadata(expr: Any) -> Any:
     return sp.Add(*rebuilt_terms)
 
 
-_realize_cache: dict[int, Any] = {}
+_realize_cache: dict[Any, Any] = {}
 
 
 def clear_realize_cache() -> None:
@@ -595,12 +595,11 @@ def _realize_expr(expr: Any) -> Any:
     """
     # P1: memoize RealizedGenerator expansions
     if isinstance(expr, RealizedGenerator):
-        key = id(expr)
-        cached = _realize_cache.get(key)
+        cached = _realize_cache.get(expr)
         if cached is not None:
             return cached
         result = _realize_expr(expr.realization)
-        _realize_cache[key] = result
+        _realize_cache[expr] = result
         return result
 
     if expr is Zero or expr is One:

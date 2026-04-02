@@ -188,7 +188,7 @@ class OPECache:
             else:
                 self.misses += 1
                 return None
-        except Exception:
+        except (TypeError, ValueError, AttributeError):
             # 如果无法创建键，跳过缓存
             self.misses += 1
             return None
@@ -213,7 +213,7 @@ class OPECache:
             key = make_ope_cache_key(left, right)
             self._cache[key] = result
             self._access_count[key] = 1
-        except Exception:
+        except (TypeError, ValueError, AttributeError):
             # 如果无法创建键，跳过缓存
             pass
 

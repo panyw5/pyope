@@ -239,7 +239,7 @@ class BasisOperator(Operator):
         indexed_name = f"{self._base_name}_{index}"
         return BasisOperator(
             indexed_name,
-            bosonic=self._bosonic,
+            fermionic=not self._bosonic,
             indexed=True,
             conformal_weight=self._conformal_weight,
             indices=index,
