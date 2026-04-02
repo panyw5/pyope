@@ -1210,8 +1210,12 @@ class C2Space:
         return self.reducer().solve_c2_witness(canonical)
 
 
-class C2NullSearcher:
-    """Search for descendant operators equivalent to a target modulo C2."""
+class LegacyC2NullSearcher:
+    """Search for descendant operators equivalent to a target modulo C2.
+
+    Note: This is the legacy interface. For new code, prefer
+    ``null_search.C2NullSearcher`` (exported as ``QuotientC2NullSearcher``).
+    """
 
     def __init__(
         self,
@@ -1380,3 +1384,7 @@ class C2NullSearcher:
                 vector = vector.xreplace(substitutions)
             return vector
         return solution
+
+
+# Backward-compatible alias
+C2NullSearcher = LegacyC2NullSearcher

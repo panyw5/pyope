@@ -20,6 +20,23 @@ def independent_under_realization(
     free_field_basis: "LocalOperatorBasis",
     weight: Any = None,
 ) -> list[Any]: ...
+def list_independent_ops(
+    expressions: Iterable[Any],
+    basis: "LocalOperatorBasis",
+    weight: Any = None,
+) -> list[Any]: ...
+def list_zero_relations(
+    expressions: Iterable[Any],
+    basis: "LocalOperatorBasis",
+    weight: Any = None,
+) -> list[dict[str, Any]]: ...
+
+class LocalOperatorCanonicalizer:
+    def __init__(self, generators: Iterable[Operator]) -> None: ...
+    def canonicalize(self, expr: Any) -> Any: ...
+
+class SparseLinearContext:
+    def __init__(self) -> None: ...
 
 class LocalOperatorBasis:
     generators: tuple[Operator, ...]
@@ -41,36 +58,6 @@ class LocalOperatorBasis:
         weight: Any = None,
     ) -> list[Any]: ...
 
-class DescendantSpace:
-    basis_builder: LocalOperatorBasis
-    def __init__(self, basis_builder: LocalOperatorBasis) -> None: ...
-    def generate(self, source: Any, target_weight: Any) -> List[Any]: ...
-    def basis(self, source: Any, target_weight: Any) -> List[Any]: ...
-    def span(self, sources: Iterable[Any], target_weight: Any) -> List[Any]: ...
-
-class SingularVectorAnalyzer:
-    basis_builder: LocalOperatorBasis
-    generators: tuple[Any, ...]
-    stress_tensor: Any
-    def __init__(
-        self,
-        basis_builder: LocalOperatorBasis,
-        generators: Optional[Iterable[Any]] = None,
-        stress_tensor: Any = None,
-    ) -> None: ...
-    def positive_mode_constraints(
-        self, expr: Any, generators: Optional[Iterable[Any]] = None
-    ) -> Dict[Any, Dict[int, Any]]: ...
-    def is_singular(
-        self, expr: Any, generators: Optional[Iterable[Any]] = None
-    ) -> bool: ...
-    def find_singular_vectors(
-        self,
-        weight: Any,
-        ansatz: Optional[Iterable[Any]] = None,
-        generators: Optional[Iterable[Any]] = None,
-    ) -> List[Dict[str, Any]]: ...
-
 class C2Space:
     basis_builder: LocalOperatorBasis
     def __init__(self, basis_builder: LocalOperatorBasis) -> None: ...
@@ -80,19 +67,11 @@ class C2Space:
 
 class C2NullSearcher:
     basis_builder: LocalOperatorBasis
-    descendants: DescendantSpace
-    c2_space: C2Space
-    stress_tensor: Any
     def __init__(
         self,
         basis_builder: LocalOperatorBasis,
-        descendants: Optional[DescendantSpace] = None,
-        c2_space: Optional[C2Space] = None,
         stress_tensor: Any = None,
     ) -> None: ...
     def search_from_sources(
         self, target_weight: Any, sources: Iterable[Any], target_expr: Any
-    ) -> Optional[Dict[str, Any]]: ...
-    def search_stress_tensor_nilpotency(
-        self, n: int, sources: Iterable[Any], stress_tensor: Any = None
     ) -> Optional[Dict[str, Any]]: ...
