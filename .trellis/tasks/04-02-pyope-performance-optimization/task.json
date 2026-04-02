@@ -1,0 +1,44 @@
+{
+  "id": "pyope-performance-optimization",
+  "name": "pyope-performance-optimization",
+  "title": "Optimize pyope performance",
+  "description": "",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "priority": "P2",
+  "creator": "lelouch",
+  "assignee": "lelouch",
+  "createdAt": "2026-04-02",
+  "completedAt": null,
+  "branch": "feat/pyope-performance-optimization",
+  "base_branch": "main",
+  "worktree_path": "/Users/lelouch/trellis-worktrees/feat/pyope-performance-optimization",
+  "current_phase": 1,
+  "next_action": [
+    {
+      "phase": 1,
+      "action": "implement"
+    },
+    {
+      "phase": 2,
+      "action": "check"
+    },
+    {
+      "phase": 3,
+      "action": "finish"
+    },
+    {
+      "phase": 4,
+      "action": "create-pr"
+    }
+  ],
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "Benchmark established on bc-beta-gamma nested NO simplification. OPEdefs remains faster, but phase-1 hot-path optimizations reduced pyope mean runtime from about 0.04197s to about 0.03136s. Current focus: first-layer lightweight internal representation for simplify/NO hot path, while staying in the 04-02-pyope-performance-optimization worktree.",
+  "meta": {}
+}

@@ -1,0 +1,12 @@
+{
+  "candidate_count": 169,
+  "candidate_rank": 140,
+  "known_singular_descendant_count": 128,
+  "known_singular_descendant_rank": 119,
+  "combined_rank": 157,
+  "quotient_dimension_after_known_singulars": 38,
+  "target": "NO(SG0,NO(SG0,NO(SG0,SG0)))",
+  "target_survives_mod_known_singulars": false,
+  "rank_without_target": 157,
+  "rank_with_target": 157
+}

@@ -323,7 +323,7 @@ The associated variety has positive dimension (≥1 in the T-direction).
 
 ### Summary
 
-Switched the Bershadsky-Polyakov level-six null search to an OPEdefs-only workflow and established that :TTT: lies in a larger null-descendant span modulo manifest C2, but the final manifest-C2 representative is still incomplete.
+Completed the OPEdefs-only Bershadsky-Polyakov level-six null search at the manifest-$C_2$ level: the previously remaining 14 strict non-manifest terms were identified explicitly, and a simpler exact descendant combination was found whose remainder is entirely manifestly $C_2$.
 
 ### Main Changes
 
@@ -332,10 +332,17 @@ Switched the Bershadsky-Polyakov level-six null search to an OPEdefs-only workfl
 - Generated 4278 descendant candidates in OPEdefs and exported them to `/tmp/bp_desc_ungraded.txt`.
 - Projected the closure onto the weight-6, charge-0, non-manifestly-C2 monomial sector in Python; found 19 relevant bad monomials, 153 useful descendant columns, and an 18-dimensional effective span.
 - Solved the quotient linear algebra and found a 13-term descendant combination showing that `:TTT:` is already in the larger OPEdefs null-descendant span modulo manifest C2.
-- Reconstructed an exact OPEdefs combination from the selected closure basis and then solved an additional 4-term correction to cancel a first batch of remaining non-manifest bad monomials.
-- Current best exact reconstruction still leaves 14 non-manifestly-C2 terms, so the final representative `N_final = :TTT: + phi` with `phi` written entirely in manifest C2 form has not yet been completed.
-- Current blocking issue is no longer existence of a relation, but basis completeness / exact reconstruction: the automated closure proves the relation is present, yet the present descendant basis is still not rich enough to reorganize every remaining bad term into explicit `NO[Derivative[1][a], b]` form.
-- Relevant scratch scripts and artifacts: `tmp_bp_generate_desc_ungraded.wls`, `tmp_bp_exact_final.wls`, `tmp_bp_exact_final2.wls`, `/tmp/bp_desc_ungraded.txt`, `/tmp/bp_exact_final2.txt`.
+- Reconstructed an exact OPEdefs combination from the selected closure basis and then isolated the exact 14 remaining strict non-manifest terms in the Session 9 remainder. These are the terms that fail the strongest outermost-`NO[Derivative[1][a], b]` criterion, namely the `X`/`Z`-nested monomials built from `NO[X, NO[Y, T]]`, `NO[X, Derivative[3][Y]]`, `NO[Z, Derivative[2][T]]`, and their immediate `Z`-descendants.
+- Clarified the distinction between two notions of manifest $C_2$: under the recursive criterion used in the earlier quotient bookkeeping, the same remainder has only 4 genuinely bad monomials, explaining the discrepancy with the earlier “14 terms remain” note.
+- Built a dedicated diagnostic script `tmp_bp_remainder_analysis.wls` to split the exact remainder into monomials, classify strict vs recursive manifest-$C_2$ terms, and solve the resulting linear systems directly inside OPEdefs.
+- Found a much simpler exact descendant representative
+  `N_final = (8/3) e2 - (4/3) e12 + (16/9) e13`,
+  where the remainder `R = N_final - :TTT:` has **no** recursively non-manifest terms. Equivalently, `:TTT:` is now written modulo an explicitly manifest-$C_2$ remainder using only the existing OPEdefs descendant basis.
+- Verified this compact representative in `tmp_bp_exact_manifest_c2.wls`; its remainder is
+  `2*NO[X, NO[Derivative[1][Y], T]] - (3/2) NO[Z, NO[Derivative[1][T], T]] - (1/2) NO[Z, NO[Derivative[2][X], Y]] - (1/4) NO[Z, Derivative[3][T]] - NO[Derivative[1][Z], NO[T, T]] + ...`,
+  which is manifestly $C_2$ in the recursive sense.
+- The only remaining incompleteness is a stricter normal-form issue: if one insists that every term be rewritten with an outermost derivative factor, the present 17-element basis still leaves 4 strict terms (`NO[X, Derivative[4][Y]]`, `NO[Z, NO[Z, NO[T, T]]]`, `NO[Z, NO[Z, Derivative[2][T]]]`, `NO[Z, Derivative[3][T]]`).
+- Relevant scratch scripts and artifacts: `tmp_bp_generate_desc_ungraded.wls`, `tmp_bp_exact_final.wls`, `tmp_bp_exact_final2.wls`, `tmp_bp_remainder_analysis.wls`, `tmp_bp_exact_manifest_c2.wls`, `/tmp/bp_desc_ungraded.txt`, `/tmp/bp_exact_final2.txt`.
 
 
 ### Git Commits
@@ -344,7 +351,8 @@ Switched the Bershadsky-Polyakov level-six null search to an OPEdefs-only workfl
 
 ### Testing
 
-- [OK] (Add test results)
+- [OK] `wolframscript tmp_bp_remainder_analysis.wls` (despite `FrontEndObject::notavail` warnings, the algebraic output completed and identified the 14 strict terms, the 4 recursive bad monomials, and a manifest-$C_2$ exact solution).
+- [OK] `wolframscript tmp_bp_exact_manifest_c2.wls` (verified the compact representative `N_final = (8/3)e2 - (4/3)e12 + (16/9)e13` and printed the manifest-$C_2$ remainder).
 
 ### Status
 
@@ -352,4 +360,4 @@ Switched the Bershadsky-Polyakov level-six null search to an OPEdefs-only workfl
 
 ### Next Steps
 
-- None - task complete
+- Optional: enlarge the descendant basis further only if a stricter outermost-derivative normal form is desired for the remaining 4 terms.

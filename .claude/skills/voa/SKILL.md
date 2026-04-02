@@ -2,6 +2,9 @@
 name: voa
 description: 进行形顶点算符代数 (vertex operator algebra) 的解析、符号化的计算。当需要解释和预测顶点算符代数计算的结果，或者开发测试 (tests) 时，使用此技能。
 ---
+
+
+
 # `OPEdefs` manual
 
 阅读 `OPEdefs-manual.md` (相对于本 SKILL.md 的路径是 [OPEdefs-manual.md](manual/OPEdefs-manual.md))

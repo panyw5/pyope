@@ -1,0 +1,3264 @@
+{
+	"Wbar":[
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, gamma]]]]",
+			"coeff":"1"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[gamma, NO[b, c]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], gamma]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[gamma, NO[b, Derivative[1][c]]]",
+			"coeff":"-4\/3"
+		},
+		{
+			"monomial":"NO[gamma, NO[Derivative[1][b], c]]",
+			"coeff":"2\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, gamma]]",
+			"coeff":"2\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][gamma], NO[b, c]]",
+			"coeff":"-8\/3"
+		},
+		{
+			"monomial":"Derivative[2][gamma]",
+			"coeff":"10\/9"
+		}
+	],
+	"dWbar":[
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]",
+			"coeff":"3"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]",
+			"coeff":"4"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], Derivative[1][gamma]]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], gamma]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[gamma, NO[b, Derivative[2][c]]]",
+			"coeff":"-4\/3"
+		},
+		{
+			"monomial":"NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]",
+			"coeff":"-2\/3"
+		},
+		{
+			"monomial":"NO[gamma, NO[Derivative[2][b], c]]",
+			"coeff":"2\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, gamma]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, c]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][gamma], gamma]]",
+			"coeff":"-8\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[Derivative[1][gamma], NO[Derivative[1][b], c]]",
+			"coeff":"-2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, gamma]]",
+			"coeff":"2\/3"
+		},
+		{
+			"monomial":"NO[Derivative[2][gamma], NO[b, c]]",
+			"coeff":"-8\/3"
+		},
+		{
+			"monomial":"Derivative[3][gamma]",
+			"coeff":"10\/9"
+		}
+	],
+	"NO_W_dWbar":[
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"3"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], Derivative[1][gamma]]]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], gamma]]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[b, Derivative[2][c]]]]",
+			"coeff":"-4\/3"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]",
+			"coeff":"-2\/3"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], c]]]",
+			"coeff":"2\/3"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"-2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[b, c]]]",
+			"coeff":"-8\/3"
+		},
+		{
+			"monomial":"NO[beta, Derivative[3][gamma]]",
+			"coeff":"10\/9"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-8\/3"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, gamma]]]",
+			"coeff":"2\/3"
+		}
+	],
+	"NO_dW_Wbar":[
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"1"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[b, Derivative[1][c]]]]",
+			"coeff":"-4\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[1][b], c]]]",
+			"coeff":"2\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, gamma]]]",
+			"coeff":"2\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[b, c]]]",
+			"coeff":"-8\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], Derivative[2][gamma]]",
+			"coeff":"10\/9"
+		}
+	],
+	"term5":[
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-243\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"-405\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"-243\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"-81\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]]]",
+			"coeff":"81\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]]]",
+			"coeff":"567\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"567\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[3][c]]]]]]]]",
+			"coeff":"18"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]]]",
+			"coeff":"-135\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]]]",
+			"coeff":"243\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"189\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]]]",
+			"coeff":"-27\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"297\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"297\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"621\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"189\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]]]",
+			"coeff":"189\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"-1755\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"315\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"189\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"189\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"-45"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[2][gamma], gamma]]]]]",
+			"coeff":"-441\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[4][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-1053\/64"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[5][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-693\/640"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[5][c]]]]]]",
+			"coeff":"-9\/10"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]]]",
+			"coeff":"-135\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[3][c], c]]]]]]]",
+			"coeff":"12"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[4][c]]]]]]",
+			"coeff":"-45\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], Derivative[2][c]]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[5][b], c]]]]]",
+			"coeff":"-9\/80"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[4][c]]]]]]",
+			"coeff":"-75\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]]]",
+			"coeff":"45\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[3][c]]]]]]",
+			"coeff":"-3"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], Derivative[2][c]]]]]]",
+			"coeff":"27\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[3][b], Derivative[1][c]]]]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[4][b], c]]]]]",
+			"coeff":"3\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[3][c]]]]]]",
+			"coeff":"-30"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"90"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-135\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[3][b], c]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[3][c]]]]]]",
+			"coeff":"-27"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"207\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-189\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-21\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-72"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[2][b], c]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-945\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"-585\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-147\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-21\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"21\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-645\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"-645\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[2][gamma], NO[b, c]]]]]",
+			"coeff":"-147\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], Derivative[3][gamma]]]]",
+			"coeff":"133\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-567\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-351\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"-351\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], Derivative[2][gamma]]]]",
+			"coeff":"405\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[5][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-231\/160"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[5][gamma], Derivative[1][gamma]]]]",
+			"coeff":"99\/20"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[6][gamma], gamma]]]",
+			"coeff":"117\/160"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[b, Derivative[6][c]]]]",
+			"coeff":"7\/24"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[3][c], Derivative[1][c]]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[4][c], c]]]]]",
+			"coeff":"-5\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[1][b], Derivative[5][c]]]]",
+			"coeff":"3\/10"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[3][c], c]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], NO[Derivative[1][b], NO[Derivative[2][c], c]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], Derivative[4][c]]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[3][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"-1\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[3][b], NO[Derivative[1][b], NO[Derivative[1][c], c]]]]]",
+			"coeff":"1\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[3][b], Derivative[3][c]]]]",
+			"coeff":"1\/3"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[4][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"1"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[4][b], Derivative[2][c]]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[5][b], Derivative[1][c]]]]",
+			"coeff":"3\/80"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[6][b], c]]]",
+			"coeff":"-1\/30"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[b, Derivative[5][c]]]]",
+			"coeff":"9\/5"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]",
+			"coeff":"81\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[3][c], c]]]]]",
+			"coeff":"-18"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[4][c]]]]",
+			"coeff":"45\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[3][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-9\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[3][b], Derivative[2][c]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[5][b], c]]]",
+			"coeff":"9\/80"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[b, Derivative[4][c]]]]",
+			"coeff":"55\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"-33\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][b], Derivative[3][c]]]]",
+			"coeff":"5\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][b], Derivative[2][c]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[3][b], Derivative[1][c]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[4][b], c]]]",
+			"coeff":"-5\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[b, Derivative[3][c]]]]",
+			"coeff":"31\/3"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-31"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"93\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[Derivative[3][b], c]]]",
+			"coeff":"31\/24"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[4][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"261\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[4][gamma], NO[Derivative[1][b], Derivative[1][c]]]]",
+			"coeff":"45\/64"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[4][gamma], NO[Derivative[2][b], c]]]",
+			"coeff":"-45\/64"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[5][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"671\/160"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[5][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"671\/320"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[6][gamma], NO[b, c]]]",
+			"coeff":"39\/80"
+		},
+		{
+			"monomial":"NO[beta, Derivative[7][gamma]]",
+			"coeff":"-55\/448"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-81\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"-189\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"-27"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"-189\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]]]",
+			"coeff":"27"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"2727\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"63\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[3][c]]]]]]]]",
+			"coeff":"9"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]]]",
+			"coeff":"-63\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]]]",
+			"coeff":"27\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]]]",
+			"coeff":"3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"153\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"135\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"135\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"1593\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"909\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"477\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"-225\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], gamma]]]]]",
+			"coeff":"-945\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"147\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-30"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[4][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-621\/64"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[4][c]]]]]]",
+			"coeff":"-65\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]]]",
+			"coeff":"39\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[3][c]]]]]]",
+			"coeff":"-1"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"-3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[2][b], Derivative[2][c]]]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], Derivative[1][c]]]]]]",
+			"coeff":"-1\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[4][b], c]]]]]",
+			"coeff":"1\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[3][c]]]]]]",
+			"coeff":"-14"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"42"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-63\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-7\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-387\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-285\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"-285\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], NO[b, c]]]]]",
+			"coeff":"-285\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-97\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-97\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], Derivative[2][gamma]]]]",
+			"coeff":"165\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[4][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-207\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[4][gamma], Derivative[1][gamma]]]]",
+			"coeff":"45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[5][gamma], gamma]]]",
+			"coeff":"33\/20"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-135\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"-81\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"351\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]]]",
+			"coeff":"-3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"57\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"57\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"249\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-33\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"459\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"315\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"225\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"-135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-495\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-147\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[3][c]]]]]]",
+			"coeff":"-1"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-1\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-27\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"27\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-225\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"-225\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-57\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-51\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"-18"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], Derivative[2][gamma]]]]",
+			"coeff":"105\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-21\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[3][gamma], Derivative[1][gamma]]]]",
+			"coeff":"213\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[4][gamma], gamma]]]",
+			"coeff":"63\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[b, Derivative[4][c]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"-3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[1][b], Derivative[3][c]]]]",
+			"coeff":"1\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[2][b], Derivative[2][c]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[3][b], Derivative[1][c]]]]",
+			"coeff":"1\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[4][b], c]]]",
+			"coeff":"-1\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"33\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"21\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"153\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-267\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-33\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-33\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-33\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-57\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], Derivative[1][gamma]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[3][gamma], gamma]]]",
+			"coeff":"19\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[b, Derivative[3][c]]]]",
+			"coeff":"3"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[Derivative[3][b], c]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-27\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"-3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[1][gamma], Derivative[1][gamma]]]]",
+			"coeff":"9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[2][gamma], gamma]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"51\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], Derivative[1][c]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][gamma], NO[Derivative[2][b], c]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[3][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"41\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[3][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"41\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[4][gamma], NO[b, c]]]",
+			"coeff":"9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], Derivative[5][gamma]]",
+			"coeff":"-11\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"135\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"81\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-153\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-57\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-57\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-51\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[2][gamma], Derivative[1][gamma]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[3][gamma], gamma]]]",
+			"coeff":"33\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"27\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"27\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"-9\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-15\/128"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"25\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"5\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[Derivative[1][gamma], Derivative[1][gamma]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[Derivative[2][gamma], gamma]]]",
+			"coeff":"-5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[gamma, NO[b, Derivative[2][c]]]]",
+			"coeff":"5\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]",
+			"coeff":"5\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[gamma, NO[Derivative[2][b], c]]]",
+			"coeff":"-5\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"-5\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"-15\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"5\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"15\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"15\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[2][beta], NO[gamma, gamma]]]",
+			"coeff":"-15\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[2][gamma], NO[b, c]]]",
+			"coeff":"5\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], Derivative[3][gamma]]",
+			"coeff":"-25\/192"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"-63\/320"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"-63\/320"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"21\/80"
+		},
+		{
+			"monomial":"NO[Derivative[6][beta], NO[beta, NO[gamma, gamma]]]",
+			"coeff":"-3\/64"
+		}
+	],
+	"term9":[
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"135\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"45\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]]]",
+			"coeff":"-135\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"-675\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"-105\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[3][c]]]]]]]]",
+			"coeff":"-5"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]]]",
+			"coeff":"15"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]]]",
+			"coeff":"-5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"-135\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"-405\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"-315\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]]]",
+			"coeff":"-45\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"-225\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"-225\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-225\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"525\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], gamma]]]]]",
+			"coeff":"1125\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-105\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"315\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[4][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"675\/128"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[4][c]]]]]]",
+			"coeff":"75\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]]]",
+			"coeff":"-45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[3][c]]]]]]",
+			"coeff":"30"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"-60"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"5\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[2][c]]]]]]",
+			"coeff":"45"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"225\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"475\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"325\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], NO[b, c]]]]]",
+			"coeff":"375\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"315\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"245\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"105\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], Derivative[2][gamma]]]]",
+			"coeff":"-1225\/48"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[4][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"225\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[4][gamma], Derivative[1][gamma]]]]",
+			"coeff":"-375\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[5][gamma], gamma]]]",
+			"coeff":"-77\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[b, Derivative[5][c]]]]",
+			"coeff":"-1"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[3][c], c]]]]]",
+			"coeff":"10\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[1][b], Derivative[4][c]]]]",
+			"coeff":"25\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[3][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-5\/6"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[3][b], Derivative[2][c]]]]",
+			"coeff":"5\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[5][b], c]]]",
+			"coeff":"1\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"-135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"-525\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"-45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"-45\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-15"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-375\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"125\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"105\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"10"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-5\/6"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"25\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-5\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-325\/48"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"15"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-175\/24"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-625\/48"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"25\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], Derivative[2][gamma]]]]",
+			"coeff":"125\/24"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[3][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"35\/6"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[4][gamma], gamma]]]",
+			"coeff":"25\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[b, Derivative[4][c]]]]",
+			"coeff":"-25\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"15"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[b, Derivative[3][c]]]]",
+			"coeff":"-125\/9"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"50\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"25\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[3][b], c]]]",
+			"coeff":"25\/72"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[3][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"-35\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[4][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"-275\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[4][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"-125\/64"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[5][gamma], NO[b, c]]]",
+			"coeff":"-77\/48"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], Derivative[6][gamma]]",
+			"coeff":"65\/192"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"-225\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"-15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-135\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"225\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"-15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"105\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"75\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], Derivative[1][gamma]]]]",
+			"coeff":"-175\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[3][gamma], gamma]]]",
+			"coeff":"-35\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"15\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"-45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"-15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"225\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"75\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"75\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[2][gamma], Derivative[1][gamma]]]]",
+			"coeff":"-25\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[3][gamma], gamma]]]",
+			"coeff":"-35\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[gamma, NO[b, Derivative[3][c]]]]",
+			"coeff":"-5\/3"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[gamma, NO[Derivative[3][b], c]]]",
+			"coeff":"5\/24"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"-45\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-25\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-55\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"-25\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], gamma]]]",
+			"coeff":"75\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"-15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"-175\/24"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"-25\/48"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[3][beta], NO[gamma, gamma]]]",
+			"coeff":"5\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[3][gamma], NO[b, c]]]",
+			"coeff":"-35\/12"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], Derivative[4][gamma]]",
+			"coeff":"25\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"25\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"25\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-25\/32"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"21\/128"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"21\/64"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-21\/32"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[gamma, NO[b, Derivative[1][c]]]]",
+			"coeff":"-7\/32"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[gamma, NO[Derivative[1][b], c]]]",
+			"coeff":"7\/64"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[Derivative[1][beta], NO[gamma, gamma]]]",
+			"coeff":"7\/32"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[Derivative[1][gamma], NO[b, c]]]",
+			"coeff":"-7\/16"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], Derivative[2][gamma]]",
+			"coeff":"35\/192"
+		}
+	],
+	"term5_plus_term9":[
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-243\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"-405\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"-243\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"-81\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]]]",
+			"coeff":"81\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]]]",
+			"coeff":"567\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"567\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[3][c]]]]]]]]",
+			"coeff":"18"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]]]",
+			"coeff":"-135\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]]]",
+			"coeff":"243\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"189\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]]]",
+			"coeff":"-27\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"297\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"297\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"621\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"189\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]]]",
+			"coeff":"189\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"-1755\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"315\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"189\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"189\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"-45"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[2][gamma], gamma]]]]]",
+			"coeff":"-441\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[4][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-1053\/64"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[beta, NO[Derivative[5][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-693\/640"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[5][c]]]]]]",
+			"coeff":"-9\/10"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]]]",
+			"coeff":"-135\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[3][c], c]]]]]]]",
+			"coeff":"12"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[4][c]]]]]]",
+			"coeff":"-45\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], Derivative[2][c]]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[gamma, NO[gamma, NO[Derivative[5][b], c]]]]]",
+			"coeff":"-9\/80"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[4][c]]]]]]",
+			"coeff":"-75\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]]]",
+			"coeff":"45\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[3][c]]]]]]",
+			"coeff":"-3"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], Derivative[2][c]]]]]]",
+			"coeff":"27\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[3][b], Derivative[1][c]]]]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[4][b], c]]]]]",
+			"coeff":"3\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[3][c]]]]]]",
+			"coeff":"-30"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"90"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-135\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[3][b], c]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[3][c]]]]]]",
+			"coeff":"-27"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"207\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-189\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-21\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-72"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[2][b], c]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-945\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"-585\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-147\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-21\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"21\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-645\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"-645\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[2][gamma], NO[b, c]]]]]",
+			"coeff":"-147\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[3][gamma], Derivative[3][gamma]]]]",
+			"coeff":"133\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-567\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-351\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"-351\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[4][gamma], Derivative[2][gamma]]]]",
+			"coeff":"405\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[5][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-231\/160"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[5][gamma], Derivative[1][gamma]]]]",
+			"coeff":"99\/20"
+		},
+		{
+			"monomial":"NO[beta, NO[beta, NO[Derivative[6][gamma], gamma]]]",
+			"coeff":"117\/160"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[b, Derivative[6][c]]]]",
+			"coeff":"7\/24"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[3][c], Derivative[1][c]]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[4][c], c]]]]]",
+			"coeff":"-5\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[1][b], Derivative[5][c]]]]",
+			"coeff":"3\/10"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[3][c], c]]]]]",
+			"coeff":"2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], NO[Derivative[1][b], NO[Derivative[2][c], c]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[2][b], Derivative[4][c]]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[3][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"-1\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[3][b], NO[Derivative[1][b], NO[Derivative[1][c], c]]]]]",
+			"coeff":"1\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[3][b], Derivative[3][c]]]]",
+			"coeff":"1\/3"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[4][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"1"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[4][b], Derivative[2][c]]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[5][b], Derivative[1][c]]]]",
+			"coeff":"3\/80"
+		},
+		{
+			"monomial":"NO[beta, NO[gamma, NO[Derivative[6][b], c]]]",
+			"coeff":"-1\/30"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[b, Derivative[5][c]]]]",
+			"coeff":"9\/5"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]",
+			"coeff":"81\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[3][c], c]]]]]",
+			"coeff":"-18"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[4][c]]]]",
+			"coeff":"45\/16"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[3][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-9\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[3][b], Derivative[2][c]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[1][gamma], NO[Derivative[5][b], c]]]",
+			"coeff":"9\/80"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[b, Derivative[4][c]]]]",
+			"coeff":"55\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"-33\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][b], Derivative[3][c]]]]",
+			"coeff":"5\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][b], Derivative[2][c]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[3][b], Derivative[1][c]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[2][gamma], NO[Derivative[4][b], c]]]",
+			"coeff":"-5\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[b, Derivative[3][c]]]]",
+			"coeff":"31\/3"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-31"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"93\/8"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[3][gamma], NO[Derivative[3][b], c]]]",
+			"coeff":"31\/24"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[4][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"261\/32"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[4][gamma], NO[Derivative[1][b], Derivative[1][c]]]]",
+			"coeff":"45\/64"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[4][gamma], NO[Derivative[2][b], c]]]",
+			"coeff":"-45\/64"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[5][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"671\/160"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[5][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"671\/320"
+		},
+		{
+			"monomial":"NO[beta, NO[Derivative[6][gamma], NO[b, c]]]",
+			"coeff":"39\/80"
+		},
+		{
+			"monomial":"NO[beta, Derivative[7][gamma]]",
+			"coeff":"-55\/448"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-189\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"-99\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"-63\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"-27\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]]]",
+			"coeff":"-27\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"1377\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"147\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[3][c]]]]]]]]",
+			"coeff":"4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]]]",
+			"coeff":"-33\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]]]",
+			"coeff":"63\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]]]",
+			"coeff":"7\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"-135\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]]]",
+			"coeff":"-45\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"693\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"459\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"75\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], gamma]]]]]",
+			"coeff":"-765\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"21\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"75\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[4][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-567\/128"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[4][c]]]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]]]",
+			"coeff":"-3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[3][c]]]]]]",
+			"coeff":"-1"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"-3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[2][b], Derivative[2][c]]]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], Derivative[1][c]]]]]]",
+			"coeff":"-1\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[4][b], c]]]]]",
+			"coeff":"1\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[3][c]]]]]]",
+			"coeff":"16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"-18"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-1\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[2][c]]]]]]",
+			"coeff":"45"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"63\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"665\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"365\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[2][gamma], NO[b, c]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"121\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"51\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"105\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], Derivative[2][gamma]]]]",
+			"coeff":"-365\/24"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[4][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"9\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[4][gamma], Derivative[1][gamma]]]]",
+			"coeff":"-285\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[beta, NO[Derivative[5][gamma], gamma]]]",
+			"coeff":"-121\/160"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[b, Derivative[5][c]]]]",
+			"coeff":"-1"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], Derivative[1][c]]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[3][c], c]]]]]",
+			"coeff":"10\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[1][b], Derivative[4][c]]]]",
+			"coeff":"25\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[3][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-5\/6"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[3][b], Derivative[2][c]]]]",
+			"coeff":"5\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[gamma, NO[Derivative[5][b], c]]]",
+			"coeff":"1\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-45\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]]]",
+			"coeff":"-21\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]]]",
+			"coeff":"-15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"177\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]]]",
+			"coeff":"-3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"-33\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-15"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-63\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"35\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"39\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"10"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-5\/6"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]]]",
+			"coeff":"-3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]]]",
+			"coeff":"3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"25\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-5\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-325\/48"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"15"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-175\/24"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-625\/48"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"25\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], Derivative[2][gamma]]]]",
+			"coeff":"125\/24"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[3][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"35\/6"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[4][gamma], gamma]]]",
+			"coeff":"25\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[b, Derivative[4][c]]]]",
+			"coeff":"-25\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"15"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[b, Derivative[3][c]]]]",
+			"coeff":"-125\/9"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"50\/3"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"25\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[Derivative[3][b], c]]]",
+			"coeff":"25\/72"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[3][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"-35\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[4][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"-275\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[4][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"-125\/64"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], NO[Derivative[5][gamma], NO[b, c]]]",
+			"coeff":"-77\/48"
+		},
+		{
+			"monomial":"NO[Derivative[1][beta], Derivative[6][gamma]]",
+			"coeff":"65\/192"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]]]",
+			"coeff":"459\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"315\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"225\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], Derivative[1][gamma]]]]]]",
+			"coeff":"-135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"-495\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[beta, NO[Derivative[3][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-147\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[3][c]]]]]]",
+			"coeff":"-1"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]]]",
+			"coeff":"-9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[3][b], c]]]]]",
+			"coeff":"-1\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"-135\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-27\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"27\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-225\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]]]",
+			"coeff":"-225\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-57\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-51\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"-18"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[2][gamma], Derivative[2][gamma]]]]",
+			"coeff":"105\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[3][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-21\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[3][gamma], Derivative[1][gamma]]]]",
+			"coeff":"213\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[beta, NO[Derivative[4][gamma], gamma]]]",
+			"coeff":"63\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[b, Derivative[4][c]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[1][b], NO[b, NO[Derivative[2][c], c]]]]]",
+			"coeff":"-3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[1][b], Derivative[3][c]]]]",
+			"coeff":"1\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[2][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[2][b], Derivative[2][c]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[3][b], Derivative[1][c]]]]",
+			"coeff":"1\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[gamma, NO[Derivative[4][b], c]]]",
+			"coeff":"-1\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"135\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-21\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"21\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"69\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"39\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], Derivative[1][gamma]]]]",
+			"coeff":"-115\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][beta], NO[Derivative[3][gamma], gamma]]]",
+			"coeff":"-2"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[b, Derivative[3][c]]]]",
+			"coeff":"3"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], NO[b, NO[Derivative[1][c], c]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[Derivative[3][b], c]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-27\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"9\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[1][gamma], Derivative[1][gamma]]]]",
+			"coeff":"9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][beta], NO[Derivative[2][gamma], gamma]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"51\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], Derivative[1][c]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[2][gamma], NO[Derivative[2][b], c]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[3][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"41\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[3][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"41\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], NO[Derivative[4][gamma], NO[b, c]]]",
+			"coeff":"9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][beta], Derivative[5][gamma]]",
+			"coeff":"-11\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"45\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]]]",
+			"coeff":"21\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], gamma]]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[beta, NO[Derivative[2][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-81\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[2][c]]]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]]]",
+			"coeff":"-3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[2][b], c]]]]]",
+			"coeff":"3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"93\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"33\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[1][gamma], NO[Derivative[1][gamma], NO[b, c]]]]]",
+			"coeff":"15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[2][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"3"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[2][gamma], Derivative[1][gamma]]]]",
+			"coeff":"-35\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[beta, NO[Derivative[3][gamma], gamma]]]",
+			"coeff":"-37\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[gamma, NO[b, Derivative[3][c]]]]",
+			"coeff":"-5\/3"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[gamma, NO[Derivative[1][b], Derivative[2][c]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[gamma, NO[Derivative[3][b], c]]]",
+			"coeff":"5\/24"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, NO[gamma, gamma]]]]]]]",
+			"coeff":"9\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, NO[gamma, NO[b, c]]]]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"-25\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"-55\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"-25\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][beta], NO[Derivative[2][gamma], gamma]]]",
+			"coeff":"75\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[1][gamma], NO[b, Derivative[2][c]]]]",
+			"coeff":"-15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][beta], NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"-175\/24"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[2][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"-25\/48"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[3][beta], NO[gamma, gamma]]]",
+			"coeff":"5\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], NO[Derivative[3][gamma], NO[b, c]]]",
+			"coeff":"-35\/12"
+		},
+		{
+			"monomial":"NO[Derivative[3][beta], Derivative[4][gamma]]",
+			"coeff":"25\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[beta, NO[Derivative[1][gamma], NO[gamma, gamma]]]]]",
+			"coeff":"-15\/128"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[gamma, NO[gamma, NO[b, Derivative[1][c]]]]]]",
+			"coeff":"25\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[gamma, NO[gamma, NO[Derivative[1][b], c]]]]]",
+			"coeff":"5\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[Derivative[1][gamma], NO[gamma, NO[b, c]]]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[Derivative[1][gamma], Derivative[1][gamma]]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[beta, NO[Derivative[2][gamma], gamma]]]",
+			"coeff":"-5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[gamma, NO[b, Derivative[2][c]]]]",
+			"coeff":"5\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[gamma, NO[Derivative[1][b], Derivative[1][c]]]]",
+			"coeff":"5\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[gamma, NO[Derivative[2][b], c]]]",
+			"coeff":"-5\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"15\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"5\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][beta], NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-15\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][gamma], NO[b, Derivative[1][c]]]]",
+			"coeff":"15\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[1][gamma], NO[Derivative[1][b], c]]]",
+			"coeff":"15\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[2][beta], NO[gamma, gamma]]]",
+			"coeff":"-15\/64"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], NO[Derivative[2][gamma], NO[b, c]]]",
+			"coeff":"5\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][beta], Derivative[3][gamma]]",
+			"coeff":"-25\/192"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[beta, NO[gamma, NO[gamma, gamma]]]]]",
+			"coeff":"-21\/640"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[gamma, NO[gamma, NO[b, c]]]]]",
+			"coeff":"21\/160"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[beta, NO[Derivative[1][gamma], gamma]]]",
+			"coeff":"-63\/160"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[gamma, NO[b, Derivative[1][c]]]]",
+			"coeff":"-7\/32"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[gamma, NO[Derivative[1][b], c]]]",
+			"coeff":"7\/64"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[Derivative[1][beta], NO[gamma, gamma]]]",
+			"coeff":"7\/32"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], NO[Derivative[1][gamma], NO[b, c]]]",
+			"coeff":"-7\/16"
+		},
+		{
+			"monomial":"NO[Derivative[5][beta], Derivative[2][gamma]]",
+			"coeff":"35\/192"
+		},
+		{
+			"monomial":"NO[Derivative[6][beta], NO[beta, NO[gamma, gamma]]]",
+			"coeff":"-3\/64"
+		}
+	]
+}

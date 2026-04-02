@@ -1,0 +1,504 @@
+{
+  "max_weight": "4",
+  "expected_series": {
+    "0": 1,
+    "2": 1,
+    "4": 1,
+    "6": 2,
+    "7": -2,
+    "8": 3,
+    "9": -2,
+    "10": 4,
+    "11": -4,
+    "12": 6,
+    "13": -6,
+    "14": 8,
+    "15": -8
+  },
+  "six_generator_scan_naive": [
+    {
+      "weight": "0",
+      "double_weight": 0,
+      "candidate_count": 1,
+      "independent_count": 1,
+      "bosonic_count": 1,
+      "fermionic_count": 0,
+      "superdimension": 1
+    },
+    {
+      "weight": "1/2",
+      "double_weight": 1,
+      "candidate_count": 0,
+      "independent_count": 0,
+      "bosonic_count": 0,
+      "fermionic_count": 0,
+      "superdimension": 0
+    },
+    {
+      "weight": "1",
+      "double_weight": 2,
+      "candidate_count": 1,
+      "independent_count": 1,
+      "bosonic_count": 1,
+      "fermionic_count": 0,
+      "superdimension": 1
+    },
+    {
+      "weight": "3/2",
+      "double_weight": 3,
+      "candidate_count": 4,
+      "independent_count": 4,
+      "bosonic_count": 2,
+      "fermionic_count": 2,
+      "superdimension": 0
+    },
+    {
+      "weight": "2",
+      "double_weight": 4,
+      "candidate_count": 3,
+      "independent_count": 3,
+      "bosonic_count": 3,
+      "fermionic_count": 0,
+      "superdimension": 3
+    },
+    {
+      "weight": "5/2",
+      "double_weight": 5,
+      "candidate_count": 8,
+      "independent_count": 8,
+      "bosonic_count": 4,
+      "fermionic_count": 4,
+      "superdimension": 0
+    },
+    {
+      "weight": "3",
+      "double_weight": 6,
+      "candidate_count": 13,
+      "independent_count": 12,
+      "bosonic_count": 8,
+      "fermionic_count": 4,
+      "superdimension": 4
+    },
+    {
+      "weight": "7/2",
+      "double_weight": 7,
+      "candidate_count": 20,
+      "independent_count": 20,
+      "bosonic_count": 10,
+      "fermionic_count": 10,
+      "superdimension": 0
+    },
+    {
+      "weight": "4",
+      "double_weight": 8,
+      "candidate_count": 34,
+      "independent_count": 31,
+      "bosonic_count": 19,
+      "fermionic_count": 12,
+      "superdimension": 7
+    }
+  ],
+  "six_generator_comparison_naive": [
+    {
+      "double_weight": 0,
+      "weight": "0",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 1,
+      "weight": "1/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 2,
+      "weight": "1",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 3,
+      "weight": "3/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 4,
+      "weight": "2",
+      "computed": 3,
+      "expected": 1,
+      "matches": false
+    },
+    {
+      "double_weight": 5,
+      "weight": "5/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 6,
+      "weight": "3",
+      "computed": 4,
+      "expected": 2,
+      "matches": false
+    },
+    {
+      "double_weight": 7,
+      "weight": "7/2",
+      "computed": 0,
+      "expected": -2,
+      "matches": false
+    },
+    {
+      "double_weight": 8,
+      "weight": "4",
+      "computed": 7,
+      "expected": 3,
+      "matches": false
+    }
+  ],
+  "six_generator_scan_closed": [
+    {
+      "weight": "0",
+      "double_weight": 0,
+      "candidate_count": 1,
+      "independent_count": 1,
+      "bosonic_count": 1,
+      "fermionic_count": 0,
+      "superdimension": 1
+    },
+    {
+      "weight": "1/2",
+      "double_weight": 1,
+      "candidate_count": 0,
+      "independent_count": 0,
+      "bosonic_count": 0,
+      "fermionic_count": 0,
+      "superdimension": 0
+    },
+    {
+      "weight": "1",
+      "double_weight": 2,
+      "candidate_count": 1,
+      "independent_count": 1,
+      "bosonic_count": 1,
+      "fermionic_count": 0,
+      "superdimension": 1
+    },
+    {
+      "weight": "3/2",
+      "double_weight": 3,
+      "candidate_count": 4,
+      "independent_count": 4,
+      "bosonic_count": 2,
+      "fermionic_count": 2,
+      "superdimension": 0
+    },
+    {
+      "weight": "2",
+      "double_weight": 4,
+      "candidate_count": 5,
+      "independent_count": 5,
+      "bosonic_count": 3,
+      "fermionic_count": 2,
+      "superdimension": 1
+    },
+    {
+      "weight": "5/2",
+      "double_weight": 5,
+      "candidate_count": 8,
+      "independent_count": 8,
+      "bosonic_count": 4,
+      "fermionic_count": 4,
+      "superdimension": 0
+    },
+    {
+      "weight": "3",
+      "double_weight": 6,
+      "candidate_count": 17,
+      "independent_count": 14,
+      "bosonic_count": 8,
+      "fermionic_count": 6,
+      "superdimension": 2
+    },
+    {
+      "weight": "7/2",
+      "double_weight": 7,
+      "candidate_count": 28,
+      "independent_count": 22,
+      "bosonic_count": 10,
+      "fermionic_count": 12,
+      "superdimension": -2
+    },
+    {
+      "weight": "4",
+      "double_weight": 8,
+      "candidate_count": 45,
+      "independent_count": 35,
+      "bosonic_count": 19,
+      "fermionic_count": 16,
+      "superdimension": 3
+    }
+  ],
+  "six_generator_comparison_closed": [
+    {
+      "double_weight": 0,
+      "weight": "0",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 1,
+      "weight": "1/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 2,
+      "weight": "1",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 3,
+      "weight": "3/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 4,
+      "weight": "2",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 5,
+      "weight": "5/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 6,
+      "weight": "3",
+      "computed": 2,
+      "expected": 2,
+      "matches": true
+    },
+    {
+      "double_weight": 7,
+      "weight": "7/2",
+      "computed": -2,
+      "expected": -2,
+      "matches": true
+    },
+    {
+      "double_weight": 8,
+      "weight": "4",
+      "computed": 3,
+      "expected": 3,
+      "matches": true
+    }
+  ],
+  "six_generator_closed_atoms": [
+    "-2*NO(b_char_p3,\u2202c_char_p3) - 3*NO(beta_char_p3,\u2202gamma_char_p3)/2 - NO(\u2202b_char_p3,c_char_p3) - NO(\u2202beta_char_p3,gamma_char_p3)/2",
+    "2*NO(b_char_p3,c_char_p3) + 3*NO(beta_char_p3,gamma_char_p3)",
+    "NO(gamma_char_p3,b_char_p3)",
+    "3*NO(beta_char_p3,\u2202c_char_p3) + 2*NO(\u2202beta_char_p3,c_char_p3)",
+    "beta_char_p3",
+    "10*\u2202^2gamma_char_p3/9 + NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))) + 2*NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,c_char_p3)))) - 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,gamma_char_p3)) - 4*NO(gamma_char_p3,NO(b_char_p3,\u2202c_char_p3))/3 + 2*NO(gamma_char_p3,NO(\u2202b_char_p3,c_char_p3))/3 + 2*NO(\u2202beta_char_p3,NO(gamma_char_p3,gamma_char_p3))/3 - 8*NO(\u2202gamma_char_p3,NO(b_char_p3,c_char_p3))/3",
+    "b_char_p3",
+    "-10*\u2202^3c_char_p3/9 - 8*NO(b_char_p3,NO(\u2202^2c_char_p3,c_char_p3))/3 - 3*NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,\u2202c_char_p3)))) + 4*NO(beta_char_p3,NO(gamma_char_p3,NO(b_char_p3,NO(\u2202c_char_p3,c_char_p3)))) + 4*NO(beta_char_p3,NO(gamma_char_p3,\u2202^2c_char_p3)) + 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,\u2202c_char_p3)) - 2*NO(\u2202^2beta_char_p3,NO(gamma_char_p3,c_char_p3))/3 + 2*NO(\u2202b_char_p3,NO(\u2202c_char_p3,c_char_p3))/3 - 2*NO(\u2202beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,c_char_p3)))) + 8*NO(\u2202beta_char_p3,NO(\u2202gamma_char_p3,c_char_p3))/3"
+  ],
+  "six_generator_closure_discovered": [
+    {
+      "operator": "b_char_p3",
+      "from": [
+        "NO(gamma_char_p3,b_char_p3)",
+        "beta_char_p3",
+        1
+      ],
+      "weight": "2",
+      "parity": 1
+    },
+    {
+      "operator": "-10*\u2202^3c_char_p3/9 - 8*NO(b_char_p3,NO(\u2202^2c_char_p3,c_char_p3))/3 - 3*NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,\u2202c_char_p3)))) + 4*NO(beta_char_p3,NO(gamma_char_p3,NO(b_char_p3,NO(\u2202c_char_p3,c_char_p3)))) + 4*NO(beta_char_p3,NO(gamma_char_p3,\u2202^2c_char_p3)) + 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,\u2202c_char_p3)) - 2*NO(\u2202^2beta_char_p3,NO(gamma_char_p3,c_char_p3))/3 + 2*NO(\u2202b_char_p3,NO(\u2202c_char_p3,c_char_p3))/3 - 2*NO(\u2202beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,c_char_p3)))) + 8*NO(\u2202beta_char_p3,NO(\u2202gamma_char_p3,c_char_p3))/3",
+      "from": [
+        "3*NO(beta_char_p3,\u2202c_char_p3) + 2*NO(\u2202beta_char_p3,c_char_p3)",
+        "10*\u2202^2gamma_char_p3/9 + NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))) + 2*NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,c_char_p3)))) - 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,gamma_char_p3)) - 4*NO(gamma_char_p3,NO(b_char_p3,\u2202c_char_p3))/3 + 2*NO(gamma_char_p3,NO(\u2202b_char_p3,c_char_p3))/3 + 2*NO(\u2202beta_char_p3,NO(gamma_char_p3,gamma_char_p3))/3 - 8*NO(\u2202gamma_char_p3,NO(b_char_p3,c_char_p3))/3",
+        1
+      ],
+      "weight": "2",
+      "parity": 1
+    }
+  ],
+  "eight_generator_scan": [
+    {
+      "weight": "0",
+      "double_weight": 0,
+      "candidate_count": 1,
+      "independent_count": 1,
+      "bosonic_count": 1,
+      "fermionic_count": 0,
+      "superdimension": 1
+    },
+    {
+      "weight": "1/2",
+      "double_weight": 1,
+      "candidate_count": 0,
+      "independent_count": 0,
+      "bosonic_count": 0,
+      "fermionic_count": 0,
+      "superdimension": 0
+    },
+    {
+      "weight": "1",
+      "double_weight": 2,
+      "candidate_count": 1,
+      "independent_count": 1,
+      "bosonic_count": 1,
+      "fermionic_count": 0,
+      "superdimension": 1
+    },
+    {
+      "weight": "3/2",
+      "double_weight": 3,
+      "candidate_count": 4,
+      "independent_count": 4,
+      "bosonic_count": 2,
+      "fermionic_count": 2,
+      "superdimension": 0
+    },
+    {
+      "weight": "2",
+      "double_weight": 4,
+      "candidate_count": 5,
+      "independent_count": 5,
+      "bosonic_count": 3,
+      "fermionic_count": 2,
+      "superdimension": 1
+    },
+    {
+      "weight": "5/2",
+      "double_weight": 5,
+      "candidate_count": 8,
+      "independent_count": 8,
+      "bosonic_count": 4,
+      "fermionic_count": 4,
+      "superdimension": 0
+    },
+    {
+      "weight": "3",
+      "double_weight": 6,
+      "candidate_count": 17,
+      "independent_count": 14,
+      "bosonic_count": 8,
+      "fermionic_count": 6,
+      "superdimension": 2
+    },
+    {
+      "weight": "7/2",
+      "double_weight": 7,
+      "candidate_count": 28,
+      "independent_count": 22,
+      "bosonic_count": 10,
+      "fermionic_count": 12,
+      "superdimension": -2
+    },
+    {
+      "weight": "4",
+      "double_weight": 8,
+      "candidate_count": 45,
+      "independent_count": 35,
+      "bosonic_count": 19,
+      "fermionic_count": 16,
+      "superdimension": 3
+    }
+  ],
+  "eight_generator_comparison": [
+    {
+      "double_weight": 0,
+      "weight": "0",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 1,
+      "weight": "1/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 2,
+      "weight": "1",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 3,
+      "weight": "3/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 4,
+      "weight": "2",
+      "computed": 1,
+      "expected": 1,
+      "matches": true
+    },
+    {
+      "double_weight": 5,
+      "weight": "5/2",
+      "computed": 0,
+      "expected": null,
+      "matches": null
+    },
+    {
+      "double_weight": 6,
+      "weight": "3",
+      "computed": 2,
+      "expected": 2,
+      "matches": true
+    },
+    {
+      "double_weight": 7,
+      "weight": "7/2",
+      "computed": -2,
+      "expected": -2,
+      "matches": true
+    },
+    {
+      "double_weight": 8,
+      "weight": "4",
+      "computed": 3,
+      "expected": 3,
+      "matches": true
+    }
+  ],
+  "eight_generator_atoms": [
+    "-2*NO(b_char_p3,\u2202c_char_p3) - 3*NO(beta_char_p3,\u2202gamma_char_p3)/2 - NO(\u2202b_char_p3,c_char_p3) - NO(\u2202beta_char_p3,gamma_char_p3)/2",
+    "2*NO(b_char_p3,c_char_p3) + 3*NO(beta_char_p3,gamma_char_p3)",
+    "NO(gamma_char_p3,b_char_p3)",
+    "3*NO(beta_char_p3,\u2202c_char_p3) + 2*NO(\u2202beta_char_p3,c_char_p3)",
+    "beta_char_p3",
+    "10*\u2202^2gamma_char_p3/9 + NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))) + 2*NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,c_char_p3)))) - 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,gamma_char_p3)) - 4*NO(gamma_char_p3,NO(b_char_p3,\u2202c_char_p3))/3 + 2*NO(gamma_char_p3,NO(\u2202b_char_p3,c_char_p3))/3 + 2*NO(\u2202beta_char_p3,NO(gamma_char_p3,gamma_char_p3))/3 - 8*NO(\u2202gamma_char_p3,NO(b_char_p3,c_char_p3))/3",
+    "b_char_p3",
+    "-10*\u2202^3c_char_p3/9 - NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,\u2202c_char_p3)))) - NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(\u2202c_char_p3,gamma_char_p3)))) - NO(beta_char_p3,NO(beta_char_p3,NO(\u2202c_char_p3,NO(gamma_char_p3,gamma_char_p3)))) - 2*NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(\u2202beta_char_p3,c_char_p3)))) - 2*NO(beta_char_p3,NO(gamma_char_p3,NO(\u2202c_char_p3,NO(b_char_p3,c_char_p3)))) + 4*NO(beta_char_p3,NO(\u2202^2c_char_p3,gamma_char_p3)) - 2*NO(beta_char_p3,NO(\u2202c_char_p3,NO(gamma_char_p3,NO(b_char_p3,c_char_p3)))) + 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,\u2202c_char_p3)) - 2*NO(gamma_char_p3,NO(\u2202^2beta_char_p3,c_char_p3))/3 + 4*NO(gamma_char_p3,NO(\u2202beta_char_p3,\u2202c_char_p3))/3 + 8*NO(\u2202^2c_char_p3,NO(b_char_p3,c_char_p3))/3 - 2*NO(\u2202beta_char_p3,NO(gamma_char_p3,\u2202c_char_p3))/3 - 2*NO(\u2202beta_char_p3,NO(\u2202c_char_p3,gamma_char_p3))/3 + 4*NO(\u2202c_char_p3,NO(b_char_p3,\u2202c_char_p3))/3 - 2*NO(\u2202c_char_p3,NO(\u2202b_char_p3,c_char_p3))/3 + 8*NO(\u2202gamma_char_p3,NO(\u2202beta_char_p3,c_char_p3))/3"
+  ]
+}

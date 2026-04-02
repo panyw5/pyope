@@ -1,0 +1,207 @@
+{
+  "full_relation_term_count": 135,
+  "cached_sum_term_count": 0,
+  "difference_term_count": 135,
+  "difference_sample": [
+    {
+      "monomial": "NO(Derivative(1)(b),Derivative(6)(c))",
+      "coeff": "-7/48"
+    },
+    {
+      "monomial": "NO(Derivative(1)(b),NO(b,NO(Derivative(3)(c),Derivative(2)(c))))",
+      "coeff": "12"
+    },
+    {
+      "monomial": "NO(Derivative(1)(b),NO(b,NO(Derivative(4)(c),Derivative(1)(c))))",
+      "coeff": "-5"
+    },
+    {
+      "monomial": "NO(Derivative(1)(b),NO(b,NO(Derivative(5)(c),c)))",
+      "coeff": "8/5"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),Derivative(6)(gamma))",
+      "coeff": "-13/256"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(gamma,NO(gamma,NO(gamma,gamma)))))))",
+      "coeff": "1/16"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(2)(gamma),NO(gamma,gamma)))))",
+      "coeff": "-15/16"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(beta,NO(Derivative(1)(gamma),NO(gamma,NO(gamma,gamma)))))))",
+      "coeff": "3/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(gamma,NO(gamma,NO(gamma,NO(Derivative(1)(b),c)))))))",
+      "coeff": "1/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(gamma,NO(gamma,NO(gamma,NO(b,Derivative(1)(c))))))))",
+      "coeff": "1"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(2)(gamma),Derivative(2)(gamma))))",
+      "coeff": "75/64"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(2)(gamma),NO(gamma,NO(Derivative(1)(b),c)))))",
+      "coeff": "-15/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(2)(gamma),NO(gamma,NO(b,Derivative(1)(c))))))",
+      "coeff": "-15/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(Derivative(4)(gamma),gamma)))",
+      "coeff": "15/32"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(beta,NO(Derivative(1)(gamma),NO(gamma,NO(gamma,NO(Derivative(1)(b),c)))))))",
+      "coeff": "9/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(beta,NO(Derivative(1)(gamma),NO(gamma,NO(gamma,NO(b,Derivative(1)(c))))))))",
+      "coeff": "9"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(beta,NO(Derivative(2)(gamma),NO(Derivative(1)(gamma),gamma)))))",
+      "coeff": "-45/8"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(beta,NO(Derivative(3)(gamma),NO(gamma,gamma)))))",
+      "coeff": "-21/16"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(beta,NO(beta,NO(Derivative(1)(gamma),NO(Derivative(1)(gamma),NO(gamma,gamma)))))))",
+      "coeff": "27/8"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(gamma,NO(gamma,NO(Derivative(1)(b),Derivative(2)(c))))))",
+      "coeff": "-9/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(gamma,NO(gamma,NO(Derivative(1)(b),NO(b,NO(Derivative(1)(c),c)))))))",
+      "coeff": "6"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(gamma,NO(gamma,NO(Derivative(3)(b),c)))))",
+      "coeff": "-1/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(1)(beta),NO(gamma,NO(gamma,NO(b,Derivative(3)(c))))))",
+      "coeff": "-2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(2)(gamma),NO(Derivative(1)(b),Derivative(2)(c))))",
+      "coeff": "45/8"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(2)(gamma),NO(Derivative(1)(b),NO(b,NO(Derivative(1)(c),c)))))",
+      "coeff": "-15"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(2)(gamma),NO(Derivative(3)(b),c)))",
+      "coeff": "5/8"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(2)(gamma),NO(b,Derivative(3)(c))))",
+      "coeff": "5"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(4)(gamma),NO(Derivative(1)(b),c)))",
+      "coeff": "15/16"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(Derivative(4)(gamma),NO(b,Derivative(1)(c))))",
+      "coeff": "15/8"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(1)(gamma),NO(gamma,NO(Derivative(1)(b),Derivative(2)(c))))))",
+      "coeff": "-27/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(1)(gamma),NO(gamma,NO(Derivative(1)(b),NO(b,NO(Derivative(1)(c),c)))))))",
+      "coeff": "36"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(1)(gamma),NO(gamma,NO(Derivative(3)(b),c)))))",
+      "coeff": "-3/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(1)(gamma),NO(gamma,NO(b,Derivative(3)(c))))))",
+      "coeff": "-12"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(2)(gamma),NO(Derivative(1)(gamma),NO(Derivative(1)(b),c)))))",
+      "coeff": "-45/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(2)(gamma),NO(Derivative(1)(gamma),NO(b,Derivative(1)(c))))))",
+      "coeff": "-45/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(3)(gamma),Derivative(2)(gamma))))",
+      "coeff": "105/32"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(3)(gamma),NO(gamma,NO(Derivative(1)(b),c)))))",
+      "coeff": "-21/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(3)(gamma),NO(gamma,NO(b,Derivative(1)(c))))))",
+      "coeff": "-21/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(4)(gamma),Derivative(1)(gamma))))",
+      "coeff": "45/32"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(Derivative(5)(gamma),gamma)))",
+      "coeff": "77/160"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(beta,NO(Derivative(1)(gamma),NO(Derivative(1)(gamma),NO(gamma,NO(Derivative(1)(b),c)))))))",
+      "coeff": "27/2"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(beta,NO(Derivative(1)(gamma),NO(Derivative(1)(gamma),NO(gamma,NO(b,Derivative(1)(c))))))))",
+      "coeff": "27"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(beta,NO(Derivative(2)(gamma),NO(Derivative(1)(gamma),Derivative(1)(gamma))))))",
+      "coeff": "-135/16"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(beta,NO(Derivative(3)(gamma),NO(Derivative(1)(gamma),gamma)))))",
+      "coeff": "-63/8"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(beta,NO(beta,NO(beta,NO(Derivative(1)(gamma),NO(Derivative(1)(gamma),NO(Derivative(1)(gamma),gamma)))))))",
+      "coeff": "27/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(gamma,NO(Derivative(1)(b),Derivative(4)(c))))",
+      "coeff": "5/4"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(gamma,NO(Derivative(1)(b),NO(b,NO(Derivative(2)(c),Derivative(1)(c))))))",
+      "coeff": "18"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(gamma,NO(Derivative(1)(b),NO(b,NO(Derivative(3)(c),c)))))",
+      "coeff": "-8"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(gamma,NO(Derivative(3)(b),Derivative(2)(c))))",
+      "coeff": "1"
+    },
+    {
+      "monomial": "NO(Derivative(1)(beta),NO(gamma,NO(Derivative(3)(b),NO(b,NO(Derivative(1)(c),c)))))",
+      "coeff": "-2"
+    }
+  ]
+}

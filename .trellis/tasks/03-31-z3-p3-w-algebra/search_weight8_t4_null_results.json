@@ -1,0 +1,198 @@
+{
+  "closed_generator_count": 8,
+  "closure_discoveries": [
+    {
+      "operator": "b_char_p3",
+      "from": [
+        "NO(gamma_char_p3,b_char_p3)",
+        "beta_char_p3",
+        1
+      ],
+      "weight": "2",
+      "parity": 1
+    },
+    {
+      "operator": "-10*\u2202^3c_char_p3/9 - 8*NO(b_char_p3,NO(\u2202^2c_char_p3,c_char_p3))/3 - 3*NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,\u2202c_char_p3)))) + 4*NO(beta_char_p3,NO(gamma_char_p3,NO(b_char_p3,NO(\u2202c_char_p3,c_char_p3)))) + 4*NO(beta_char_p3,NO(gamma_char_p3,\u2202^2c_char_p3)) + 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,\u2202c_char_p3)) - 2*NO(\u2202^2beta_char_p3,NO(gamma_char_p3,c_char_p3))/3 + 2*NO(\u2202b_char_p3,NO(\u2202c_char_p3,c_char_p3))/3 - 2*NO(\u2202beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,c_char_p3)))) + 8*NO(\u2202beta_char_p3,NO(\u2202gamma_char_p3,c_char_p3))/3",
+      "from": [
+        "3*NO(beta_char_p3,\u2202c_char_p3) + 2*NO(\u2202beta_char_p3,c_char_p3)",
+        "10*\u2202^2gamma_char_p3/9 + NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))) + 2*NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,c_char_p3)))) - 4*NO(beta_char_p3,NO(\u2202gamma_char_p3,gamma_char_p3)) - 4*NO(gamma_char_p3,NO(b_char_p3,\u2202c_char_p3))/3 + 2*NO(gamma_char_p3,NO(\u2202b_char_p3,c_char_p3))/3 + 2*NO(\u2202beta_char_p3,NO(gamma_char_p3,gamma_char_p3))/3 - 8*NO(\u2202gamma_char_p3,NO(b_char_p3,c_char_p3))/3",
+        1
+      ],
+      "weight": "2",
+      "parity": 1
+    }
+  ],
+  "candidate_count": 169,
+  "target": "NO(SG0,NO(SG0,NO(SG0,SG0)))",
+  "target_index": 1,
+  "cache_entries": 169,
+  "reduced_target_zero": true,
+  "residual_support_size": 0,
+  "residual_support": [],
+  "pivot_coefficients": [
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,\u2202^3c_char_p3)))))",
+      "source_index": 13,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202^2SG1,SG1)))",
+      "coeff": "77/716"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(\u2202^2b_char_p3,\u2202c_char_p3)))))",
+      "source_index": 12,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG4,SG5)))",
+      "coeff": "9500/132027"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(\u2202^3b_char_p3,c_char_p3)))))",
+      "source_index": 11,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG2,SG3)))",
+      "coeff": "19/1593"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(\u2202b_char_p3,NO(b_char_p3,NO(\u2202c_char_p3,c_char_p3)))))))",
+      "source_index": 10,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG1,\u2202SG1)))",
+      "coeff": "-245/3456"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(\u2202b_char_p3,\u2202^2c_char_p3)))))",
+      "source_index": 9,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG1,NO(SG1,SG1))))",
+      "coeff": "-8/63"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))))))))",
+      "source_index": 8,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG6,SG7)))",
+      "coeff": "603/800"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,c_char_p3)))))))))",
+      "source_index": 7,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG4,\u2202SG5)))",
+      "coeff": "-469/4272"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(beta_char_p3,NO(\u2202gamma_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))))))",
+      "source_index": 6,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG2,\u2202SG3)))",
+      "coeff": "-67/240"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,\u2202c_char_p3)))))))",
+      "source_index": 5,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG1,NO(SG4,SG5))))",
+      "coeff": "-5/24"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(\u2202beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(\u2202b_char_p3,c_char_p3)))))))",
+      "source_index": 2,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG0,\u2202SG1)))",
+      "coeff": "7/72"
+    },
+    {
+      "pivot_monomial": "NO(\u2202beta_char_p3,\u2202^6gamma_char_p3)",
+      "source_index": 0,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG0,NO(SG1,SG1))))",
+      "coeff": "-13/256"
+    }
+  ],
+  "normalized_relation": [
+    {
+      "op": "NO(SG0,NO(SG0,NO(SG0,SG0)))",
+      "coeff": "1"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(SG0,NO(SG1,SG1))))",
+      "coeff": "-2/3"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(SG0,\u2202SG1)))",
+      "coeff": "1/3"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(SG1,NO(SG2,SG3))))",
+      "coeff": "-2/3"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(SG2,\u2202SG3)))",
+      "coeff": "1/2"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(SG4,\u2202SG5)))",
+      "coeff": "-9/4"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(\u2202SG1,NO(SG1,SG1))))",
+      "coeff": "-1/12"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(\u2202SG1,\u2202SG1)))",
+      "coeff": "-1/3"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(\u2202SG2,SG3)))",
+      "coeff": "-1/6"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(\u2202SG4,SG5)))",
+      "coeff": "15/4"
+    },
+    {
+      "op": "NO(SG0,NO(SG0,NO(\u2202^2SG1,SG1)))",
+      "coeff": "3/4"
+    }
+  ],
+  "source_coefficients": [
+    {
+      "source_index": 0,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG0,NO(SG1,SG1))))",
+      "coeff": "2/3"
+    },
+    {
+      "source_index": 2,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG0,\u2202SG1)))",
+      "coeff": "-1/3"
+    },
+    {
+      "source_index": 4,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG1,NO(SG2,SG3))))",
+      "coeff": "2/3"
+    },
+    {
+      "source_index": 6,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG2,\u2202SG3)))",
+      "coeff": "-1/2"
+    },
+    {
+      "source_index": 7,
+      "source_operator": "NO(SG0,NO(SG0,NO(SG4,\u2202SG5)))",
+      "coeff": "9/4"
+    },
+    {
+      "source_index": 9,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG1,NO(SG1,SG1))))",
+      "coeff": "1/12"
+    },
+    {
+      "source_index": 10,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG1,\u2202SG1)))",
+      "coeff": "1/3"
+    },
+    {
+      "source_index": 11,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG2,SG3)))",
+      "coeff": "1/6"
+    },
+    {
+      "source_index": 12,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202SG4,SG5)))",
+      "coeff": "-15/4"
+    },
+    {
+      "source_index": 13,
+      "source_operator": "NO(SG0,NO(SG0,NO(\u2202^2SG1,SG1)))",
+      "coeff": "-3/4"
+    }
+  ]
+}

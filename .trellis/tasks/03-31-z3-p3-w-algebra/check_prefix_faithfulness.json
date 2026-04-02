@@ -1,0 +1,79 @@
+[
+  {
+    "prefix_len": 1,
+    "direct_terms": 135,
+    "cached_sum_terms": 135,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(SG0,SG0)))"
+  },
+  {
+    "prefix_len": 2,
+    "direct_terms": 278,
+    "cached_sum_terms": 278,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(SG0,NO(SG1,SG1))))"
+  },
+  {
+    "prefix_len": 3,
+    "direct_terms": 273,
+    "cached_sum_terms": 273,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(SG0,\u2202SG1)))"
+  },
+  {
+    "prefix_len": 4,
+    "direct_terms": 371,
+    "cached_sum_terms": 371,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(SG1,NO(SG2,SG3))))"
+  },
+  {
+    "prefix_len": 5,
+    "direct_terms": 370,
+    "cached_sum_terms": 370,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(SG2,\u2202SG3)))"
+  },
+  {
+    "prefix_len": 6,
+    "direct_terms": 369,
+    "cached_sum_terms": 369,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(SG4,\u2202SG5)))"
+  },
+  {
+    "prefix_len": 7,
+    "direct_terms": 353,
+    "cached_sum_terms": 353,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(\u2202SG1,NO(SG1,SG1))))"
+  },
+  {
+    "prefix_len": 8,
+    "direct_terms": 341,
+    "cached_sum_terms": 341,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(\u2202SG1,\u2202SG1)))"
+  },
+  {
+    "prefix_len": 9,
+    "direct_terms": 317,
+    "cached_sum_terms": 317,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(\u2202SG2,SG3)))"
+  },
+  {
+    "prefix_len": 10,
+    "direct_terms": 276,
+    "cached_sum_terms": 276,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(\u2202SG4,SG5)))"
+  },
+  {
+    "prefix_len": 11,
+    "direct_terms": 0,
+    "cached_sum_terms": 0,
+    "diff_terms": 0,
+    "added_term": "NO(SG0,NO(SG0,NO(\u2202^2SG1,SG1)))"
+  }
+]

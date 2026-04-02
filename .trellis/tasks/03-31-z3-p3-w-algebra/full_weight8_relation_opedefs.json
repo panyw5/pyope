@@ -1,0 +1,546 @@
+{
+	"nullQ":false,
+	"termCount":135,
+	"terms":[
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]]]]]",
+			"coeff":"81\/16"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]]]]]",
+			"coeff":"27"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]]]]]",
+			"coeff":"27\/2"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[betaff, NO[Derivative[3][gammaff], NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]]]",
+			"coeff":"-189\/16"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, Derivative[3][cff]]]]]]",
+			"coeff":"-18"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]]]",
+			"coeff":"54"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[2][cff]]]]]]",
+			"coeff":"-81\/4"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[3][bff], cff]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[3][gammaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-63\/2"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[3][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-63\/4"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[3][gammaff], Derivative[3][gammaff]]]]",
+			"coeff":"147\/64"
+		},
+		{
+			"monomial":"NO[betaff, NO[betaff, NO[Derivative[5][gammaff], Derivative[1][gammaff]]]]",
+			"coeff":"231\/160"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[5][cff]]]]",
+			"coeff":"12\/5"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], NO[bff, NO[Derivative[2][cff], Derivative[1][cff]]]]]]",
+			"coeff":"54"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], NO[bff, NO[Derivative[3][cff], cff]]]]]",
+			"coeff":"-24"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[4][cff]]]]",
+			"coeff":"15\/4"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[3][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]",
+			"coeff":"-6"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[3][bff], Derivative[2][cff]]]]",
+			"coeff":"3"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[5][bff], cff]]]",
+			"coeff":"3\/20"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[3][gammaff], NO[bff, Derivative[3][cff]]]]",
+			"coeff":"7"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[3][gammaff], NO[Derivative[1][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]",
+			"coeff":"-21"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[3][gammaff], NO[Derivative[1][bff], Derivative[2][cff]]]]",
+			"coeff":"63\/8"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[3][gammaff], NO[Derivative[3][bff], cff]]]",
+			"coeff":"7\/8"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[5][gammaff], NO[bff, Derivative[1][cff]]]]",
+			"coeff":"77\/40"
+		},
+		{
+			"monomial":"NO[betaff, NO[Derivative[5][gammaff], NO[Derivative[1][bff], cff]]]",
+			"coeff":"77\/80"
+		},
+		{
+			"monomial":"NO[betaff, Derivative[7][gammaff]]",
+			"coeff":"-11\/256"
+		},
+		{
+			"monomial":"NO[bff, Derivative[7][cff]]",
+			"coeff":"-8\/105"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]]]]",
+			"coeff":"27\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]]]]",
+			"coeff":"27"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]]]",
+			"coeff":"27\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]]]",
+			"coeff":"-135\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[3][gammaff], NO[Derivative[1][gammaff], gammaff]]]]]",
+			"coeff":"-63\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[3][cff]]]]]]",
+			"coeff":"-12"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]]]",
+			"coeff":"36"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]]]",
+			"coeff":"-27\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[3][bff], cff]]]]]",
+			"coeff":"-3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-45\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-45\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[3][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-21\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[3][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-21\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[3][gammaff], Derivative[2][gammaff]]]]",
+			"coeff":"105\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[4][gammaff], Derivative[1][gammaff]]]]",
+			"coeff":"45\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[betaff, NO[Derivative[5][gammaff], gammaff]]]",
+			"coeff":"77\/160"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[5][cff]]]]",
+			"coeff":"4\/5"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], NO[bff, NO[Derivative[2][cff], Derivative[1][cff]]]]]]",
+			"coeff":"18"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], NO[bff, NO[Derivative[3][cff], cff]]]]]",
+			"coeff":"-8"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[4][cff]]]]",
+			"coeff":"5\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[3][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]",
+			"coeff":"-2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[3][bff], Derivative[2][cff]]]]",
+			"coeff":"1"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[5][bff], cff]]]",
+			"coeff":"1\/20"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]]]",
+			"coeff":"9"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]]]",
+			"coeff":"9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][gammaff], gammaff]]]]]",
+			"coeff":"-45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[Derivative[3][gammaff], NO[gammaff, gammaff]]]]]",
+			"coeff":"-21\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[bff, Derivative[3][cff]]]]]]",
+			"coeff":"-2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[Derivative[1][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]]]",
+			"coeff":"6"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[Derivative[3][bff], cff]]]]]",
+			"coeff":"-1\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[gammaff, gammaff]]]]]]]",
+			"coeff":"3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]]]",
+			"coeff":"1"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]]]",
+			"coeff":"1\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[gammaff, gammaff]]]]]]]",
+			"coeff":"1\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]]",
+			"coeff":"-15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-15\/2"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-15\/4"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[2][gammaff], Derivative[2][gammaff]]]]",
+			"coeff":"75\/64"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[4][gammaff], gammaff]]]",
+			"coeff":"15\/32"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, Derivative[3][cff]]]]",
+			"coeff":"5"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[Derivative[1][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]",
+			"coeff":"-15"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[Derivative[1][bff], Derivative[2][cff]]]]",
+			"coeff":"45\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[Derivative[3][bff], cff]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[4][gammaff], NO[bff, Derivative[1][cff]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], NO[Derivative[4][gammaff], NO[Derivative[1][bff], cff]]]",
+			"coeff":"15\/16"
+		},
+		{
+			"monomial":"NO[Derivative[1][betaff], Derivative[6][gammaff]]",
+			"coeff":"-13\/256"
+		},
+		{
+			"monomial":"NO[Derivative[1][bff], NO[bff, NO[Derivative[3][cff], Derivative[2][cff]]]]",
+			"coeff":"12"
+		},
+		{
+			"monomial":"NO[Derivative[1][bff], NO[bff, NO[Derivative[4][cff], Derivative[1][cff]]]]",
+			"coeff":"-5"
+		},
+		{
+			"monomial":"NO[Derivative[1][bff], NO[bff, NO[Derivative[5][cff], cff]]]",
+			"coeff":"8\/5"
+		},
+		{
+			"monomial":"NO[Derivative[1][bff], Derivative[6][cff]]",
+			"coeff":"-7\/48"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]]]",
+			"coeff":"-81\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-27\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-27\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[betaff, NO[Derivative[3][gammaff], Derivative[1][gammaff]]]]",
+			"coeff":"147\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]]",
+			"coeff":"-27\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]",
+			"coeff":"-9\/16"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[Derivative[2][gammaff], Derivative[1][gammaff]]]]",
+			"coeff":"45\/32"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[Derivative[3][gammaff], gammaff]]]",
+			"coeff":"7\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[3][cff]]]]",
+			"coeff":"3"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]",
+			"coeff":"-9"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[2][cff]]]]",
+			"coeff":"27\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[Derivative[3][bff], cff]]]",
+			"coeff":"3\/8"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[2][betaff], NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]",
+			"coeff":"27\/64"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[3][gammaff], NO[bff, Derivative[1][cff]]]]",
+			"coeff":"7\/2"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], NO[Derivative[3][gammaff], NO[Derivative[1][bff], cff]]]",
+			"coeff":"7\/4"
+		},
+		{
+			"monomial":"NO[Derivative[2][betaff], Derivative[5][gammaff]]",
+			"coeff":"-231\/1280"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]]",
+			"coeff":"-27\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-9\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-9\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]]",
+			"coeff":"15\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[betaff, NO[Derivative[3][gammaff], gammaff]]]",
+			"coeff":"21\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[gammaff, NO[bff, Derivative[3][cff]]]]",
+			"coeff":"1"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[gammaff, NO[Derivative[1][bff], NO[bff, NO[Derivative[1][cff], cff]]]]]",
+			"coeff":"-3"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]",
+			"coeff":"9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[gammaff, NO[Derivative[3][bff], cff]]]",
+			"coeff":"1\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]",
+			"coeff":"-9\/8"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]",
+			"coeff":"-3\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]",
+			"coeff":"-3\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, NO[gammaff, gammaff]]]]]",
+			"coeff":"-3\/16"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[1][betaff], NO[Derivative[2][gammaff], gammaff]]]",
+			"coeff":"35\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[2][betaff], NO[Derivative[1][gammaff], gammaff]]]",
+			"coeff":"9\/32"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]]",
+			"coeff":"5\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]",
+			"coeff":"5\/4"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], NO[Derivative[3][betaff], NO[gammaff, gammaff]]]",
+			"coeff":"3\/64"
+		},
+		{
+			"monomial":"NO[Derivative[3][betaff], Derivative[4][gammaff]]",
+			"coeff":"-45\/256"
+		},
+		{
+			"monomial":"NO[Derivative[3][bff], NO[bff, NO[Derivative[2][cff], Derivative[1][cff]]]]",
+			"coeff":"-4"
+		},
+		{
+			"monomial":"NO[Derivative[3][bff], NO[bff, NO[Derivative[3][cff], cff]]]",
+			"coeff":"4\/3"
+		},
+		{
+			"monomial":"NO[Derivative[3][bff], NO[Derivative[1][bff], NO[Derivative[2][cff], cff]]]",
+			"coeff":"-1\/2"
+		},
+		{
+			"monomial":"NO[Derivative[3][bff], Derivative[4][cff]]",
+			"coeff":"-5\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]",
+			"coeff":"15\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]]",
+			"coeff":"5\/32"
+		},
+		{
+			"monomial":"NO[Derivative[4][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]",
+			"coeff":"5\/8"
+		},
+		{
+			"monomial":"NO[Derivative[4][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]",
+			"coeff":"5\/16"
+		},
+		{
+			"monomial":"NO[Derivative[4][betaff], Derivative[3][gammaff]]",
+			"coeff":"-35\/256"
+		},
+		{
+			"monomial":"NO[Derivative[5][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]",
+			"coeff":"21\/160"
+		},
+		{
+			"monomial":"NO[Derivative[5][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]",
+			"coeff":"7\/40"
+		},
+		{
+			"monomial":"NO[Derivative[5][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]]",
+			"coeff":"7\/80"
+		},
+		{
+			"monomial":"NO[Derivative[5][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]]",
+			"coeff":"7\/160"
+		},
+		{
+			"monomial":"NO[Derivative[5][betaff], Derivative[2][gammaff]]",
+			"coeff":"-21\/256"
+		},
+		{
+			"monomial":"NO[Derivative[5][bff], NO[bff, NO[Derivative[1][cff], cff]]]",
+			"coeff":"1\/5"
+		},
+		{
+			"monomial":"NO[Derivative[5][bff], Derivative[2][cff]]",
+			"coeff":"-9\/80"
+		},
+		{
+			"monomial":"NO[Derivative[6][betaff], Derivative[1][gammaff]]",
+			"coeff":"-3\/256"
+		},
+		{
+			"monomial":"NO[Derivative[7][betaff], gammaff]",
+			"coeff":"-11\/3840"
+		},
+		{
+			"monomial":"NO[Derivative[7][bff], cff]",
+			"coeff":"-1\/336"
+		}
+	]
+}
