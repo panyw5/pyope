@@ -25,6 +25,7 @@ from .operator_spaces import (
     realize,
     realize_and_simplify,
     realized_coordinates,
+    clear_realize_cache,
 )
 from .operators import (
     BasisOperator,

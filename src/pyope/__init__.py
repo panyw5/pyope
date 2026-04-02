@@ -7,7 +7,7 @@ in Vertex Operator Algebras (VOA).
 基于 Mathematica 包 OPEdefs 的 Python 实现。
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.0.post1"
 __author__ = "PyOPE Contributors"
 
 # 已实现的模块
@@ -36,19 +36,33 @@ from .local_operator import (
 )
 
 from .ope_data import OPEData
+from .compact_ope import compact_family_poles
+from .quasiprimary import qp, quasiprimary_product
+from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
+from .descendants import DescendantSpace
+from .free_field_c2 import DerivativeKillingFreeFieldC2Reducer, FreeFieldC2Reducer
+from .null_search import C2NullSearcher as QuotientC2NullSearcher, NullSearchResult
+from .realizations import (
+    DerivativeKillingRealizationBackend,
+    IdentityRealizationBackend,
+    RealizationBackend,
+)
+from .singularity import SingularVectorAnalyzer
 from .operator_spaces import (
     C2NullSearcher,
     C2Space,
-    DescendantSpace,
     LocalOperatorBasis,
+    LocalOperatorCanonicalizer,
+    SparseLinearContext,
+    list_independent_ops,
     list_zero_relations,
     make_realized,
     RealizedGenerator,
-    SingularVectorAnalyzer,
     independent_under_realization,
     realize,
     realize_and_simplify,
     realized_coordinates,
+    clear_realize_cache,
 )
 from .operators import (
     BasisOperator,
@@ -97,10 +111,26 @@ __all__ = [
     "Delta",
     # OPE Data
     "OPEData",
+    "compact_family_poles",
+    "quasiprimary_product",
+    "qp",
+    "AbstractC2Reducer",
     "C2NullSearcher",
+    "C2ReductionWitness",
     "C2Space",
     "DescendantSpace",
+    "GenericC2Reducer",
+    "DerivativeKillingFreeFieldC2Reducer",
+    "DerivativeKillingRealizationBackend",
+    "FreeFieldC2Reducer",
+    "IdentityRealizationBackend",
     "LocalOperatorBasis",
+    "LocalOperatorCanonicalizer",
+    "NullSearchResult",
+    "QuotientC2NullSearcher",
+    "RealizationBackend",
+    "SparseLinearContext",
+    "list_independent_ops",
     "list_zero_relations",
     "make_realized",
     "RealizedGenerator",
@@ -108,6 +138,7 @@ __all__ = [
     "realize",
     "realize_and_simplify",
     "realized_coordinates",
+    "clear_realize_cache",
     "independent_under_realization",
     # Registry
     "OPERegistry",

@@ -87,6 +87,28 @@ class TestSimplifyBasic:
         # 应该保持原样
         assert result == T + J
 
+    def test_zero_addition_identity(self):
+        """测试 Zero 在加法中作为零元"""
+        T = BasisOperator(
+            "T_zero_add",
+        )
+        Bosonic(T)
+
+        assert Zero + T == T
+        assert T + Zero == T
+        assert Zero + Zero == Zero
+
+    def test_zero_subtraction_identity(self):
+        """测试 Zero 在减法中的行为"""
+        T = BasisOperator(
+            "T_zero_sub",
+        )
+        Bosonic(T)
+
+        assert Zero - T == -T
+        assert T - Zero == T
+        assert Zero - Zero == Zero
+
 
 class TestSimplifyNormalOrdered:
     """测试正规序化简"""

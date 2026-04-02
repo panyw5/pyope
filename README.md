@@ -1,211 +1,238 @@
 # PyOPE
 
-PyOPE 是一个面向顶点算符代数 (VOA) / 共形场论 (CFT) 的符号计算库，用 Python + SymPy 实现算符积展开 (OPE) 的自动推导与化简。
+PyOPE is a Python library for symbolic Operator Product Expansion (OPE) calculations in Vertex Operator Algebras (VOA) and 2d Conformal Field Theory (CFT).
 
-项目目标是复现并对齐 Mathematica 参考实现 `OPEdefs.m`（仓库内 `OPEdefs/` 与 `tests/*.wls` 提供了大量对照）。
+It is built on top of Python and SymPy, with the goal of providing a programmable, testable, and extensible environment for OPE computations while staying close to the Mathematica reference implementation `OPEdefs.m`.
 
-## 特性
+## Status
 
-- OPE 计算：`OPE(A, B)` 返回奇异部分（各阶极点系数）
-- 正规序：`NO(A, B)` / `normal_product(A, B, ...)`
-- bracket：`bracket(A, B, n)`（`n=0` 约定为 `NO(A, B)`）
-- 导数：`d(A)` / `dn(n, A)`，并在 OPE 里自动应用导数规则
-- 代数化简：`simplify(expr)` 将表达式规范化、重排并合并同类项
-- Jacobi 恒等式检查：`check_jacobi_identity` / `verify_jacobi_identity`
-- Null states（实验性案例）：参见 `demo/null_states_case.py` 与 `demo/w_algebra_null_states_demo.ipynb`
+- Version: `0.1.0.post1`
+- Development status: **Alpha**
+- Python: `>=3.8`
+- Main dependencies: `sympy`, `numpy`
 
-## 安装
+The project currently supports:
 
-本仓库使用标准 `pyproject.toml` (setuptools)。
+- Registration and evaluation of OPEs between basic generators
+- OPE rules for derivatives, linear combinations, and normal-ordered operators
+- Construction and simplification of `NO(...)` and `normal_product(...)`
+- Extraction of pole coefficients via `bracket(A, B, n)`
+- Jacobi identity checks
+- A set of experimental tools for C2 spaces, realizations, and null-state searches
+
+The C2, null-state, and realization-related interfaces are still evolving and may change in later releases.
+
+## Installation
+
+Install from PyPI:
+
+```bash
+pip install pyope-voa
+```
+
+The distribution name is `pyope-voa`, but the import name remains:
+
+```python
+import pyope
+```
+
+Install from source:
 
 ```bash
 pip install -e .
 ```
 
-安装开发依赖（测试/格式化等）：
+Install development dependencies:
 
 ```bash
 pip install -e ".[dev]"
 ```
 
-安装 Notebook 相关依赖：
+Install notebook-related dependencies:
 
 ```bash
 pip install -e ".[jupyter]"
 ```
 
-## 快速上手
+## Quick Start
 
-最小例子：定义 Virasoro 的 `T(z)T(w)` OPE。
+Here is a minimal Virasoro example defining the OPE of $T(z)T(w)$:
 
 ```python
 import sympy as sp
 
-from pyope import BasisOperator, Bosonic, OPE, MakeOPE
-from pyope import One, Zero, d, NO, bracket
+from pyope import BasisOperator, Bosonic, MakeOPE, OPE
+from pyope import One, Zero, NO, bracket, d
 
 T = BasisOperator("T", conformal_weight=2)
 Bosonic(T)
 
 c = sp.Symbol("c")
 
-# MakeOPE([...]) 使用 Mathematica 风格：从最高极点到 (z-w)^-1
 OPE[T, T] = MakeOPE(
     [
-        sp.Rational(1, 2) * c * One,  # (z-w)^-4
-        Zero,                          # (z-w)^-3
-        2 * T,                         # (z-w)^-2
-        d(T),                          # (z-w)^-1
+        sp.Rational(1, 2) * c * One,
+        Zero,
+        2 * T,
+        d(T),
     ]
 )
 
-print(OPE(T, T))
+tt = OPE(T, T)
+
+print("max pole =", tt.max_pole)
+print("{TT}_4 =", bracket(T, T, 4))
 print("{TT}_2 =", bracket(T, T, 2))
 print("(TT) =", NO(T, T))
 ```
 
-注意：`Operator` 之间的普通乘法 `A * B` 会抛错（避免把 VOA 语义误写成普通乘法）；复合算符请用 `NO(A, B)` 或 `normal_product(...)`。
+`MakeOPE([...])` follows the same convention as the Mathematica package: entries are listed from the highest pole down to the $(z-w)^{-1}$ term.
 
-更多快速上手例子：
+In the example above, the list corresponds to:
 
-1) 提取极点系数 / 导数
+- the $(z-w)^{-4}$ coefficient
+- the $(z-w)^{-3}$ coefficient
+- the $(z-w)^{-2}$ coefficient
+- the $(z-w)^{-1}$ coefficient
 
-```python
-import sympy as sp
+## Core Concepts
 
-from pyope import BasisOperator, Bosonic, OPE, MakeOPE
-from pyope import One, Zero, d, dn, bracket
+### 1. Basis operators
 
-T = BasisOperator("T", conformal_weight=2)
-Bosonic(T)
-c = sp.Symbol("c")
-
-OPE[T, T] = MakeOPE([
-    sp.Rational(1, 2) * c * One,
-    Zero,
-    2 * T,
-    d(T),
-])
-
-tt = OPE(T, T)
-print("max pole =", tt.max_pole)
-print("{TT}_4 =", bracket(T, T, 4))
-print("{TT}_1 =", bracket(T, T, 1))
-print("{(dT)T}_3 =", bracket(d(T), T, 3))
-print("d^2 T =", dn(2, T))
-```
-
-2) 复合算符与化简（使用 `normal_product` 构造嵌套正规序）
+In typical usage, you first define generators and then declare their statistics:
 
 ```python
 from pyope import BasisOperator, Bosonic
-from pyope import NO, normal_product, simplify
+
+J = BasisOperator("J", conformal_weight=1)
+Bosonic(J)
+```
+
+### 2. Registering OPE data
+
+Define an OPE with:
+
+```python
+OPE[A, B] = MakeOPE([...])
+```
+
+Evaluate it with:
+
+```python
+result = OPE(A, B)
+```
+
+The result is an `OPEData` object, and individual poles can be accessed with `.pole(n)`.
+
+### 3. Normal-ordered products
+
+PyOPE intentionally rejects direct multiplication such as `A * B` for local operators, to avoid confusing VOA operator syntax with ordinary multiplication.
+
+Use one of the following instead:
+
+- `NO(A, B)`
+- `normal_product(A, B, C, ...)`
+
+Example:
+
+```python
+from pyope import BasisOperator, Bosonic, normal_product, simplify
 
 A = BasisOperator("A")
 B = BasisOperator("B")
 Bosonic(A, B)
 
-expr = normal_product(B, A, B)  # NO(B, NO(A, B))
-
-print("raw =", expr)
-print("simplified =", simplify(expr))
+expr = normal_product(B, A, B)
+print(simplify(expr))
 ```
 
-3) W3 代数（最小骨架）
+### 4. Derivatives and brackets
+
+- `d(A)` denotes the first derivative
+- `dn(n, A)` denotes the $n$th derivative
+- `bracket(A, B, n)` extracts the $n$th bracket / pole coefficient
 
 ```python
-import sympy as sp
+from pyope import bracket, d, dn
 
-from pyope import BasisOperator, Bosonic, OPE, MakeOPE
-from pyope import One, Zero, d, dn, NO
-
-T = BasisOperator("T", conformal_weight=2)
-W = BasisOperator("W", conformal_weight=3)
-Bosonic(T, W)
-
-c = sp.Symbol("c")
-beta = sp.Symbol("beta")
-
-OPE[T, T] = MakeOPE([
-    sp.Rational(1, 2) * c * One,
-    Zero,
-    2 * T,
-    d(T),
-])
-
-OPE[T, W] = MakeOPE([
-    3 * W,
-    d(W),
-])
-
-Lambda = NO(T, T) - sp.Rational(3, 10) * dn(2, T)
-OPE[W, W] = MakeOPE([
-    c * One,
-    Zero,
-    2 * T,
-    d(T),
-    2 * beta * Lambda + sp.Rational(3, 10) * dn(2, T),
-    beta * d(Lambda) + sp.Rational(1, 15) * dn(3, T),
-])
-
-ww = OPE(W, W)
-print("max pole =", ww.max_pole)
-print("(z-w)^-6 coeff =", ww.pole(6))
-print("(z-w)^-2 coeff =", ww.pole(2))
+print(bracket(T, T, 4))
+print(bracket(d(T), T, 3))
+print(dn(2, T))
 ```
 
-4) Jacobi 恒等式快速验证
+### 5. Jacobi identity checks
 
 ```python
-import sympy as sp
+from pyope import verify_jacobi_identity
 
-from pyope import BasisOperator, Bosonic, OPE, MakeOPE
-from pyope import One, Zero, d, verify_jacobi_identity
-
-T = BasisOperator("T", conformal_weight=2)
-Bosonic(T)
-c = sp.Symbol("c")
-
-OPE[T, T] = MakeOPE([
-    sp.Rational(1, 2) * c * One,
-    Zero,
-    2 * T,
-    d(T),
-])
-
-print("Jacobi(T,T,T) =", verify_jacobi_identity(T, T, T))
+print(verify_jacobi_identity(T, T, T))
 ```
 
-## API 概览
+## Available API
 
-- `pyope.api`：`OPE`, `NO`, `MakeOPE`, `bracket`, `normal_product`
-- `pyope.operators`：`BasisOperator`, `d`, `dn`
-- `pyope.simplify`：`simplify`
-- `pyope.jacobi`：Jacobi 恒等式验证
+Frequently used public interfaces include:
 
-`OPE(A, B)` 的返回值是 `OPEData`，可用 `.pole(n)` 取出 $(z-w)^{-n}$ 系数。
+- `OPE`, `MakeOPE`, `NO`, `NO_product`, `normal_product`, `bracket`
+- `BasisOperator`, `Operator`, `d`, `dn`
+- `One`, `Zero`, `Delta`
+- `simplify`
+- `check_jacobi_identity`, `verify_jacobi_identity`
 
-## 示例与文档
+The package also exports a number of more research-oriented and experimental tools, including:
 
-- Notebooks：`demo/`（Virasoro, Kac-Moody, Jacobi identity 等）
-- 文档碎片：`docs/normal_product.md`
-- 测试快速参考：`tests/QUICK_REFERENCE.md`
+- `C2Space`, `C2NullSearcher`, `GenericC2Reducer`
+- `DescendantSpace`
+- `SingularVectorAnalyzer`
+- `RealizationBackend` and related realization helpers
 
-## 运行测试
+For the full export list, see `src/pyope/__init__.py`.
+
+## Examples And References
+
+The repository already contains a number of examples and reference materials:
+
+- GitHub repository: <https://github.com/panyw5/pyope>
+- Demos and notebooks: <https://github.com/panyw5/pyope/tree/main/demo>
+- Test framework notes: <https://github.com/panyw5/pyope/blob/main/tests/TEST_FRAMEWORK.md>
+- Mathematica reference materials: <https://github.com/panyw5/pyope/tree/main/OPEdefs>
+
+Current examples cover:
+
+- Virasoro
+- Kac-Moody
+- Jacobi identities
+- Several W-algebra and null-state experiments
+
+## Running Tests
+
+Run the full test suite:
 
 ```bash
 python -m pytest
 ```
 
-如果你想只跑参考对照类的测试：
+Run only Mathematica-reference tests:
 
 ```bash
 python -m pytest -m mathematica_ref
 ```
 
-更多测试结构说明见：`tests/TEST_FRAMEWORK.md`。
+Skip slow tests:
 
-## 参考
+```bash
+python -m pytest -m "not slow"
+```
+
+## Packaging Notes
+
+The current PyPI release is centered on the core package under `src/pyope`.
+
+- the `wheel` contains the core library and package metadata
+- notebooks, `.wls` files, and temporary research scripts are not included in the current wheel
+
+That means users installing with `pip install pyope-voa` get the core library rather than the full research repository.
+
+## Citation And Background
 
 - K. Thielemans, "An Algorithmic Approach to Operator Product Expansions, W-algebras and W-strings", arXiv:hep-th/9506159
 

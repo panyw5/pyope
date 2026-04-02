@@ -52,3 +52,16 @@ wheels/
 # Mathematica
 *.mx
 .ace-tool/
+
+# Temporary/scratch files
+tmp_*
+test_sign_*.py
+FINAL_SIGN_TRACE_REPORT.md
+
+# Environment
+.env
+
+# IDE/Tool configs (local)
+.cursor/
+.opencode/
+.agents/

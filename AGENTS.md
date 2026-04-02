@@ -1,18 +1,18 @@
-<!-- OPENSPEC:START -->
-# OpenSpec Instructions
+<!-- TRELLIS:START -->
+# Trellis Instructions
 
 These instructions are for AI assistants working in this project.
 
-Always open `@/openspec/AGENTS.md` when the request:
-- Mentions planning or proposals (words like proposal, spec, change, plan)
-- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
-- Sounds ambiguous and you need the authoritative spec before coding
+Use the `/trellis:start` command when starting a new session to:
+- Initialize your developer identity
+- Understand current project context
+- Read relevant guidelines
 
-Use `@/openspec/AGENTS.md` to learn:
-- How to create and apply change proposals
-- Spec format and conventions
-- Project structure and guidelines
+Use `@/.trellis/` to learn:
+- Development workflow (`workflow.md`)
+- Project structure guidelines (`spec/`)
+- Developer workspace (`workspace/`)
 
-Keep this managed block so 'openspec update' can refresh the instructions.
+Keep this managed block so 'trellis update' can refresh the instructions.
 
-<!-- OPENSPEC:END -->
+<!-- TRELLIS:END -->

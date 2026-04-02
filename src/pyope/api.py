@@ -827,9 +827,21 @@ def _NO_binary(left: Any, right: Any) -> Any:
 
     # 处理线性性
     if isinstance(left, Add):
-        return sp.Add(*[_NO_binary(term, right) for term in left.args])
+        terms = [_NO_binary(term, right) for term in left.args]
+        non_zero_terms = [term for term in terms if term != Zero and term != 0]
+        if not non_zero_terms:
+            return Zero
+        if len(non_zero_terms) == 1:
+            return non_zero_terms[0]
+        return sp.Add(*non_zero_terms)
     if isinstance(right, Add):
-        return sp.Add(*[_NO_binary(left, term) for term in right.args])
+        terms = [_NO_binary(left, term) for term in right.args]
+        non_zero_terms = [term for term in terms if term != Zero and term != 0]
+        if not non_zero_terms:
+            return Zero
+        if len(non_zero_terms) == 1:
+            return non_zero_terms[0]
+        return sp.Add(*non_zero_terms)
 
     # 处理标量乘法
     if isinstance(left, Mul):

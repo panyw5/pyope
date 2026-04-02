@@ -70,6 +70,34 @@ class Operator(Symbol):
             )
         return super().__mul__(other)
 
+    def __add__(self, other):
+        from .constants import Zero
+
+        if other == 0 or other == Zero:
+            return self
+        return super().__add__(other)
+
+    def __radd__(self, other):
+        from .constants import Zero
+
+        if other == 0 or other == Zero:
+            return self
+        return super().__radd__(other)
+
+    def __sub__(self, other):
+        from .constants import Zero
+
+        if other == 0 or other == Zero:
+            return self
+        return super().__sub__(other)
+
+    def __rsub__(self, other):
+        from .constants import Zero
+
+        if other == 0 or other == Zero:
+            return -self
+        return super().__rsub__(other)
+
     def __rmul__(self, other):
         if isinstance(other, sp.Expr) and other.has(Operator):
             from .exceptions import IllegalOperatorProductError

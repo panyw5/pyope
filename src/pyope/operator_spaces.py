@@ -1,10 +1,9 @@
-"""Operator-space utilities for fixed-weight local-operator computations."""
+"""Operator-space utilities for fixed-weight and sparse local-operator computations."""
 
 from __future__ import annotations
-
 import inspect
 from functools import lru_cache
-from typing import Any, Iterable, MutableMapping, Optional
+from typing import Any, Iterable, MutableMapping, Optional, cast
 
 import sympy as sp
 
@@ -48,7 +47,7 @@ class RealizedGenerator(BasisOperator):
             conformal_weight=conformal_weight,
             **assumptions,
         )
-        obj._realization = realization
+        object.__setattr__(obj, "_realization", realization)
         return obj
 
     @property
@@ -107,7 +106,10 @@ def make_realized(expressions: Any, **assumptions) -> list[RealizedGenerator]:
     for expr in exprs:
         name = _lookup_binding_name(namespace, expr)
         realization = expr.realization if isinstance(expr, RealizedGenerator) else expr
-        generator = RealizedGenerator(name, realization=realization, **assumptions)
+        generator = cast(
+            RealizedGenerator,
+            RealizedGenerator(name, realization=realization, **assumptions),
+        )
         promoted.append(generator)
 
     return promoted
@@ -263,6 +265,89 @@ class _SparseIndependentEliminator:
     @property
     def pivot_order(self) -> list[Any]:
         return list(self._pivot_order)
+
+
+class LocalOperatorCanonicalizer:
+    """Public sparse canonicalization helper for local-operator expressions."""
+
+    def __init__(
+        self,
+        generators: Iterable[Operator],
+        stress_tensor: Any = None,
+        gradings: Any = None,
+        max_weight: Any = None,
+        max_occurence: Any = None,
+    ):
+        self.generators = tuple(generators)
+        self.stress_tensor = stress_tensor
+        self.gradings = gradings
+        self._basis = LocalOperatorBasis(
+            self.generators,
+            max_weight=max_weight,
+            max_occurence=max_occurence,
+        )
+
+    def canonicalize(self, expr: Any) -> Any:
+        return self._basis.canonicalize(expr)
+
+    def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
+        return _canonical_terms(expr, self.canonicalize)
+
+    def basis(self, weight: Any, max_occurence: Any = None) -> list[Any]:
+        return self._basis.list(weight, max_occurence=max_occurence)
+
+    def list(self, weight: Any, max_occurence: Any = None) -> list[Any]:
+        """Alias for basis(); allows LocalOperatorCanonicalizer to satisfy the
+        same interface as LocalOperatorBasis."""
+        return self.basis(weight, max_occurence=max_occurence)
+
+    def sector_of(self, expr: Any) -> Any:
+        weight = _get_conformal_weight(expr)
+        parity = get_operator_parity(expr)
+        return {"weight": weight, "parity": parity}
+
+    def nested_stress_tensor(self, n: int) -> Any:
+        if self.stress_tensor is None:
+            raise ValueError("stress_tensor must be provided")
+        if n <= 0:
+            raise ValueError("n must be positive")
+        return self.canonicalize(normal_product(*([self.stress_tensor] * n)))
+
+
+class SparseLinearContext:
+    """On-demand sparse linear algebra over canonical monomial supports."""
+
+    def __init__(self, canonicalizer: Any):
+        self.canonicalizer = canonicalizer
+        self._eliminator = _SparseIndependentEliminator()
+
+    def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
+        sparse_terms = getattr(self.canonicalizer, "sparse_terms", None)
+        if callable(sparse_terms):
+            return cast(dict[Any, sp.Expr], sparse_terms(expr))
+        return _canonical_terms(expr, self.canonicalizer.canonicalize)
+
+    def reduce_vector(
+        self, sparse_terms: dict[Any, sp.Expr]
+    ) -> tuple[dict[Any, sp.Expr], dict[Any, sp.Expr]]:
+        return self._eliminator.reduce_with_coefficients(sparse_terms)
+
+    def insert_expr(self, expr: Any) -> bool:
+        return self._eliminator.insert(self.sparse_terms(expr))
+
+    def independent_subset(self, expressions: Iterable[Any]) -> list[Any]:
+        ordered = sorted(set(expressions), key=sp.srepr)
+        eliminator = _SparseIndependentEliminator()
+        independent = []
+
+        for expr in ordered:
+            if eliminator.insert(self.sparse_terms(expr)):
+                independent.append(expr)
+
+        return independent
+
+    def zero_relations(self, expressions: Iterable[Any]) -> list[dict[str, Any]]:
+        return _zero_relations_from_vectors(expressions, self.sparse_terms)
 
 
 def _canonical_terms(expr: Any, canonicalizer: Any) -> dict[Any, sp.Expr]:
@@ -490,16 +575,41 @@ def _combine_like_terms_preserving_metadata(expr: Any) -> Any:
     return sp.Add(*rebuilt_terms)
 
 
+_realize_cache: dict[int, Any] = {}
+
+
+def clear_realize_cache() -> None:
+    """Clear the realization memoization cache."""
+    _realize_cache.clear()
+
+
 def _realize_expr(expr: Any) -> Any:
-    """Recursively expand realized generators into their underlying expressions."""
+    """Recursively expand realized generators into their underlying expressions.
+
+    Optimizations over naive recursive expansion:
+    - **P0 – incremental simplification**: after each ``normal_product`` call the
+      result is immediately combined (like terms merged) so that intermediate
+      expression sizes stay small instead of snowballing.
+    - **P1 – RealizedGenerator caching**: each ``RealizedGenerator`` is expanded
+      at most once; subsequent encounters reuse the cached result.
+    """
+    # P1: memoize RealizedGenerator expansions
     if isinstance(expr, RealizedGenerator):
-        return _realize_expr(expr.realization)
+        key = id(expr)
+        cached = _realize_cache.get(key)
+        if cached is not None:
+            return cached
+        result = _realize_expr(expr.realization)
+        _realize_cache[key] = result
+        return result
 
     if expr is Zero or expr is One:
         return expr
 
     if isinstance(expr, sp.Add):
-        return sp.Add(*[_realize_expr(arg) for arg in expr.args])
+        # P0: combine like terms after expanding each summand
+        expanded = sp.Add(*[_realize_expr(arg) for arg in expr.args])
+        return _combine_like_terms_preserving_metadata(expanded)
 
     if isinstance(expr, sp.Mul):
         coeff, operator = extract_scalar_operator(expr)
@@ -519,7 +629,9 @@ def _realize_expr(expr: Any) -> Any:
         if base is not None and order is not None:
             return d(_realize_expr(base), order)
         if left is not None and right is not None:
-            return normal_product(_realize_expr(left), _realize_expr(right))
+            # P0: combine like terms immediately after normal ordering
+            result = normal_product(_realize_expr(left), _realize_expr(right))
+            return _combine_like_terms_preserving_metadata(result)
         return expr
 
     return expr
@@ -560,9 +672,11 @@ def list_independent_ops(
 ) -> list[Any]:
     """Return a linearly independent subset via local canonical expansions."""
 
+    context = SparseLinearContext(basis_builder)
+
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
-        return _canonical_terms(expr, basis_builder.canonicalize)
+        return context.sparse_terms(expr)
 
     return _independent_from_vectors(expressions, vector_getter)
 
@@ -575,9 +689,11 @@ def list_zero_relations(
 ) -> list[dict[str, Any]]:
     """Return a basis of linear relations via local canonical expansions."""
 
+    context = SparseLinearContext(basis_builder)
+
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
-        return _canonical_terms(expr, basis_builder.canonicalize)
+        return context.sparse_terms(expr)
 
     return _zero_relations_from_vectors(expressions, vector_getter)
 
@@ -659,6 +775,10 @@ class LocalOperatorBasis:
             return Zero
         return combined
 
+    def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
+        """Return sparse canonical coordinates without fixed-weight basis enumeration."""
+        return _canonical_terms(expr, self.canonicalize)
+
     def enumerate_candidates(self, weight: Any) -> list[Any]:
         """Enumerate raw canonical candidate expressions of fixed weight."""
         normalized_weight = _normalize_weight(weight)
@@ -670,7 +790,7 @@ class LocalOperatorBasis:
         )
         return list(basis_terms)
 
-    def basis(self, weight: Any, max_occurence: Any = None) -> list[Any]:
+    def list(self, weight: Any, max_occurence: Any = None) -> list[Any]:
         """Return a canonical basis of operator monomials at fixed weight."""
         normalized_weight = _normalize_weight(weight)
         normalized_max_occurence = self._resolve_max_occurence(max_occurence)
@@ -689,7 +809,7 @@ class LocalOperatorBasis:
                 if inferred_weight is None:
                     raise ValueError("Weight is required for the zero expression")
                 weight = inferred_weight
-            basis = self.basis(weight, max_occurence=normalized_max_occurence)
+            basis = self.list(weight, max_occurence=normalized_max_occurence)
             return sp.zeros(len(basis), 1)
 
         expr_weight = _get_conformal_weight(canonical)
@@ -702,7 +822,7 @@ class LocalOperatorBasis:
         if expr_weight is not None and not _weights_equal(expr_weight, target_weight):
             raise ValueError("Expression weight does not match requested basis weight")
 
-        basis = self.basis(target_weight, max_occurence=normalized_max_occurence)
+        basis = self.list(target_weight, max_occurence=normalized_max_occurence)
         index = {op: i for i, op in enumerate(basis)}
         vector = sp.zeros(len(basis), 1)
 
@@ -948,240 +1068,26 @@ class LocalOperatorBasis:
         return sp.simplify(compensation)
 
 
-class DescendantSpace:
-    """Generate descendant subspaces from source operators at fixed weight."""
+def _c2_weight_step(generators: Any) -> sp.Expr:
+    """Return the smallest weight unit implied by the given generators.
 
-    def __init__(self, basis_builder: LocalOperatorBasis):
-        self.basis_builder = basis_builder
-
-    def generate(self, source: Any, target_weight: Any) -> list[Any]:
-        """Generate canonical descendant candidates from one source."""
-        normalized_target = _normalize_weight(target_weight)
-        canonical_source = self.basis_builder.canonicalize(source)
-        source_weight = _get_conformal_weight(canonical_source)
-
-        if source_weight is None:
-            raise ValueError(
-                "Source operator must have a well-defined conformal weight"
-            )
-        if normalized_target < source_weight:
-            return []
-
-        queue = [canonical_source]
-        seen = {canonical_source}
-        generated = []
-
-        while queue:
-            current = queue.pop(0)
-            current_weight = _get_conformal_weight(current)
-            if current_weight is None or current_weight > normalized_target:
-                continue
-
-            if _weights_equal(current_weight, normalized_target):
-                generated.append(current)
-                continue
-
-            derivative_descendant = self.basis_builder.canonicalize(d(current))
-            self._enqueue_if_relevant(
-                derivative_descendant,
-                normalized_target,
-                seen,
-                queue,
-            )
-
-            for generator in self.basis_builder.generators:
-                product_descendant = self.basis_builder.canonicalize(
-                    normal_product(generator, current)
-                )
-                self._enqueue_if_relevant(
-                    product_descendant,
-                    normalized_target,
-                    seen,
-                    queue,
-                )
-
-        return sorted(set(generated), key=sp.srepr)
-
-    def basis(self, source: Any, target_weight: Any) -> list[Any]:
-        """Return a linearly independent spanning set for one source."""
-        return self._independent_span(
-            self.generate(source, target_weight), target_weight
-        )
-
-    def span(self, sources: Iterable[Any], target_weight: Any) -> list[Any]:
-        """Return a linearly independent spanning set from multiple sources."""
-        generated = []
-        for source in sources:
-            generated.extend(self.generate(source, target_weight))
-        return self._independent_span(generated, target_weight)
-
-    def _enqueue_if_relevant(
-        self,
-        expr: Any,
-        target_weight: sp.Expr,
-        seen: set[Any],
-        queue: list[Any],
-    ) -> None:
-        if expr == Zero:
-            return
-
-        expr_weight = _get_conformal_weight(expr)
-        if expr_weight is None or expr_weight > target_weight:
-            return
-        if expr not in seen:
-            seen.add(expr)
-            queue.append(expr)
-
-    def _independent_span(
-        self, expressions: Iterable[Any], target_weight: Any
-    ) -> list[Any]:
-        normalized_target = _normalize_weight(target_weight)
-        independent = []
-        columns = []
-
-        for expr in sorted(set(expressions), key=sp.srepr):
-            vector = self.basis_builder.coordinates(expr, weight=normalized_target)
-            if not columns:
-                if vector != sp.zeros(*vector.shape):
-                    independent.append(expr)
-                    columns.append(vector)
-                continue
-
-            current = sp.Matrix.hstack(*columns)
-            candidate = sp.Matrix.hstack(*columns, vector)
-            if candidate.rank() > current.rank():
-                independent.append(expr)
-                columns.append(vector)
-
-        return independent
-
-
-class SingularVectorAnalyzer:
-    """Analyze singular / primary constraints from OPE pole data."""
-
-    def __init__(
-        self,
-        basis_builder: LocalOperatorBasis,
-        generators: Optional[Iterable[Any]] = None,
-        stress_tensor: Any = None,
-    ):
-        self.basis_builder = basis_builder
-        self.generators = (
-            tuple(generators)
-            if generators is not None
-            else tuple(basis_builder.generators)
-        )
-        self.stress_tensor = stress_tensor
-
-    def positive_mode_constraints(
-        self, expr: Any, generators: Optional[Iterable[Any]] = None
-    ) -> dict[Any, dict[int, Any]]:
-        """Return forbidden positive-mode pole coefficients for each constraint generator."""
-        constraint_generators = (
-            tuple(generators) if generators is not None else self.generators
-        )
-        canonical_expr = self.basis_builder.canonicalize(expr)
-        constraints: dict[Any, dict[int, Any]] = {}
-
-        for generator in constraint_generators:
-            ope = OPE(generator, canonical_expr)
-            allowed_max_pole = self._allowed_max_pole(generator)
-            violating: dict[int, Any] = {}
-            for pole in range(allowed_max_pole + 1, ope.max_pole + 1):
-                coeff = self.basis_builder.canonicalize(ope.pole(pole))
-                if coeff != Zero:
-                    violating[pole] = coeff
-            constraints[generator] = violating
-
-        return constraints
-
-    def is_singular(
-        self, expr: Any, generators: Optional[Iterable[Any]] = None
-    ) -> bool:
-        """Check whether all forbidden positive-mode poles vanish."""
-        constraints = self.positive_mode_constraints(expr, generators=generators)
-        return all(not violations for violations in constraints.values())
-
-    def find_singular_vectors(
-        self,
-        weight: Any,
-        ansatz: Optional[Iterable[Any]] = None,
-        generators: Optional[Iterable[Any]] = None,
-    ) -> list[dict[str, Any]]:
-        """Solve linear ansaetze for singular vectors at fixed weight."""
-        normalized_weight = _normalize_weight(weight)
-        ansatz_basis = (
-            list(ansatz) if ansatz is not None else self.basis_builder.basis(weight)
-        )
-        ansatz_basis = [
-            self.basis_builder.canonicalize(expr)
-            for expr in ansatz_basis
-            if _weights_equal(_get_conformal_weight(expr), normalized_weight)
-        ]
-        if not ansatz_basis:
-            return []
-
-        constraint_generators = (
-            tuple(generators) if generators is not None else self.generators
-        )
-        equations = []
-        symbols = sp.symbols(f"c0:{len(ansatz_basis)}")
-        trial_expr = sp.Add(
-            *[symbol * expr for symbol, expr in zip(symbols, ansatz_basis)]
-        )
-
-        for generator in constraint_generators:
-            ope = OPE(generator, trial_expr)
-            allowed_max_pole = self._allowed_max_pole(generator)
-            for pole in range(allowed_max_pole + 1, ope.max_pole + 1):
-                coeff = self.basis_builder.canonicalize(ope.pole(pole))
-                if coeff == Zero:
-                    continue
-
-                coeff_terms = collect_operator_terms(coeff)
-                for operator_coeff in coeff_terms.values():
-                    equations.append(sp.sympify(operator_coeff))
-
-        if not equations:
-            results = []
-            for index, basis_expr in enumerate(ansatz_basis):
-                coeffs = {
-                    symbol: (sp.Integer(1) if i == index else sp.Integer(0))
-                    for i, symbol in enumerate(symbols)
-                }
-                results.append({"vector": basis_expr, "coefficients": coeffs})
-            return results
-
-        matrix, _ = sp.linear_eq_to_matrix(equations, symbols)
-        nullspace = matrix.nullspace()
-        results = []
-        for basis_vector in nullspace:
-            expr = self.basis_builder.canonicalize(
-                sp.Add(
-                    *[
-                        coeff * basis_expr
-                        for coeff, basis_expr in zip(basis_vector, ansatz_basis)
-                        if coeff != 0
-                    ]
-                )
-            )
-            if expr != Zero:
-                results.append(
-                    {
-                        "vector": expr,
-                        "coefficients": {
-                            symbol: coeff
-                            for symbol, coeff in zip(symbols, basis_vector)
-                        },
-                    }
-                )
-
-        return results
-
-    def _allowed_max_pole(self, generator: Any) -> int:
-        if self.stress_tensor is not None and generator == self.stress_tensor:
-            return 2
-        return 0
+    For integer-weight generators this is 1; for half-integer generators it is
+    1/2, etc.  The step controls how finely we sweep h_a when enumerating C2
+    generators of the form NO(d(a), phi).
+    """
+    denoms: list[int] = []
+    for g in generators:
+        w = _get_conformal_weight(g)
+        if w is None:
+            continue
+        r = sp.Rational(w)
+        denoms.append(int(r.q))
+    if not denoms:
+        return sp.Integer(1)
+    lcm_val = denoms[0]
+    for denom in denoms[1:]:
+        lcm_val = int(sp.lcm(lcm_val, denom))
+    return sp.Rational(1, lcm_val)
 
 
 class C2Space:
@@ -1189,35 +1095,50 @@ class C2Space:
 
     def __init__(self, basis_builder: LocalOperatorBasis):
         self.basis_builder = basis_builder
+        self._compat_reducer = None
+
+    def reducer(self):
+        """Return a compatibility reducer backed by the new sparse C2 API."""
+        if self._compat_reducer is None:
+            from .c2 import GenericC2Reducer
+
+            self._compat_reducer = GenericC2Reducer(cast(Any, self.basis_builder))
+        return self._compat_reducer
 
     def generators(self, weight: Any) -> list[Any]:
-        """Generate canonical C2 candidates of the form NO(d(a), phi)."""
+        """Generate canonical C2 candidates of the form NO(d(a), phi).
+
+        C2(V)_w = span{:(∂a)φ: | a ∈ V[h_a], φ ∈ V[h_φ], h_a + h_φ + 1 = w}.
+        We iterate over ALL basis elements a (not just primary generators) so that
+        derived elements like ∂^n T are correctly included.
+        """
         normalized_weight = _normalize_weight(weight)
         generated = set()
 
-        for generator in self.basis_builder.generators:
-            generator_weight = _get_conformal_weight(generator)
-            if generator_weight is None:
-                continue
+        step = _c2_weight_step(self.basis_builder.generators)
+        h_a = step
+        while sp.simplify(normalized_weight - h_a - 1) >= 0:
+            phi_weight = sp.simplify(normalized_weight - h_a - 1)
+            a_list = self.basis_builder.list(h_a)
+            phi_list = self.basis_builder.list(phi_weight)
 
-            phi_weight = sp.simplify(normalized_weight - generator_weight - 1)
-            if phi_weight < 0:
-                continue
+            for a in a_list:
+                for phi in phi_list:
+                    candidate = self.basis_builder.canonicalize(
+                        normal_product(d(a), phi)
+                    )
+                    if candidate == Zero:
+                        continue
 
-            for phi in self.basis_builder.basis(phi_weight):
-                candidate = self.basis_builder.canonicalize(
-                    normal_product(d(generator), phi)
-                )
-                if candidate == Zero:
-                    continue
+                    candidate_weight = _get_conformal_weight(candidate)
+                    if candidate_weight is None or not _weights_equal(
+                        candidate_weight, normalized_weight
+                    ):
+                        continue
 
-                candidate_weight = _get_conformal_weight(candidate)
-                if candidate_weight is None or not _weights_equal(
-                    candidate_weight, normalized_weight
-                ):
-                    continue
+                    generated.add(candidate)
 
-                generated.add(candidate)
+            h_a = sp.simplify(h_a + step)
 
         return sorted(generated, key=sp.srepr)
 
@@ -1257,19 +1178,37 @@ class C2Space:
         if expr_weight is not None and not _weights_equal(expr_weight, target_weight):
             raise ValueError("Expression weight does not match requested C2 weight")
 
-        basis_vectors = []
-        for generator in self.basis(target_weight):
-            basis_vectors.append(
-                self.basis_builder.coordinates(generator, weight=target_weight)
-            )
+        return self.is_zero_mod_c2(canonical, weight=target_weight)
 
-        expr_vector = self.basis_builder.coordinates(canonical, weight=target_weight)
-        if not basis_vectors:
-            return expr_vector == sp.zeros(*expr_vector.shape)
+    def quotient_normal_form(self, expr: Any, weight: Any = None) -> Any:
+        """Compatibility helper exposing reducer-style quotient normal forms."""
+        canonical = self.basis_builder.canonicalize(expr)
+        if canonical == Zero:
+            return Zero
+        if weight is not None:
+            expr_weight = _get_conformal_weight(canonical)
+            target_weight = _normalize_weight(weight)
+            if expr_weight is not None and not _weights_equal(
+                expr_weight, target_weight
+            ):
+                raise ValueError("Expression weight does not match requested C2 weight")
+        return self.reducer().quotient_normal_form(canonical)
 
-        matrix = sp.Matrix.hstack(*basis_vectors)
-        augmented = sp.Matrix.hstack(matrix, expr_vector)
-        return augmented.rank() == matrix.rank()
+    def is_zero_mod_c2(self, expr: Any, weight: Any = None) -> bool:
+        """Compatibility helper exposing reducer-style C2 triviality checks."""
+        return self.quotient_normal_form(expr, weight=weight) == Zero
+
+    def solve_c2_witness(self, expr: Any, weight: Any = None) -> Any:
+        """Compatibility helper exposing reducer witness diagnostics."""
+        canonical = self.basis_builder.canonicalize(expr)
+        if weight is not None:
+            expr_weight = _get_conformal_weight(canonical)
+            target_weight = _normalize_weight(weight)
+            if expr_weight is not None and not _weights_equal(
+                expr_weight, target_weight
+            ):
+                raise ValueError("Expression weight does not match requested C2 weight")
+        return self.reducer().solve_c2_witness(canonical)
 
 
 class C2NullSearcher:
@@ -1278,14 +1217,38 @@ class C2NullSearcher:
     def __init__(
         self,
         basis_builder: LocalOperatorBasis,
-        descendants: Optional[DescendantSpace] = None,
+        descendants: Optional[Any] = None,
         c2_space: Optional[C2Space] = None,
         stress_tensor: Any = None,
+        c2_reducer: Any = None,
     ):
+        if descendants is None:
+            from .descendants import DescendantSpace as ExternalDescendantSpace
+
+            descendants = ExternalDescendantSpace(cast(Any, basis_builder))
         self.basis_builder = basis_builder
-        self.descendants = descendants or DescendantSpace(basis_builder)
+        self.descendants = descendants
         self.c2_space = c2_space or C2Space(basis_builder)
         self.stress_tensor = stress_tensor
+        self.c2_reducer = c2_reducer or self.c2_space.reducer()
+
+    def quotient_precheck(self, target_expr: Any) -> Any:
+        """Bridge legacy searcher to the new reducer-based precheck API."""
+        from .null_search import C2NullSearcher as QuotientC2NullSearcher
+
+        canonicalizer = LocalOperatorCanonicalizer(
+            self.basis_builder.generators,
+            stress_tensor=self.stress_tensor,
+            max_weight=self.basis_builder.max_weight,
+            max_occurence=self.basis_builder.max_occurence,
+        )
+        searcher = QuotientC2NullSearcher(
+            canonicalizer=canonicalizer,
+            linear_context=SparseLinearContext(canonicalizer),
+            descendants=self.descendants,
+            c2_reducer=self.c2_reducer,
+        )
+        return searcher.quotient_precheck(target_expr)
 
     def search_from_sources(
         self,
@@ -1293,61 +1256,35 @@ class C2NullSearcher:
         sources: Iterable[Any],
         target_expr: Any,
     ) -> Optional[dict[str, Any]]:
-        """Solve D x - C y = t at fixed weight."""
+        """Solve descendant lift via the new sparse quotient core."""
+        from .null_search import C2NullSearcher as QuotientC2NullSearcher
+
         normalized_weight = _normalize_weight(target_weight)
         target_canonical = self.basis_builder.canonicalize(target_expr)
         target_vector = self.basis_builder.coordinates(
             target_canonical, normalized_weight
         )
 
-        descendant_basis = self.descendants.span(sources, normalized_weight)
-        c2_basis = self.c2_space.basis(normalized_weight)
-
-        descendant_matrix = self._coordinate_matrix(descendant_basis, normalized_weight)
-        c2_matrix = self._coordinate_matrix(c2_basis, normalized_weight)
-
-        blocks = []
-        if descendant_matrix.cols:
-            blocks.append(descendant_matrix)
-        if c2_matrix.cols:
-            blocks.append(-c2_matrix)
-
-        if not blocks:
+        canonicalizer = LocalOperatorCanonicalizer(
+            self.basis_builder.generators,
+            stress_tensor=self.stress_tensor,
+            max_weight=self.basis_builder.max_weight,
+            max_occurence=self.basis_builder.max_occurence,
+        )
+        searcher = QuotientC2NullSearcher(
+            canonicalizer=canonicalizer,
+            linear_context=SparseLinearContext(canonicalizer),
+            descendants=self.descendants,
+            c2_reducer=self.c2_reducer,
+        )
+        result = searcher.search_from_sources(
+            normalized_weight,
+            sources,
+            target_canonical,
+        )
+        if result is None or result.status == "obstructed":
             return None
-
-        system_matrix = sp.Matrix.hstack(*blocks)
-        if (
-            system_matrix.rank()
-            != sp.Matrix.hstack(system_matrix, target_vector).rank()
-        ):
-            return None
-
-        solution_vector = self._solve_one_solution(system_matrix, target_vector)
-        descendant_coeffs = [
-            solution_vector[i, 0] for i in range(descendant_matrix.cols)
-        ]
-        c2_coeffs = [
-            solution_vector[i, 0]
-            for i in range(descendant_matrix.cols, solution_vector.rows)
-        ]
-
-        null_operator = self._linear_combination(descendant_basis, descendant_coeffs)
-        c2_remainder = self._linear_combination(c2_basis, c2_coeffs)
-
-        return {
-            "weight": normalized_weight,
-            "target": target_canonical,
-            "target_vector": target_vector,
-            "descendant_basis": descendant_basis,
-            "descendant_matrix": descendant_matrix,
-            "descendant_coeffs": descendant_coeffs,
-            "c2_basis": c2_basis,
-            "c2_matrix": c2_matrix,
-            "c2_coeffs": c2_coeffs,
-            "solution_vector": solution_vector,
-            "null_operator": self.basis_builder.canonicalize(null_operator),
-            "c2_remainder": self.basis_builder.canonicalize(c2_remainder),
-        }
+        return self._legacy_result_payload(result, override_weight=normalized_weight)
 
     def search_stress_tensor_nilpotency(
         self, n: int, sources: Iterable[Any], stress_tensor: Any = None
@@ -1357,22 +1294,70 @@ class C2NullSearcher:
         if tensor is None:
             raise ValueError("stress_tensor must be provided")
 
-        target_expr = normal_product(*([tensor] * n))
-        target_weight = _get_conformal_weight(target_expr)
-        if target_weight is None:
-            raise ValueError("Could not infer target weight for stress tensor product")
+        from .null_search import C2NullSearcher as QuotientC2NullSearcher
 
-        result = self.search_from_sources(target_weight, sources, target_expr)
-        if result is not None:
-            result["n"] = n
-        return result
+        canonicalizer = LocalOperatorCanonicalizer(
+            self.basis_builder.generators,
+            stress_tensor=tensor,
+            max_weight=self.basis_builder.max_weight,
+            max_occurence=self.basis_builder.max_occurence,
+        )
+        searcher = QuotientC2NullSearcher(
+            canonicalizer=canonicalizer,
+            linear_context=SparseLinearContext(canonicalizer),
+            descendants=self.descendants,
+            singular_constraints=self._make_singular_analyzer(
+                tensor,
+            ),
+            c2_reducer=self.c2_reducer,
+        )
+        result = searcher.search_stress_tensor_nilpotency(n, sources)
+        if result is None or result.status == "obstructed":
+            return None
+        return self._legacy_result_payload(result, override_n=n)
+
+    def _make_singular_analyzer(self, tensor: Any) -> Any:
+        from .singularity import (
+            SingularVectorAnalyzer as ExternalSingularVectorAnalyzer,
+        )
+
+        return ExternalSingularVectorAnalyzer(
+            cast(Any, self.basis_builder),
+            generators=self.basis_builder.generators,
+            stress_tensor=tensor,
+        )
+
+    def _legacy_result_payload(
+        self,
+        result: Any,
+        override_weight: Any = None,
+        override_n: int | None = None,
+    ) -> dict[str, Any]:
+        payload = result.legacy_payload(self.basis_builder)
+        if override_weight is not None:
+            payload["weight"] = override_weight
+            payload["target_vector"] = self.basis_builder.coordinates(
+                payload["target"],
+                override_weight,
+            )
+            payload["descendant_matrix"] = self._coordinate_matrix(
+                payload["descendant_basis"],
+                override_weight,
+            )
+            payload["c2_matrix"] = self._coordinate_matrix(
+                payload["c2_basis"],
+                override_weight,
+            )
+        if override_n is not None:
+            payload["n"] = override_n
+        return payload
 
     def _coordinate_matrix(self, expressions: Iterable[Any], weight: Any) -> sp.Matrix:
         columns = [
             self.basis_builder.coordinates(expr, weight=weight) for expr in expressions
         ]
         if not columns:
-            basis_dim = len(self.basis_builder.basis(weight))
+            basis_dim = len(self.basis_builder.list(weight))
             return sp.zeros(basis_dim, 0)
         return sp.Matrix.hstack(*columns)
 
