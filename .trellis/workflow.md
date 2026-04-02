@@ -58,35 +58,41 @@ git status && git log --oneline -10              # Git state
 **CRITICAL**: Read guidelines before writing any code:
 
 ```bash
-# Read frontend guidelines index (if applicable)
-cat .trellis/spec/frontend/index.md
+# Core library guidelines (architecture, API, coding patterns)
+cat .trellis/spec/core/index.md
 
-# Read backend guidelines index (if applicable)
-cat .trellis/spec/backend/index.md
+# Testing guidelines (conventions, Mathematica reference, fixtures)
+cat .trellis/spec/testing/index.md
 ```
 
-**Why read both?**
-- Understand the full project architecture
-- Know coding standards for the entire codebase
-- See how frontend and backend interact
-- Learn the overall code quality requirements
+**Why read these?**
+- Understand the module architecture and layer boundaries
+- Know API conventions and SymPy coding patterns
+- Learn the testing requirements (OPEdefs.m reference validation)
+- See code quality standards and forbidden patterns
 
 ### Step 3: Before Coding - Read Specific Guidelines (Required)
 
 Based on your task, read the **detailed** guidelines:
 
-**Frontend Task**:
+**Core Library Task**:
 ```bash
-cat .trellis/spec/frontend/hook-guidelines.md      # For hooks
-cat .trellis/spec/frontend/component-guidelines.md # For components
-cat .trellis/spec/frontend/type-safety.md          # For types
+cat .trellis/spec/core/architecture.md        # Module organization, layers
+cat .trellis/spec/core/api-conventions.md      # OPE/NO/bracket usage
+cat .trellis/spec/core/sympy-patterns.md       # SymPy-specific patterns
+cat .trellis/spec/core/quality-guidelines.md   # Forbidden/required patterns
 ```
 
-**Backend Task**:
+**Testing Task**:
 ```bash
-cat .trellis/spec/backend/database-guidelines.md   # For DB operations
-cat .trellis/spec/backend/type-safety.md           # For types
-cat .trellis/spec/backend/logging-guidelines.md    # For logging
+cat .trellis/spec/testing/test-conventions.md       # Test structure, fixtures, naming
+cat .trellis/spec/testing/mathematica-reference.md  # OPEdefs.m reference workflow
+cat .trellis/spec/testing/algebra-fixtures.md       # Standard VOA fixtures
+```
+
+**Cross-Layer Features**:
+```bash
+cat .trellis/spec/guides/cross-layer-thinking-guide.md
 ```
 
 ---
@@ -133,12 +139,17 @@ cat .trellis/spec/backend/logging-guidelines.md    # For logging
 |   +-- {MM}-{DD}-{name}/
 |       +-- task.json
 |-- spec/                # [!] MUST READ before coding
-|   |-- frontend/        # Frontend guidelines (if applicable)
-|   |   |-- index.md               # Start here - guidelines index
-|   |   +-- *.md                   # Topic-specific docs
-|   |-- backend/         # Backend guidelines (if applicable)
-|   |   |-- index.md               # Start here - guidelines index
-|   |   +-- *.md                   # Topic-specific docs
+|   |-- core/            # Core library guidelines
+|   |   |-- index.md               # Start here - architecture & API
+|   |   +-- *.md                   # architecture, api-conventions, sympy-patterns, quality
+|   |-- backend/         # Redirects to core/ (not a web backend)
+|   |   +-- index.md               # Redirect map
+|   |-- testing/         # Test guidelines
+|   |   |-- index.md               # Start here - test conventions
+|   |   +-- *.md                   # test-conventions, mathematica-reference, algebra-fixtures
+|   |-- domain/          # VOA/CFT domain knowledge
+|   |   |-- index.md               # Start here - domain reference
+|   |   +-- *.md                   # voa-primer, opedefs-mapping
 |   +-- guides/          # Thinking guides
 |       |-- index.md                      # Guides index
 |       |-- cross-layer-thinking-guide.md # Pre-implementation checklist
@@ -168,16 +179,16 @@ python3 ./.trellis/scripts/get_context.py --json
 
 Based on what you'll develop, read the corresponding guidelines:
 
-**Frontend Development** (if applicable):
+**Core Library Development**:
 ```bash
 # Read index first, then specific docs based on task
-cat .trellis/spec/frontend/index.md
+cat .trellis/spec/core/index.md
 ```
 
-**Backend Development** (if applicable):
+**Testing**:
 ```bash
-# Read index first, then specific docs based on task
-cat .trellis/spec/backend/index.md
+# Read testing conventions and reference workflow
+cat .trellis/spec/testing/index.md
 ```
 
 **Cross-Layer Features**:
@@ -233,8 +244,8 @@ python3 ./.trellis/scripts/task.py create "<title>" --slug <task-name>
 - [OK] Manual feature testing passes
 
 **Project-specific checks**:
-- See `.trellis/spec/frontend/quality-guidelines.md` for frontend
-- See `.trellis/spec/backend/quality-guidelines.md` for backend
+- See `.trellis/spec/core/quality-guidelines.md` for code quality
+- See `.trellis/spec/testing/test-conventions.md` for test conventions
 
 ---
 
@@ -295,15 +306,20 @@ workspace/
 **Structure** (Multi-doc format):
 ```
 spec/
-|-- frontend/           # Frontend docs (if applicable)
-|   |-- index.md        # Start here
-|   +-- *.md            # Topic-specific docs
-|-- backend/            # Backend docs (if applicable)
-|   |-- index.md        # Start here
-|   +-- *.md            # Topic-specific docs
-+-- guides/             # Thinking guides
-    |-- index.md        # Start here
-    +-- *.md            # Guide-specific docs
+|-- core/              # Core library guidelines
+|   |-- index.md       # Start here
+|   +-- *.md           # architecture, api-conventions, sympy-patterns, quality
+|-- backend/           # Redirects to core/ (not a web backend)
+|   +-- index.md       # Redirect map
+|-- testing/           # Test guidelines
+|   |-- index.md       # Start here
+|   +-- *.md           # test-conventions, mathematica-reference, algebra-fixtures
+|-- domain/            # VOA/CFT domain knowledge
+|   |-- index.md       # Start here
+|   +-- *.md           # voa-primer, opedefs-mapping
++-- guides/            # Thinking guides
+    |-- index.md       # Start here
+    +-- *.md           # Guide-specific docs
 ```
 
 **When to update**:
@@ -372,8 +388,8 @@ python3 ./.trellis/scripts/task.py list-archive    # List archived tasks
 
 | Task Type | Must-read Document |
 |-----------|-------------------|
-| Frontend work | `frontend/index.md` → relevant docs |
-| Backend work | `backend/index.md` → relevant docs |
+| Core library work | `core/index.md` → relevant docs |
+| Testing work | `testing/index.md` → relevant docs |
 | Cross-Layer Feature | `guides/cross-layer-thinking-guide.md` |
 
 ### Commit Convention

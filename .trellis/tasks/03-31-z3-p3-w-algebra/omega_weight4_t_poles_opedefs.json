@@ -1,0 +1,548 @@
+{
+	"NO(∂beta_char_p3,NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(21*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, (-3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - 6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]]))\/2 + 3*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], -4*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]], -3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]] - 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - NO[Derivative[2][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]]}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(21*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, (-3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - 6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]]))\/2 + 3*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], -4*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]], -3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]] - 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - NO[Derivative[2][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]]}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(21*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, (-3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - 6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]]))\/2 + 3*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], -4*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]], -3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]] - 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - NO[Derivative[2][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]]}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(21*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, (-3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - 6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]]))\/2 + 3*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], -4*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]], -3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]] - 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] - NO[Derivative[2][betaff], NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]]}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(beta_char_p3,NO(∂gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,c_char_p3)))))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{20*NO[betaff, NO[gammaff, NO[bff, cff]]], -12*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 12*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + 2*(2*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 2*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]]), -16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]], 8*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 4*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 6*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] - NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] + NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]])}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{20*NO[betaff, NO[gammaff, NO[bff, cff]]], -12*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 12*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + 2*(2*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 2*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]]), -16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]], 8*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 4*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 6*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] - NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] + NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]])}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{20*NO[betaff, NO[gammaff, NO[bff, cff]]], -12*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 12*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + 2*(2*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 2*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]]), -16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]], 8*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 4*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 6*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] - NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] + NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]])}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{20*NO[betaff, NO[gammaff, NO[bff, cff]]], -12*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 12*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + 2*(2*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 2*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]]), -16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]], 8*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 4*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 6*(-NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] - NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], NO[bff, cff]]]]] + NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, NO[bff, cff]]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, cff]]]]])}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(beta_char_p3,NO(beta_char_p3,NO(∂gamma_char_p3,NO(gamma_char_p3,gamma_char_p3)))))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(45*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, 27*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] + 6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/2, -12*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]], (9*(-2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] - NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] - 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2 + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] + NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] + 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(45*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, 27*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] + 6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/2, -12*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]], (9*(-2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] - NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] - 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2 + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] + NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] + 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(45*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, 27*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] + 6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/2, -12*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]], (9*(-2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] - NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] - 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2 + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] + NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] + 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(45*NO[betaff, NO[betaff, NO[gammaff, gammaff]]])\/2, 27*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, gammaff]]]]] + 6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/2, -12*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]], (9*(-2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] - NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] - 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2 + (3*(2*NO[betaff, NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][gammaff], gammaff]]]]] + NO[betaff, NO[betaff, NO[betaff, NO[Derivative[2][gammaff], NO[gammaff, gammaff]]]]] + 3*NO[Derivative[1][betaff], NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, gammaff]]]]]))\/2}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(b_char_p3,∂c_char_p3)))))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{-8*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], 4*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{-8*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], 4*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{-8*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], 4*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{-8*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], 4*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[2][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[bff, Derivative[1][cff]]]]]]}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,NO(gamma_char_p3,NO(∂b_char_p3,c_char_p3)))))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{-10*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{-10*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{-10*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{-10*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[bff, cff]]]]] + 16*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]], -8*NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]], 4*(-NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] - NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*(NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]]] + NO[betaff, NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[2][bff], cff]]]]]) + 2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] + 3*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], NO[gammaff, NO[Derivative[1][bff], cff]]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]) + 2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, NO[gammaff, NO[Derivative[1][bff], cff]]]]]}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(∂gamma_char_p3,NO(∂b_char_p3,c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{10*NO[betaff, Derivative[1][gammaff]] - 5*NO[Derivative[1][bff], cff], -2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 8*NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]], -4*(-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - 2*(NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - 3*(-NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]) - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{10*NO[betaff, Derivative[1][gammaff]] - 5*NO[Derivative[1][bff], cff], -2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 8*NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]], -4*(-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - 2*(NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - 3*(-NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]) - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{10*NO[betaff, Derivative[1][gammaff]] - 5*NO[Derivative[1][bff], cff], -2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 8*NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]], -4*(-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - 2*(NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - 3*(-NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]) - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{10*NO[betaff, Derivative[1][gammaff]] - 5*NO[Derivative[1][bff], cff], -2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 8*NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]], -4*(-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - 2*(NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]]) - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - 3*(-NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]) - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(beta_char_p3,NO(∂^2gamma_char_p3,gamma_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{-48*NO[betaff, gammaff], -12*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]) - 2*(6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]), 16*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], gammaff]]], -6*(-NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]]) - 2*(NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]])}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{-48*NO[betaff, gammaff], -12*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]) - 2*(6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]), 16*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], gammaff]]], -6*(-NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]]) - 2*(NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]])}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{-48*NO[betaff, gammaff], -12*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]) - 2*(6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]), 16*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], gammaff]]], -6*(-NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]]) - 2*(NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]])}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{-48*NO[betaff, gammaff], -12*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]) - 2*(6*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + 2*NO[betaff, Derivative[2][gammaff]]), 16*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], gammaff]]], -6*(-NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]]) - 2*(NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + NO[betaff, NO[betaff, NO[Derivative[3][gammaff], gammaff]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]])}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(beta_char_p3,NO(∂gamma_char_p3,∂gamma_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{-40*NO[betaff, Derivative[1][gammaff]], -8*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]], 16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]) - 2*(2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]])}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{-40*NO[betaff, Derivative[1][gammaff]], -8*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]], 16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]) - 2*(2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]])}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{-40*NO[betaff, Derivative[1][gammaff]], -8*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]], 16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]) - 2*(2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]])}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{-40*NO[betaff, Derivative[1][gammaff]], -8*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]], 16*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]], -6*(-2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] - 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]]) - 2*(2*NO[betaff, NO[betaff, NO[Derivative[2][gammaff], Derivative[1][gammaff]]]] + 2*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]])}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(∂gamma_char_p3,NO(b_char_p3,∂c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{16*NO[betaff, Derivative[1][gammaff]] - 10*NO[bff, Derivative[1][cff]], -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] - 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 16*NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]], -8*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 4*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 6*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]) - 2*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]])}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{16*NO[betaff, Derivative[1][gammaff]] - 10*NO[bff, Derivative[1][cff]], -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] - 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 16*NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]], -8*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 4*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 6*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]) - 2*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]])}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{16*NO[betaff, Derivative[1][gammaff]] - 10*NO[bff, Derivative[1][cff]], -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] - 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 16*NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]], -8*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 4*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 6*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]) - 2*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]])}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{16*NO[betaff, Derivative[1][gammaff]] - 10*NO[bff, Derivative[1][cff]], -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] - 8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]], 16*NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]], -8*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 4*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]]) - 6*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]]) - 2*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]])}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,∂^3gamma_char_p3)":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(70*One)\/3, (40*NO[betaff, gammaff])\/3, (10*NO[betaff, Derivative[1][gammaff]])\/3, (-10*NO[betaff, Derivative[2][gammaff]])\/3, (-40*NO[betaff, Derivative[3][gammaff]])\/9, (5*(-NO[betaff, Derivative[4][gammaff]] - NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/3 + (5*(NO[betaff, Derivative[4][gammaff]] + NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/9}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(70*One)\/3, (40*NO[betaff, gammaff])\/3, (10*NO[betaff, Derivative[1][gammaff]])\/3, (-10*NO[betaff, Derivative[2][gammaff]])\/3, (-40*NO[betaff, Derivative[3][gammaff]])\/9, (5*(-NO[betaff, Derivative[4][gammaff]] - NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/3 + (5*(NO[betaff, Derivative[4][gammaff]] + NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/9}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(70*One)\/3, (40*NO[betaff, gammaff])\/3, (10*NO[betaff, Derivative[1][gammaff]])\/3, (-10*NO[betaff, Derivative[2][gammaff]])\/3, (-40*NO[betaff, Derivative[3][gammaff]])\/9, (5*(-NO[betaff, Derivative[4][gammaff]] - NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/3 + (5*(NO[betaff, Derivative[4][gammaff]] + NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/9}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(70*One)\/3, (40*NO[betaff, gammaff])\/3, (10*NO[betaff, Derivative[1][gammaff]])\/3, (-10*NO[betaff, Derivative[2][gammaff]])\/3, (-40*NO[betaff, Derivative[3][gammaff]])\/9, (5*(-NO[betaff, Derivative[4][gammaff]] - NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/3 + (5*(NO[betaff, Derivative[4][gammaff]] + NO[Derivative[1][betaff], Derivative[3][gammaff]]))\/9}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(∂beta_char_p3,NO(∂gamma_char_p3,NO(b_char_p3,c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(32*NO[bff, cff])\/3, 0, -8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3 - 8*NO[Derivative[1][betaff], Derivative[1][gammaff]], (-32*NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]])\/3, (16*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + (8*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + 4*(-NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] - NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]) + (4*(NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] + NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]))\/3}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(32*NO[bff, cff])\/3, 0, -8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3 - 8*NO[Derivative[1][betaff], Derivative[1][gammaff]], (-32*NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]])\/3, (16*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + (8*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + 4*(-NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] - NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]) + (4*(NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] + NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]))\/3}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(32*NO[bff, cff])\/3, 0, -8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3 - 8*NO[Derivative[1][betaff], Derivative[1][gammaff]], (-32*NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]])\/3, (16*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + (8*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + 4*(-NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] - NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]) + (4*(NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] + NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]))\/3}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(32*NO[bff, cff])\/3, 0, -8*NO[betaff, NO[Derivative[1][gammaff], NO[bff, cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3 - 8*NO[Derivative[1][betaff], Derivative[1][gammaff]], (-32*NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]])\/3, (16*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + (8*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]]))\/3 + 4*(-NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] - NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]) + (4*(NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]] + NO[Derivative[2][betaff], NO[Derivative[1][gammaff], NO[bff, cff]]]))\/3}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(∂beta_char_p3,NO(beta_char_p3,NO(∂gamma_char_p3,gamma_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(16*NO[betaff, gammaff])\/3, 2*(2*NO[betaff, Derivative[1][gammaff]] + NO[Derivative[1][betaff], gammaff]) + (2*(NO[betaff, Derivative[1][gammaff]] + 2*NO[Derivative[1][betaff], gammaff]))\/3, 2*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]) + (2*(2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3, (-16*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]])\/3, 2*(-NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] - NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] - NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]) + (2*(NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] + NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] + NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/3}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(16*NO[betaff, gammaff])\/3, 2*(2*NO[betaff, Derivative[1][gammaff]] + NO[Derivative[1][betaff], gammaff]) + (2*(NO[betaff, Derivative[1][gammaff]] + 2*NO[Derivative[1][betaff], gammaff]))\/3, 2*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]) + (2*(2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3, (-16*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]])\/3, 2*(-NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] - NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] - NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]) + (2*(NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] + NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] + NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/3}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(16*NO[betaff, gammaff])\/3, 2*(2*NO[betaff, Derivative[1][gammaff]] + NO[Derivative[1][betaff], gammaff]) + (2*(NO[betaff, Derivative[1][gammaff]] + 2*NO[Derivative[1][betaff], gammaff]))\/3, 2*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]) + (2*(2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3, (-16*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]])\/3, 2*(-NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] - NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] - NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]) + (2*(NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] + NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] + NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/3}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(16*NO[betaff, gammaff])\/3, 2*(2*NO[betaff, Derivative[1][gammaff]] + NO[Derivative[1][betaff], gammaff]) + (2*(NO[betaff, Derivative[1][gammaff]] + 2*NO[Derivative[1][betaff], gammaff]))\/3, 2*(-2*NO[betaff, NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]) + (2*(2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3, (-16*NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]])\/3, 2*(-NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] - NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] - NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]) + (2*(NO[Derivative[1][betaff], NO[betaff, NO[Derivative[1][gammaff], Derivative[1][gammaff]]]] + NO[Derivative[1][betaff], NO[betaff, NO[Derivative[2][gammaff], gammaff]]] + NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]]))\/3}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(∂beta_char_p3,NO(gamma_char_p3,NO(b_char_p3,∂c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(14*NO[bff, Derivative[1][cff]])\/3 - (16*NO[Derivative[1][betaff], gammaff])\/3, -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (-16*NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3, (8*(-NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + (4*(NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + 2*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]) + (2*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]))\/3}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(14*NO[bff, Derivative[1][cff]])\/3 - (16*NO[Derivative[1][betaff], gammaff])\/3, -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (-16*NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3, (8*(-NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + (4*(NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + 2*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]) + (2*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]))\/3}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(14*NO[bff, Derivative[1][cff]])\/3 - (16*NO[Derivative[1][betaff], gammaff])\/3, -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (-16*NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3, (8*(-NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + (4*(NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + 2*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]) + (2*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]))\/3}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(14*NO[bff, Derivative[1][cff]])\/3 - (16*NO[Derivative[1][betaff], gammaff])\/3, -4*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (-16*NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3, (8*(-NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + (4*(NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]))\/3 + 2*(-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] - NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]) + (2*(NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[bff, Derivative[1][cff]]]] + NO[Derivative[2][betaff], NO[gammaff, NO[bff, Derivative[1][cff]]]]))\/3}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(gamma_char_p3,NO(∂^2b_char_p3,c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-20*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + (4*NO[Derivative[2][bff], cff])\/3, (-8*NO[betaff, NO[gammaff, NO[Derivative[2][bff], cff]]])\/3, (4*(-NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 + (2*(NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]] + (NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]])\/3}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-20*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + (4*NO[Derivative[2][bff], cff])\/3, (-8*NO[betaff, NO[gammaff, NO[Derivative[2][bff], cff]]])\/3, (4*(-NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 + (2*(NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]] + (NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]])\/3}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-20*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + (4*NO[Derivative[2][bff], cff])\/3, (-8*NO[betaff, NO[gammaff, NO[Derivative[2][bff], cff]]])\/3, (4*(-NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 + (2*(NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]] + (NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]])\/3}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-20*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + (4*NO[Derivative[2][bff], cff])\/3, (-8*NO[betaff, NO[gammaff, NO[Derivative[2][bff], cff]]])\/3, (4*(-NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 + (2*(NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[3][bff], cff]]]))\/3 - NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]] + (NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[2][bff], cff]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]])\/3}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(∂^2beta_char_p3,NO(beta_char_p3,NO(gamma_char_p3,gamma_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -6*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff] + (2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff])\/3, (-8*NO[Derivative[2][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3, -2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] - NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]] + (2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] + NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -6*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff] + (2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff])\/3, (-8*NO[Derivative[2][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3, -2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] - NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]] + (2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] + NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -6*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff] + (2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff])\/3, (-8*NO[Derivative[2][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3, -2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] - NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]] + (2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] + NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -6*NO[betaff, NO[betaff, NO[gammaff, gammaff]]], -6*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff] + (2*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]] + 2*NO[Derivative[2][betaff], gammaff])\/3, (-8*NO[Derivative[2][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3, -2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] - NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] - NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]] + (2*NO[Derivative[2][betaff], NO[betaff, NO[Derivative[1][gammaff], gammaff]]] + NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]] + NO[Derivative[3][betaff], NO[betaff, NO[gammaff, gammaff]]])\/3}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(gamma_char_p3,NO(∂b_char_p3,∂c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{4*NO[betaff, gammaff], 0, (8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (4*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 - (4*NO[Derivative[1][bff], Derivative[1][cff]])\/3, (8*NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3, (-4*(-NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 - (2*(NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + (-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3 + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{4*NO[betaff, gammaff], 0, (8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (4*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 - (4*NO[Derivative[1][bff], Derivative[1][cff]])\/3, (8*NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3, (-4*(-NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 - (2*(NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + (-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3 + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{4*NO[betaff, gammaff], 0, (8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (4*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 - (4*NO[Derivative[1][bff], Derivative[1][cff]])\/3, (8*NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3, (-4*(-NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 - (2*(NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + (-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3 + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{4*NO[betaff, gammaff], 0, (8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (4*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 - (4*NO[Derivative[1][bff], Derivative[1][cff]])\/3, (8*NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3, (-4*(-NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 - (2*(NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[2][bff], Derivative[1][cff]]]]))\/3 + NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] + (-NO[betaff, NO[Derivative[1][gammaff], NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]])\/3 + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]]}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(∂beta_char_p3,NO(gamma_char_p3,NO(∂b_char_p3,c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(10*NO[Derivative[1][betaff], gammaff])\/3 - (7*NO[Derivative[1][bff], cff])\/3, 2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (8*NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3, (-4*(-NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 - (2*(NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] + (-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]]}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(10*NO[Derivative[1][betaff], gammaff])\/3 - (7*NO[Derivative[1][bff], cff])\/3, 2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (8*NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3, (-4*(-NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 - (2*(NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] + (-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]]}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(10*NO[Derivative[1][betaff], gammaff])\/3 - (7*NO[Derivative[1][bff], cff])\/3, 2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (8*NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3, (-4*(-NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 - (2*(NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] + (-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]]}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(10*NO[Derivative[1][betaff], gammaff])\/3 - (7*NO[Derivative[1][bff], cff])\/3, 2*NO[betaff, NO[gammaff, NO[Derivative[1][bff], cff]]] + (8*NO[Derivative[1][betaff], NO[gammaff, NO[bff, cff]]])\/3, (8*NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3, (-4*(-NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 - (2*(NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[1][bff], Derivative[1][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[Derivative[2][bff], cff]]]))\/3 + NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] + (-NO[Derivative[1][betaff], NO[Derivative[1][gammaff], NO[Derivative[1][bff], cff]]] - NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]])\/3 + NO[Derivative[2][betaff], NO[gammaff, NO[Derivative[1][bff], cff]]]}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(∂beta_char_p3,NO(∂beta_char_p3,NO(gamma_char_p3,gamma_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[Derivative[1][betaff], gammaff])\/3, 4*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], (8*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3, 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + (-2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3 + 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]]}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[Derivative[1][betaff], gammaff])\/3, 4*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], (8*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3, 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + (-2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3 + 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]]}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[Derivative[1][betaff], gammaff])\/3, 4*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], (8*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3, 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + (-2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3 + 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]]}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(-28*NO[Derivative[1][betaff], gammaff])\/3, 4*NO[Derivative[1][betaff], NO[betaff, NO[gammaff, gammaff]]], (8*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3, 2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] + (-2*NO[Derivative[1][betaff], NO[Derivative[1][betaff], NO[Derivative[1][gammaff], gammaff]]] - 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]])\/3 + 2*NO[Derivative[2][betaff], NO[Derivative[1][betaff], NO[gammaff, gammaff]]]}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(gamma_char_p3,NO(b_char_p3,∂^2c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (8*NO[bff, Derivative[2][cff]])\/3, (16*NO[betaff, NO[gammaff, NO[bff, Derivative[2][cff]]]])\/3, (-8*(-NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - (4*(NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - 2*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]) - (2*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]))\/3}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (8*NO[bff, Derivative[2][cff]])\/3, (16*NO[betaff, NO[gammaff, NO[bff, Derivative[2][cff]]]])\/3, (-8*(-NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - (4*(NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - 2*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]) - (2*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]))\/3}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (8*NO[bff, Derivative[2][cff]])\/3, (16*NO[betaff, NO[gammaff, NO[bff, Derivative[2][cff]]]])\/3, (-8*(-NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - (4*(NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - 2*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]) - (2*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]))\/3}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{(40*NO[betaff, gammaff])\/3, -8*NO[betaff, NO[gammaff, NO[bff, cff]]], (-8*NO[betaff, NO[gammaff, NO[bff, Derivative[1][cff]]]])\/3 - (8*NO[bff, Derivative[2][cff]])\/3, (16*NO[betaff, NO[gammaff, NO[bff, Derivative[2][cff]]]])\/3, (-8*(-NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] - NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - (4*(NO[betaff, NO[gammaff, NO[bff, Derivative[3][cff]]]] + NO[betaff, NO[gammaff, NO[Derivative[1][bff], Derivative[2][cff]]]]))\/3 - 2*(-NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] - NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]) - (2*(NO[betaff, NO[Derivative[1][gammaff], NO[bff, Derivative[2][cff]]]] + NO[Derivative[1][betaff], NO[gammaff, NO[bff, Derivative[2][cff]]]]))\/3}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(beta_char_p3,NO(∂^2gamma_char_p3,NO(b_char_p3,c_char_p3)))":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{-16*NO[bff, cff], -8*NO[betaff, NO[gammaff, NO[bff, cff]]], 8*NO[betaff, Derivative[2][gammaff]], (32*NO[betaff, NO[Derivative[2][gammaff], NO[bff, cff]]])\/3, (-16*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - (8*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - 4*(-NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] - NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]) - (4*(NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] + NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]))\/3}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{-16*NO[bff, cff], -8*NO[betaff, NO[gammaff, NO[bff, cff]]], 8*NO[betaff, Derivative[2][gammaff]], (32*NO[betaff, NO[Derivative[2][gammaff], NO[bff, cff]]])\/3, (-16*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - (8*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - 4*(-NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] - NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]) - (4*(NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] + NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]))\/3}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{-16*NO[bff, cff], -8*NO[betaff, NO[gammaff, NO[bff, cff]]], 8*NO[betaff, Derivative[2][gammaff]], (32*NO[betaff, NO[Derivative[2][gammaff], NO[bff, cff]]])\/3, (-16*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - (8*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - 4*(-NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] - NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]) - (4*(NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] + NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]))\/3}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{-16*NO[bff, cff], -8*NO[betaff, NO[gammaff, NO[bff, cff]]], 8*NO[betaff, Derivative[2][gammaff]], (32*NO[betaff, NO[Derivative[2][gammaff], NO[bff, cff]]])\/3, (-16*(-NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] - NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - (8*(NO[betaff, NO[Derivative[2][gammaff], NO[bff, Derivative[1][cff]]]] + NO[betaff, NO[Derivative[2][gammaff], NO[Derivative[1][bff], cff]]]))\/3 - 4*(-NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] - NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]) - (4*(NO[betaff, NO[Derivative[3][gammaff], NO[bff, cff]]] + NO[Derivative[1][betaff], NO[Derivative[2][gammaff], NO[bff, cff]]]))\/3}][1]",
+				"coeff":"1"
+			}
+		]
+	},
+	"NO(∂beta_char_p3,∂^2gamma_char_p3)":{
+		"pole4":[
+			{
+				"monomial":"MakeOPE[{-10*One, 0, (-10*NO[Derivative[1][betaff], gammaff])\/3, (-5*(-2*NO[betaff, Derivative[2][gammaff]] - 2*NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3 - (10*NO[Derivative[1][betaff], Derivative[1][gammaff]])\/3, (40*NO[Derivative[1][betaff], Derivative[2][gammaff]])\/9, (-5*(-NO[Derivative[1][betaff], Derivative[3][gammaff]] - NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/3 - (5*(NO[Derivative[1][betaff], Derivative[3][gammaff]] + NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/9}][4]",
+				"coeff":"1"
+			}
+		],
+		"pole3":[
+			{
+				"monomial":"MakeOPE[{-10*One, 0, (-10*NO[Derivative[1][betaff], gammaff])\/3, (-5*(-2*NO[betaff, Derivative[2][gammaff]] - 2*NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3 - (10*NO[Derivative[1][betaff], Derivative[1][gammaff]])\/3, (40*NO[Derivative[1][betaff], Derivative[2][gammaff]])\/9, (-5*(-NO[Derivative[1][betaff], Derivative[3][gammaff]] - NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/3 - (5*(NO[Derivative[1][betaff], Derivative[3][gammaff]] + NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/9}][3]",
+				"coeff":"1"
+			}
+		],
+		"pole2":[
+			{
+				"monomial":"MakeOPE[{-10*One, 0, (-10*NO[Derivative[1][betaff], gammaff])\/3, (-5*(-2*NO[betaff, Derivative[2][gammaff]] - 2*NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3 - (10*NO[Derivative[1][betaff], Derivative[1][gammaff]])\/3, (40*NO[Derivative[1][betaff], Derivative[2][gammaff]])\/9, (-5*(-NO[Derivative[1][betaff], Derivative[3][gammaff]] - NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/3 - (5*(NO[Derivative[1][betaff], Derivative[3][gammaff]] + NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/9}][2]",
+				"coeff":"1"
+			}
+		],
+		"pole1":[
+			{
+				"monomial":"MakeOPE[{-10*One, 0, (-10*NO[Derivative[1][betaff], gammaff])\/3, (-5*(-2*NO[betaff, Derivative[2][gammaff]] - 2*NO[Derivative[1][betaff], Derivative[1][gammaff]]))\/3 - (10*NO[Derivative[1][betaff], Derivative[1][gammaff]])\/3, (40*NO[Derivative[1][betaff], Derivative[2][gammaff]])\/9, (-5*(-NO[Derivative[1][betaff], Derivative[3][gammaff]] - NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/3 - (5*(NO[Derivative[1][betaff], Derivative[3][gammaff]] + NO[Derivative[2][betaff], Derivative[2][gammaff]]))\/9}][1]",
+				"coeff":"1"
+			}
+		]
+	}
+}

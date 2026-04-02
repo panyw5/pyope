@@ -39,6 +39,6 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Benchmark established on bc-beta-gamma nested NO simplification. OPEdefs remains faster, but phase-1 hot-path optimizations reduced pyope mean runtime from about 0.04197s to about 0.03136s. Current focus: first-layer lightweight internal representation for simplify/NO hot path, while staying in the 04-02-pyope-performance-optimization worktree.",
+  "notes": "Benchmark established on bc-beta-gamma nested NO simplification. Benchmarking now includes a hard pyope-vs-OPEdefs result equivalence check, and the current benchmark still matches OPEdefs exactly. Phase-1 hot-path optimizations reduced pyope mean runtime from about 0.04197s to about 0.03136s. First-layer lightweight internal representation is in place via operator-subtree light keys plus simplify memoization. Second step has progressed: parts of derivative and normal-ordered simplification dispatch directly from light keys, some ordering/comparison logic now uses light-key comparison, and simplify-internal safe NO fast paths now avoid part of the generic NO dispatch when operands are already known-good operators. Current measured benchmark status: cold mean about 0.01645s, cold best about 0.00963s, hot mean about 0.0000033s, with matches_opedefs=true. Current focus: continue compressing _simplify_light_operand and related object/key switching overhead, while keeping the OPEdefs result-equivalence check green on every benchmark run.",
   "meta": {}
 }

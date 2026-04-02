@@ -40,13 +40,13 @@ This shows: developer identity, git status, current task (if any), active tasks.
 ### Step 3: Read Guidelines Index
 
 ```bash
-cat .trellis/spec/frontend/index.md  # Frontend guidelines
-cat .trellis/spec/backend/index.md   # Backend guidelines
-cat .trellis/spec/guides/index.md    # Thinking guides
-cat .trellis/spec/unit-test/index.md # Testing guidelines
+cat .trellis/spec/core/index.md      # Architecture, API, SymPy patterns, quality
+cat .trellis/spec/testing/index.md   # Test conventions, Mathematica reference, fixtures
+cat .trellis/spec/domain/index.md    # VOA/CFT domain knowledge
+cat .trellis/spec/guides/index.md    # Thinking guides (code reuse, cross-layer)
 ```
 
-> **Important**: The index files are navigation — they list the actual guideline files (e.g., `error-handling.md`, `conventions.md`, `mock-strategies.md`).
+> **Important**: The index files are navigation — they list the actual guideline files (e.g., `architecture.md`, `api-conventions.md`, `test-conventions.md`).
 > At this step, just read the indexes to understand what's available.
 > When you start actual development, you MUST go back and read the specific guideline files relevant to your task, as listed in the index's Pre-Development Checklist.
 

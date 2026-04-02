@@ -203,7 +203,7 @@ def get_implement_base() -> list[dict]:
 def get_implement_backend() -> list[dict]:
     """Get backend implement context entries."""
     return [
-        {"file": f"{DIR_WORKFLOW}/{DIR_SPEC}/backend/index.md", "reason": "Backend development guide"},
+        {"file": f"{DIR_WORKFLOW}/{DIR_SPEC}/core/index.md", "reason": "Core library guidelines (architecture, API, SymPy patterns, quality)"},
     ]
 
 
