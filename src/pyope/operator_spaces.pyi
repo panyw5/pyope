@@ -31,32 +31,60 @@ def list_zero_relations(
     weight: Any = None,
 ) -> list[dict[str, Any]]: ...
 
-class LocalOperatorCanonicalizer:
-    def __init__(self, generators: Iterable[Operator]) -> None: ...
-    def canonicalize(self, expr: Any) -> Any: ...
-
 class SparseLinearContext:
     def __init__(self) -> None: ...
 
 class LocalOperatorBasis:
     generators: tuple[Operator, ...]
+    stress_tensor: Any
+    gradings: Any
     max_weight: Optional[sp.Expr]
     def __init__(
-        self, generators: Iterable[Operator], max_weight: Any = None
+        self,
+        generators: Iterable[Operator],
+        stress_tensor: Any = None,
+        gradings: Any = None,
+        max_weight: Any = None,
+        max_occurence: Any = None,
     ) -> None: ...
     def canonicalize(self, expr: Any) -> Any: ...
+    def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]: ...
+    def basis(self, weight: Any, max_occurence: Any = None) -> list[Any]: ...
     def enumerate_candidates(self, weight: Any) -> list[Any]: ...
-    def list(self, weight: Any) -> list[Any]: ...
-    def coordinates(self, expr: Any, weight: Any = None) -> sp.Matrix: ...
+    def list(self, weight: Any, max_occurence: Any = None) -> list[Any]: ...
+    def sector_of(self, expr: Any) -> dict[str, Any]: ...
+    def nested_stress_tensor(self, n: int) -> Any: ...
+    def coordinates(
+        self, expr: Any, weight: Any = None, max_occurence: Any = None
+    ) -> sp.Matrix: ...
     def realized_coordinates(
-        self, expr: Any, free_field_basis: "LocalOperatorBasis", weight: Any = None
+        self,
+        expr: Any,
+        free_field_basis: "LocalOperatorBasis",
+        weight: Any = None,
+        max_occurence: Any = None,
     ) -> sp.Matrix: ...
     def independent_under_realization(
         self,
         expressions: Iterable[Any],
         free_field_basis: "LocalOperatorBasis",
         weight: Any = None,
+        max_occurence: Any = None,
     ) -> list[Any]: ...
+    def list_independent_ops(
+        self,
+        expressions: Iterable[Any],
+        weight: Any = None,
+        max_occurence: Any = None,
+    ) -> list[Any]: ...
+    def list_zero_relations(
+        self,
+        expressions: Iterable[Any],
+        weight: Any = None,
+        max_occurence: Any = None,
+    ) -> list[dict[str, Any]]: ...
+
+class LocalOperatorCanonicalizer(LocalOperatorBasis): ...
 
 class C2Space:
     basis_builder: LocalOperatorBasis

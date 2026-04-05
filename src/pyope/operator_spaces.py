@@ -267,53 +267,6 @@ class _SparseIndependentEliminator:
         return list(self._pivot_order)
 
 
-class LocalOperatorCanonicalizer:
-    """Public sparse canonicalization helper for local-operator expressions."""
-
-    def __init__(
-        self,
-        generators: Iterable[Operator],
-        stress_tensor: Any = None,
-        gradings: Any = None,
-        max_weight: Any = None,
-        max_occurence: Any = None,
-    ):
-        self.generators = tuple(generators)
-        self.stress_tensor = stress_tensor
-        self.gradings = gradings
-        self._basis = LocalOperatorBasis(
-            self.generators,
-            max_weight=max_weight,
-            max_occurence=max_occurence,
-        )
-
-    def canonicalize(self, expr: Any) -> Any:
-        return self._basis.canonicalize(expr)
-
-    def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
-        return _canonical_terms(expr, self.canonicalize)
-
-    def basis(self, weight: Any, max_occurence: Any = None) -> list[Any]:
-        return self._basis.list(weight, max_occurence=max_occurence)
-
-    def list(self, weight: Any, max_occurence: Any = None) -> list[Any]:
-        """Alias for basis(); allows LocalOperatorCanonicalizer to satisfy the
-        same interface as LocalOperatorBasis."""
-        return self.basis(weight, max_occurence=max_occurence)
-
-    def sector_of(self, expr: Any) -> Any:
-        weight = _get_conformal_weight(expr)
-        parity = get_operator_parity(expr)
-        return {"weight": weight, "parity": parity}
-
-    def nested_stress_tensor(self, n: int) -> Any:
-        if self.stress_tensor is None:
-            raise ValueError("stress_tensor must be provided")
-        if n <= 0:
-            raise ValueError("n must be positive")
-        return self.canonicalize(normal_product(*([self.stress_tensor] * n)))
-
-
 class SparseLinearContext:
     """On-demand sparse linear algebra over canonical monomial supports."""
 
@@ -730,10 +683,15 @@ class LocalOperatorBasis:
     def __init__(
         self,
         generators: Iterable[Operator],
+        stress_tensor: Any = None,
+        gradings: Any = None,
         max_weight: Any = None,
         max_occurence: Any = None,
     ):
         self.generators = tuple(generators)
+        self.stress_tensor = stress_tensor
+        self.gradings = gradings
+        self._basis = self
         self.max_weight = None if max_weight is None else _normalize_weight(max_weight)
         self.max_occurence = _normalize_max_occurence(max_occurence)
 
@@ -777,6 +735,24 @@ class LocalOperatorBasis:
     def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
         """Return sparse canonical coordinates without fixed-weight basis enumeration."""
         return _canonical_terms(expr, self.canonicalize)
+
+    def basis(self, weight: Any, max_occurence: Any = None) -> list[Any]:
+        """Alias for list(); retained for interface compatibility."""
+        return self.list(weight, max_occurence=max_occurence)
+
+    def sector_of(self, expr: Any) -> dict[str, Any]:
+        """Return the conformal-weight/parity sector of an expression."""
+        weight = _get_conformal_weight(expr)
+        parity = get_operator_parity(expr)
+        return {"weight": weight, "parity": parity}
+
+    def nested_stress_tensor(self, n: int) -> Any:
+        """Return the canonicalized n-fold normal product of the stress tensor."""
+        if self.stress_tensor is None:
+            raise ValueError("stress_tensor must be provided")
+        if n <= 0:
+            raise ValueError("n must be positive")
+        return self.canonicalize(normal_product(*([self.stress_tensor] * n)))
 
     def enumerate_candidates(self, weight: Any) -> list[Any]:
         """Enumerate raw canonical candidate expressions of fixed weight."""
@@ -1067,6 +1043,15 @@ class LocalOperatorBasis:
         return sp.simplify(compensation)
 
 
+class LocalOperatorCanonicalizer(LocalOperatorBasis):
+    """Backward-compatible alias for LocalOperatorBasis.
+
+    New code should use LocalOperatorBasis directly.
+    """
+
+    pass
+
+
 def _c2_weight_step(generators: Any) -> sp.Expr:
     """Return the smallest weight unit implied by the given generators.
 
@@ -1239,9 +1224,10 @@ class LegacyC2NullSearcher:
         """Bridge legacy searcher to the new reducer-based precheck API."""
         from .null_search import C2NullSearcher as QuotientC2NullSearcher
 
-        canonicalizer = LocalOperatorCanonicalizer(
+        canonicalizer = LocalOperatorBasis(
             self.basis_builder.generators,
             stress_tensor=self.stress_tensor,
+            gradings=getattr(self.basis_builder, "gradings", None),
             max_weight=self.basis_builder.max_weight,
             max_occurence=self.basis_builder.max_occurence,
         )
@@ -1268,9 +1254,10 @@ class LegacyC2NullSearcher:
             target_canonical, normalized_weight
         )
 
-        canonicalizer = LocalOperatorCanonicalizer(
+        canonicalizer = LocalOperatorBasis(
             self.basis_builder.generators,
             stress_tensor=self.stress_tensor,
+            gradings=getattr(self.basis_builder, "gradings", None),
             max_weight=self.basis_builder.max_weight,
             max_occurence=self.basis_builder.max_occurence,
         )
@@ -1299,9 +1286,10 @@ class LegacyC2NullSearcher:
 
         from .null_search import C2NullSearcher as QuotientC2NullSearcher
 
-        canonicalizer = LocalOperatorCanonicalizer(
+        canonicalizer = LocalOperatorBasis(
             self.basis_builder.generators,
             stress_tensor=tensor,
+            gradings=getattr(self.basis_builder, "gradings", None),
             max_weight=self.basis_builder.max_weight,
             max_occurence=self.basis_builder.max_occurence,
         )
