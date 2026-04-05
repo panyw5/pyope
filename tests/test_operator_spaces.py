@@ -4,6 +4,7 @@ import sympy as sp
 from pyope import (
     BasisOperator,
     Bosonic,
+    Fermionic,
     independent_under_realization,
     LocalOperatorBasis,
     list_independent_ops,
@@ -357,6 +358,27 @@ def test_list_zero_relations_handles_dependence_chain_with_compressed_coordinate
     for relation in relations:
         assert relation["operators"] == expressions
         assert basis.canonicalize(relation["relation"]) == 0
+
+
+def test_sparse_terms_distributes_symbolic_scalars_over_operator_sums():
+    b = BasisOperator("b_sparse_expand", fermionic=True, conformal_weight=sp.Integer(2))
+    c = BasisOperator(
+        "c_sparse_expand", fermionic=True, conformal_weight=sp.Integer(-1)
+    )
+    Bosonic(b, c)
+
+    canonicalizer = LocalOperatorBasis([b, c], max_weight=3, max_occurence=4)
+    x = NO(b, c)
+    y = NO(b, d(c))
+    a0, a1 = sp.symbols("a0:2")
+
+    expr = 5 * x + y - a0 * (x + y) - a1 * (x - y)
+    terms = canonicalizer.sparse_terms(expr)
+
+    assert terms == {
+        x: sp.expand(5 - a0 - a1),
+        y: sp.expand(1 - a0 + a1),
+    }
 
 
 def test_local_operator_basis_list_zero_relations_uses_default_max_occurence():

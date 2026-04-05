@@ -102,7 +102,11 @@ def qp(
     left_weight: Any | None = None,
     right_weight: Any | None = None,
 ) -> Any:
-    """Short alias for ``quasiprimary_product``."""
+    """Short alias for ``quasiprimary_product``.
+
+    Important: this is not the normal-ordered product. Use ``NO(left, right)``
+    for the genuine normal-ordered product.
+    """
 
     return quasiprimary_product(
         left,
