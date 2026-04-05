@@ -1,5 +1,0 @@
-{"file": ".opencode/commands/trellis/finish-work.md", "reason": "Finish work checklist"}
-{"file": ".opencode/commands/trellis/check-backend.md", "reason": "Backend check spec"}
-{"file": ".trellis/tasks/03-19-null-state-search/prd.md", "reason": "Validate against task requirements"}
-{"file": ".trellis/tasks/03-19-null-state-search/null-c2-search-plan.md", "reason": "Validate API design against planning doc"}
-{"file": "README.md", "reason": "Check public API alignment"}
