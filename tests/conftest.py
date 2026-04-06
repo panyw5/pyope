@@ -4,6 +4,8 @@ Pytest configuration for pyope tests
 This file contains shared fixtures and configuration for all tests.
 """
 
+from pathlib import Path
+
 import pytest
 import sympy as sp
 
@@ -22,6 +24,25 @@ from pyope import (
 )
 from pyope.cache import get_ope_cache
 from pyope.registry import ope_registry
+
+
+def pytest_sessionstart(session):
+    """Fail fast if tests import pyope from outside this worktree."""
+    del session
+
+    import pyope
+
+    repo_root = Path(__file__).resolve().parents[1]
+    expected_package_dir = (repo_root / "src" / "pyope").resolve()
+    actual_package_dir = Path(pyope.__file__).resolve().parent
+
+    if actual_package_dir != expected_package_dir:
+        raise RuntimeError(
+            "pytest imported pyope from the wrong source tree: "
+            f"expected {expected_package_dir}, got {actual_package_dir}. "
+            'Run tests with PYTHONPATH="$PWD/src" python -m pytest ... '
+            "or use a worktree-local editable install."
+        )
 
 
 @pytest.fixture(autouse=True, scope="function")

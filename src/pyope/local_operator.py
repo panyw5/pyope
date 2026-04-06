@@ -125,6 +125,11 @@ def assert_no_illegal_operator_mul(expr: Any, context: str) -> None:
     if not isinstance(expr, sp.Expr):
         return
 
+    # 单个 Operator 节点不可能直接包含非法的 Mul(operator, operator)。
+    # 这条快速路径可以避免在 NO/simplify 热路径里反复做整树扫描。
+    if isinstance(expr, Operator):
+        return
+
     for m in expr.atoms(Mul):
         op_like_factors = [
             a for a in m.args if isinstance(a, sp.Expr) and a.has(Operator)
@@ -164,11 +169,27 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
     if isinstance(expr, Mul):
         from .constants import One, ConstantOperator
 
+        args = expr.args
+
+        # 热路径快速分支：大多数情况是二元乘法 coeff * Operator。
+        if len(args) == 2:
+            left, right = args
+            if isinstance(left, Operator) and not isinstance(right, Operator):
+                if right is One or (
+                    isinstance(right, ConstantOperator) and right == One
+                ):
+                    return (sp.Integer(1), left)
+                return (right, left)
+            if isinstance(right, Operator) and not isinstance(left, Operator):
+                if left is One or (isinstance(left, ConstantOperator) and left == One):
+                    return (sp.Integer(1), right)
+                return (left, right)
+
         has_one = False
         scalar_parts = []
         operator_parts = []
 
-        for arg in expr.args:
+        for arg in args:
             if arg is One or (isinstance(arg, ConstantOperator) and arg == One):
                 has_one = True
                 continue

@@ -7,10 +7,12 @@
 - simplify(expr): 将表达式化简为排序的 NO product 线性组合
 """
 
+from functools import lru_cache
 from typing import Any, Dict, List, Tuple
 import sympy as sp
 from sympy import Add, Mul, Pow
 
+from .backend import get_compute_backend
 from .operators import (
     Operator,
     BasisOperator,
@@ -72,6 +74,19 @@ def simplify(
         >>> # 禁用导数展开
         >>> simplify(expr, expand_derivatives=False)  # 返回 d(NO(T, J))
     """
+    backend = get_compute_backend()
+
+    if backend == "wolfram" and _should_delegate_wolfram_simplify(expr):
+        from .backend import compute_backend
+        from .wolfram_backend import evaluate_expr
+
+        with compute_backend("sympy"):
+            evaluated = evaluate_expr(expr)
+            if evaluated != expr:
+                return simplify(
+                    evaluated, expand_derivatives, preserve_nested_structure
+                )
+
     # 处理零
     if expr == 0 or expr == Zero:
         return Zero
@@ -166,6 +181,14 @@ def simplify(
 
     # 其他情况：直接返回
     return expr
+
+
+def _should_delegate_wolfram_simplify(expr: Any) -> bool:
+    if isinstance(expr, (Add, NormalOrderedOperator)):
+        return True
+    if isinstance(expr, Mul) and expr.has(Operator):
+        return True
+    return False
 
 
 def _simplify_ope_data(
@@ -423,13 +446,7 @@ def _simplify_normal_ordered(
                 sign = (-1) ** (parity_AB * parity_C)
                 return sign * NO(C, NO(A, B))
 
-            # A 应该排在 C 之前或相等，顺序已经正确，不需要展开
-            # 但仍需递归化简内层的 NO(A,B)
-            simplified_left = simplify(
-                left, expand_derivatives, preserve_nested_structure
-            )
-            if simplified_left != left:
-                return NO(simplified_left, right)
+            # left 在入口处已经按同配置完成 simplify。
             return NO(left, right)
 
     # 如果右侧是 NO，展开为 NO(B, NO(A,C))
@@ -462,28 +479,15 @@ def _simplify_normal_ordered(
         # 情况 2: B 和 A 的顺序正确，但 A 和 C 需要交换（order_AC < 0）
         # 需要先简化内层 NO(A, C)，这会触发内层的重排
         if order_AC < 0:
-            # 内层需要重排，递归简化内层
-            simplified_right = simplify(
-                right, expand_derivatives, preserve_nested_structure
-            )
-            if simplified_right != right:
-                # 内层被简化了，递归简化整个表达式
-                return simplify(
-                    NO(B, simplified_right),
-                    expand_derivatives,
-                    preserve_nested_structure,
-                )
-
-        # 情况 3: 所有顺序都正确，但仍需递归简化内层
-        simplified_right = simplify(
-            right, expand_derivatives, preserve_nested_structure
-        )
-        if simplified_right != right:
+            # right 在入口处已经按同配置完成 simplify；若仍不满足次序，
+            # 直接把当前组合重新走一遍整体规范化路径即可。
             return simplify(
-                NO(B, simplified_right), expand_derivatives, preserve_nested_structure
+                NO(B, right),
+                expand_derivatives,
+                preserve_nested_structure,
             )
 
-        # 顺序已经正确，不需要展开
+        # 顺序已经正确，不需要再次递归化简内层
         return NO(left, right)
 
     # 检查算符顺序
@@ -886,6 +890,16 @@ def _expand_nested_no_right(
 
 
 def _compute_no_commute_help(A: Any, B: Any, expand_derivatives: bool = True) -> Any:
+    return _compute_no_commute_help_cached(
+        A, B, expand_derivatives, ope_registry.version
+    )
+
+
+@lru_cache(maxsize=None)
+def _compute_no_commute_help_cached(
+    A: Any, B: Any, expand_derivatives: bool, registry_version: int
+) -> Any:
+    del registry_version
     """
     计算 NOCommuteHelp[A,B] = NO[A,B] - sign * NO[B,A]
 

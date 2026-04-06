@@ -8,6 +8,8 @@ OPE 计算 API 模块
 - MakeOPE: 创建 OPEData 的便捷函数
 """
 
+from functools import lru_cache
+
 from typing import Any, List, Optional, Union, cast
 
 import sympy as sp
@@ -20,6 +22,7 @@ from .cache import (
     cached_pochhammer,
     get_ope_cache,
 )
+from .backend import get_compute_backend
 from .constants import One, Zero
 from .local_operator import (
     extract_scalar_operator,
@@ -36,6 +39,8 @@ from .operators import (
     d as derivative,
 )
 from .registry import OPEDefiner, ope_registry
+from .wolfram_backend import compute_no as _compute_no_wolfram
+from .wolfram_backend import compute_ope as _compute_ope_wolfram
 
 
 class OPEComputer(OPEDefiner):
@@ -133,6 +138,13 @@ def MakeOPE(data: Union[List, OPEData]) -> OPEData:
 
 
 def _compute_ope(left: Any, right: Any) -> OPEData:
+    backend = get_compute_backend()
+    if backend == "wolfram":
+        return _compute_ope_wolfram(left, right)
+    return _compute_ope_sympy(left, right)
+
+
+def _compute_ope_sympy(left: Any, right: Any) -> OPEData:
     """
     计算两个算符的 OPE（内部实现）
 
@@ -790,6 +802,13 @@ def bracket(
 
 
 def _NO_binary(left: Any, right: Any) -> Any:
+    backend = get_compute_backend()
+    if backend == "wolfram":
+        return _compute_no_wolfram(left, right)
+    return _NO_binary_sympy(left, right)
+
+
+def _NO_binary_sympy(left: Any, right: Any) -> Any:
     """
     计算正规序乘积 (AB)
 
@@ -847,19 +866,26 @@ def _NO_binary(left: Any, right: Any) -> Any:
         if coeff != 1:
             return coeff * _NO_binary(left, op)
 
-    from .local_operator import assert_no_illegal_operator_mul
-
     if not isinstance(left, Operator):
+        from .local_operator import assert_no_illegal_operator_mul
+
         assert_no_illegal_operator_mul(left, context="NO(left)")
         raise TypeError(
             f"NO requires Operator instances for left operand, got {type(left)}"
         )
     if not isinstance(right, Operator):
+        from .local_operator import assert_no_illegal_operator_mul
+
         assert_no_illegal_operator_mul(right, context="NO(right)")
         raise TypeError(
             f"NO requires Operator instances for right operand, got {type(right)}"
         )
 
+    return _NO_binary_operator_only(left, right)
+
+
+def _NO_binary_operator_only(left: Operator, right: Operator) -> Any:
+    """Fast path for NO on already-validated operator operands."""
     # 特殊情况：算符与自身的正规序 NO(A, A)
     # 对应 manual eq. (11)：若 A 为 fermionic，则 [AA]_0 由奇数阶极点的导数决定。
     # 这是一条 q = 0 的正规序特例，不应与 q >= 1 的 OPE 公式混用。
@@ -928,8 +954,22 @@ def _NO_binary(left: Any, right: Any) -> Any:
                 return Zero
             return sp.Rational(1, 2) * _NO_binary(commute, right.right)
 
-    # 创建正规序算符
+    # 创建正规序算符。对子节点构造做轻量缓存，减少热路径中的重复节点重建。
+    # 缓存必须跟随 registry 版本失效，否则不同测试里同名算符会复用旧节点。
+    return _make_no_node(left, right, ope_registry.version)
+
+
+@lru_cache(maxsize=None)
+def _make_no_node(
+    left: Operator, right: Operator, registry_version: int
+) -> NormalOrderedOperator:
+    del registry_version
     return NormalOrderedOperator(left, right)
+
+
+def clear_api_caches() -> None:
+    """Clear internal API memoization caches used by NO construction."""
+    _make_no_node.cache_clear()
 
 
 def NO(*operators: Any) -> Any:

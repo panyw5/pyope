@@ -1,0 +1,74 @@
+{
+  "id": "wolfram-backend-protocol-hardening",
+  "name": "wolfram-backend-protocol-hardening",
+  "title": "Harden Wolfram backend expression protocol",
+  "description": "Fix the Wolfram bridge so notebook-scale NO/OPE computations round-trip through wolframscript without path issues, float leakage, invalid derivative syntax, or illegal operator-times-expression decoding.",
+  "status": "in_progress",
+  "dev_type": "feature",
+  "scope": "core",
+  "priority": "P1",
+  "creator": "lelouch",
+  "assignee": "lelouch",
+  "createdAt": "2026-04-06",
+  "completedAt": null,
+  "branch": "feat/pyope-performance-optimization",
+  "base_branch": "main",
+  "worktree_path": "/Users/lelouch/trellis-worktrees/feat/pyope-performance-optimization",
+  "current_phase": 1,
+  "next_action": [
+    {
+      "phase": 0,
+      "action": "protocol-audit"
+    },
+    {
+      "phase": 1,
+      "action": "implement"
+    },
+    {
+      "phase": 2,
+      "action": "check"
+    },
+    {
+      "phase": 3,
+      "action": "finish"
+    }
+  ],
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [
+    {
+      "name": "Audit current Wolfram wrapper output grammar against pyope decoder constraints",
+      "status": "completed"
+    },
+    {
+      "name": "Eliminate invalid derivative and pretty-print forms from bridge payloads",
+      "status": "completed"
+    },
+    {
+      "name": "Ensure wrapper never emits operator-times-operator-expression payloads",
+      "status": "completed"
+    },
+    {
+      "name": "Add notebook-derived regression tests for large nested NO expressions",
+      "status": "in_progress"
+    },
+    {
+      "name": "Document safe notebook workflow for sympy construction and wolfram execution",
+      "status": "in_progress"
+    }
+  ],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "src/pyope/wolfram_backend.py",
+    "OPEdefs/OPEdefs.wls",
+    "src/pyope/api.py",
+    "demo/N_equals_three_algebra.ipynb",
+    "tests/test_backend.py"
+  ],
+  "notes": "Notebook testing in the optimization worktree surfaced multiple bridge-level failures after backend switching: relative wrapper path lookup from demo cwd, malformed derivative payloads, sympy.Float leakage, eval-based decoding, and invalid decoded operator-times-expression payloads. This round hardened the bridge into a strict machine protocol in src/pyope/wolfram_backend.py and OPEdefs/OPEdefs.wls, replaced decoder eval with a constrained AST decoder, preserved exact rationals, and added notebook-derived regression tests. A key notebook correctness finding is that the null-state mismatch was not a Wolfram math error: demo/N_equals_three_algebra.ipynb had drifted from the reference OPEdefs.m definitions, most importantly G had been written as NO(γ,b) instead of NO(b,γ). With the reference definitions restored, the representative null state does simplify to Zero through the Wolfram bridge. Performance profiling then showed the dominant bottleneck is not OPEdefs itself but 63 separate wolframscript launches during expression construction, each around 0.75s. A whole-expression prototype was added via wolfram_evaluate_expr / wolfram_simplify_expr plus a new EVAL mode in OPEdefs/OPEdefs.wls. That path reduces the representative null-state computation from about 57s to about 1.4s when the expression is first built structurally under the sympy backend and only then sent wholesale to Wolfram. The remaining architectural gap is that set_compute_backend(\"wolfram\") still eagerly dispatches every binary NO/OPE and therefore remains slow for large notebook expressions; the likely long-term fix is a persistent Wolfram session with incremental registry sync.",
+  "meta": {
+    "focus": "bridge-correctness-before-persistent-session-performance",
+    "source_notebook": "demo/N_equals_three_algebra.ipynb"
+  }
+}

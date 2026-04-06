@@ -8,6 +8,7 @@ OPE 注册表模块
 - clear_registry: 清空全局注册表状态的辅助函数
 """
 
+from functools import lru_cache
 from typing import Dict, Tuple, Optional, Any, Union
 import sympy as sp
 
@@ -38,7 +39,12 @@ class OPERegistry:
         self._parities: Dict[Any, int] = {}
         self._positions: Dict[Any, int] = {}
         self._position_counter: int = 0
-        self._compare_cache: Dict[Tuple[Any, Any], int] = {}
+        self._version: int = 0
+
+    @property
+    def version(self) -> int:
+        """Return a monotonic version for cache invalidation."""
+        return self._version
 
     def register_operator(self, operator: Any, parity: int) -> None:
         """
@@ -72,7 +78,7 @@ class OPERegistry:
             self._positions[operator] = self._position_counter
             self._position_counter += 1
 
-        self._compare_cache.clear()
+        self._version += 1
 
     def is_registered(self, operator: Any) -> bool:
         """
@@ -111,6 +117,14 @@ class OPERegistry:
         return self._positions.get(operator)
 
     def compare_operators(self, left: Any, right: Any) -> int:
+        return self._compare_operators_cached(left, right, self._version)
+
+    @lru_cache(maxsize=None)
+    def _compare_operators_cached(self, left: Any, right: Any, version: int) -> int:
+        del version
+        return self._compare_operators_uncached(left, right)
+
+    def _compare_operators_uncached(self, left: Any, right: Any) -> int:
         """
         比较两个算符的顺序
 
@@ -125,20 +139,13 @@ class OPERegistry:
             = 0 如果 left == right
             < 0 如果 left 和 right 需要交换
         """
-        cache_key = (left, right)
-        cached = self._compare_cache.get(cache_key)
-        if cached is not None:
-            return cached
-
         # 处理正规序算符：NO 总是排在最后
         from .operators import NormalOrderedOperator, DerivativeOperator, BasisOperator
 
         if isinstance(right, NormalOrderedOperator):
-            self._compare_cache[cache_key] = 1
             return 1  # left < right（left 应该在前）
 
         if isinstance(left, NormalOrderedOperator):
-            self._compare_cache[cache_key] = -1
             return -1  # left > right（需要交换）
 
         # 处理导数算符
@@ -167,7 +174,6 @@ class OPERegistry:
         if left_pos is not None and right_pos is not None:
             diff = right_pos - left_pos
             if diff != 0:
-                self._compare_cache[cache_key] = diff
                 return diff
         else:
             # 如果至少有一个未注册，使用字符串比较作为 fallback
@@ -175,17 +181,14 @@ class OPERegistry:
             if left_base != right_base:
                 # 字符串比较：如果 left < right（字典序），返回正数（顺序正确）
                 result = 1 if str(left_base) < str(right_base) else -1
-                self._compare_cache[cache_key] = result
                 return result
 
         # 基础算符相同，比较导数阶数
         # 导数越多越靠左（阶数大的在前）
         if left_order != right_order:
             result = left_order - right_order
-            self._compare_cache[cache_key] = result
             return result  # 如果 left > right (order), 返回正数
 
-        self._compare_cache[cache_key] = 0
         return 0
 
     def define_ope(self, left: Any, right: Any, ope_data: OPEData) -> None:
@@ -210,6 +213,7 @@ class OPERegistry:
         # 创建规范化的键（使用算符的字符串表示）
         key = self._make_key(left, right)
         self._opes[key] = ope_data
+        self._version += 1
 
     def get_ope(self, left: Any, right: Any) -> Optional[OPEData]:
         """
@@ -271,12 +275,14 @@ class OPERegistry:
         self._parities.clear()
         self._positions.clear()
         self._position_counter = 0
-        self._compare_cache.clear()
+        self._version += 1
 
         # 清空全局 OPE 缓存
         from .cache import get_ope_cache
+        from .api import clear_api_caches
 
         get_ope_cache().clear()
+        clear_api_caches()
 
     def __repr__(self) -> str:
         """字符串表示"""

@@ -1,6 +1,8 @@
 """Operator-space utilities for fixed-weight and sparse local-operator computations."""
 
 from __future__ import annotations
+
+from collections import deque
 import inspect
 from functools import lru_cache
 from typing import Any, Iterable, MutableMapping, Optional, cast
@@ -504,6 +506,37 @@ def _operator_sort_key(operator: Operator) -> tuple:
     return (base_key, -order, name)
 
 
+def _underlying_basis_generators(expr: Any) -> set[Operator]:
+    """Collect underlying basis generators appearing in an operator expression."""
+    if not isinstance(expr, Operator):
+        return set()
+
+    base = getattr(expr, "base", None)
+    if base is not None:
+        return _underlying_basis_generators(base)
+
+    left = getattr(expr, "left", None)
+    right = getattr(expr, "right", None)
+    if left is not None and right is not None:
+        return _underlying_basis_generators(left) | _underlying_basis_generators(right)
+
+    return {expr}
+
+
+def _is_negative_single_letter_fermion_sector(expr: Any) -> bool:
+    """Return whether an expression is built from one negative-weight fermionic letter."""
+    generators = _underlying_basis_generators(expr)
+    if len(generators) != 1:
+        return False
+
+    generator = next(iter(generators))
+    generator_weight = _get_conformal_weight(generator)
+    if generator_weight is None or generator_weight >= 0:
+        return False
+
+    return bool(get_operator_parity(generator))
+
+
 def _combine_like_terms_preserving_metadata(expr: Any) -> Any:
     """Combine like terms without rebuilding operators from stripped keys."""
     terms = collect_operator_terms(expr)
@@ -726,11 +759,17 @@ class LocalOperatorBasis:
 
     def canonicalize(self, expr: Any) -> Any:
         """Canonicalize an operator expression for basis comparisons."""
-        simplified = simplify(expr)
+        simplified = self._canonicalize_cached(expr, ope_registry.version)
         combined = _combine_like_terms_preserving_metadata(simplified)
         if combined == 0:
             return Zero
         return combined
+
+    @staticmethod
+    @lru_cache(maxsize=None)
+    def _canonicalize_cached(expr: Any, registry_version: int) -> Any:
+        del registry_version
+        return simplify(expr)
 
     def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
         """Return sparse canonical coordinates without fixed-weight basis enumeration."""
@@ -897,6 +936,10 @@ class LocalOperatorBasis:
                 if operator_weight is None:
                     continue
                 if _weights_equal(operator_weight, weight):
+                    if weight == 0 and _is_negative_single_letter_fermion_sector(
+                        operator
+                    ):
+                        continue
                     canonical_terms.add(operator)
 
         return tuple(sorted(canonical_terms, key=sp.srepr))
