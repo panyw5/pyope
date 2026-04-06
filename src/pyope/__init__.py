@@ -12,6 +12,9 @@ __author__ = "PyOPE Contributors"
 
 # 已实现的模块
 from .api import NO, NO_product, OPE, MakeOPE, bracket, normal_product
+from .backend import compute_backend, get_compute_backend, set_compute_backend
+from .wolfram_backend import evaluate_expr as wolfram_evaluate_expr
+from .wolfram_backend import simplify_expr as simplify_with_wolfram
 
 # 缓存模块
 from .cache import get_ope_cache
@@ -124,6 +127,11 @@ __all__ = [
     "bracket",
     "MakeOPE",
     "normal_product",
+    "get_compute_backend",
+    "set_compute_backend",
+    "compute_backend",
+    "wolfram_evaluate_expr",
+    "simplify_with_wolfram",
     # Simplification
     "simplify",
     "collect_normal_ordered_terms",

@@ -22,6 +22,7 @@ from .cache import (
     cached_pochhammer,
     get_ope_cache,
 )
+from .backend import get_compute_backend
 from .constants import One, Zero
 from .local_operator import (
     extract_scalar_operator,
@@ -38,6 +39,8 @@ from .operators import (
     d as derivative,
 )
 from .registry import OPEDefiner, ope_registry
+from .wolfram_backend import compute_no as _compute_no_wolfram
+from .wolfram_backend import compute_ope as _compute_ope_wolfram
 
 
 class OPEComputer(OPEDefiner):
@@ -135,6 +138,13 @@ def MakeOPE(data: Union[List, OPEData]) -> OPEData:
 
 
 def _compute_ope(left: Any, right: Any) -> OPEData:
+    backend = get_compute_backend()
+    if backend == "wolfram":
+        return _compute_ope_wolfram(left, right)
+    return _compute_ope_sympy(left, right)
+
+
+def _compute_ope_sympy(left: Any, right: Any) -> OPEData:
     """
     计算两个算符的 OPE（内部实现）
 
@@ -798,6 +808,13 @@ def bracket(
 
 
 def _NO_binary(left: Any, right: Any) -> Any:
+    backend = get_compute_backend()
+    if backend == "wolfram":
+        return _compute_no_wolfram(left, right)
+    return _NO_binary_sympy(left, right)
+
+
+def _NO_binary_sympy(left: Any, right: Any) -> Any:
     """
     计算正规序乘积 (AB)
 

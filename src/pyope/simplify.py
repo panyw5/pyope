@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Tuple
 import sympy as sp
 from sympy import Add, Mul, Pow
 
+from .backend import get_compute_backend
 from .operators import (
     Operator,
     BasisOperator,
@@ -73,6 +74,19 @@ def simplify(
         >>> # 禁用导数展开
         >>> simplify(expr, expand_derivatives=False)  # 返回 d(NO(T, J))
     """
+    backend = get_compute_backend()
+
+    if backend == "wolfram" and _should_delegate_wolfram_simplify(expr):
+        from .backend import compute_backend
+        from .wolfram_backend import evaluate_expr
+
+        with compute_backend("sympy"):
+            evaluated = evaluate_expr(expr)
+            if evaluated != expr:
+                return simplify(
+                    evaluated, expand_derivatives, preserve_nested_structure
+                )
+
     # 处理零
     if expr == 0 or expr == Zero:
         return Zero
@@ -167,6 +181,14 @@ def simplify(
 
     # 其他情况：直接返回
     return expr
+
+
+def _should_delegate_wolfram_simplify(expr: Any) -> bool:
+    if isinstance(expr, (Add, NormalOrderedOperator)):
+        return True
+    if isinstance(expr, Mul) and expr.has(Operator):
+        return True
+    return False
 
 
 def _simplify_ope_data(
