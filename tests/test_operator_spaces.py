@@ -4,6 +4,7 @@ import sympy as sp
 from pyope import (
     BasisOperator,
     Bosonic,
+    Fermionic,
     independent_under_realization,
     LocalOperatorBasis,
     list_independent_ops,
@@ -25,7 +26,7 @@ def test_local_operator_basis_enumerates_virasoro_weight_four_basis():
 
     basis = LocalOperatorBasis([T], max_weight=4)
 
-    weight_four_basis = basis.basis(4)
+    weight_four_basis = basis.list(4)
 
     assert d(T, 2) in weight_four_basis
     assert NO(T, T) in weight_four_basis
@@ -42,7 +43,7 @@ def test_local_operator_basis_canonicalizes_and_extracts_coordinates():
 
     canonical = basis.canonicalize(expr)
     coordinates = basis.coordinates(expr, weight=3)
-    ordered_basis = basis.basis(3)
+    ordered_basis = basis.list(3)
     index = {op: i for i, op in enumerate(ordered_basis)}
 
     assert canonical == 5 * NO(T, J) + d(T)
@@ -70,7 +71,7 @@ def test_local_operator_basis_weight_zero_is_vacuum():
 
     basis = LocalOperatorBasis([T])
 
-    assert basis.basis(0) == [One]
+    assert basis.list(0) == [One]
 
 
 def test_local_operator_basis_rejects_weight_mismatch():
@@ -100,7 +101,7 @@ def test_realized_generator_can_be_used_in_local_operator_basis():
     Bosonic(T)
 
     basis = LocalOperatorBasis([T], max_weight=4)
-    weight_four_basis = basis.basis(4)
+    weight_four_basis = basis.list(4)
 
     assert d(T, 2) in weight_four_basis
     assert NO(T, T) in weight_four_basis
@@ -296,7 +297,7 @@ def test_local_operator_basis_list_independent_ops_uses_default_max_occurence():
     expressions = [d(phi), NO(phi, d(phi)), 2 * NO(phi, d(phi))]
 
     independent = basis.list_independent_ops(expressions, weight=1)
-    ordered_basis = basis.basis(1)
+    ordered_basis = basis.list(1)
     target_index = ordered_basis.index(basis.canonicalize(NO(phi, d(phi))))
 
     assert len(independent) == 2
@@ -373,6 +374,27 @@ def test_list_zero_relations_handles_dependence_chain_with_compressed_coordinate
         assert basis.canonicalize(relation["relation"]) == 0
 
 
+def test_sparse_terms_distributes_symbolic_scalars_over_operator_sums():
+    b = BasisOperator("b_sparse_expand", fermionic=True, conformal_weight=sp.Integer(2))
+    c = BasisOperator(
+        "c_sparse_expand", fermionic=True, conformal_weight=sp.Integer(-1)
+    )
+    Bosonic(b, c)
+
+    canonicalizer = LocalOperatorBasis([b, c], max_weight=3, max_occurence=4)
+    x = NO(b, c)
+    y = NO(b, d(c))
+    a0, a1 = sp.symbols("a0:2")
+
+    expr = 5 * x + y - a0 * (x + y) - a1 * (x - y)
+    terms = canonicalizer.sparse_terms(expr)
+
+    assert terms == {
+        x: sp.expand(5 - a0 - a1),
+        y: sp.expand(1 - a0 + a1),
+    }
+
+
 def test_local_operator_basis_list_zero_relations_uses_default_max_occurence():
     phi = BasisOperator("phi_zero_relation", conformal_weight=0)
     Bosonic(phi)
@@ -413,7 +435,7 @@ def test_local_operator_basis_allows_nonpositive_fermionic_atoms_without_recursi
     c = BasisOperator("c_basis_nonpositive", fermionic=True, conformal_weight=-1)
 
     basis = LocalOperatorBasis([c], max_weight=1, max_occurence=0)
-    weight_one_basis = basis.basis(1)
+    weight_one_basis = basis.list(1)
 
     assert d(c, 2) in weight_one_basis
     assert len(weight_one_basis) > 0
@@ -444,8 +466,8 @@ def test_local_operator_basis_truncates_weight_zero_bosonic_atoms_with_max_occur
 
     basis = LocalOperatorBasis([phi], max_weight=1, max_occurence=2)
 
-    weight_zero_basis = basis.basis(0, max_occurence=2)
-    weight_one_basis = basis.basis(1, max_occurence=1)
+    weight_zero_basis = basis.list(0, max_occurence=2)
+    weight_one_basis = basis.list(1, max_occurence=1)
 
     assert set(weight_zero_basis) == {One, phi, NO(phi, phi)}
     assert len(weight_zero_basis) == 3
@@ -460,8 +482,8 @@ def test_local_operator_basis_zero_max_occurence_keeps_only_vacuum_sector():
 
     basis = LocalOperatorBasis([phi], max_weight=1, max_occurence=0)
 
-    assert basis.basis(0) == [One]
-    assert basis.basis(1) == [d(phi)]
+    assert basis.list(0) == [One]
+    assert basis.list(1) == [d(phi)]
 
 
 def test_local_operator_basis_rejects_invalid_max_occurence():
@@ -471,10 +493,10 @@ def test_local_operator_basis_rejects_invalid_max_occurence():
     basis = LocalOperatorBasis([phi], max_weight=0, max_occurence=0)
 
     with pytest.raises(ValueError):
-        basis.basis(0, max_occurence=-1)
+        basis.list(0, max_occurence=-1)
 
     with pytest.raises(ValueError):
-        basis.basis(0, max_occurence=sp.Rational(1, 2))
+        basis.list(0, max_occurence=sp.Rational(1, 2))
 
 
 def test_coordinates_supports_max_occurence_for_weight_zero_bosonic_atoms():
@@ -485,7 +507,7 @@ def test_coordinates_supports_max_occurence_for_weight_zero_bosonic_atoms():
     expr = basis.canonicalize(NO(phi, d(phi)))
 
     coords = basis.coordinates(expr, weight=1)
-    ordered_basis = basis.basis(1)
+    ordered_basis = basis.list(1)
     index = {op: i for i, op in enumerate(ordered_basis)}
 
     assert coords[index[expr], 0] == 1
@@ -505,7 +527,7 @@ def test_realized_coordinates_supports_max_occurence_for_zero_weight_free_fields
     expr = NO(Jplus, gamma)
 
     coords = abstract_basis.realized_coordinates(expr, free_field_basis, weight=1)
-    ordered_basis = free_field_basis.basis(1)
+    ordered_basis = free_field_basis.list(1)
     canonical_realized = free_field_basis.canonicalize(NO(beta, gamma))
     index = {op: i for i, op in enumerate(ordered_basis)}
 
@@ -526,7 +548,7 @@ def test_realized_coordinates_work_for_bc_free_field_ambient_basis():
     abstract_basis = LocalOperatorBasis([T], max_weight=4)
     free_field_basis = LocalOperatorBasis([b, c], max_weight=4, max_occurence=0)
 
-    expr = abstract_basis.basis(4)[0]
+    expr = abstract_basis.list(4)[0]
     coords = realized_coordinates(expr, free_field_basis, weight=4)
 
     assert coords.shape[1] == 1
@@ -553,9 +575,9 @@ def test_local_operator_basis_allows_repeated_negative_bosonic_atoms_up_to_max_o
 
     canonical = basis.canonicalize(expr)
 
-    assert canonical in basis.basis(4)
+    assert canonical in basis.list(4)
     coords = basis.coordinates(expr, weight=4)
-    ordered_basis = basis.basis(4)
+    ordered_basis = basis.list(4)
     index = {op: i for i, op in enumerate(ordered_basis)}
     assert coords[index[canonical], 0] == 1
 
@@ -565,5 +587,5 @@ def test_local_operator_basis_still_excludes_repeated_fermionic_single_letter_at
 
     basis = LocalOperatorBasis([c], max_weight=0, max_occurence=3)
 
-    assert basis.basis(0) == [One]
+    assert basis.list(0) == [One]
     assert basis.canonicalize(NO(c, c)) == 0

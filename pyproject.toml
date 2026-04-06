@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyope"
-version = "0.1.0"
+name = "pyope-voa"
+version = "0.1.0.post1"
 description = "Python library for Operator Product Expansion calculations in Vertex Operator Algebras"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "PyOPE Contributors"}
 ]
@@ -18,7 +18,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Physics",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -47,12 +46,14 @@ jupyter = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/pyope"
-Repository = "https://github.com/yourusername/pyope"
-Documentation = "https://github.com/yourusername/pyope"
+Homepage = "https://github.com/panyw5/pyope"
+Repository = "https://github.com/panyw5/pyope"
+Documentation = "https://github.com/panyw5/pyope/tree/main/docs"
+Issues = "https://github.com/panyw5/pyope/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+license-files = ["LICENSE"]
 
 [tool.setuptools.package-data]
 pyope = ["py.typed", "*.pyi"]

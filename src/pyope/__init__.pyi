@@ -13,18 +13,33 @@ from .local_operator import (
     simplify_operator_expr,
 )
 from .ope_data import OPEData
+from .compact_ope import compact_family_poles
+from .quasiprimary import qp, quasiprimary_product
+from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
+from .descendants import DescendantSpace
+from .free_field_c2 import DerivativeKillingFreeFieldC2Reducer, FreeFieldC2Reducer
+from .null_search import C2NullSearcher as QuotientC2NullSearcher, NullSearchResult
+from .realizations import (
+    DerivativeKillingRealizationBackend,
+    IdentityRealizationBackend,
+    RealizationBackend,
+)
+from .singularity import SingularVectorAnalyzer
 from .operator_spaces import (
     C2NullSearcher,
     C2Space,
-    DescendantSpace,
     LocalOperatorBasis,
-    RealizedGenerator,
-    SingularVectorAnalyzer,
-    independent_under_realization,
+    LocalOperatorCanonicalizer,
+    SparseLinearContext,
+    list_independent_ops,
+    list_zero_relations,
     make_realized,
+    RealizedGenerator,
+    independent_under_realization,
     realize,
     realize_and_simplify,
     realized_coordinates,
+    clear_realize_cache,
 )
 from .operators import (
     BasisOperator,
@@ -37,7 +52,6 @@ from .operators import (
 from .registry import (
     Bosonic,
     Fermionic,
-    OPEDefiner,
     OPERegistry,
     clear_registry,
     ope_registry,

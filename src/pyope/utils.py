@@ -8,6 +8,15 @@ import sympy as sp
 from typing import Any
 
 
+def _ascending_pochhammer(value: Any, order: int) -> sp.Expr:
+    """Compute ascending Pochhammer symbol (value)_order = value*(value+1)*...*(value+order-1)."""
+    result = sp.Integer(1)
+    base = sp.sympify(value)
+    for k in range(order):
+        result *= base + k
+    return sp.simplify(result)
+
+
 def sympify_coefficient(coeff: Any) -> Any:
     """
     将系数自动转换为 SymPy 类型
@@ -82,48 +91,7 @@ def sympify_coefficient(coeff: Any) -> Any:
     # 其他情况，尝试使用 sympify
     try:
         return sp.sympify(coeff)
-    except:
-        return coeff
-
-    # 如果已经是 SymPy 表达式，检查是否需要转换
-    if isinstance(coeff, sp.Expr):
-        # 如果是 SymPy 的 Float，尝试转换为 Rational
-        if isinstance(coeff, sp.Float):
-            # 尝试将浮点数转换为有理数
-            rational = sp.nsimplify(coeff)
-            # 如果转换后是 Rational 或 Integer，使用转换结果
-            if isinstance(rational, (sp.Rational, sp.Integer)):
-                return rational
-        return coeff
-
-    # 如果是 Python 的 int，转换为 SymPy Integer
-    if isinstance(coeff, int):
-        return sp.Integer(coeff)
-
-    # 如果是 Python 的 float，尝试转换为 Rational
-    if isinstance(coeff, float):
-        # 使用 nsimplify 尝试找到精确的有理数表示
-        rational = sp.nsimplify(coeff)
-        # 如果转换成功（得到 Rational 或 Integer），使用转换结果
-        if isinstance(rational, (sp.Rational, sp.Integer)):
-            return rational
-        # 否则使用 Float（保持精度）
-        return sp.Float(coeff)
-
-    # 如果是 Python 的 Fraction，转换为 SymPy Rational
-    try:
-        from fractions import Fraction
-
-        if isinstance(coeff, Fraction):
-            return sp.Rational(coeff.numerator, coeff.denominator)
-    except ImportError:
-        pass
-
-    # 其他情况，尝试使用 sympify
-    try:
-        return sp.sympify(coeff)
-    except:
-        # 如果 sympify 失败，返回原值
+    except (TypeError, ValueError, sp.SympifyError):
         return coeff
 
 def _multiply_bracket_operator(bracket: Any, operator: Any) -> Any:

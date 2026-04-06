@@ -295,21 +295,40 @@ def collect_operator_terms(expr: LocalOperatorType) -> dict:
     Returns:
         字典，键为算符，值为系数
     """
-    if isinstance(expr, Operator):
-        return {expr: sp.Integer(1)}
+    terms: dict[Any, sp.Expr] = {}
 
-    if isinstance(expr, Add):
-        terms = {}
-        for arg in expr.args:
-            coeff, op = extract_scalar_operator(arg)
-            if op in terms:
-                terms[op] += coeff
-            else:
-                terms[op] = coeff
-        return terms
+    def add_term(operator: Any, coeff: sp.Expr) -> None:
+        coeff = sp.sympify(coeff)
+        if coeff == 0:
+            return
+        terms[operator] = sp.sympify(terms.get(operator, 0) + coeff)
+        if terms[operator] == 0:
+            del terms[operator]
 
-    if isinstance(expr, Mul):
-        coeff, op = extract_scalar_operator(expr)
-        return {op: coeff}
+    def visit(node: LocalOperatorType, scalar: sp.Expr = sp.Integer(1)) -> None:
+        scalar = sp.sympify(scalar)
+        if scalar == 0:
+            return
 
-    return {expr: sp.Integer(1)}
+        if isinstance(node, Operator):
+            add_term(node, scalar)
+            return
+
+        if isinstance(node, Add):
+            for arg in node.args:
+                visit(arg, scalar)
+            return
+
+        if isinstance(node, Mul):
+            coeff, op = extract_scalar_operator(node)
+            visit(op, scalar * sp.sympify(coeff))
+            return
+
+        if isinstance(node, sp.Expr) and not node.has(Operator):
+            add_term(sp.Integer(1), scalar * node)
+            return
+
+        add_term(node, scalar)
+
+    visit(expr)
+    return terms

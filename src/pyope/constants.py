@@ -74,6 +74,42 @@ class ConstantOperator(Operator):
             return other  # One * anything = anything
         return sp.Mul(self, other)
 
+    def __add__(self, other) -> sp.Expr:
+        """加法运算"""
+        if self._name == "Zero":  # type: ignore[attr-defined]
+            other_expr = sp.sympify(other)
+            if other_expr == 0 or other_expr == sp.Integer(0):
+                return self
+            return other_expr
+        return sp.Add(self, other)
+
+    def __radd__(self, other) -> sp.Expr:
+        """右加法运算"""
+        if self._name == "Zero":  # type: ignore[attr-defined]
+            other_expr = sp.sympify(other)
+            if other_expr == 0 or other_expr == sp.Integer(0):
+                return self
+            return other_expr
+        return sp.Add(other, self)
+
+    def __sub__(self, other) -> sp.Expr:
+        """减法运算"""
+        if self._name == "Zero":  # type: ignore[attr-defined]
+            other_expr = sp.sympify(other)
+            if other_expr == 0 or other_expr == sp.Integer(0):
+                return self
+            return -other_expr
+        return sp.Add(self, -sp.sympify(other))
+
+    def __rsub__(self, other) -> sp.Expr:
+        """右减法运算"""
+        if self._name == "Zero":  # type: ignore[attr-defined]
+            other_expr = sp.sympify(other)
+            if other_expr == 0 or other_expr == sp.Integer(0):
+                return self
+            return other_expr
+        return sp.Add(sp.sympify(other), -self)
+
     def __rmul__(self, other) -> sp.Expr:
         """右乘法运算"""
         if self._name == "Zero":  # type: ignore[attr-defined]
