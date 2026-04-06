@@ -8,6 +8,7 @@ OPE 注册表模块
 - clear_registry: 清空全局注册表状态的辅助函数
 """
 
+from functools import lru_cache
 from typing import Dict, Tuple, Optional, Any, Union
 import sympy as sp
 
@@ -38,6 +39,12 @@ class OPERegistry:
         self._parities: Dict[Any, int] = {}
         self._positions: Dict[Any, int] = {}
         self._position_counter: int = 0
+        self._version: int = 0
+
+    @property
+    def version(self) -> int:
+        """Return a monotonic version for cache invalidation."""
+        return self._version
 
     def register_operator(self, operator: Any, parity: int) -> None:
         """
@@ -70,6 +77,8 @@ class OPERegistry:
         if operator not in self._positions:
             self._positions[operator] = self._position_counter
             self._position_counter += 1
+
+        self._version += 1
 
     def is_registered(self, operator: Any) -> bool:
         """
@@ -108,6 +117,14 @@ class OPERegistry:
         return self._positions.get(operator)
 
     def compare_operators(self, left: Any, right: Any) -> int:
+        return self._compare_operators_cached(left, right, self._version)
+
+    @lru_cache(maxsize=None)
+    def _compare_operators_cached(self, left: Any, right: Any, version: int) -> int:
+        del version
+        return self._compare_operators_uncached(left, right)
+
+    def _compare_operators_uncached(self, left: Any, right: Any) -> int:
         """
         比较两个算符的顺序
 
@@ -194,6 +211,7 @@ class OPERegistry:
         # 创建规范化的键（使用算符的字符串表示）
         key = self._make_key(left, right)
         self._opes[key] = ope_data
+        self._version += 1
 
     def get_ope(self, left: Any, right: Any) -> Optional[OPEData]:
         """
@@ -255,6 +273,7 @@ class OPERegistry:
         self._parities.clear()
         self._positions.clear()
         self._position_counter = 0
+        self._version += 1
 
         # 清空全局 OPE 缓存
         from .cache import get_ope_cache

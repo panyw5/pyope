@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import deque
 import inspect
 from functools import lru_cache
 from typing import Any, Iterable, MutableMapping, Optional
@@ -653,11 +654,17 @@ class LocalOperatorBasis:
 
     def canonicalize(self, expr: Any) -> Any:
         """Canonicalize an operator expression for basis comparisons."""
-        simplified = simplify(expr)
+        simplified = self._canonicalize_cached(expr, ope_registry.version)
         combined = _combine_like_terms_preserving_metadata(simplified)
         if combined == 0:
             return Zero
         return combined
+
+    @staticmethod
+    @lru_cache(maxsize=None)
+    def _canonicalize_cached(expr: Any, registry_version: int) -> Any:
+        del registry_version
+        return simplify(expr)
 
     def enumerate_candidates(self, weight: Any) -> list[Any]:
         """Enumerate raw canonical candidate expressions of fixed weight."""
@@ -967,18 +974,18 @@ class DescendantSpace:
         if normalized_target < source_weight:
             return []
 
-        queue = [canonical_source]
+        queue = deque([canonical_source])
         seen = {canonical_source}
-        generated = []
+        generated: set[Any] = set()
 
         while queue:
-            current = queue.pop(0)
+            current = queue.popleft()
             current_weight = _get_conformal_weight(current)
             if current_weight is None or current_weight > normalized_target:
                 continue
 
             if _weights_equal(current_weight, normalized_target):
-                generated.append(current)
+                generated.add(current)
                 continue
 
             derivative_descendant = self.basis_builder.canonicalize(d(current))
@@ -1000,7 +1007,7 @@ class DescendantSpace:
                     queue,
                 )
 
-        return sorted(set(generated), key=sp.srepr)
+        return sorted(generated, key=sp.srepr)
 
     def basis(self, source: Any, target_weight: Any) -> list[Any]:
         """Return a linearly independent spanning set for one source."""
@@ -1020,7 +1027,7 @@ class DescendantSpace:
         expr: Any,
         target_weight: sp.Expr,
         seen: set[Any],
-        queue: list[Any],
+        queue: deque[Any],
     ) -> None:
         if expr == Zero:
             return

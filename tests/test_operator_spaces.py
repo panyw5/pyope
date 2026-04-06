@@ -50,6 +50,20 @@ def test_local_operator_basis_canonicalizes_and_extracts_coordinates():
     assert coordinates[index[d(T)], 0] == 1
 
 
+def test_local_operator_basis_canonicalize_cache_tracks_registry_changes():
+    A = BasisOperator("A_basis_cache_version", conformal_weight=1)
+    B = BasisOperator("B_basis_cache_version", conformal_weight=1)
+
+    basis = LocalOperatorBasis([A, B], max_weight=2)
+    expr = NO(B, A)
+
+    assert basis.canonicalize(expr) == NO(A, B)
+
+    Bosonic(B, A)
+
+    assert basis.canonicalize(expr) == NO(B, A)
+
+
 def test_local_operator_basis_weight_zero_is_vacuum():
     T = BasisOperator("T_basis_vac", conformal_weight=2)
     Bosonic(T)
