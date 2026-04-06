@@ -961,11 +961,15 @@ def _NO_binary_operator_only(left: Operator, right: Operator) -> Any:
             return sp.Rational(1, 2) * _NO_binary(commute, right.right)
 
     # 创建正规序算符。对子节点构造做轻量缓存，减少热路径中的重复节点重建。
-    return _make_no_node(left, right)
+    # 缓存必须跟随 registry 版本失效，否则不同测试里同名算符会复用旧节点。
+    return _make_no_node(left, right, ope_registry.version)
 
 
 @lru_cache(maxsize=None)
-def _make_no_node(left: Operator, right: Operator) -> NormalOrderedOperator:
+def _make_no_node(
+    left: Operator, right: Operator, registry_version: int
+) -> NormalOrderedOperator:
+    del registry_version
     return NormalOrderedOperator(left, right)
 
 
