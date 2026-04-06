@@ -11,16 +11,31 @@ __version__ = "0.1.0.post1"
 __author__ = "PyOPE Contributors"
 
 # 已实现的模块
-from .api import NO, NO_product, OPE, MakeOPE, bracket, normal_product
+from .api import NO, OPE, MakeOPE, NO_product, bracket, normal_product
+from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
 
 # 缓存模块
 from .cache import get_ope_cache
+from .compact_ope import compact_family_poles
 from .constants import (
     ConstantOperator,
     Delta,
     One,
     Zero,
 )
+from .descendants import DescendantSpace
+from .finite_algebra import (
+    AlgebraElement,
+    AlgebraValidationIssue,
+    AssociativityValidationResult,
+    FiniteDimensionalAlgebra,
+    IdentityValidationResult,
+    IrreducibleRepresentationClassification,
+    MultiplicationTableEntry,
+    OneDimensionalRepresentation,
+    build_finite_dimensional_algebra,
+)
+from .free_field_c2 import DerivativeKillingFreeFieldC2Reducer, FreeFieldC2Reducer
 
 # Jacobi 恒等式模块
 from .jacobi import check_jacobi_identity, verify_jacobi_identity
@@ -34,35 +49,24 @@ from .local_operator import (
     is_local_operator,
     simplify_operator_expr,
 )
-
+from .null_search import C2NullSearcher as QuotientC2NullSearcher
+from .null_search import NullSearchResult
 from .ope_data import OPEData
-from .compact_ope import compact_family_poles
-from .quasiprimary import qp, quasiprimary_product
-from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
-from .descendants import DescendantSpace
-from .free_field_c2 import DerivativeKillingFreeFieldC2Reducer, FreeFieldC2Reducer
-from .null_search import C2NullSearcher as QuotientC2NullSearcher, NullSearchResult
-from .realizations import (
-    DerivativeKillingRealizationBackend,
-    IdentityRealizationBackend,
-    RealizationBackend,
-)
-from .singularity import SingularVectorAnalyzer
 from .operator_spaces import (
     C2NullSearcher,
     C2Space,
     LocalOperatorBasis,
     LocalOperatorCanonicalizer,
+    RealizedGenerator,
     SparseLinearContext,
+    clear_realize_cache,
+    independent_under_realization,
     list_independent_ops,
     list_zero_relations,
     make_realized,
-    RealizedGenerator,
-    independent_under_realization,
     realize,
     realize_and_simplify,
     realized_coordinates,
-    clear_realize_cache,
 )
 from .operators import (
     BasisOperator,
@@ -71,6 +75,12 @@ from .operators import (
     Operator,
     d,
     dn,
+)
+from .quasiprimary import qp, quasiprimary_product
+from .realizations import (
+    DerivativeKillingRealizationBackend,
+    IdentityRealizationBackend,
+    RealizationBackend,
 )
 
 # Registry 和 API 模块
@@ -82,6 +92,15 @@ from .simplify import (
     combine_normal_ordered_terms,
     expand_nested_no,
     simplify,
+)
+from .singularity import SingularVectorAnalyzer
+from .zhu import (
+    AbstractZhuReducer,
+    GenericZhuReducer,
+    ZhuReductionWitness,
+    ZhuSpace,
+    zhu_circle_product,
+    zhu_star_product,
 )
 
 __all__ = [
@@ -120,16 +139,29 @@ __all__ = [
     "C2Space",
     "DescendantSpace",
     "GenericC2Reducer",
+    "AlgebraElement",
+    "AlgebraValidationIssue",
+    "AssociativityValidationResult",
+    "build_finite_dimensional_algebra",
     "DerivativeKillingFreeFieldC2Reducer",
     "DerivativeKillingRealizationBackend",
+    "FiniteDimensionalAlgebra",
     "FreeFieldC2Reducer",
     "IdentityRealizationBackend",
+    "IdentityValidationResult",
+    "IrreducibleRepresentationClassification",
     "LocalOperatorBasis",
     "LocalOperatorCanonicalizer",
+    "MultiplicationTableEntry",
     "NullSearchResult",
+    "OneDimensionalRepresentation",
     "QuotientC2NullSearcher",
     "RealizationBackend",
+    "AbstractZhuReducer",
+    "GenericZhuReducer",
     "SparseLinearContext",
+    "ZhuReductionWitness",
+    "ZhuSpace",
     "list_independent_ops",
     "list_zero_relations",
     "make_realized",
@@ -140,6 +172,8 @@ __all__ = [
     "realized_coordinates",
     "clear_realize_cache",
     "independent_under_realization",
+    "zhu_circle_product",
+    "zhu_star_product",
     # Registry
     "OPERegistry",
     "ope_registry",

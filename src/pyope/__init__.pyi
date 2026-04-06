@@ -18,6 +18,17 @@ from .quasiprimary import qp, quasiprimary_product
 from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
 from .descendants import DescendantSpace
 from .free_field_c2 import DerivativeKillingFreeFieldC2Reducer, FreeFieldC2Reducer
+from .finite_algebra import (
+    AlgebraElement,
+    AlgebraValidationIssue,
+    AssociativityValidationResult,
+    build_finite_dimensional_algebra,
+    FiniteDimensionalAlgebra,
+    IdentityValidationResult,
+    IrreducibleRepresentationClassification,
+    MultiplicationTableEntry,
+    OneDimensionalRepresentation,
+)
 from .null_search import C2NullSearcher as QuotientC2NullSearcher, NullSearchResult
 from .realizations import (
     DerivativeKillingRealizationBackend,
@@ -25,6 +36,14 @@ from .realizations import (
     RealizationBackend,
 )
 from .singularity import SingularVectorAnalyzer
+from .zhu import (
+    AbstractZhuReducer,
+    GenericZhuReducer,
+    ZhuReductionWitness,
+    ZhuSpace,
+    zhu_circle_product,
+    zhu_star_product,
+)
 from .operator_spaces import (
     C2NullSearcher,
     C2Space,

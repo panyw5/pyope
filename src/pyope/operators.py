@@ -9,8 +9,13 @@
 """
 
 from typing import Any, Optional, Tuple
+from weakref import WeakValueDictionary
 import sympy as sp
 from sympy.core.symbol import Symbol
+
+
+_derivative_operator_cache: WeakValueDictionary = WeakValueDictionary()
+_normal_ordered_operator_cache: WeakValueDictionary = WeakValueDictionary()
 
 
 class Operator(Symbol):
@@ -292,6 +297,11 @@ class DerivativeOperator(Operator):
             base: 被求导的算符
             order: 导数阶数（默认为 1）
         """
+        cache_key = (base, order)
+        cached = _derivative_operator_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
         # 生成导数算符的名称
         if order == 1:
             name = f"∂{base.name}"
@@ -301,6 +311,7 @@ class DerivativeOperator(Operator):
         obj = Operator.__new__(cls, name, **assumptions)
         obj._base = base
         obj._order = order
+        _derivative_operator_cache[cache_key] = obj
         return obj
 
     @property
@@ -395,6 +406,11 @@ class NormalOrderedOperator(Operator):
             left: 左侧算符
             right: 右侧算符
         """
+        cache_key = (left, right)
+        cached = _normal_ordered_operator_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
         # 生成正规序算符的名称
         name = f"NO({left.name},{right.name})"
 
@@ -402,6 +418,7 @@ class NormalOrderedOperator(Operator):
         obj._left = left
         obj._right = right
         obj._factors = (left, right)
+        _normal_ordered_operator_cache[cache_key] = obj
         return obj
 
     @property

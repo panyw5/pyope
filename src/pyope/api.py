@@ -849,14 +849,13 @@ def _NO_binary(left: Any, right: Any) -> Any:
 
     from .local_operator import assert_no_illegal_operator_mul
 
-    assert_no_illegal_operator_mul(left, context="NO(left)")
-    assert_no_illegal_operator_mul(right, context="NO(right)")
-
     if not isinstance(left, Operator):
+        assert_no_illegal_operator_mul(left, context="NO(left)")
         raise TypeError(
             f"NO requires Operator instances for left operand, got {type(left)}"
         )
     if not isinstance(right, Operator):
+        assert_no_illegal_operator_mul(right, context="NO(right)")
         raise TypeError(
             f"NO requires Operator instances for right operand, got {type(right)}"
         )

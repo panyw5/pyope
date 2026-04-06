@@ -38,6 +38,7 @@ class OPERegistry:
         self._parities: Dict[Any, int] = {}
         self._positions: Dict[Any, int] = {}
         self._position_counter: int = 0
+        self._compare_cache: Dict[Tuple[Any, Any], int] = {}
 
     def register_operator(self, operator: Any, parity: int) -> None:
         """
@@ -70,6 +71,8 @@ class OPERegistry:
         if operator not in self._positions:
             self._positions[operator] = self._position_counter
             self._position_counter += 1
+
+        self._compare_cache.clear()
 
     def is_registered(self, operator: Any) -> bool:
         """
@@ -122,13 +125,20 @@ class OPERegistry:
             = 0 如果 left == right
             < 0 如果 left 和 right 需要交换
         """
+        cache_key = (left, right)
+        cached = self._compare_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
         # 处理正规序算符：NO 总是排在最后
         from .operators import NormalOrderedOperator, DerivativeOperator, BasisOperator
 
         if isinstance(right, NormalOrderedOperator):
+            self._compare_cache[cache_key] = 1
             return 1  # left < right（left 应该在前）
 
         if isinstance(left, NormalOrderedOperator):
+            self._compare_cache[cache_key] = -1
             return -1  # left > right（需要交换）
 
         # 处理导数算符
@@ -157,19 +167,25 @@ class OPERegistry:
         if left_pos is not None and right_pos is not None:
             diff = right_pos - left_pos
             if diff != 0:
+                self._compare_cache[cache_key] = diff
                 return diff
         else:
             # 如果至少有一个未注册，使用字符串比较作为 fallback
             # 但如果它们是同一个算符（即使未注册），则继续比较阶数
             if left_base != right_base:
                 # 字符串比较：如果 left < right（字典序），返回正数（顺序正确）
-                return 1 if str(left_base) < str(right_base) else -1
+                result = 1 if str(left_base) < str(right_base) else -1
+                self._compare_cache[cache_key] = result
+                return result
 
         # 基础算符相同，比较导数阶数
         # 导数越多越靠左（阶数大的在前）
         if left_order != right_order:
-            return left_order - right_order  # 如果 left > right (order), 返回正数
+            result = left_order - right_order
+            self._compare_cache[cache_key] = result
+            return result  # 如果 left > right (order), 返回正数
 
+        self._compare_cache[cache_key] = 0
         return 0
 
     def define_ope(self, left: Any, right: Any, ope_data: OPEData) -> None:
@@ -255,6 +271,7 @@ class OPERegistry:
         self._parities.clear()
         self._positions.clear()
         self._position_counter = 0
+        self._compare_cache.clear()
 
         # 清空全局 OPE 缓存
         from .cache import get_ope_cache
