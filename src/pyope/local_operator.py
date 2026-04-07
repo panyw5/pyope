@@ -270,9 +270,9 @@ def get_operator_parity(expr: LocalOperatorType) -> int:
 # 为了方便，添加一些辅助函数
 
 
-def simplify_operator_expr(expr: LocalOperatorType) -> LocalOperatorType:
+def simplify_with_sympy(expr: LocalOperatorType) -> LocalOperatorType:
     """
-    简化算符表达式
+    使用 SymPy 简化算符表达式
 
     Args:
         expr: 算符表达式

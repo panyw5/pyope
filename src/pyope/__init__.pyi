@@ -10,7 +10,7 @@ from .local_operator import (
     extract_scalar_operator,
     get_operator_parity,
     is_local_operator,
-    simplify_operator_expr,
+    simplify_with_sympy,
 )
 from .ope_data import OPEData
 from .compact_ope import compact_family_poles
