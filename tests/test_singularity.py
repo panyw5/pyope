@@ -17,7 +17,7 @@ def test_singular_vector_analyzer_detects_primary_current_new_module():
 
     OPE[T, J] = MakeOPE([J, d(J)])
 
-    basis_builder = LocalOperatorBasis([T, J], max_weight=3)
+    basis_builder = LocalOperatorBasis([T, J])
     analyzer = SingularVectorAnalyzer(basis_builder, generators=[T], stress_tensor=T)
 
     constraints = analyzer.positive_mode_constraints(J)
@@ -34,7 +34,7 @@ def test_singular_vector_analyzer_finds_primary_ansatz_solution_new_module():
     OPE[T, J] = MakeOPE([J, d(J)])
     OPE[T, T] = MakeOPE([0, 0, 2 * T, d(T)])
 
-    basis_builder = LocalOperatorBasis([T, J], max_weight=2)
+    basis_builder = LocalOperatorBasis([T, J])
     analyzer = SingularVectorAnalyzer(basis_builder, generators=[T], stress_tensor=T)
 
     solutions = analyzer.find_singular_vectors(2, ansatz=[T, NO(J, J)])

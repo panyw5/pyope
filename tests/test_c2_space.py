@@ -7,7 +7,7 @@ def test_c2_space_generators_include_virasoro_weight_five_terms():
     T = BasisOperator("T_c2_gen", conformal_weight=2)
     Bosonic(T)
 
-    basis_builder = LocalOperatorBasis([T], max_weight=5)
+    basis_builder = LocalOperatorBasis([T])
     c2 = C2Space(basis_builder)
 
     generators = c2.generators(5)
@@ -20,7 +20,7 @@ def test_c2_space_basis_is_independent():
     J = BasisOperator("J_c2_basis", conformal_weight=1)
     Bosonic(T, J)
 
-    basis_builder = LocalOperatorBasis([T, J], max_weight=4)
+    basis_builder = LocalOperatorBasis([T, J])
     c2 = C2Space(basis_builder)
 
     basis = c2.basis(4)
@@ -32,7 +32,7 @@ def test_c2_space_contains_known_generator():
     T = BasisOperator("T_c2_contains", conformal_weight=2)
     Bosonic(T)
 
-    basis_builder = LocalOperatorBasis([T], max_weight=5)
+    basis_builder = LocalOperatorBasis([T])
     c2 = C2Space(basis_builder)
 
     assert c2.contains(NO(d(T), T), weight=5)
@@ -42,7 +42,7 @@ def test_c2_space_rejects_non_c2_element():
     T = BasisOperator("T_c2_reject", conformal_weight=2)
     Bosonic(T)
 
-    basis_builder = LocalOperatorBasis([T], max_weight=4)
+    basis_builder = LocalOperatorBasis([T])
     c2 = C2Space(basis_builder)
 
     assert not c2.contains(NO(T, T), weight=4)
@@ -52,7 +52,7 @@ def test_c2_space_exposes_reducer_style_quotient_api():
     T = BasisOperator("T_c2_quotient_api", conformal_weight=2)
     Bosonic(T)
 
-    basis_builder = LocalOperatorBasis([T], max_weight=5)
+    basis_builder = LocalOperatorBasis([T])
     c2 = C2Space(basis_builder)
 
     assert c2.quotient_normal_form(NO(d(T), T), weight=5) == Zero
@@ -74,7 +74,7 @@ def test_c2_space_second_derivative_of_generator_is_in_c2():
     T = BasisOperator("T_c2_ddT", conformal_weight=2)
     Bosonic(T)
 
-    basis_builder = LocalOperatorBasis([T], max_weight=4)
+    basis_builder = LocalOperatorBasis([T])
     c2 = C2Space(basis_builder)
 
     # d(d(T)) = ∂²T has weight 4; it equals :(∂(∂T))·1: so it is in C2
@@ -94,7 +94,7 @@ def test_c2_space_half_integer_weight_derived_element_is_in_c2():
     G = BasisOperator("G_c2_half", conformal_weight=Rational(3, 2))
     Bosonic(G)
 
-    basis_builder = LocalOperatorBasis([G], max_weight=Rational(7, 2))
+    basis_builder = LocalOperatorBasis([G])
     c2 = C2Space(basis_builder)
 
     # d(d(G)) = ∂²G has weight 7/2; it equals :(∂(∂G))·1: so it is in C2

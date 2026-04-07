@@ -53,7 +53,7 @@ def test_generic_zhu_reducer_kills_circle_generators_mod_ov():
     Bosonic(J, K)
     OPE[J, K] = OPE.make([One])
 
-    basis = LocalOperatorBasis([J, K], max_weight=2)
+    basis = LocalOperatorBasis([J, K])
     reducer = GenericZhuReducer(basis)
     expr = zhu_circle_product(J, K)
 
@@ -70,7 +70,7 @@ def test_zhu_space_exposes_reducer_style_api_and_multiply():
     Bosonic(J, K)
     OPE[J, K] = OPE.make([5 * One])
 
-    basis = LocalOperatorBasis([J, K], max_weight=2)
+    basis = LocalOperatorBasis([J, K])
     zhu = ZhuSpace(basis)
     circle_expr = zhu_circle_product(J, K)
 
@@ -88,7 +88,7 @@ def test_zhu_space_generators_and_basis_are_fixed_weight():
     K = BasisOperator("K_zhu_generators", conformal_weight=1)
     Bosonic(J, K)
 
-    basis = LocalOperatorBasis([J, K], max_weight=2)
+    basis = LocalOperatorBasis([J, K])
     zhu = ZhuSpace(basis)
 
     generators = zhu.generators(2)

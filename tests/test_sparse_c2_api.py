@@ -20,7 +20,7 @@ def test_local_operator_basis_exposes_sparse_terms_without_basis_enumeration():
     J = BasisOperator("J_sparse_terms", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
 
     def fail_basis(*args, **kwargs):
         raise AssertionError("basis() should not be called for sparse_terms()")
@@ -38,7 +38,7 @@ def test_sparse_terms_distributes_symbolic_scalars_over_operator_sums():
     c = BasisOperator("c_sparse_symbolic", fermionic=True, conformal_weight=-1)
     Fermionic(b, c)
 
-    basis = LocalOperatorBasis([b, c], max_weight=3, max_occurence=4)
+    basis = LocalOperatorBasis([b, c], max_occurence=4)
     x = NO(b, c)
     y = NO(b, d(c))
     a0, a1 = sp.symbols("a0:2")
@@ -55,7 +55,7 @@ def test_sparse_linear_context_finds_independent_subset_and_relations():
     J = BasisOperator("J_sparse_context", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
     context = SparseLinearContext(basis)
     jj = NO(J, J)
     dj = d(J)
@@ -72,7 +72,7 @@ def test_generic_c2_reducer_detects_c2_generator_and_obstruction():
     T = BasisOperator("T_generic_c2", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], max_weight=5)
+    basis = LocalOperatorBasis([T])
     reducer = GenericC2Reducer(basis)
 
     assert isinstance(reducer, AbstractC2Reducer)
@@ -84,7 +84,7 @@ def test_quotient_null_searcher_precheck_reports_status_and_remainder():
     T = BasisOperator("T_precheck", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     reducer = GenericC2Reducer(basis)
     searcher = QuotientC2NullSearcher(canonicalizer=basis, c2_reducer=reducer)
 
@@ -102,7 +102,7 @@ def test_quotient_null_searcher_solves_descendant_lift_from_sources():
     T = BasisOperator("T_lift", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     reducer = GenericC2Reducer(basis)
     searcher = QuotientC2NullSearcher(
         canonicalizer=basis,
@@ -123,7 +123,7 @@ def test_quotient_null_searcher_records_stress_tensor_search_metadata():
     T = BasisOperator("T_nilpotency_meta", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     reducer = GenericC2Reducer(basis)
     searcher = QuotientC2NullSearcher(canonicalizer=basis, c2_reducer=reducer)
 
@@ -142,7 +142,7 @@ def test_quotient_null_searcher_marks_failed_singularity_when_hook_rejects():
     T = BasisOperator("T_singularity_reject", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     reducer = GenericC2Reducer(basis)
     searcher = QuotientC2NullSearcher(
         canonicalizer=basis,
@@ -162,7 +162,7 @@ def test_null_search_result_legacy_payload_preserves_structured_fields():
     T = BasisOperator("T_legacy_payload", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     reducer = GenericC2Reducer(basis)
     searcher = QuotientC2NullSearcher(
         canonicalizer=basis,

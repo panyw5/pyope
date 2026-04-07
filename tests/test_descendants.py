@@ -5,7 +5,7 @@ def test_descendant_space_generates_virasoro_weight_four_descendants_new_module(
     T = BasisOperator("T_desc_gen_new", conformal_weight=2)
     Bosonic(T)
 
-    basis_builder = LocalOperatorBasis([T], max_weight=4)
+    basis_builder = LocalOperatorBasis([T])
     descendants = DescendantSpace(basis_builder)
 
     generated = descendants.generate(T, 4)
@@ -19,7 +19,7 @@ def test_descendant_space_span_combines_multiple_sources_new_module():
     J = BasisOperator("J_desc_span_new", conformal_weight=1)
     Bosonic(T, J)
 
-    basis_builder = LocalOperatorBasis([T, J], max_weight=3)
+    basis_builder = LocalOperatorBasis([T, J])
     descendants = DescendantSpace(basis_builder)
 
     span = descendants.span([J], 3)

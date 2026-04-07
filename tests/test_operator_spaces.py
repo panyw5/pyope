@@ -1,10 +1,11 @@
 import pytest
 import sympy as sp
 
+import pyope.operator_spaces as operator_spaces_module
 from pyope import (
     BasisOperator,
     Bosonic,
-    Fermionic,
+    compute_backend,
     independent_under_realization,
     LocalOperatorBasis,
     list_independent_ops,
@@ -24,7 +25,7 @@ def test_local_operator_basis_enumerates_virasoro_weight_four_basis():
     T = BasisOperator("T_basis_w4", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], max_weight=4)
+    basis = LocalOperatorBasis([T])
 
     weight_four_basis = basis.list(4)
 
@@ -38,7 +39,7 @@ def test_local_operator_basis_canonicalizes_and_extracts_coordinates():
     J = BasisOperator("J_basis_coord", conformal_weight=1)
     Bosonic(T, J)
 
-    basis = LocalOperatorBasis([T, J], max_weight=3)
+    basis = LocalOperatorBasis([T, J])
     expr = 2 * NO(T, J) + 3 * NO(T, J) + d(T)
 
     canonical = basis.canonicalize(expr)
@@ -55,7 +56,7 @@ def test_local_operator_basis_canonicalize_cache_tracks_registry_changes():
     A = BasisOperator("A_basis_cache_version", conformal_weight=1)
     B = BasisOperator("B_basis_cache_version", conformal_weight=1)
 
-    basis = LocalOperatorBasis([A, B], max_weight=2)
+    basis = LocalOperatorBasis([A, B])
     expr = NO(B, A)
 
     assert basis.canonicalize(expr) == NO(A, B)
@@ -63,6 +64,43 @@ def test_local_operator_basis_canonicalize_cache_tracks_registry_changes():
     Bosonic(B, A)
 
     assert basis.canonicalize(expr) == NO(B, A)
+
+
+def test_local_operator_basis_sorts_generators_before_enumeration():
+    A = BasisOperator("A_basis_sorted", conformal_weight=1)
+    B = BasisOperator("B_basis_sorted", conformal_weight=1)
+    Bosonic(A, B)
+
+    basis = LocalOperatorBasis([B, A])
+
+    assert basis.generators == (A, B)
+    assert basis.list(2) == [d(A), NO(A, A), NO(A, B), d(B), NO(B, B)]
+
+
+def test_local_operator_basis_builds_canonical_right_nested_basis():
+    A = BasisOperator("A_basis_nested", conformal_weight=1)
+    B = BasisOperator("B_basis_nested", conformal_weight=1)
+    C = BasisOperator("C_basis_nested", conformal_weight=1)
+    Bosonic(A, B, C)
+
+    basis = LocalOperatorBasis([C, A, B])
+
+    assert NO(A, NO(B, C)) in basis.list(3)
+    assert NO(C, NO(A, B)) not in basis.list(3)
+
+
+def test_local_operator_basis_list_is_backend_independent():
+    A = BasisOperator("A_basis_backend", conformal_weight=1)
+    B = BasisOperator("B_basis_backend", conformal_weight=1)
+    Bosonic(A, B)
+
+    basis = LocalOperatorBasis([B, A])
+    sympy_basis = basis.list(2)
+
+    with compute_backend("wolfram"):
+        wolfram_basis = basis.list(2)
+
+    assert wolfram_basis == sympy_basis
 
 
 def test_local_operator_basis_weight_zero_is_vacuum():
@@ -78,7 +116,7 @@ def test_local_operator_basis_rejects_weight_mismatch():
     T = BasisOperator("T_basis_mismatch", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], max_weight=4)
+    basis = LocalOperatorBasis([T])
 
     try:
         basis.coordinates(NO(T, T), weight=3)
@@ -100,7 +138,7 @@ def test_realized_generator_can_be_used_in_local_operator_basis():
     )
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], max_weight=4)
+    basis = LocalOperatorBasis([T])
     weight_four_basis = basis.list(4)
 
     assert d(T, 2) in weight_four_basis
@@ -230,7 +268,7 @@ def test_list_independent_ops_filters_dependent_basis_elements():
     J = BasisOperator("J_list_indep", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
     expressions = [NO(J, J), 2 * NO(J, J), d(J)]
 
     independent = list_independent_ops(expressions, basis, weight=2)
@@ -246,7 +284,7 @@ def test_list_independent_ops_does_not_require_weight_for_homogeneous_inputs():
     J = BasisOperator("J_list_indep_no_weight", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
     expressions = [NO(J, J), 2 * NO(J, J), d(J)]
 
     independent = list_independent_ops(expressions, basis)
@@ -259,7 +297,7 @@ def test_list_independent_ops_avoids_basis_enumeration():
     J = BasisOperator("J_list_indep_local", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
 
     def fail_basis(*args, **kwargs):
         raise AssertionError("basis() should not be called for local dependence checks")
@@ -276,7 +314,7 @@ def test_list_independent_ops_handles_incremental_dependence_chain():
     J = BasisOperator("J_list_indep_chain", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
     jj = NO(J, J)
     dj = d(J)
 
@@ -293,7 +331,7 @@ def test_local_operator_basis_list_independent_ops_uses_default_max_occurence():
     phi = BasisOperator("phi_list_indep_zero", conformal_weight=0)
     Bosonic(phi)
 
-    basis = LocalOperatorBasis([phi], max_weight=1, max_occurence=1)
+    basis = LocalOperatorBasis([phi], max_occurence=1)
     expressions = [d(phi), NO(phi, d(phi)), 2 * NO(phi, d(phi))]
 
     independent = basis.list_independent_ops(expressions, weight=1)
@@ -311,7 +349,7 @@ def test_list_zero_relations_finds_dependent_linear_combination():
     J = BasisOperator("J_zero_relation", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
     jj = NO(J, J)
     expressions = [jj, 2 * jj, d(J)]
 
@@ -330,7 +368,7 @@ def test_list_zero_relations_does_not_require_weight_for_homogeneous_inputs():
     J = BasisOperator("J_zero_relation_no_weight", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
     jj = NO(J, J)
     expressions = [jj, 2 * jj, d(J)]
 
@@ -344,7 +382,7 @@ def test_list_zero_relations_avoids_basis_enumeration():
     J = BasisOperator("J_zero_relation_local", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
 
     def fail_basis(*args, **kwargs):
         raise AssertionError("basis() should not be called for local relation checks")
@@ -361,7 +399,7 @@ def test_list_zero_relations_handles_dependence_chain_with_compressed_coordinate
     J = BasisOperator("J_zero_relation_chain", conformal_weight=1)
     Bosonic(J)
 
-    basis = LocalOperatorBasis([J], max_weight=2)
+    basis = LocalOperatorBasis([J])
     jj = NO(J, J)
     dj = d(J)
     expressions = [jj, dj, jj + dj, 3 * jj - 2 * dj]
@@ -374,6 +412,112 @@ def test_list_zero_relations_handles_dependence_chain_with_compressed_coordinate
         assert basis.canonicalize(relation["relation"]) == 0
 
 
+def test_list_independent_ops_uses_wolfram_precanonicalization_when_available(
+    monkeypatch,
+):
+    J = BasisOperator("J_list_indep_wolfram_pre", conformal_weight=1)
+    Bosonic(J)
+
+    basis = LocalOperatorBasis([J])
+    expressions = [2 * NO(J, J), NO(J, J), d(J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_use_wolfram_precanonicalization",
+        lambda: True,
+    )
+
+    calls: list[list[object]] = []
+
+    def fake_batch(exprs):
+        calls.append(list(exprs))
+        return [NO(J, J), NO(J, J), d(J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_batch_wolfram_precanonicalize",
+        fake_batch,
+    )
+
+    independent = list_independent_ops(expressions, basis, weight=2)
+
+    assert calls == [[d(J), 2 * NO(J, J), NO(J, J)]]
+    assert independent == [d(J), NO(J, J)]
+
+
+def test_list_zero_relations_uses_wolfram_precanonicalization_when_available(
+    monkeypatch,
+):
+    J = BasisOperator("J_zero_relation_wolfram_pre", conformal_weight=1)
+    Bosonic(J)
+
+    basis = LocalOperatorBasis([J])
+    jj = NO(J, J)
+    expressions = [jj, 2 * jj, d(J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_use_wolfram_precanonicalization",
+        lambda: True,
+    )
+
+    calls: list[list[object]] = []
+
+    def fake_batch(exprs):
+        calls.append(list(exprs))
+        return [jj, jj, d(J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_batch_wolfram_precanonicalize",
+        fake_batch,
+    )
+
+    relations = list_zero_relations(expressions, basis, weight=2)
+
+    assert calls == [[jj, 2 * jj, d(J)]]
+    assert len(relations) == 1
+    assert relations[0]["coefficients"] == [-1, 1, 0]
+
+
+def test_independent_under_realization_uses_wolfram_precanonicalization_when_available(
+    monkeypatch,
+):
+    J = BasisOperator("J_realize_indep_wolfram_pre", conformal_weight=1)
+    Bosonic(J)
+
+    W = RealizedGenerator("W_realize_indep_wolfram_pre", realization=NO(J, J))
+    free_field_basis = LocalOperatorBasis([J])
+    expressions = [W, NO(J, J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_use_wolfram_precanonicalization",
+        lambda: True,
+    )
+
+    calls: list[list[object]] = []
+
+    def fake_batch(exprs):
+        calls.append(list(exprs))
+        return [NO(J, J), NO(J, J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_batch_wolfram_precanonicalize",
+        fake_batch,
+    )
+
+    independent = independent_under_realization(
+        expressions,
+        free_field_basis=free_field_basis,
+        weight=2,
+    )
+
+    assert calls == [[NO(J, J), NO(J, J)]]
+    assert len(independent) == 1
+
+
 def test_sparse_terms_distributes_symbolic_scalars_over_operator_sums():
     b = BasisOperator("b_sparse_expand", fermionic=True, conformal_weight=sp.Integer(2))
     c = BasisOperator(
@@ -381,7 +525,7 @@ def test_sparse_terms_distributes_symbolic_scalars_over_operator_sums():
     )
     Bosonic(b, c)
 
-    canonicalizer = LocalOperatorBasis([b, c], max_weight=3, max_occurence=4)
+    canonicalizer = LocalOperatorBasis([b, c], max_occurence=4)
     x = NO(b, c)
     y = NO(b, d(c))
     a0, a1 = sp.symbols("a0:2")
@@ -399,7 +543,7 @@ def test_local_operator_basis_list_zero_relations_uses_default_max_occurence():
     phi = BasisOperator("phi_zero_relation", conformal_weight=0)
     Bosonic(phi)
 
-    basis = LocalOperatorBasis([phi], max_weight=1, max_occurence=1)
+    basis = LocalOperatorBasis([phi], max_occurence=1)
     expr = NO(phi, d(phi))
     expressions = [d(phi), expr, 2 * expr]
 
@@ -418,7 +562,7 @@ def test_independent_under_realization_filters_dependent_abstract_basis():
     Bosonic(J)
 
     W = RealizedGenerator("W_realize_indep", realization=NO(J, J))
-    free_field_basis = LocalOperatorBasis([J], max_weight=2)
+    free_field_basis = LocalOperatorBasis([J])
 
     expressions = [W, NO(J, J)]
     independent = independent_under_realization(
@@ -434,7 +578,7 @@ def test_independent_under_realization_filters_dependent_abstract_basis():
 def test_local_operator_basis_allows_nonpositive_fermionic_atoms_without_recursion():
     c = BasisOperator("c_basis_nonpositive", fermionic=True, conformal_weight=-1)
 
-    basis = LocalOperatorBasis([c], max_weight=1, max_occurence=0)
+    basis = LocalOperatorBasis([c], max_occurence=0)
     weight_one_basis = basis.list(1)
 
     assert d(c, 2) in weight_one_basis
@@ -446,7 +590,7 @@ def test_local_operator_basis_requires_max_occurence_for_nonpositive_generators(
     Bosonic(phi)
 
     with pytest.raises(ValueError) as exc_info:
-        LocalOperatorBasis([phi], max_weight=1)
+        LocalOperatorBasis([phi])
 
     assert "max_occurence" in str(exc_info.value)
 
@@ -455,7 +599,7 @@ def test_local_operator_basis_requires_max_occurence_for_negative_fermionic_gene
     c = BasisOperator("c_basis_requires_cutoff", fermionic=True, conformal_weight=-1)
 
     with pytest.raises(ValueError) as exc_info:
-        LocalOperatorBasis([c], max_weight=1)
+        LocalOperatorBasis([c])
 
     assert "max_occurence" in str(exc_info.value)
 
@@ -464,7 +608,7 @@ def test_local_operator_basis_truncates_weight_zero_bosonic_atoms_with_max_occur
     phi = BasisOperator("phi_basis_zero_boson", conformal_weight=0)
     Bosonic(phi)
 
-    basis = LocalOperatorBasis([phi], max_weight=1, max_occurence=2)
+    basis = LocalOperatorBasis([phi], max_occurence=2)
 
     weight_zero_basis = basis.list(0, max_occurence=2)
     weight_one_basis = basis.list(1, max_occurence=1)
@@ -480,7 +624,7 @@ def test_local_operator_basis_zero_max_occurence_keeps_only_vacuum_sector():
     phi = BasisOperator("phi_basis_zero_cutoff", conformal_weight=0)
     Bosonic(phi)
 
-    basis = LocalOperatorBasis([phi], max_weight=1, max_occurence=0)
+    basis = LocalOperatorBasis([phi], max_occurence=0)
 
     assert basis.list(0) == [One]
     assert basis.list(1) == [d(phi)]
@@ -490,7 +634,7 @@ def test_local_operator_basis_rejects_invalid_max_occurence():
     phi = BasisOperator("phi_basis_bad_cutoff", conformal_weight=0)
     Bosonic(phi)
 
-    basis = LocalOperatorBasis([phi], max_weight=0, max_occurence=0)
+    basis = LocalOperatorBasis([phi], max_occurence=0)
 
     with pytest.raises(ValueError):
         basis.list(0, max_occurence=-1)
@@ -503,7 +647,7 @@ def test_coordinates_supports_max_occurence_for_weight_zero_bosonic_atoms():
     phi = BasisOperator("phi_basis_coords_zero", conformal_weight=0)
     Bosonic(phi)
 
-    basis = LocalOperatorBasis([phi], max_weight=1, max_occurence=1)
+    basis = LocalOperatorBasis([phi], max_occurence=1)
     expr = basis.canonicalize(NO(phi, d(phi)))
 
     coords = basis.coordinates(expr, weight=1)
@@ -521,8 +665,8 @@ def test_realized_coordinates_supports_max_occurence_for_zero_weight_free_fields
     Jplus = RealizedGenerator("Jplus_realized_zero_weight", realization=beta)
     Bosonic(Jplus)
 
-    abstract_basis = LocalOperatorBasis([Jplus], max_weight=2)
-    free_field_basis = LocalOperatorBasis([beta, gamma], max_weight=2, max_occurence=1)
+    abstract_basis = LocalOperatorBasis([Jplus])
+    free_field_basis = LocalOperatorBasis([beta, gamma], max_occurence=1)
 
     expr = NO(Jplus, gamma)
 
@@ -545,8 +689,8 @@ def test_realized_coordinates_work_for_bc_free_field_ambient_basis():
         conformal_weight=2,
     )
 
-    abstract_basis = LocalOperatorBasis([T], max_weight=4)
-    free_field_basis = LocalOperatorBasis([b, c], max_weight=4, max_occurence=0)
+    abstract_basis = LocalOperatorBasis([T])
+    free_field_basis = LocalOperatorBasis([b, c], max_occurence=0)
 
     expr = abstract_basis.list(4)[0]
     coords = realized_coordinates(expr, free_field_basis, weight=4)
@@ -570,7 +714,7 @@ def test_local_operator_basis_allows_repeated_negative_bosonic_atoms_up_to_max_o
     )
     Bosonic(beta, gamma)
 
-    basis = LocalOperatorBasis([b, c, beta, gamma], max_weight=4, max_occurence=6)
+    basis = LocalOperatorBasis([b, c, beta, gamma], max_occurence=6)
     expr = NO(c, NO(d(beta, 3), NO(beta, NO(gamma, gamma))))
 
     canonical = basis.canonicalize(expr)
@@ -585,7 +729,7 @@ def test_local_operator_basis_allows_repeated_negative_bosonic_atoms_up_to_max_o
 def test_local_operator_basis_still_excludes_repeated_fermionic_single_letter_atoms():
     c = BasisOperator("c_basis_repeated_fermion", fermionic=True, conformal_weight=-1)
 
-    basis = LocalOperatorBasis([c], max_weight=0, max_occurence=3)
+    basis = LocalOperatorBasis([c], max_occurence=3)
 
     assert basis.list(0) == [One]
     assert basis.canonicalize(NO(c, c)) == 0

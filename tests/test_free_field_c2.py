@@ -18,7 +18,7 @@ def test_identity_realization_backend_matches_canonicalizer_interface():
     T = BasisOperator("T_identity_backend", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     backend = IdentityRealizationBackend(basis)
 
     assert isinstance(backend, RealizationBackend)
@@ -30,7 +30,7 @@ def test_derivative_killing_backend_removes_derivative_terms_in_quotient():
     T = BasisOperator("T_derivative_backend", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     backend = DerivativeKillingRealizationBackend(basis)
 
     assert backend.quotient_normal_form(d(T)) == 0
@@ -43,7 +43,7 @@ def test_free_field_c2_reducer_falls_back_to_generic_reducer_by_default():
     T = BasisOperator("T_free_field_fallback", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     generic = GenericC2Reducer(basis)
     reducer = FreeFieldC2Reducer(basis)
 
@@ -58,7 +58,7 @@ def test_derivative_killing_free_field_reducer_uses_backend_rule_before_fallback
     T = BasisOperator("T_derivative_ff", conformal_weight=2)
     Bosonic(T)
 
-    basis = LocalOperatorBasis([T], stress_tensor=T, max_weight=5)
+    basis = LocalOperatorBasis([T], stress_tensor=T)
     reducer = DerivativeKillingFreeFieldC2Reducer(basis)
 
     assert isinstance(reducer, AbstractC2Reducer)
