@@ -7,7 +7,7 @@ import os
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Iterable, Set
+from typing import Any, Dict, Iterable, Mapping, Sequence, Set
 
 import sympy as sp
 from sympy import Add, Mul
@@ -22,7 +22,6 @@ from .operators import (
     Operator,
 )
 from .registry import ope_registry
-
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _WOLFRAM_WRAPPER = _REPO_ROOT / "OPEdefs" / "OPEdefs.wls"
@@ -50,13 +49,21 @@ def evaluate_expr(expr: Any) -> Any:
     return _run_eval(expr)
 
 
+def evaluate_exprs(exprs: Sequence[Any]) -> list[Any]:
+    return _run_eval_list(exprs, operation="EVAL_LIST")
+
+
+def canonicalize_exprs(exprs: Sequence[Any]) -> list[Any]:
+    return _run_eval_list(exprs, operation="CANONICALIZE_LIST")
+
+
 def simplify_expr(expr: Any) -> Any:
     from .backend import compute_backend
     from .simplify import simplify as sympy_simplify
 
     with compute_backend("sympy"):
         evaluated = _run_eval(expr)
-        return sympy_simplify(evaluated)
+        return _simplify_nested_structure(evaluated, sympy_simplify)
 
 
 def _run_operation(operation: str, left: Any, right: Any) -> Any:
@@ -78,10 +85,28 @@ def _run_eval(expr: Any) -> Any:
     env = {
         "PYOPE_WL_OPERATION": "EVAL",
         "PYOPE_WL_REGISTRY": _encode_registry_state(),
-        "PYOPE_WL_EXPR": _encode_expr(expr),
+        "PYOPE_WL_EXPR": _encode_value(expr),
         "PYOPE_WL_OPERATORS": ",".join(sorted(operator_names)),
     }
     return _invoke_wolfram(script_path, env, operator_names)
+
+
+def _run_eval_list(exprs: Sequence[Any], operation: str) -> list[Any]:
+    script_path = str(_WOLFRAM_WRAPPER)
+    expr_list = list(exprs)
+    operator_names = _collect_protocol_operator_names(expr_list)
+    env = {
+        "PYOPE_WL_OPERATION": operation,
+        "PYOPE_WL_REGISTRY": _encode_registry_state(),
+        "PYOPE_WL_EXPR_LIST": _encode_wolfram_expr_list(expr_list),
+        "PYOPE_WL_OPERATORS": ",".join(sorted(operator_names)),
+    }
+    result = _invoke_wolfram(script_path, env, operator_names)
+    if not isinstance(result, list):
+        raise WolframBackendError(
+            f"Expected list result from Wolfram operation {operation}, got {type(result)!r}"
+        )
+    return result
 
 
 def _invoke_wolfram(
@@ -150,8 +175,31 @@ def _encode_ope_data(ope_data: OPEData) -> str:
     poles = []
     max_pole = ope_data.max_pole
     for order in range(max_pole, 0, -1):
-        poles.append(_encode_expr(ope_data.pole(order)))
+        poles.append(_encode_value(ope_data.pole(order)))
     return "MakeOPE[{" + ", ".join(poles) + "}]"
+
+
+def _encode_value(value: Any) -> str:
+    if isinstance(value, list):
+        return "{" + ", ".join(_encode_value(item) for item in value) + "}"
+    if isinstance(value, tuple):
+        return "PyTuple[{" + ", ".join(_encode_value(item) for item in value) + "}]"
+    if isinstance(value, Mapping):
+        entries = []
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise WolframBackendError(
+                    "Wolfram backend only supports dict containers with string keys"
+                )
+            entries.append(
+                "{" + _encode_string_literal(key) + ", " + _encode_value(item) + "}"
+            )
+        return "PyDict[{" + ", ".join(entries) + "}]"
+    if isinstance(value, OPEData):
+        return _encode_ope_data(value)
+    if isinstance(value, str):
+        return _encode_string_literal(value)
+    return _encode_expr(value)
 
 
 def _encode_expr(expr: Any) -> str:
@@ -173,9 +221,9 @@ def _encode_expr(expr: Any) -> str:
     if isinstance(expr, BasisOperator):
         return _encode_symbol_name(expr.name)
     if isinstance(expr, DerivativeOperator):
-        return f"Derivative[{expr.order}][{_encode_expr(expr.base)}]"
+        return f"Derivative[{expr.order}][{_encode_value(expr.base)}]"
     if isinstance(expr, NormalOrderedOperator):
-        return f"NO[{_encode_expr(expr.left)}, {_encode_expr(expr.right)}]"
+        return f"NO[{_encode_value(expr.left)}, {_encode_value(expr.right)}]"
     if isinstance(expr, sp.Symbol):
         return _encode_symbol_name(expr.name)
     if isinstance(expr, Add):
@@ -186,22 +234,74 @@ def _encode_expr(expr: Any) -> str:
     raise WolframBackendError(f"Unsupported expression for Wolfram backend: {expr!r}")
 
 
+def _encode_expr_list(exprs: Sequence[Any]) -> str:
+    return "[" + ", ".join(_encode_value(expr) for expr in exprs) + "]"
+
+
+def _encode_wolfram_expr_list(exprs: Sequence[Any]) -> str:
+    return "{" + ", ".join(_encode_value(expr) for expr in exprs) + "}"
+
+
+def chunk_exprs_for_wolfram(
+    exprs: Sequence[Any], max_items: int = 32, max_chars: int = 100_000
+) -> list[list[Any]]:
+    if max_items <= 0:
+        raise ValueError("max_items must be positive")
+    if max_chars <= 0:
+        raise ValueError("max_chars must be positive")
+
+    chunks: list[list[Any]] = []
+    current_chunk: list[Any] = []
+    current_chars = 2
+
+    for expr in exprs:
+        encoded = _encode_value(expr)
+        encoded_len = len(encoded)
+        if encoded_len + 2 > max_chars:
+            raise WolframBackendError(
+                "Single expression exceeds Wolfram transport size limit "
+                f"({encoded_len} chars > {max_chars})"
+            )
+
+        separator_len = 2 if current_chunk else 0
+        would_exceed_items = len(current_chunk) >= max_items
+        would_exceed_chars = current_chars + separator_len + encoded_len > max_chars
+        if current_chunk and (would_exceed_items or would_exceed_chars):
+            chunks.append(current_chunk)
+            current_chunk = []
+            current_chars = 2
+            separator_len = 0
+
+        current_chunk.append(expr)
+        current_chars += separator_len + encoded_len
+
+    if current_chunk:
+        chunks.append(current_chunk)
+
+    return chunks
+
+
 def _encode_mul(expr: Mul) -> str:
     if not expr.has(Operator):
-        return "(" + " * ".join(_encode_expr(arg) for arg in expr.args) + ")"
+        return "(" + " * ".join(_encode_value(arg) for arg in expr.args) + ")"
 
     assert_no_illegal_operator_mul(expr, context="wolfram_backend.encode")
     coeff, op = extract_scalar_operator(expr)
 
     if op == 1:
-        return _encode_expr(coeff)
+        return _encode_value(coeff)
     if coeff == 1:
-        return _encode_expr(op)
-    return f"({_encode_expr(coeff)} * {_encode_expr(op)})"
+        return _encode_value(op)
+    return f"({_encode_value(coeff)} * {_encode_value(op)})"
 
 
 def _encode_symbol_name(name: str) -> str:
     return name
+
+
+def _encode_string_literal(value: str) -> str:
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return '"' + escaped + '"'
 
 
 def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
@@ -240,6 +340,8 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
         "MakeOPE": MakeOPE,
         "NO": decoded_no,
         "One": One,
+        "PyDict": lambda items: dict(items),
+        "PyTuple": lambda items: tuple(items),
         "Zero": Zero,
         "dn": decoded_dn,
     }
@@ -260,7 +362,7 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
     for name in protocol_operator_names:
         names.setdefault(name, BasisOperator(name))
 
-    reserved = {"MakeOPE", "NO", "One", "Zero", "dn"}
+    reserved = {"MakeOPE", "NO", "One", "PyDict", "PyTuple", "Zero", "dn"}
     for token in set(re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", payload)):
         if token not in names and token not in reserved:
             names[token] = sp.Symbol(token)
@@ -280,6 +382,14 @@ def _collect_protocol_operator_names(exprs: Iterable[Any]) -> Set[str]:
     names: Set[str] = set()
 
     def visit(expr: Any) -> None:
+        if isinstance(expr, list | tuple):
+            for item in expr:
+                visit(item)
+            return
+        if isinstance(expr, Mapping):
+            for item in expr.values():
+                visit(item)
+            return
         if isinstance(expr, BasisOperator):
             names.add(expr.name)
             return
@@ -342,6 +452,11 @@ def _eval_protocol_ast(node: ast.AST, names: Dict[str, Any], payload: str) -> An
     if isinstance(node, ast.Tuple):
         return tuple(_eval_protocol_ast(elt, names, payload) for elt in node.elts)
 
+    if isinstance(node, ast.Dict):
+        keys = [_eval_protocol_ast(key, names, payload) for key in node.keys]
+        values = [_eval_protocol_ast(value, names, payload) for value in node.values]
+        return dict(zip(keys, values, strict=True))
+
     if isinstance(node, ast.Constant):
         if isinstance(node.value, int):
             return node.value
@@ -349,6 +464,8 @@ def _eval_protocol_ast(node: ast.AST, names: Dict[str, Any], payload: str) -> An
             rational = sp.nsimplify(node.value)
             if isinstance(rational, (sp.Integer, sp.Rational)):
                 return rational
+            return node.value
+        if isinstance(node.value, str):
             return node.value
         raise WolframBackendError(f"Unsupported constant in Wolfram payload: {payload}")
 
@@ -386,3 +503,16 @@ def _is_operator_like(value: Any) -> bool:
     return isinstance(value, Operator) or (
         isinstance(value, sp.Expr) and value.has(Operator)
     )
+
+
+def _simplify_nested_structure(value: Any, simplify_fn: Any) -> Any:
+    if isinstance(value, list):
+        return [_simplify_nested_structure(item, simplify_fn) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_simplify_nested_structure(item, simplify_fn) for item in value)
+    if isinstance(value, dict):
+        return {
+            key: _simplify_nested_structure(item, simplify_fn)
+            for key, item in value.items()
+        }
+    return simplify_fn(value)

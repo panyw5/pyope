@@ -13,7 +13,9 @@ __author__ = "PyOPE Contributors"
 # 已实现的模块
 from .api import NO, NO_product, OPE, MakeOPE, bracket, normal_product
 from .backend import compute_backend, get_compute_backend, set_compute_backend
-from .wolfram_backend import evaluate_expr as wolfram_evaluate_expr
+from .wolfram_backend import canonicalize_exprs as wolfram_canonicalize_exprs
+from .wolfram_backend import evaluate_expr as evaluate_with_wolfram
+from .wolfram_backend import evaluate_exprs as evaluate_many_with_wolfram
 from .wolfram_backend import simplify_expr as simplify_with_wolfram
 from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
 
@@ -50,7 +52,7 @@ from .local_operator import (
     extract_scalar_operator,
     get_operator_parity,
     is_local_operator,
-    simplify_operator_expr,
+    simplify_with_sympy,
 )
 from .null_search import C2NullSearcher as QuotientC2NullSearcher
 from .null_search import NullSearchResult
@@ -124,7 +126,7 @@ __all__ = [
     "is_local_operator",
     "extract_scalar_operator",
     "get_operator_parity",
-    "simplify_operator_expr",
+    "simplify_with_sympy",
     "collect_operator_terms",
     # Constants
     "ConstantOperator",
@@ -193,7 +195,9 @@ __all__ = [
     "get_compute_backend",
     "set_compute_backend",
     "compute_backend",
-    "wolfram_evaluate_expr",
+    "evaluate_many_with_wolfram",
+    "evaluate_with_wolfram",
+    "wolfram_canonicalize_exprs",
     "simplify_with_wolfram",
     # Simplification
     "simplify",

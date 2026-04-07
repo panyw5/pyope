@@ -8,6 +8,7 @@ Quiet[
 ClearAll[
   PySymbolName,
   PyEncode,
+  PyEncodeAssociation,
   PyEncodeProduct,
   PyProtocolError,
   PyScalarNormalize,
@@ -15,6 +16,11 @@ ClearAll[
   PyOperatorSymbolQ,
   PyRegisteredOperatorQ,
   PyEvalExpr,
+  PyEvalExprList,
+  PyEvaluateValue,
+  PyCanonicalizeExpr,
+  PyCanonicalizeExprList,
+  PyCanonicalizeValue,
   PyMain
 ];
 
@@ -23,13 +29,15 @@ PyProtocolError[expr_] := Throw[
   "PYOPE_PROTOCOL_ERROR"
 ];
 
-PyRegisteredOperatorQ[s_Symbol] := Module[{raw, names},
+PyRegisteredOperatorQ[expr_] := Module[{raw, names, name},
   raw = Environment["PYOPE_WL_OPERATORS"];
   names = If[StringLength[raw] > 0, StringSplit[raw, ","], {}];
-  MemberQ[names, SymbolName[Unevaluated[s]]]
+  name = ToString[Unevaluated[expr], InputForm];
+  MemberQ[names, name]
 ];
 
-PyOperatorSymbolQ[s_Symbol] := PyRegisteredOperatorQ[s] || Head[Unevaluated[s]] === Operator;
+PyOperatorSymbolQ[expr_] := PyRegisteredOperatorQ[expr] || Head[Unevaluated[expr]] === Operator;
+PyDict[list_List] := PyDict[Association[Rule @@@ list]];
 
 PyNonScalarQ[expr_] := MatchQ[expr, _NO | Derivative[_Integer][_]];
 PyNonScalarQ[expr_Symbol] := PyOperatorSymbolQ[expr];
@@ -44,11 +52,14 @@ PyScalarNormalize[expr_] := FixedPoint[
   expr
 ];
 
-PySymbolName[s_Symbol] := SymbolName[Unevaluated[s]];
+PySymbolName[expr_] := ToString[Unevaluated[expr], InputForm];
 
 PyEncode[Derivative[n_Integer][x_]] := "dn(" <> ToString[n, InputForm] <> ", " <> PyEncode[x] <> ")";
 PyEncode[NO[a_, b_]] := "NO(" <> PyEncode[a] <> ", " <> PyEncode[b] <> ")";
 PyEncode[OPEData[a_List]] := "MakeOPE([" <> StringRiffle[PyEncode /@ a, ", "] <> "])";
+PyEncode[PyTuple[list_List]] := "PyTuple([" <> StringRiffle[PyEncode /@ list, ", "] <> "])";
+PyEncode[PyDict[assoc_Association]] := PyEncodeAssociation[assoc];
+PyEncode[list_List] := "[" <> StringRiffle[PyEncode /@ list, ", "] <> "]";
 PyEncode[expr_Plus] := "(" <> StringRiffle[PyEncode /@ (List @@ expr), " + "] <> ")";
 PyEncode[expr_Times] := PyEncodeProduct[List @@ expr, expr];
 PyEncode[expr_Rational] := "(" <> ToString[Numerator[expr], InputForm] <> "/" <> ToString[Denominator[expr], InputForm] <> ")";
@@ -61,8 +72,18 @@ PyEncode[expr_Real] := Module[{r = Rationalize[expr, 0]},
 ];
 PyEncode[0] := "Zero";
 PyEncode[One] := "One";
+PyEncode[str_String] := ToString[InputForm[str]];
+PyEncode[expr_ /; PyOperatorSymbolQ[Unevaluated[expr]]] := PySymbolName[Unevaluated[expr]];
 PyEncode[expr_Symbol] := PySymbolName[expr];
 PyEncode[expr_] := PyProtocolError[expr];
+
+PyEncodeAssociation[assoc_Association] := Module[{items},
+  items = KeyValueMap[
+    "(" <> PyEncode[#1] <> ", " <> PyEncode[#2] <> ")" &,
+    assoc
+  ];
+  "PyDict([" <> StringRiffle[items, ", "] <> "])"
+];
 
 PyEncodeProduct[factors_List, original_] := Module[{nonscalar, scalarFactors, nonscalarFactor},
   nonscalar = Select[factors, PyNonScalarQ];
@@ -84,7 +105,35 @@ PyEvalExpr[] := Module[{exprText, expr},
   exprText = Environment["PYOPE_WL_EXPR"];
   If[StringLength[exprText] == 0, PyProtocolError["missing PYOPE_WL_EXPR"]];
   expr = ToExpression[exprText];
-  Expand[expr]
+  PyEvaluateValue[expr]
+];
+
+PyEvaluateValue[value_List] := PyEvaluateValue /@ value;
+PyEvaluateValue[PyTuple[list_List]] := PyTuple[PyEvaluateValue /@ list];
+PyEvaluateValue[PyDict[assoc_Association]] := PyDict[Map[PyEvaluateValue, assoc]];
+PyEvaluateValue[expr_] := Expand[expr];
+
+PyEvalExprList[] := Module[{exprText, exprs},
+  exprText = Environment["PYOPE_WL_EXPR_LIST"];
+  If[StringLength[exprText] == 0, PyProtocolError["missing PYOPE_WL_EXPR_LIST"]];
+  exprs = ToExpression[exprText];
+  If[Head[exprs] =!= List, PyProtocolError["PYOPE_WL_EXPR_LIST must decode to List"]];
+  PyEvaluateValue /@ exprs
+];
+
+PyCanonicalizeExpr[expr_] := OPESimplify[Expand[expr]];
+
+PyCanonicalizeValue[value_List] := PyCanonicalizeValue /@ value;
+PyCanonicalizeValue[PyTuple[list_List]] := PyTuple[PyCanonicalizeValue /@ list];
+PyCanonicalizeValue[PyDict[assoc_Association]] := PyDict[Map[PyCanonicalizeValue, assoc]];
+PyCanonicalizeValue[expr_] := PyCanonicalizeExpr[expr];
+
+PyCanonicalizeExprList[] := Module[{exprText, exprs},
+  exprText = Environment["PYOPE_WL_EXPR_LIST"];
+  If[StringLength[exprText] == 0, PyProtocolError["missing PYOPE_WL_EXPR_LIST"]];
+  exprs = ToExpression[exprText];
+  If[Head[exprs] =!= List, PyProtocolError["PYOPE_WL_EXPR_LIST must decode to List"]];
+  PyCanonicalizeValue /@ exprs
 ];
 
 PyMain[] := Module[{op, left, right, result, encoded},
@@ -93,7 +142,9 @@ PyMain[] := Module[{op, left, right, result, encoded},
     PyApplyRegistry[];
     result = Switch[op,
       "EVAL", PyEvalExpr[],
+      "EVAL_LIST", PyEvalExprList[],
       "EXPAND", PyEvalExpr[],
+      "CANONICALIZE_LIST", PyCanonicalizeExprList[],
       _,
       left = ToExpression[Environment["PYOPE_WL_LEFT"]];
       right = ToExpression[Environment["PYOPE_WL_RIGHT"]];

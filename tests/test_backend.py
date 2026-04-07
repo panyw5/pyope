@@ -5,19 +5,26 @@ import sympy as sp
 
 from pyope import (
     BasisOperator,
+    Bosonic,
     MakeOPE,
     NO,
     OPE,
     One,
     dn,
+    evaluate_many_with_wolfram,
+    evaluate_with_wolfram,
     simplify_with_wolfram,
-    wolfram_evaluate_expr,
+    wolfram_canonicalize_exprs,
     set_compute_backend,
     get_compute_backend,
     compute_backend,
 )
 from pyope.backend import SUPPORTED_BACKENDS
-from pyope.wolfram_backend import WolframBackendError, _decode_expr
+from pyope.wolfram_backend import (
+    WolframBackendError,
+    _decode_expr,
+    chunk_exprs_for_wolfram,
+)
 
 
 def test_default_backend_is_sympy():
@@ -120,6 +127,105 @@ def test_wolfram_decoder_preserves_derivative_protocol_shape():
     assert repr(result) == "d^2(T)"
 
 
+def test_wolfram_decoder_supports_nested_container_payloads():
+    T = BasisOperator("T")
+    J = BasisOperator("J")
+
+    result = _decode_expr(
+        'PyDict([("ops", [NO(T, J), PyTuple([dn(1, T), "tag"])])])',
+        {"T", "J"},
+    )
+
+    assert result == {"ops": [NO(T, J), (dn(1, T), "tag")]}
+
+
+def test_chunk_exprs_for_wolfram_respects_item_limit():
+    exprs = [sp.Integer(i) for i in range(5)]
+
+    chunks = chunk_exprs_for_wolfram(exprs, max_items=2, max_chars=100)
+
+    assert chunks == [[0, 1], [2, 3], [4]]
+
+
+def test_chunk_exprs_for_wolfram_raises_for_oversized_expression():
+    x = sp.Symbol("x" * 40)
+
+    with pytest.raises(WolframBackendError, match="transport size limit"):
+        chunk_exprs_for_wolfram([x], max_items=4, max_chars=20)
+
+
+@pytest.mark.skipif(
+    shutil.which("wolframscript") is None, reason="wolframscript not installed"
+)
+def test_wolfram_batch_eval_round_trips_expression_lists():
+    T = BasisOperator("Tbatcheval")
+    J = BasisOperator("Jbatcheval")
+
+    exprs = [NO(T, J), dn(1, T) + J]
+
+    result = evaluate_many_with_wolfram(exprs)
+
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert repr(result[0]) == "NO(Tbatcheval, Jbatcheval)"
+    assert result[1] == J + dn(1, T)
+
+
+@pytest.mark.skipif(
+    shutil.which("wolframscript") is None, reason="wolframscript not installed"
+)
+def test_wolfram_eval_round_trips_nested_containers():
+    T = BasisOperator("Tnested")
+    J = BasisOperator("Jnested")
+
+    payload = {
+        "ops": [NO(T, J), (dn(1, T), J + dn(1, T))],
+        "meta": {"label": "trial"},
+    }
+
+    result = evaluate_with_wolfram(payload)
+
+    assert result["ops"][0] == NO(T, J)
+    assert result["ops"][1] == (dn(1, T), J + dn(1, T))
+    assert result["meta"] == {"label": "trial"}
+
+
+@pytest.mark.skipif(
+    shutil.which("wolframscript") is None, reason="wolframscript not installed"
+)
+def test_wolfram_simplify_round_trips_nested_containers():
+    T = BasisOperator("Tsimplify_nested")
+    J = BasisOperator("Jsimplify_nested")
+    Bosonic(T, J)
+
+    payload = {
+        "ops": [NO(T, J) + NO(T, J), (NO(T, J) + NO(T, J), NO(T, J))],
+        "meta": {"label": "trial"},
+    }
+
+    result = simplify_with_wolfram(payload)
+
+    assert result == {
+        "ops": [2 * NO(T, J), (2 * NO(T, J), NO(T, J))],
+        "meta": {"label": "trial"},
+    }
+
+
+@pytest.mark.skipif(
+    shutil.which("wolframscript") is None, reason="wolframscript not installed"
+)
+def test_wolfram_batch_canonicalize_reorders_normal_products():
+    A = BasisOperator("Abatchcanon", conformal_weight=1)
+    B = BasisOperator("Bbatchcanon", conformal_weight=1)
+    Bosonic(A, B)
+
+    result = wolfram_canonicalize_exprs([NO(B, A), NO(A, B)])
+
+    assert len(result) == 2
+    assert result[0] == NO(A, B)
+    assert result[1] == NO(A, B)
+
+
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
@@ -169,7 +275,7 @@ def test_wolfram_whole_expression_eval_preserves_nested_no_shape():
         + sp.Rational(2, 3) * NO(dn(1, T), NO(T, NO(T, J)))
     )
 
-    result = wolfram_evaluate_expr(expr)
+    result = evaluate_with_wolfram(expr)
 
     assert result != 0
     assert "NO(" in repr(result)
