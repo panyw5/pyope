@@ -157,11 +157,11 @@ def _batch_wolfram_precanonicalize(expressions: list[Any]) -> list[Any]:
     if not expressions:
         return []
 
-    from .wolfram_backend import canonicalize_exprs, chunk_exprs_for_wolfram
+    from .wolfram_backend import chunk_exprs_for_wolfram, simplify_expr
 
     canonicalized: list[Any] = []
     for chunk in chunk_exprs_for_wolfram(expressions):
-        canonicalized.extend(canonicalize_exprs(chunk))
+        canonicalized.extend(simplify_expr(chunk))
     return canonicalized
 
 
@@ -175,6 +175,12 @@ def _precanonicalize_expressions(expressions: Iterable[Any]) -> list[Any]:
 
 def _precanonicalize_expression(expr: Any) -> Any:
     return _precanonicalize_expressions([expr])[0]
+
+
+def _canonicalization_mode() -> str:
+    if _should_use_wolfram_precanonicalization():
+        return "wolfram-pre"
+    return get_compute_backend()
 
 
 def _precanonicalized_expression_lookup(expressions: Iterable[Any]) -> dict[Any, Any]:
@@ -747,6 +753,8 @@ def realize_and_simplify(expr: Any) -> Any:
     """Expand realized generators and canonicalize the resulting expression."""
     realized = realize(expr)
     precanonicalized = _precanonicalize_expression(realized)
+    if _should_use_wolfram_precanonicalization():
+        return _combine_like_terms_preserving_metadata(precanonicalized)
     return _combine_like_terms_preserving_metadata(simplify(precanonicalized))
 
 
@@ -773,16 +781,18 @@ def list_independent_ops(
     """Return a linearly independent subset via local canonical expansions."""
 
     context = SparseLinearContext(basis_builder)
-    processed_lookup = _precanonicalized_expression_lookup(
-        _ordered_unique_expressions(expressions)
-    )
+    use_wolfram_precanonicalization = _should_use_wolfram_precanonicalization()
+    processed_lookup: dict[Any, Any] = {}
+    if use_wolfram_precanonicalization:
+        processed_lookup = _precanonicalized_expression_lookup(
+            _ordered_unique_expressions(expressions)
+        )
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
-        processed = processed_lookup.get(expr, expr)
-        if processed is expr:
+        if not use_wolfram_precanonicalization:
             return context.sparse_terms(expr)
-        return _terms_from_precanonical_expression(processed)
+        return _terms_from_precanonical_expression(processed_lookup[expr])
 
     return _independent_from_vectors(expressions, vector_getter)
 
@@ -796,14 +806,16 @@ def list_zero_relations(
     """Return a basis of linear relations via local canonical expansions."""
 
     context = SparseLinearContext(basis_builder)
-    processed_lookup = _precanonicalized_expression_lookup(expressions)
+    use_wolfram_precanonicalization = _should_use_wolfram_precanonicalization()
+    processed_lookup: dict[Any, Any] = {}
+    if use_wolfram_precanonicalization:
+        processed_lookup = _precanonicalized_expression_lookup(expressions)
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
-        processed = processed_lookup.get(expr, expr)
-        if processed is expr:
+        if not use_wolfram_precanonicalization:
             return context.sparse_terms(expr)
-        return _terms_from_precanonical_expression(processed)
+        return _terms_from_precanonical_expression(processed_lookup[expr])
 
     return _zero_relations_from_vectors(expressions, vector_getter)
 
@@ -903,7 +915,11 @@ class LocalOperatorBasis:
 
     def canonicalize(self, expr: Any) -> Any:
         """Canonicalize an operator expression for basis comparisons."""
-        simplified = self._canonicalize_cached(expr, ope_registry.version)
+        simplified = self._canonicalize_cached(
+            expr,
+            ope_registry.version,
+            _canonicalization_mode(),
+        )
         combined = _combine_like_terms_preserving_metadata(simplified)
         if combined == 0:
             return Zero
@@ -911,9 +927,15 @@ class LocalOperatorBasis:
 
     @staticmethod
     @lru_cache(maxsize=None)
-    def _canonicalize_cached(expr: Any, registry_version: int) -> Any:
+    def _canonicalize_cached(
+        expr: Any, registry_version: int, canonicalization_mode: str
+    ) -> Any:
         del registry_version
-        return simplify(expr)
+        processed = expr
+        if canonicalization_mode == "wolfram-pre":
+            processed = _precanonicalize_expression(expr)
+            return processed
+        return simplify(processed)
 
     def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
         """Return sparse canonical coordinates without fixed-weight basis enumeration."""

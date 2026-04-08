@@ -296,6 +296,132 @@ def test_realize_and_simplify_uses_wolfram_precanonicalization_when_available(
     assert realized == 2 * NO(d(J), J)
 
 
+def test_batch_wolfram_precanonicalize_uses_simplify_expr_not_eval(monkeypatch):
+    A = BasisOperator("A_batch_precanonicalize_route", conformal_weight=1)
+    B = BasisOperator("B_batch_precanonicalize_route", conformal_weight=1)
+    Bosonic(A, B)
+
+    simplify_calls: list[list[object]] = []
+    eval_calls: list[object] = []
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_use_wolfram_precanonicalization",
+        lambda: True,
+    )
+
+    def fake_simplify_expr(value):
+        simplify_calls.append(list(value))
+        return [NO(A, B), NO(A, B)]
+
+    def fake_evaluate_expr(value):
+        eval_calls.append(value)
+        raise AssertionError("evaluate_expr should not be used for precanonicalization")
+
+    import pyope.wolfram_backend as wolfram_backend_module
+
+    monkeypatch.setattr(wolfram_backend_module, "simplify_expr", fake_simplify_expr)
+    monkeypatch.setattr(wolfram_backend_module, "evaluate_expr", fake_evaluate_expr)
+
+    result = operator_spaces_module._batch_wolfram_precanonicalize([NO(B, A), NO(A, B)])
+
+    assert simplify_calls == [[NO(B, A), NO(A, B)]]
+    assert eval_calls == []
+    assert result == [NO(A, B), NO(A, B)]
+
+
+def test_local_operator_basis_canonicalize_uses_wolfram_precanonicalization_when_available(
+    monkeypatch,
+):
+    A = BasisOperator("A_basis_canonicalize_wolfram_pre", conformal_weight=1)
+    B = BasisOperator("B_basis_canonicalize_wolfram_pre", conformal_weight=1)
+    Bosonic(A, B)
+
+    basis = LocalOperatorBasis([A, B])
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_use_wolfram_precanonicalization",
+        lambda: True,
+    )
+
+    calls: list[list[object]] = []
+
+    def fake_batch(exprs):
+        calls.append(list(exprs))
+        return [NO(A, B)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_batch_wolfram_precanonicalize",
+        fake_batch,
+    )
+
+    import pyope.wolfram_backend as wolfram_backend_module
+
+    monkeypatch.setattr(
+        wolfram_backend_module,
+        "evaluate_expr",
+        lambda value: (_ for _ in ()).throw(
+            AssertionError(
+                "evaluate_expr should not be called after Wolfram precanonicalization"
+            )
+        ),
+    )
+
+    canonical = basis.canonicalize(NO(B, A))
+
+    assert calls == [[NO(B, A)]]
+    assert canonical == NO(A, B)
+
+
+def test_local_operator_basis_coordinates_uses_wolfram_precanonicalization_when_available(
+    monkeypatch,
+):
+    A = BasisOperator("A_basis_coordinates_wolfram_pre", conformal_weight=1)
+    B = BasisOperator("B_basis_coordinates_wolfram_pre", conformal_weight=1)
+    Bosonic(A, B)
+
+    basis = LocalOperatorBasis([A, B])
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_use_wolfram_precanonicalization",
+        lambda: True,
+    )
+
+    calls: list[list[object]] = []
+
+    def fake_batch(exprs):
+        calls.append(list(exprs))
+        return [NO(A, B)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_batch_wolfram_precanonicalize",
+        fake_batch,
+    )
+
+    import pyope.wolfram_backend as wolfram_backend_module
+
+    monkeypatch.setattr(
+        wolfram_backend_module,
+        "evaluate_expr",
+        lambda value: (_ for _ in ()).throw(
+            AssertionError(
+                "evaluate_expr should not be called after Wolfram precanonicalization"
+            )
+        ),
+    )
+
+    coordinates = basis.coordinates(NO(B, A), weight=2)
+    ordered_basis = basis.list(2)
+    index = {op: i for i, op in enumerate(ordered_basis)}
+
+    assert calls == [[NO(B, A)]]
+    assert coordinates[index[NO(A, B)], 0] == 1
+
+
 def test_list_independent_ops_filters_dependent_basis_elements():
     J = BasisOperator("J_list_indep", conformal_weight=1)
     Bosonic(J)
