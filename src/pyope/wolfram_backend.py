@@ -45,12 +45,8 @@ def compute_no(left: Any, right: Any) -> Any:
     return _run_operation("NO", left, right)
 
 
-def expand_with_wolfram(expr: Any) -> Any:
+def simplify_with_wolfram(expr: Any) -> Any:
     return _run_eval(expr)
-
-
-def canonicalize_exprs(exprs: Sequence[Any]) -> list[Any]:
-    return _run_eval_list(exprs, operation="CANONICALIZE_LIST")
 
 
 def _run_operation(operation: str, left: Any, right: Any) -> Any:

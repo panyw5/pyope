@@ -147,15 +147,15 @@ def _ordered_unique_expressions(expressions: Iterable[Any]) -> list[Any]:
     return sorted(set(expressions), key=sp.srepr)
 
 
-def _should_expand_with_wolfram() -> bool:
+def _should_simplify_with_wolfram() -> bool:
     return (
         get_compute_backend() == "wolfram" and shutil.which("wolframscript") is not None
     )
 
 
 def _canonicalization_mode() -> str:
-    if _should_expand_with_wolfram():
-        return "wolfram-expand-then-simplify"
+    if _should_simplify_with_wolfram():
+        return "wolfram-simplify"
     return get_compute_backend()
 
 
@@ -722,14 +722,10 @@ def realize(expr: Any) -> Any:
 def realize_and_simplify(expr: Any) -> Any:
     """Expand realized generators and canonicalize the resulting expression."""
     realized = realize(expr)
-    if _should_expand_with_wolfram():
-        from .backend import compute_backend
-        from .wolfram_backend import expand_with_wolfram
+    if _should_simplify_with_wolfram():
+        from .wolfram_backend import simplify_with_wolfram
 
-        expanded = expand_with_wolfram(realized)
-        with compute_backend("sympy"):
-            simplified = simplify(expanded)
-        return _combine_like_terms_preserving_metadata(simplified)
+        return _combine_like_terms_preserving_metadata(simplify_with_wolfram(realized))
     return _combine_like_terms_preserving_metadata(simplify(realized))
 
 
@@ -756,22 +752,20 @@ def list_independent_ops(
     """Return a linearly independent subset via local canonical expansions."""
 
     context = SparseLinearContext(basis_builder)
-    use_wolfram_precanonicalization = _should_expand_with_wolfram()
+    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
     processed_lookup: dict[Any, Any] = {}
     if use_wolfram_precanonicalization:
-        from .backend import compute_backend
-        from .wolfram_backend import chunk_exprs_for_wolfram, expand_with_wolfram
+        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
 
         ordered = _ordered_unique_expressions(expressions)
         canonicalized: list[Any] = []
         for chunk in chunk_exprs_for_wolfram(ordered):
-            expanded_chunk = expand_with_wolfram(chunk)
-            if not isinstance(expanded_chunk, list):
+            simplified_chunk = simplify_with_wolfram(chunk)
+            if not isinstance(simplified_chunk, list):
                 raise TypeError(
-                    "expand_with_wolfram must return a list for list inputs"
+                    "simplify_with_wolfram must return a list for list inputs"
                 )
-            with compute_backend("sympy"):
-                canonicalized.extend(simplify(item) for item in expanded_chunk)
+            canonicalized.extend(simplified_chunk)
         processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
@@ -792,22 +786,20 @@ def list_zero_relations(
     """Return a basis of linear relations via local canonical expansions."""
 
     context = SparseLinearContext(basis_builder)
-    use_wolfram_precanonicalization = _should_expand_with_wolfram()
+    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
     processed_lookup: dict[Any, Any] = {}
     if use_wolfram_precanonicalization:
-        from .backend import compute_backend
-        from .wolfram_backend import chunk_exprs_for_wolfram, expand_with_wolfram
+        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
 
         ordered = list(expressions)
         canonicalized: list[Any] = []
         for chunk in chunk_exprs_for_wolfram(ordered):
-            expanded_chunk = expand_with_wolfram(chunk)
-            if not isinstance(expanded_chunk, list):
+            simplified_chunk = simplify_with_wolfram(chunk)
+            if not isinstance(simplified_chunk, list):
                 raise TypeError(
-                    "expand_with_wolfram must return a list for list inputs"
+                    "simplify_with_wolfram must return a list for list inputs"
                 )
-            with compute_backend("sympy"):
-                canonicalized.extend(simplify(item) for item in expanded_chunk)
+            canonicalized.extend(simplified_chunk)
         processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
@@ -828,23 +820,21 @@ def independent_under_realization(
     """Return expressions that stay linearly independent after realization."""
 
     ordered = _ordered_unique_expressions(expressions)
-    use_wolfram_precanonicalization = _should_expand_with_wolfram()
+    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
     processed_lookup: dict[Any, Any] = {}
 
     if use_wolfram_precanonicalization and ordered:
-        from .backend import compute_backend
-        from .wolfram_backend import chunk_exprs_for_wolfram, expand_with_wolfram
+        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
 
         realized_exprs = [realize(expr) for expr in ordered]
         canonicalized: list[Any] = []
         for chunk in chunk_exprs_for_wolfram(realized_exprs):
-            expanded_chunk = expand_with_wolfram(chunk)
-            if not isinstance(expanded_chunk, list):
+            simplified_chunk = simplify_with_wolfram(chunk)
+            if not isinstance(simplified_chunk, list):
                 raise TypeError(
-                    "expand_with_wolfram must return a list for list inputs"
+                    "simplify_with_wolfram must return a list for list inputs"
                 )
-            with compute_backend("sympy"):
-                canonicalized.extend(simplify(item) for item in expanded_chunk)
+            canonicalized.extend(simplified_chunk)
         processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> sp.Matrix:
@@ -941,13 +931,10 @@ class LocalOperatorBasis:
         expr: Any, registry_version: int, canonicalization_mode: str
     ) -> Any:
         del registry_version
-        if canonicalization_mode == "wolfram-expand-then-simplify":
-            from .backend import compute_backend
-            from .wolfram_backend import expand_with_wolfram
+        if canonicalization_mode == "wolfram-simplify":
+            from .wolfram_backend import simplify_with_wolfram
 
-            expanded = expand_with_wolfram(expr)
-            with compute_backend("sympy"):
-                return simplify(expanded)
+            return simplify_with_wolfram(expr)
         return simplify(expr)
 
     def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:

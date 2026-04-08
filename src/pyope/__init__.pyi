@@ -82,8 +82,7 @@ from .simplify import (
     simplify,
 )
 from .wolfram_backend import (
-    canonicalize_exprs as wolfram_canonicalize_exprs,
-    expand_with_wolfram,
+    simplify_with_wolfram,
 )
 
 __version__: str
