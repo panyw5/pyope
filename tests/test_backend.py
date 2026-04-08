@@ -11,9 +11,8 @@ from pyope import (
     OPE,
     One,
     dn,
-    evaluate_many_with_wolfram,
-    evaluate_with_wolfram,
-    simplify_with_wolfram,
+    expand_with_wolfram,
+    simplify,
     wolfram_canonicalize_exprs,
     set_compute_backend,
     get_compute_backend,
@@ -157,13 +156,13 @@ def test_chunk_exprs_for_wolfram_raises_for_oversized_expression():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_batch_eval_round_trips_expression_lists():
+def test_expand_with_wolfram_round_trips_expression_lists():
     T = BasisOperator("Tbatcheval")
     J = BasisOperator("Jbatcheval")
 
     exprs = [NO(T, J), dn(1, T) + J]
 
-    result = evaluate_many_with_wolfram(exprs)
+    result = expand_with_wolfram(exprs)
 
     assert isinstance(result, list)
     assert len(result) == 2
@@ -174,7 +173,7 @@ def test_wolfram_batch_eval_round_trips_expression_lists():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_eval_round_trips_nested_containers():
+def test_expand_with_wolfram_round_trips_nested_containers():
     T = BasisOperator("Tnested")
     J = BasisOperator("Jnested")
 
@@ -183,7 +182,7 @@ def test_wolfram_eval_round_trips_nested_containers():
         "meta": {"label": "trial"},
     }
 
-    result = evaluate_with_wolfram(payload)
+    result = expand_with_wolfram(payload)
 
     assert result["ops"][0] == NO(T, J)
     assert result["ops"][1] == (dn(1, T), J + dn(1, T))
@@ -193,7 +192,7 @@ def test_wolfram_eval_round_trips_nested_containers():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_simplify_round_trips_nested_containers():
+def test_expand_with_wolfram_plus_simplify_round_trips_nested_containers():
     T = BasisOperator("Tsimplify_nested")
     J = BasisOperator("Jsimplify_nested")
     Bosonic(T, J)
@@ -203,7 +202,12 @@ def test_wolfram_simplify_round_trips_nested_containers():
         "meta": {"label": "trial"},
     }
 
-    result = simplify_with_wolfram(payload)
+    expanded = expand_with_wolfram(payload)
+    result = {
+        "ops": [simplify(item) for item in expanded["ops"][:1]]
+        + [tuple(simplify(part) for part in expanded["ops"][1])],
+        "meta": expanded["meta"],
+    }
 
     assert result == {
         "ops": [2 * NO(T, J), (2 * NO(T, J), NO(T, J))],
@@ -275,7 +279,7 @@ def test_wolfram_whole_expression_eval_preserves_nested_no_shape():
         + sp.Rational(2, 3) * NO(dn(1, T), NO(T, NO(T, J)))
     )
 
-    result = evaluate_with_wolfram(expr)
+    result = expand_with_wolfram(expr)
 
     assert result != 0
     assert "NO(" in repr(result)
@@ -284,7 +288,7 @@ def test_wolfram_whole_expression_eval_preserves_nested_no_shape():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_whole_expression_simplify_handles_null_state_style_expr():
+def test_expand_with_wolfram_plus_simplify_handles_null_state_style_expr():
     b = BasisOperator("b")
     c = BasisOperator("c")
     beta = BasisOperator("β")
@@ -333,6 +337,6 @@ def test_wolfram_whole_expression_simplify_handles_null_state_style_expr():
         + NO(T, NO(T, NO(dn(2, J), J)))
     )
 
-    result = simplify_with_wolfram(expr)
+    result = simplify(expand_with_wolfram(expr))
 
     assert result == 0

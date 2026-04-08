@@ -78,10 +78,10 @@ def simplify(
 
     if backend == "wolfram" and _should_delegate_wolfram_simplify(expr):
         from .backend import compute_backend
-        from .wolfram_backend import evaluate_expr
+        from .wolfram_backend import expand_with_wolfram
 
         with compute_backend("sympy"):
-            evaluated = evaluate_expr(expr)
+            evaluated = expand_with_wolfram(expr)
             if evaluated != expr:
                 return simplify(
                     evaluated, expand_derivatives, preserve_nested_structure

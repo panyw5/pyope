@@ -45,25 +45,12 @@ def compute_no(left: Any, right: Any) -> Any:
     return _run_operation("NO", left, right)
 
 
-def evaluate_expr(expr: Any) -> Any:
+def expand_with_wolfram(expr: Any) -> Any:
     return _run_eval(expr)
-
-
-def evaluate_exprs(exprs: Sequence[Any]) -> list[Any]:
-    return _run_eval_list(exprs, operation="EVAL_LIST")
 
 
 def canonicalize_exprs(exprs: Sequence[Any]) -> list[Any]:
     return _run_eval_list(exprs, operation="CANONICALIZE_LIST")
-
-
-def simplify_expr(expr: Any) -> Any:
-    from .backend import compute_backend
-    from .simplify import simplify as sympy_simplify
-
-    with compute_backend("sympy"):
-        evaluated = _run_eval(expr)
-        return _simplify_nested_structure(evaluated, sympy_simplify)
 
 
 def _run_operation(operation: str, left: Any, right: Any) -> Any:
@@ -503,16 +490,3 @@ def _is_operator_like(value: Any) -> bool:
     return isinstance(value, Operator) or (
         isinstance(value, sp.Expr) and value.has(Operator)
     )
-
-
-def _simplify_nested_structure(value: Any, simplify_fn: Any) -> Any:
-    if isinstance(value, list):
-        return [_simplify_nested_structure(item, simplify_fn) for item in value]
-    if isinstance(value, tuple):
-        return tuple(_simplify_nested_structure(item, simplify_fn) for item in value)
-    if isinstance(value, dict):
-        return {
-            key: _simplify_nested_structure(item, simplify_fn)
-            for key, item in value.items()
-        }
-    return simplify_fn(value)

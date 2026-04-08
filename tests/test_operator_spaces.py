@@ -274,60 +274,54 @@ def test_realize_and_simplify_uses_wolfram_precanonicalization_when_available(
 
     monkeypatch.setattr(
         operator_spaces_module,
-        "_should_use_wolfram_precanonicalization",
+        "_should_expand_with_wolfram",
         lambda: True,
     )
 
-    calls: list[list[object]] = []
+    expand_calls: list[object] = []
 
-    def fake_batch(exprs):
-        calls.append(list(exprs))
-        return [2 * NO(d(J), J)]
+    import pyope.wolfram_backend as wolfram_backend_module
 
     monkeypatch.setattr(
-        operator_spaces_module,
-        "_batch_wolfram_precanonicalize",
-        fake_batch,
+        wolfram_backend_module,
+        "expand_with_wolfram",
+        lambda expr: expand_calls.append(expr) or 2 * NO(d(J), J),
     )
 
     realized = realize_and_simplify(d(W))
 
-    assert calls == [[d(NO(J, J))]]
+    assert expand_calls == [d(NO(J, J))]
     assert realized == 2 * NO(d(J), J)
 
 
-def test_batch_wolfram_precanonicalize_uses_simplify_expr_not_eval(monkeypatch):
+def test_list_independent_ops_uses_expand_then_simplify_when_available(monkeypatch):
     A = BasisOperator("A_batch_precanonicalize_route", conformal_weight=1)
     B = BasisOperator("B_batch_precanonicalize_route", conformal_weight=1)
     Bosonic(A, B)
+    basis = LocalOperatorBasis([A, B])
 
-    simplify_calls: list[list[object]] = []
-    eval_calls: list[object] = []
+    expand_calls: list[list[object]] = []
 
     monkeypatch.setattr(
         operator_spaces_module,
-        "_should_use_wolfram_precanonicalization",
+        "_should_expand_with_wolfram",
         lambda: True,
     )
 
-    def fake_simplify_expr(value):
-        simplify_calls.append(list(value))
-        return [NO(A, B), NO(A, B)]
-
-    def fake_evaluate_expr(value):
-        eval_calls.append(value)
-        raise AssertionError("evaluate_expr should not be used for precanonicalization")
+    def fake_expand_with_wolfram(value):
+        expand_calls.append(list(value))
+        return [NO(A, B) + 0, NO(A, B) + 0]
 
     import pyope.wolfram_backend as wolfram_backend_module
 
-    monkeypatch.setattr(wolfram_backend_module, "simplify_expr", fake_simplify_expr)
-    monkeypatch.setattr(wolfram_backend_module, "evaluate_expr", fake_evaluate_expr)
+    monkeypatch.setattr(
+        wolfram_backend_module, "expand_with_wolfram", fake_expand_with_wolfram
+    )
 
-    result = operator_spaces_module._batch_wolfram_precanonicalize([NO(B, A), NO(A, B)])
+    result = list_independent_ops([NO(B, A), NO(A, B)], basis, weight=2)
 
-    assert simplify_calls == [[NO(B, A), NO(A, B)]]
-    assert eval_calls == []
-    assert result == [NO(A, B), NO(A, B)]
+    assert expand_calls == [[NO(A, B), NO(B, A)]]
+    assert result == [NO(A, B)]
 
 
 def test_local_operator_basis_canonicalize_uses_wolfram_precanonicalization_when_available(
@@ -341,37 +335,23 @@ def test_local_operator_basis_canonicalize_uses_wolfram_precanonicalization_when
 
     monkeypatch.setattr(
         operator_spaces_module,
-        "_should_use_wolfram_precanonicalization",
+        "_should_expand_with_wolfram",
         lambda: True,
-    )
-
-    calls: list[list[object]] = []
-
-    def fake_batch(exprs):
-        calls.append(list(exprs))
-        return [NO(A, B)]
-
-    monkeypatch.setattr(
-        operator_spaces_module,
-        "_batch_wolfram_precanonicalize",
-        fake_batch,
     )
 
     import pyope.wolfram_backend as wolfram_backend_module
 
+    expand_calls: list[object] = []
+
     monkeypatch.setattr(
         wolfram_backend_module,
-        "evaluate_expr",
-        lambda value: (_ for _ in ()).throw(
-            AssertionError(
-                "evaluate_expr should not be called after Wolfram precanonicalization"
-            )
-        ),
+        "expand_with_wolfram",
+        lambda value: expand_calls.append(value) or NO(A, B),
     )
 
     canonical = basis.canonicalize(NO(B, A))
 
-    assert calls == [[NO(B, A)]]
+    assert expand_calls == [NO(B, A)]
     assert canonical == NO(A, B)
 
 
@@ -386,39 +366,25 @@ def test_local_operator_basis_coordinates_uses_wolfram_precanonicalization_when_
 
     monkeypatch.setattr(
         operator_spaces_module,
-        "_should_use_wolfram_precanonicalization",
+        "_should_expand_with_wolfram",
         lambda: True,
-    )
-
-    calls: list[list[object]] = []
-
-    def fake_batch(exprs):
-        calls.append(list(exprs))
-        return [NO(A, B)]
-
-    monkeypatch.setattr(
-        operator_spaces_module,
-        "_batch_wolfram_precanonicalize",
-        fake_batch,
     )
 
     import pyope.wolfram_backend as wolfram_backend_module
 
+    expand_calls: list[object] = []
+
     monkeypatch.setattr(
         wolfram_backend_module,
-        "evaluate_expr",
-        lambda value: (_ for _ in ()).throw(
-            AssertionError(
-                "evaluate_expr should not be called after Wolfram precanonicalization"
-            )
-        ),
+        "expand_with_wolfram",
+        lambda value: expand_calls.append(value) or NO(A, B),
     )
 
     coordinates = basis.coordinates(NO(B, A), weight=2)
     ordered_basis = basis.list(2)
     index = {op: i for i, op in enumerate(ordered_basis)}
 
-    assert calls == [[NO(B, A)]]
+    assert expand_calls == [NO(B, A)]
     assert coordinates[index[NO(A, B)], 0] == 1
 
 
@@ -581,25 +547,23 @@ def test_list_independent_ops_uses_wolfram_precanonicalization_when_available(
 
     monkeypatch.setattr(
         operator_spaces_module,
-        "_should_use_wolfram_precanonicalization",
+        "_should_expand_with_wolfram",
         lambda: True,
     )
 
-    calls: list[list[object]] = []
+    import pyope.wolfram_backend as wolfram_backend_module
 
-    def fake_batch(exprs):
-        calls.append(list(exprs))
-        return [NO(J, J), NO(J, J), d(J)]
+    expand_calls: list[list[object]] = []
 
     monkeypatch.setattr(
-        operator_spaces_module,
-        "_batch_wolfram_precanonicalize",
-        fake_batch,
+        wolfram_backend_module,
+        "expand_with_wolfram",
+        lambda value: expand_calls.append(list(value)) or [NO(J, J), NO(J, J), d(J)],
     )
 
     independent = list_independent_ops(expressions, basis, weight=2)
 
-    assert calls == [[d(J), 2 * NO(J, J), NO(J, J)]]
+    assert expand_calls == [[d(J), 2 * NO(J, J), NO(J, J)]]
     assert independent == [d(J), NO(J, J)]
 
 
@@ -615,25 +579,23 @@ def test_list_zero_relations_uses_wolfram_precanonicalization_when_available(
 
     monkeypatch.setattr(
         operator_spaces_module,
-        "_should_use_wolfram_precanonicalization",
+        "_should_expand_with_wolfram",
         lambda: True,
     )
 
-    calls: list[list[object]] = []
+    import pyope.wolfram_backend as wolfram_backend_module
 
-    def fake_batch(exprs):
-        calls.append(list(exprs))
-        return [jj, jj, d(J)]
+    expand_calls: list[list[object]] = []
 
     monkeypatch.setattr(
-        operator_spaces_module,
-        "_batch_wolfram_precanonicalize",
-        fake_batch,
+        wolfram_backend_module,
+        "expand_with_wolfram",
+        lambda value: expand_calls.append(list(value)) or [jj, jj, d(J)],
     )
 
     relations = list_zero_relations(expressions, basis, weight=2)
 
-    assert calls == [[jj, 2 * jj, d(J)]]
+    assert expand_calls == [[jj, 2 * jj, d(J)]]
     assert len(relations) == 1
     assert relations[0]["coefficients"] == [-1, 1, 0]
 
@@ -650,20 +612,18 @@ def test_independent_under_realization_uses_wolfram_precanonicalization_when_ava
 
     monkeypatch.setattr(
         operator_spaces_module,
-        "_should_use_wolfram_precanonicalization",
+        "_should_expand_with_wolfram",
         lambda: True,
     )
 
-    calls: list[list[object]] = []
+    import pyope.wolfram_backend as wolfram_backend_module
 
-    def fake_batch(exprs):
-        calls.append(list(exprs))
-        return [NO(J, J), NO(J, J)]
+    expand_calls: list[list[object]] = []
 
     monkeypatch.setattr(
-        operator_spaces_module,
-        "_batch_wolfram_precanonicalize",
-        fake_batch,
+        wolfram_backend_module,
+        "expand_with_wolfram",
+        lambda value: expand_calls.append(list(value)) or [NO(J, J), NO(J, J)],
     )
 
     independent = independent_under_realization(
@@ -672,7 +632,7 @@ def test_independent_under_realization_uses_wolfram_precanonicalization_when_ava
         weight=2,
     )
 
-    assert calls == [[NO(J, J), NO(J, J)]]
+    assert expand_calls == [[NO(J, J), NO(J, J)]]
     assert len(independent) == 1
 
 

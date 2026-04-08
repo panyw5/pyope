@@ -147,49 +147,19 @@ def _ordered_unique_expressions(expressions: Iterable[Any]) -> list[Any]:
     return sorted(set(expressions), key=sp.srepr)
 
 
-def _should_use_wolfram_precanonicalization() -> bool:
+def _should_expand_with_wolfram() -> bool:
     return (
         get_compute_backend() == "wolfram" and shutil.which("wolframscript") is not None
     )
 
 
-def _batch_wolfram_precanonicalize(expressions: list[Any]) -> list[Any]:
-    if not expressions:
-        return []
-
-    from .wolfram_backend import chunk_exprs_for_wolfram, simplify_expr
-
-    canonicalized: list[Any] = []
-    for chunk in chunk_exprs_for_wolfram(expressions):
-        canonicalized.extend(simplify_expr(chunk))
-    return canonicalized
-
-
-def _precanonicalize_expressions(expressions: Iterable[Any]) -> list[Any]:
-    expr_list = list(expressions)
-    if not expr_list or not _should_use_wolfram_precanonicalization():
-        return expr_list
-
-    return _batch_wolfram_precanonicalize(expr_list)
-
-
-def _precanonicalize_expression(expr: Any) -> Any:
-    return _precanonicalize_expressions([expr])[0]
-
-
 def _canonicalization_mode() -> str:
-    if _should_use_wolfram_precanonicalization():
-        return "wolfram-pre"
+    if _should_expand_with_wolfram():
+        return "wolfram-expand-then-simplify"
     return get_compute_backend()
 
 
-def _precanonicalized_expression_lookup(expressions: Iterable[Any]) -> dict[Any, Any]:
-    expr_list = list(expressions)
-    canonicalized = _precanonicalize_expressions(expr_list)
-    return dict(zip(expr_list, canonicalized, strict=True))
-
-
-def _terms_from_precanonical_expression(expr: Any) -> dict[Any, sp.Expr]:
+def _terms_from_canonical_expression(expr: Any) -> dict[Any, sp.Expr]:
     if expr == 0 or expr == Zero:
         return {}
 
@@ -205,7 +175,7 @@ def _terms_from_precanonical_expression(expr: Any) -> dict[Any, sp.Expr]:
     return {monomial: coeff for monomial, coeff in terms.items() if coeff != 0}
 
 
-def _coordinates_from_precanonical_expression(
+def _coordinates_from_canonical_expression(
     expr: Any,
     basis_builder: "LocalOperatorBasis",
     weight: Any,
@@ -752,10 +722,15 @@ def realize(expr: Any) -> Any:
 def realize_and_simplify(expr: Any) -> Any:
     """Expand realized generators and canonicalize the resulting expression."""
     realized = realize(expr)
-    precanonicalized = _precanonicalize_expression(realized)
-    if _should_use_wolfram_precanonicalization():
-        return _combine_like_terms_preserving_metadata(precanonicalized)
-    return _combine_like_terms_preserving_metadata(simplify(precanonicalized))
+    if _should_expand_with_wolfram():
+        from .backend import compute_backend
+        from .wolfram_backend import expand_with_wolfram
+
+        expanded = expand_with_wolfram(realized)
+        with compute_backend("sympy"):
+            simplified = simplify(expanded)
+        return _combine_like_terms_preserving_metadata(simplified)
+    return _combine_like_terms_preserving_metadata(simplify(realized))
 
 
 def realized_coordinates(
@@ -781,18 +756,29 @@ def list_independent_ops(
     """Return a linearly independent subset via local canonical expansions."""
 
     context = SparseLinearContext(basis_builder)
-    use_wolfram_precanonicalization = _should_use_wolfram_precanonicalization()
+    use_wolfram_precanonicalization = _should_expand_with_wolfram()
     processed_lookup: dict[Any, Any] = {}
     if use_wolfram_precanonicalization:
-        processed_lookup = _precanonicalized_expression_lookup(
-            _ordered_unique_expressions(expressions)
-        )
+        from .backend import compute_backend
+        from .wolfram_backend import chunk_exprs_for_wolfram, expand_with_wolfram
+
+        ordered = _ordered_unique_expressions(expressions)
+        canonicalized: list[Any] = []
+        for chunk in chunk_exprs_for_wolfram(ordered):
+            expanded_chunk = expand_with_wolfram(chunk)
+            if not isinstance(expanded_chunk, list):
+                raise TypeError(
+                    "expand_with_wolfram must return a list for list inputs"
+                )
+            with compute_backend("sympy"):
+                canonicalized.extend(simplify(item) for item in expanded_chunk)
+        processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
         if not use_wolfram_precanonicalization:
             return context.sparse_terms(expr)
-        return _terms_from_precanonical_expression(processed_lookup[expr])
+        return _terms_from_canonical_expression(processed_lookup[expr])
 
     return _independent_from_vectors(expressions, vector_getter)
 
@@ -806,16 +792,29 @@ def list_zero_relations(
     """Return a basis of linear relations via local canonical expansions."""
 
     context = SparseLinearContext(basis_builder)
-    use_wolfram_precanonicalization = _should_use_wolfram_precanonicalization()
+    use_wolfram_precanonicalization = _should_expand_with_wolfram()
     processed_lookup: dict[Any, Any] = {}
     if use_wolfram_precanonicalization:
-        processed_lookup = _precanonicalized_expression_lookup(expressions)
+        from .backend import compute_backend
+        from .wolfram_backend import chunk_exprs_for_wolfram, expand_with_wolfram
+
+        ordered = list(expressions)
+        canonicalized: list[Any] = []
+        for chunk in chunk_exprs_for_wolfram(ordered):
+            expanded_chunk = expand_with_wolfram(chunk)
+            if not isinstance(expanded_chunk, list):
+                raise TypeError(
+                    "expand_with_wolfram must return a list for list inputs"
+                )
+            with compute_backend("sympy"):
+                canonicalized.extend(simplify(item) for item in expanded_chunk)
+        processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
         if not use_wolfram_precanonicalization:
             return context.sparse_terms(expr)
-        return _terms_from_precanonical_expression(processed_lookup[expr])
+        return _terms_from_canonical_expression(processed_lookup[expr])
 
     return _zero_relations_from_vectors(expressions, vector_getter)
 
@@ -829,12 +828,23 @@ def independent_under_realization(
     """Return expressions that stay linearly independent after realization."""
 
     ordered = _ordered_unique_expressions(expressions)
-    use_wolfram_precanonicalization = _should_use_wolfram_precanonicalization()
+    use_wolfram_precanonicalization = _should_expand_with_wolfram()
     processed_lookup: dict[Any, Any] = {}
 
     if use_wolfram_precanonicalization and ordered:
+        from .backend import compute_backend
+        from .wolfram_backend import chunk_exprs_for_wolfram, expand_with_wolfram
+
         realized_exprs = [realize(expr) for expr in ordered]
-        canonicalized = _batch_wolfram_precanonicalize(realized_exprs)
+        canonicalized: list[Any] = []
+        for chunk in chunk_exprs_for_wolfram(realized_exprs):
+            expanded_chunk = expand_with_wolfram(chunk)
+            if not isinstance(expanded_chunk, list):
+                raise TypeError(
+                    "expand_with_wolfram must return a list for list inputs"
+                )
+            with compute_backend("sympy"):
+                canonicalized.extend(simplify(item) for item in expanded_chunk)
         processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> sp.Matrix:
@@ -854,7 +864,7 @@ def independent_under_realization(
                 max_occurence=max_occurence,
             )
 
-        return _coordinates_from_precanonical_expression(
+        return _coordinates_from_canonical_expression(
             processed_lookup[expr],
             free_field_basis,
             weight=target_weight,
@@ -931,11 +941,14 @@ class LocalOperatorBasis:
         expr: Any, registry_version: int, canonicalization_mode: str
     ) -> Any:
         del registry_version
-        processed = expr
-        if canonicalization_mode == "wolfram-pre":
-            processed = _precanonicalize_expression(expr)
-            return processed
-        return simplify(processed)
+        if canonicalization_mode == "wolfram-expand-then-simplify":
+            from .backend import compute_backend
+            from .wolfram_backend import expand_with_wolfram
+
+            expanded = expand_with_wolfram(expr)
+            with compute_backend("sympy"):
+                return simplify(expanded)
+        return simplify(expr)
 
     def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
         """Return sparse canonical coordinates without fixed-weight basis enumeration."""

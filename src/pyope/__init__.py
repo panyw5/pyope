@@ -13,10 +13,8 @@ __author__ = "PyOPE Contributors"
 # 已实现的模块
 from .api import NO, NO_product, OPE, MakeOPE, bracket, normal_product
 from .backend import compute_backend, get_compute_backend, set_compute_backend
+from .wolfram_backend import expand_with_wolfram
 from .wolfram_backend import canonicalize_exprs as wolfram_canonicalize_exprs
-from .wolfram_backend import evaluate_expr as evaluate_with_wolfram
-from .wolfram_backend import evaluate_exprs as evaluate_many_with_wolfram
-from .wolfram_backend import simplify_expr as simplify_with_wolfram
 from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
 
 # 缓存模块
@@ -195,10 +193,8 @@ __all__ = [
     "get_compute_backend",
     "set_compute_backend",
     "compute_backend",
-    "evaluate_many_with_wolfram",
-    "evaluate_with_wolfram",
+    "expand_with_wolfram",
     "wolfram_canonicalize_exprs",
-    "simplify_with_wolfram",
     # Simplification
     "simplify",
     "collect_normal_ordered_terms",
