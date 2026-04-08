@@ -264,6 +264,38 @@ def test_realize_and_simplify_produces_free_field_expression():
     assert realized == 2 * NO(d(J), J)
 
 
+def test_realize_and_simplify_uses_wolfram_precanonicalization_when_available(
+    monkeypatch,
+):
+    J = BasisOperator("J_realize_simplify_wolfram_pre", conformal_weight=1)
+    Bosonic(J)
+
+    W = RealizedGenerator("W_realize_simplify_wolfram_pre", realization=NO(J, J))
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_use_wolfram_precanonicalization",
+        lambda: True,
+    )
+
+    calls: list[list[object]] = []
+
+    def fake_batch(exprs):
+        calls.append(list(exprs))
+        return [2 * NO(d(J), J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_batch_wolfram_precanonicalize",
+        fake_batch,
+    )
+
+    realized = realize_and_simplify(d(W))
+
+    assert calls == [[d(NO(J, J))]]
+    assert realized == 2 * NO(d(J), J)
+
+
 def test_list_independent_ops_filters_dependent_basis_elements():
     J = BasisOperator("J_list_indep", conformal_weight=1)
     Bosonic(J)

@@ -165,12 +165,21 @@ def _batch_wolfram_precanonicalize(expressions: list[Any]) -> list[Any]:
     return canonicalized
 
 
-def _precanonicalized_expression_lookup(expressions: Iterable[Any]) -> dict[Any, Any]:
+def _precanonicalize_expressions(expressions: Iterable[Any]) -> list[Any]:
     expr_list = list(expressions)
     if not expr_list or not _should_use_wolfram_precanonicalization():
-        return {expr: expr for expr in expr_list}
+        return expr_list
 
-    canonicalized = _batch_wolfram_precanonicalize(expr_list)
+    return _batch_wolfram_precanonicalize(expr_list)
+
+
+def _precanonicalize_expression(expr: Any) -> Any:
+    return _precanonicalize_expressions([expr])[0]
+
+
+def _precanonicalized_expression_lookup(expressions: Iterable[Any]) -> dict[Any, Any]:
+    expr_list = list(expressions)
+    canonicalized = _precanonicalize_expressions(expr_list)
     return dict(zip(expr_list, canonicalized, strict=True))
 
 
@@ -731,15 +740,14 @@ def _realize_expr(expr: Any) -> Any:
 
 def realize(expr: Any) -> Any:
     """Expand realized generators in an operator expression."""
-    realize_method = getattr(expr, "realize", None)
-    if callable(realize_method):
-        return realize_method()
-    return _realize_expr(expr)
+    return expr.realize()
 
 
 def realize_and_simplify(expr: Any) -> Any:
     """Expand realized generators and canonicalize the resulting expression."""
-    return _combine_like_terms_preserving_metadata(simplify(expr.realize()))
+    realized = realize(expr)
+    precanonicalized = _precanonicalize_expression(realized)
+    return _combine_like_terms_preserving_metadata(simplify(precanonicalized))
 
 
 def realized_coordinates(
