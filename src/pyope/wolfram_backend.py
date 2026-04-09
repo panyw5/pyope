@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import ast
+import json
 import os
 import re
 import subprocess
+import tempfile
+import unicodedata
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence, Set
 
@@ -25,10 +28,43 @@ from .registry import ope_registry
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _WOLFRAM_WRAPPER = _REPO_ROOT / "OPEdefs" / "OPEdefs.wls"
+_MATHEMATICA_GREEK_NAME_TO_CHAR: Dict[str, str] = {}
+
+
+def _build_greek_escape_maps() -> tuple[Dict[str, str], Dict[str, str]]:
+    char_to_escape: Dict[str, str] = {}
+    for codepoint in range(0x0370, 0x0400):
+        char = chr(codepoint)
+        try:
+            unicode_name = unicodedata.name(char)
+        except ValueError:
+            continue
+
+        match = re.fullmatch(r"GREEK (SMALL|CAPITAL) LETTER ([A-Z]+)", unicode_name)
+        if not match:
+            continue
+
+        size, base_name = match.groups()
+        mathematica_name = "".join(part.title() for part in base_name.split())
+        if size == "CAPITAL":
+            mathematica_name = f"Capital{mathematica_name}"
+        char_to_escape[char] = rf"\[{mathematica_name}]"
+
+    escape_to_char = {escape[2:-1]: char for char, escape in char_to_escape.items()}
+    return char_to_escape, escape_to_char
+
+
+_GREEK_CHAR_TO_MATHEMATICA, _MATHEMATICA_GREEK_NAME_TO_CHAR = _build_greek_escape_maps()
 
 
 class WolframBackendError(RuntimeError):
     """Raised when the Wolfram backend cannot complete a request."""
+
+
+def op_to_wolfram_string(expr: Any) -> str:
+    """Convert an operator expression or container to Mathematica syntax."""
+
+    return _encode_value(expr)
 
 
 def compute_ope(left: Any, right: Any) -> OPEData:
@@ -46,45 +82,53 @@ def compute_no(left: Any, right: Any) -> Any:
 
 
 def simplify_with_wolfram(expr: Any) -> Any:
+    if isinstance(expr, list):
+        return _run_eval_list_chunked(expr)
     return _run_eval(expr)
 
 
 def _run_operation(operation: str, left: Any, right: Any) -> Any:
     script_path = str(_WOLFRAM_WRAPPER)
     operator_names = _collect_protocol_operator_names((left, right))
-    env = {
+    payload = {
         "PYOPE_WL_OPERATION": operation,
         "PYOPE_WL_REGISTRY": _encode_registry_state(),
-        "PYOPE_WL_LEFT": _encode_expr(left),
-        "PYOPE_WL_RIGHT": _encode_expr(right),
-        "PYOPE_WL_OPERATORS": ",".join(sorted(operator_names)),
+        "PYOPE_WL_LEFT": op_to_wolfram_string(left),
+        "PYOPE_WL_RIGHT": op_to_wolfram_string(right),
+        "PYOPE_WL_OPERATORS": ",".join(
+            sorted(_encode_symbol_name(name) for name in operator_names)
+        ),
     }
-    return _invoke_wolfram(script_path, env, operator_names)
+    return _invoke_wolfram(script_path, payload, operator_names)
 
 
 def _run_eval(expr: Any) -> Any:
     script_path = str(_WOLFRAM_WRAPPER)
     operator_names = _collect_protocol_operator_names((expr,))
-    env = {
+    payload = {
         "PYOPE_WL_OPERATION": "EVAL",
         "PYOPE_WL_REGISTRY": _encode_registry_state(),
-        "PYOPE_WL_EXPR": _encode_value(expr),
-        "PYOPE_WL_OPERATORS": ",".join(sorted(operator_names)),
+        "PYOPE_WL_EXPR": op_to_wolfram_string(expr),
+        "PYOPE_WL_OPERATORS": ",".join(
+            sorted(_encode_symbol_name(name) for name in operator_names)
+        ),
     }
-    return _invoke_wolfram(script_path, env, operator_names)
+    return _invoke_wolfram(script_path, payload, operator_names)
 
 
 def _run_eval_list(exprs: Sequence[Any], operation: str) -> list[Any]:
     script_path = str(_WOLFRAM_WRAPPER)
     expr_list = list(exprs)
     operator_names = _collect_protocol_operator_names(expr_list)
-    env = {
+    payload = {
         "PYOPE_WL_OPERATION": operation,
         "PYOPE_WL_REGISTRY": _encode_registry_state(),
-        "PYOPE_WL_EXPR_LIST": _encode_wolfram_expr_list(expr_list),
-        "PYOPE_WL_OPERATORS": ",".join(sorted(operator_names)),
+        "PYOPE_WL_EXPR_LIST": op_to_wolfram_string(expr_list),
+        "PYOPE_WL_OPERATORS": ",".join(
+            sorted(_encode_symbol_name(name) for name in operator_names)
+        ),
     }
-    result = _invoke_wolfram(script_path, env, operator_names)
+    result = _invoke_wolfram(script_path, payload, operator_names)
     if not isinstance(result, list):
         raise WolframBackendError(
             f"Expected list result from Wolfram operation {operation}, got {type(result)!r}"
@@ -92,25 +136,48 @@ def _run_eval_list(exprs: Sequence[Any], operation: str) -> list[Any]:
     return result
 
 
+def _run_eval_list_chunked(exprs: Sequence[Any]) -> list[Any]:
+    expr_list = list(exprs)
+    if not expr_list:
+        return []
+
+    chunks = chunk_exprs_for_wolfram(expr_list)
+    if len(chunks) == 1:
+        return _run_eval_list(expr_list, "CANONICALIZE_LIST")
+
+    simplified: list[Any] = []
+    for chunk in chunks:
+        simplified.extend(_run_eval_list(chunk, "CANONICALIZE_LIST"))
+    return simplified
+
+
 def _invoke_wolfram(
-    script_path: str, env: Dict[str, str], operator_names: Set[str]
+    script_path: str, payload: Dict[str, str], operator_names: Set[str]
 ) -> Any:
 
     result = None
     stdout = ""
     stderr = ""
-    for _ in range(2):
-        result = subprocess.run(
-            ["wolframscript", "-file", script_path],
-            capture_output=True,
-            text=True,
-            check=False,
-            env={**os.environ, **env},
-        )
-        stdout = result.stdout or ""
-        stderr = result.stderr or ""
-        if result.returncode == 0:
-            break
+    with tempfile.TemporaryDirectory(prefix="pyope-wolfram-") as tmpdir:
+        payload_paths = _write_wolfram_payload_files(Path(tmpdir), payload)
+        env = {
+            **os.environ,
+            "PYOPE_WL_PAYLOAD_DIR": tmpdir,
+            **payload_paths,
+        }
+        for _ in range(2):
+            result = subprocess.run(
+                ["wolframscript", "-file", script_path],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                check=False,
+                env=env,
+            )
+            stdout = result.stdout or ""
+            stderr = result.stderr or ""
+            if result.returncode == 0:
+                break
 
     if result is None or result.returncode != 0:
         raise WolframBackendError(
@@ -134,6 +201,23 @@ def _invoke_wolfram(
         )
 
     return _decode_expr(payload, operator_names)
+
+
+def _write_wolfram_payload_files(
+    temp_dir: Path, payload: Mapping[str, str]
+) -> Dict[str, str]:
+    payload_paths: Dict[str, str] = {}
+    for key, value in payload.items():
+        file_path = temp_dir / f"{key.lower()}.txt"
+        file_path.write_text(value, encoding="utf-8")
+        payload_paths[f"{key}_PATH"] = str(file_path)
+
+    manifest_path = temp_dir / "manifest.json"
+    manifest_path.write_text(
+        json.dumps(payload_paths, sort_keys=True), encoding="utf-8"
+    )
+    payload_paths["PYOPE_WL_MANIFEST_PATH"] = str(manifest_path)
+    return payload_paths
 
 
 def _encode_registry_state() -> str:
@@ -217,20 +301,12 @@ def _encode_expr(expr: Any) -> str:
     raise WolframBackendError(f"Unsupported expression for Wolfram backend: {expr!r}")
 
 
-def _encode_expr_list(exprs: Sequence[Any]) -> str:
-    return "[" + ", ".join(_encode_value(expr) for expr in exprs) + "]"
-
-
-def _encode_wolfram_expr_list(exprs: Sequence[Any]) -> str:
-    return "{" + ", ".join(_encode_value(expr) for expr in exprs) + "}"
-
-
 def chunk_exprs_for_wolfram(
-    exprs: Sequence[Any], max_items: int = 32, max_chars: int = 100_000
+    exprs: Sequence[Any], max_items: int = 32, max_chars: int | None = None
 ) -> list[list[Any]]:
     if max_items <= 0:
         raise ValueError("max_items must be positive")
-    if max_chars <= 0:
+    if max_chars is not None and max_chars <= 0:
         raise ValueError("max_chars must be positive")
 
     chunks: list[list[Any]] = []
@@ -240,7 +316,7 @@ def chunk_exprs_for_wolfram(
     for expr in exprs:
         encoded = _encode_value(expr)
         encoded_len = len(encoded)
-        if encoded_len + 2 > max_chars:
+        if max_chars is not None and encoded_len + 2 > max_chars:
             raise WolframBackendError(
                 "Single expression exceeds Wolfram transport size limit "
                 f"({encoded_len} chars > {max_chars})"
@@ -248,7 +324,10 @@ def chunk_exprs_for_wolfram(
 
         separator_len = 2 if current_chunk else 0
         would_exceed_items = len(current_chunk) >= max_items
-        would_exceed_chars = current_chars + separator_len + encoded_len > max_chars
+        would_exceed_chars = (
+            max_chars is not None
+            and current_chars + separator_len + encoded_len > max_chars
+        )
         if current_chunk and (would_exceed_items or would_exceed_chars):
             chunks.append(current_chunk)
             current_chunk = []
@@ -279,7 +358,15 @@ def _encode_mul(expr: Mul) -> str:
 
 
 def _encode_symbol_name(name: str) -> str:
-    return name
+    return "".join(_GREEK_CHAR_TO_MATHEMATICA.get(char, char) for char in name)
+
+
+def _decode_symbol_name(name: str) -> str:
+    def replace(match: re.Match[str]) -> str:
+        token = match.group(1)
+        return _MATHEMATICA_GREEK_NAME_TO_CHAR.get(token, match.group(0))
+
+    return re.sub(r"\\\[([A-Za-z]+)\]", replace, name)
 
 
 def _encode_string_literal(value: str) -> str:
@@ -292,7 +379,10 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
     from .backend import compute_backend
     from .operators import dn
 
-    protocol_operator_names: Set[str] = set(operator_names)
+    payload = _decode_symbol_name(payload)
+    protocol_operator_names: Set[str] = {
+        _decode_symbol_name(name) for name in operator_names
+    }
 
     def normalize_protocol_value(value: Any) -> Any:
         if isinstance(value, sp.Symbol) and value.name in protocol_operator_names:

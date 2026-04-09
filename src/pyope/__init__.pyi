@@ -50,6 +50,7 @@ from .operator_spaces import (
     LocalOperatorBasis,
     LocalOperatorCanonicalizer,
     SparseLinearContext,
+    list_independent_op_indices,
     list_independent_ops,
     list_zero_relations,
     make_realized,
@@ -82,6 +83,7 @@ from .simplify import (
     simplify,
 )
 from .wolfram_backend import (
+    op_to_wolfram_string,
     simplify_with_wolfram,
 )
 

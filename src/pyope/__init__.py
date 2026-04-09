@@ -13,7 +13,7 @@ __author__ = "PyOPE Contributors"
 # 已实现的模块
 from .api import NO, NO_product, OPE, MakeOPE, bracket, normal_product
 from .backend import compute_backend, get_compute_backend, set_compute_backend
-from .wolfram_backend import simplify_with_wolfram
+from .wolfram_backend import op_to_wolfram_string, simplify_with_wolfram
 from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
 
 # 缓存模块
@@ -45,7 +45,7 @@ from .local_operator import (
     LocalOperator,
     OperatorProduct,
     OperatorSum,
-    collect_operator_terms,
+    collect_operators_coefficients,
     extract_scalar_operator,
     get_operator_parity,
     is_local_operator,
@@ -62,6 +62,7 @@ from .operator_spaces import (
     RealizedGenerator,
     SparseLinearContext,
     clear_realize_cache,
+    list_independent_op_indices,
     independent_under_realization,
     list_independent_ops,
     list_zero_relations,
@@ -124,7 +125,7 @@ __all__ = [
     "extract_scalar_operator",
     "get_operator_parity",
     "simplify_with_sympy",
-    "collect_operator_terms",
+    "collect_operators_coefficients",
     # Constants
     "ConstantOperator",
     "One",
@@ -162,6 +163,7 @@ __all__ = [
     "AbstractZhuReducer",
     "GenericZhuReducer",
     "SparseLinearContext",
+    "list_independent_op_indices",
     "ZhuReductionWitness",
     "ZhuSpace",
     "list_independent_ops",
@@ -193,6 +195,7 @@ __all__ = [
     "set_compute_backend",
     "compute_backend",
     "simplify_with_wolfram",
+    "op_to_wolfram_string",
     # Simplification
     "simplify",
     "collect_normal_ordered_terms",

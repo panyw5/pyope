@@ -1,4 +1,5 @@
 import shutil
+import subprocess
 
 import pytest
 import sympy as sp
@@ -21,7 +22,12 @@ from pyope.backend import SUPPORTED_BACKENDS
 from pyope.wolfram_backend import (
     WolframBackendError,
     _decode_expr,
+    _decode_symbol_name,
+    _encode_symbol_name,
+    _invoke_wolfram,
+    _write_wolfram_payload_files,
     chunk_exprs_for_wolfram,
+    op_to_wolfram_string,
 )
 
 
@@ -150,6 +156,214 @@ def test_chunk_exprs_for_wolfram_raises_for_oversized_expression():
 
     with pytest.raises(WolframBackendError, match="transport size limit"):
         chunk_exprs_for_wolfram([x], max_items=4, max_chars=20)
+
+
+def test_chunk_exprs_for_wolfram_allows_large_expression_without_char_limit():
+    x = sp.Symbol("x" * 40)
+
+    chunks = chunk_exprs_for_wolfram([x], max_items=4)
+
+    assert chunks == [[x]]
+
+
+def test_write_wolfram_payload_files_creates_files(tmp_path):
+    payload_paths = _write_wolfram_payload_files(
+        tmp_path,
+        {
+            "PYOPE_WL_OPERATION": "EVAL",
+            "PYOPE_WL_EXPR": "x + y",
+        },
+    )
+
+    operation_path = tmp_path / "pyope_wl_operation.txt"
+    expr_path = tmp_path / "pyope_wl_expr.txt"
+
+    assert payload_paths["PYOPE_WL_OPERATION_PATH"] == str(operation_path)
+    assert payload_paths["PYOPE_WL_EXPR_PATH"] == str(expr_path)
+    assert operation_path.read_text(encoding="utf-8") == "EVAL"
+    assert expr_path.read_text(encoding="utf-8") == "x + y"
+    assert (tmp_path / "manifest.json").exists()
+
+
+def test_invoke_wolfram_uses_payload_files(monkeypatch, tmp_path):
+    captured = {}
+
+    def fake_tempdir(prefix):
+        class _TempDir:
+            def __enter__(self_inner):
+                return str(tmp_path)
+
+            def __exit__(self_inner, exc_type, exc, tb):
+                return False
+
+        return _TempDir()
+
+    def fake_run(command, capture_output, text, encoding, check, env):
+        captured["command"] = command
+        captured["env"] = env
+        captured["encoding"] = encoding
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="PYOPE_RESULT: 42\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(
+        "pyope.wolfram_backend.tempfile.TemporaryDirectory", fake_tempdir
+    )
+    monkeypatch.setattr("pyope.wolfram_backend.subprocess.run", fake_run)
+
+    result = _invoke_wolfram(
+        "dummy.wls",
+        {
+            "PYOPE_WL_OPERATION": "EVAL",
+            "PYOPE_WL_EXPR": "42",
+            "PYOPE_WL_OPERATORS": "",
+            "PYOPE_WL_REGISTRY": "",
+        },
+        set(),
+    )
+
+    assert result == 42
+    assert captured["command"] == ["wolframscript", "-file", "dummy.wls"]
+    assert captured["encoding"] == "utf-8"
+    assert captured["env"]["PYOPE_WL_EXPR_PATH"] == str(tmp_path / "pyope_wl_expr.txt")
+    assert captured["env"]["PYOPE_WL_OPERATION_PATH"] == str(
+        tmp_path / "pyope_wl_operation.txt"
+    )
+    assert "PYOPE_WL_EXPR" not in captured["env"]
+
+
+def test_decode_expr_supports_unicode_operator_names():
+    beta = BasisOperator("β")
+
+    result = _decode_expr("NO(β, β)", {"β"})
+
+    assert result == NO(beta, beta)
+
+
+def test_encode_symbol_name_maps_greek_letters_to_mathematica_form():
+    assert _encode_symbol_name("β") == r"\[Beta]"
+    assert _encode_symbol_name("γ") == r"\[Gamma]"
+
+
+def test_decode_symbol_name_restores_mathematica_greek_form():
+    assert _decode_symbol_name(r"NO(\[Beta], \[Gamma])") == "NO(β, γ)"
+
+
+def test_op_to_wolfram_string_formats_operator_tree():
+    beta = BasisOperator("β")
+    gamma = BasisOperator("γ")
+
+    assert op_to_wolfram_string(NO(gamma, dn(2, beta))) == (
+        r"NO[\[Gamma], Derivative[2][\[Beta]]]"
+    )
+
+
+def test_op_to_wolfram_string_formats_linear_combinations():
+    beta = BasisOperator("β")
+    gamma = BasisOperator("γ")
+
+    assert op_to_wolfram_string(2 * NO(gamma, beta) + dn(3, beta)) == (
+        r"((2 * NO[\[Gamma], \[Beta]]) + Derivative[3][\[Beta]])"
+    )
+
+
+def test_op_to_wolfram_string_formats_nested_lists():
+    alpha = BasisOperator("α")
+    beta = BasisOperator("β")
+    gamma = BasisOperator("γ")
+    delta = BasisOperator("δ")
+
+    assert op_to_wolfram_string(
+        [alpha, dn(1, beta), [NO(gamma, delta), dn(2, alpha)]]
+    ) == (
+        r"{\[Alpha], Derivative[1][\[Beta]], {NO[\[Gamma], \[Delta]], Derivative[2][\[Alpha]]}}"
+    )
+
+
+def test_op_to_wolfram_string_uses_single_backslashes_for_to_expression():
+    beta = BasisOperator("β")
+    gamma = BasisOperator("γ")
+
+    result = op_to_wolfram_string(NO(gamma, dn(2, beta)))
+
+    assert result == r"NO[\[Gamma], Derivative[2][\[Beta]]]"
+    assert "\\\\[Gamma]" not in result
+    assert "\\\\[Beta]" not in result
+
+
+def test_run_eval_uses_public_wolfram_string_encoder(monkeypatch):
+    beta = BasisOperator("β")
+    gamma = BasisOperator("γ")
+    expr = NO(gamma, dn(2, beta))
+    captured = {}
+
+    def fake_invoke(script_path, payload, operator_names):
+        captured["script_path"] = script_path
+        captured["payload"] = payload
+        captured["operator_names"] = operator_names
+        return expr
+
+    monkeypatch.setattr("pyope.wolfram_backend._invoke_wolfram", fake_invoke)
+
+    result = simplify_with_wolfram(expr)
+
+    assert result == expr
+    assert captured["payload"]["PYOPE_WL_EXPR"] == op_to_wolfram_string(expr)
+
+
+def test_run_eval_list_uses_public_wolfram_string_encoder(monkeypatch):
+    beta = BasisOperator("β")
+    gamma = BasisOperator("γ")
+    exprs = [beta, [NO(gamma, dn(2, beta))]]
+    captured = {}
+
+    def fake_invoke(script_path, payload, operator_names):
+        captured["script_path"] = script_path
+        captured["payload"] = payload
+        captured["operator_names"] = operator_names
+        return exprs
+
+    monkeypatch.setattr("pyope.wolfram_backend._invoke_wolfram", fake_invoke)
+
+    result = simplify_with_wolfram(exprs)
+
+    assert result == exprs
+    assert (
+        captured["payload"]["PYOPE_WL_EXPR"]
+        if "PYOPE_WL_EXPR" in captured["payload"]
+        else True
+    )
+    assert captured["payload"]["PYOPE_WL_EXPR_LIST"] == op_to_wolfram_string(exprs)
+
+
+def test_simplify_with_wolfram_auto_chunks_large_lists(monkeypatch):
+    exprs = [sp.Integer(i) for i in range(5)]
+    calls = []
+
+    def fake_chunk_exprs(values, max_items=32, max_chars=100_000):
+        assert list(values) == exprs
+        return [exprs[:2], exprs[2:4], exprs[4:]]
+
+    def fake_run_eval_list(values, operation):
+        calls.append((list(values), operation))
+        return list(values)
+
+    monkeypatch.setattr(
+        "pyope.wolfram_backend.chunk_exprs_for_wolfram", fake_chunk_exprs
+    )
+    monkeypatch.setattr("pyope.wolfram_backend._run_eval_list", fake_run_eval_list)
+
+    result = simplify_with_wolfram(exprs)
+
+    assert result == exprs
+    assert calls == [
+        ([0, 1], "CANONICALIZE_LIST"),
+        ([2, 3], "CANONICALIZE_LIST"),
+        ([4], "CANONICALIZE_LIST"),
+    ]
 
 
 @pytest.mark.skipif(
