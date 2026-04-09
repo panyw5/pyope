@@ -1,5 +1,6 @@
 import pytest
 import sympy as sp
+from sympy import latex
 
 import pyope.operator_spaces as operator_spaces_module
 from pyope import (
@@ -8,6 +9,7 @@ from pyope import (
     compute_backend,
     independent_under_realization,
     LocalOperatorBasis,
+    list_independent_op_indices,
     list_independent_ops,
     list_zero_relations,
     make_realized,
@@ -156,6 +158,27 @@ def test_realized_generator_infers_weight_and_realization():
     assert W.realization == composite
 
 
+def test_basis_operator_uses_custom_latex_name():
+    T = BasisOperator(
+        "T_basis_latex_name", conformal_weight=2, latex_name=r"\mathcal{T}"
+    )
+
+    assert latex(T) == r"\mathcal{T}"
+
+
+def test_realized_generator_uses_custom_latex_name():
+    J = BasisOperator("J_realized_latex_base", conformal_weight=1)
+    Bosonic(J)
+
+    W = RealizedGenerator(
+        "W_realized_latex",
+        realization=NO(J, J),
+        latex_name=r"\mathcal{W}",
+    )
+
+    assert latex(W) == r"\mathcal{W}"
+
+
 def test_make_realized_preserves_input_order_and_infers_names():
     b = BasisOperator("b_make_realized", fermionic=True, conformal_weight=2)
     c = BasisOperator("c_make_realized", fermionic=True, conformal_weight=-1)
@@ -213,6 +236,20 @@ def test_make_realized_prefers_latest_alias_name():
 
     assert Jplus_realized.name == "Jplus"
     assert Jplus_realized.realization == beta
+
+
+def test_make_realized_result_can_override_latex_name_after_promotion():
+    J = BasisOperator("J_make_realized_latex", conformal_weight=1)
+    Bosonic(J)
+
+    W = NO(J, J)
+
+    (W_realized,) = make_realized([W])
+    W_latex = W_realized.with_latex(r"\mathcal{W}")
+
+    assert W_latex.name == "W"
+    assert W_latex.realization == W_realized.realization
+    assert latex(W_latex) == r"\mathcal{W}"
 
 
 def test_realize_expands_realized_generator_recursively():
@@ -449,6 +486,66 @@ def test_list_independent_ops_handles_incremental_dependence_chain():
     assert len(independent) == 2
     assert all(expr in expressions for expr in independent)
     assert basis.list_zero_relations(independent) == []
+
+
+def test_list_independent_op_indices_preserves_original_input_order():
+    J = BasisOperator("J_list_indep_indices", conformal_weight=1)
+    Bosonic(J)
+
+    basis = LocalOperatorBasis([J])
+    jj = NO(J, J)
+    dj = d(J)
+    expressions = [jj + dj, jj, 2 * jj, dj, 3 * dj]
+
+    indices = list_independent_op_indices(expressions, basis)
+
+    assert indices == [0, 1]
+    assert [expressions[index] for index in indices] == [jj + dj, jj]
+
+
+def test_list_independent_op_indices_keeps_first_duplicate_only_when_independent():
+    J = BasisOperator("J_list_indep_indices_dupe", conformal_weight=1)
+    Bosonic(J)
+
+    basis = LocalOperatorBasis([J])
+    jj = NO(J, J)
+    expressions = [jj, jj, 2 * jj, d(J)]
+
+    indices = basis.list_independent_op_indices(expressions)
+
+    assert indices == [0, 3]
+
+
+def test_list_independent_op_indices_uses_wolfram_precanonicalization_when_available(
+    monkeypatch,
+):
+    J = BasisOperator("J_list_indep_indices_wolfram_pre", conformal_weight=1)
+    Bosonic(J)
+
+    basis = LocalOperatorBasis([J])
+    jj = NO(J, J)
+    expressions = [2 * jj, jj, d(J)]
+
+    monkeypatch.setattr(
+        operator_spaces_module,
+        "_should_simplify_with_wolfram",
+        lambda: True,
+    )
+
+    import pyope.wolfram_backend as wolfram_backend_module
+
+    expand_calls: list[list[object]] = []
+
+    monkeypatch.setattr(
+        wolfram_backend_module,
+        "simplify_with_wolfram",
+        lambda value: expand_calls.append(list(value)) or [jj, jj, d(J)],
+    )
+
+    indices = list_independent_op_indices(expressions, basis, weight=2)
+
+    assert expand_calls == [[2 * jj, jj, d(J)]]
+    assert indices == [0, 2]
 
 
 def test_local_operator_basis_list_independent_ops_uses_default_max_occurence():

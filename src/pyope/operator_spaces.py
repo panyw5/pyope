@@ -13,7 +13,7 @@ from .backend import get_compute_backend
 from .api import normal_product
 from .constants import One, Zero
 from .local_operator import (
-    collect_operator_terms,
+    collect_operators_coefficients,
     extract_scalar_operator,
     get_operator_parity,
 )
@@ -31,6 +31,7 @@ class RealizedGenerator(BasisOperator):
         realization: Any,
         conformal_weight: Optional[Any] = None,
         fermionic: Optional[bool] = None,
+        latex_name: Optional[str] = None,
         **assumptions,
     ):
         if conformal_weight is None:
@@ -48,6 +49,7 @@ class RealizedGenerator(BasisOperator):
             name,
             fermionic=fermionic,
             conformal_weight=conformal_weight,
+            latex_name=latex_name,
             **assumptions,
         )
         object.__setattr__(obj, "_realization", realization)
@@ -56,6 +58,16 @@ class RealizedGenerator(BasisOperator):
     @property
     def realization(self) -> Any:
         return getattr(self, "_realization")
+
+    def with_latex(self, latex_name: str):
+        """返回带自定义 LaTeX 显示名称的 realized generator。"""
+        return RealizedGenerator(
+            self.name,
+            realization=self.realization,
+            conformal_weight=self.conformal_weight,
+            fermionic=self.is_fermionic,
+            latex_name=latex_name,
+        )
 
 
 def _resolve_calling_namespace() -> MutableMapping[str, Any]:
@@ -164,7 +176,7 @@ def _terms_from_canonical_expression(expr: Any) -> dict[Any, sp.Expr]:
         return {}
 
     terms = {}
-    for operator, coeff in collect_operator_terms(expr).items():
+    for operator, coeff in collect_operators_coefficients(expr).items():
         coeff = sp.sympify(coeff)
         if coeff == 0:
             continue
@@ -198,7 +210,7 @@ def _coordinates_from_canonical_expression(
     index = {op: i for i, op in enumerate(basis)}
     vector = sp.zeros(len(basis), 1)
 
-    for operator, coeff in collect_operator_terms(expr).items():
+    for operator, coeff in collect_operators_coefficients(expr).items():
         if operator == 1:
             operator = One
         if operator not in index:
@@ -256,6 +268,54 @@ def _independent_from_vectors(
             columns.append(vector)
 
     return independent
+
+
+def _independent_indices_from_vectors(
+    expressions: Iterable[Any], vector_getter: Any
+) -> list[int]:
+    ordered = list(expressions)
+    independent_indices: list[int] = []
+
+    if ordered:
+        sample_vector = vector_getter(ordered[0])
+        if isinstance(sample_vector, dict):
+            eliminator = _SparseIndependentEliminator()
+            if sample_vector:
+                if eliminator.insert(sample_vector):
+                    independent_indices.append(0)
+
+            for index, expr in enumerate(ordered[1:], start=1):
+                vector = vector_getter(expr)
+                if eliminator.insert(vector):
+                    independent_indices.append(index)
+            return independent_indices
+
+    columns = []
+
+    for index, expr in enumerate(ordered):
+        vector = vector_getter(expr)
+        is_zero_vector = (
+            not vector
+            if isinstance(vector, dict)
+            else vector == sp.zeros(*vector.shape)
+        )
+        if not columns:
+            if not is_zero_vector:
+                independent_indices.append(index)
+                columns.append(vector)
+            continue
+
+        if isinstance(vector, dict):
+            current, _ = _matrix_from_sparse_vectors(columns)
+            candidate, _ = _matrix_from_sparse_vectors([*columns, vector])
+        else:
+            current = sp.Matrix.hstack(*columns)
+            candidate = sp.Matrix.hstack(*columns, vector)
+        if candidate.rank() > current.rank():
+            independent_indices.append(index)
+            columns.append(vector)
+
+    return independent_indices
 
 
 class _SparseIndependentEliminator:
@@ -380,7 +440,7 @@ def _canonical_terms(expr: Any, canonicalizer: Any) -> dict[Any, sp.Expr]:
         return {}
 
     terms = {}
-    for operator, coeff in collect_operator_terms(canonical).items():
+    for operator, coeff in collect_operators_coefficients(canonical).items():
         coeff = sp.sympify(coeff)
         if coeff == 0:
             continue
@@ -631,7 +691,7 @@ def _is_negative_single_letter_fermion_sector(expr: Any) -> bool:
 
 def _combine_like_terms_preserving_metadata(expr: Any) -> Any:
     """Combine like terms without rebuilding operators from stripped keys."""
-    terms = collect_operator_terms(expr)
+    terms = collect_operators_coefficients(expr)
     rebuilt_terms = []
 
     for operator, coeff in terms.items():
@@ -775,6 +835,40 @@ def list_independent_ops(
         return _terms_from_canonical_expression(processed_lookup[expr])
 
     return _independent_from_vectors(expressions, vector_getter)
+
+
+def list_independent_op_indices(
+    expressions: Iterable[Any],
+    basis_builder: "LocalOperatorBasis",
+    weight: Any = None,
+    max_occurence: Any = None,
+) -> list[int]:
+    """Return original input indices whose expressions are linearly independent."""
+
+    context = SparseLinearContext(basis_builder)
+    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
+    processed_lookup: dict[Any, Any] = {}
+    ordered = list(expressions)
+    if use_wolfram_precanonicalization:
+        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
+
+        canonicalized: list[Any] = []
+        for chunk in chunk_exprs_for_wolfram(ordered):
+            simplified_chunk = simplify_with_wolfram(chunk)
+            if not isinstance(simplified_chunk, list):
+                raise TypeError(
+                    "simplify_with_wolfram must return a list for list inputs"
+                )
+            canonicalized.extend(simplified_chunk)
+        processed_lookup = dict(zip(ordered, canonicalized, strict=True))
+
+    def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
+        _validate_expression_weight(expr, weight)
+        if not use_wolfram_precanonicalization:
+            return context.sparse_terms(expr)
+        return _terms_from_canonical_expression(processed_lookup[expr])
+
+    return _independent_indices_from_vectors(ordered, vector_getter)
 
 
 def list_zero_relations(
@@ -1003,7 +1097,7 @@ class LocalOperatorBasis:
         index = {op: i for i, op in enumerate(basis)}
         vector = sp.zeros(len(basis), 1)
 
-        for operator, coeff in collect_operator_terms(canonical).items():
+        for operator, coeff in collect_operators_coefficients(canonical).items():
             if operator == 1:
                 operator = One
             if operator not in index:
@@ -1052,6 +1146,20 @@ class LocalOperatorBasis:
     ) -> list[Any]:
         """Filter expressions by linear independence in this basis."""
         return list_independent_ops(
+            expressions,
+            self,
+            weight=weight,
+            max_occurence=max_occurence,
+        )
+
+    def list_independent_op_indices(
+        self,
+        expressions: Iterable[Any],
+        weight: Any = None,
+        max_occurence: Any = None,
+    ) -> list[int]:
+        """Return original input indices of linearly independent expressions."""
+        return list_independent_op_indices(
             expressions,
             self,
             weight=weight,

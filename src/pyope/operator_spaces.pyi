@@ -5,6 +5,15 @@ import sympy as sp
 from .operators import BasisOperator, Operator
 
 class RealizedGenerator(BasisOperator):
+    def __new__(
+        cls,
+        name: str,
+        realization: Any,
+        conformal_weight: Optional[Any] = None,
+        fermionic: Optional[bool] = None,
+        latex_name: Optional[str] = None,
+        **assumptions: Any,
+    ) -> "RealizedGenerator": ...
     @property
     def realization(self) -> Any: ...
 
@@ -25,6 +34,12 @@ def list_independent_ops(
     basis: "LocalOperatorBasis",
     weight: Any = None,
 ) -> list[Any]: ...
+def list_independent_op_indices(
+    expressions: Iterable[Any],
+    basis: "LocalOperatorBasis",
+    weight: Any = None,
+    max_occurence: Any = None,
+) -> list[int]: ...
 def list_zero_relations(
     expressions: Iterable[Any],
     basis: "LocalOperatorBasis",
@@ -89,6 +104,12 @@ class LocalOperatorBasis:
         weight: Any = None,
         max_occurence: Any = None,
     ) -> list[Any]: ...
+    def list_independent_op_indices(
+        self,
+        expressions: Iterable[Any],
+        weight: Any = None,
+        max_occurence: Any = None,
+    ) -> list[int]: ...
     def list_zero_relations(
         self,
         expressions: Iterable[Any],

@@ -134,6 +134,7 @@ class BasisOperator(Operator):
     _conformal_weight: Optional[float]
     _indices: Tuple
     _base_name: str
+    _latex_name: Optional[str]
 
     def __new__(
         cls,
@@ -143,6 +144,7 @@ class BasisOperator(Operator):
         conformal_weight: Optional[Any] = None,
         indices: Optional[Tuple] = None,
         base_name: Optional[str] = None,
+        latex_name: Optional[str] = None,
         **assumptions,
     ):
         """
@@ -182,6 +184,7 @@ class BasisOperator(Operator):
         obj._conformal_weight = conformal_weight
         obj._indices = indices if indices is not None else ()
         obj._base_name = base_name if base_name is not None else name
+        obj._latex_name = latex_name
         return obj
 
     @property
@@ -219,6 +222,28 @@ class BasisOperator(Operator):
     def conformal_weight(self) -> Optional[float]:
         """共形权重"""
         return self._conformal_weight
+
+    @property
+    def latex_name(self) -> Optional[str]:
+        """自定义 LaTeX 显示名称。"""
+        return self._latex_name
+
+    def with_latex(self, latex_name: str):
+        """返回带自定义 LaTeX 显示名称的同名算符。"""
+        return self.__class__(
+            self.name,
+            fermionic=not self._bosonic,
+            indexed=self._indexed,
+            conformal_weight=self._conformal_weight,
+            indices=self._indices,
+            base_name=self._base_name,
+            latex_name=latex_name,
+        )
+
+    def _latex(self, printer=None):
+        if self._latex_name is not None:
+            return self._latex_name
+        return self.name
 
     def __getitem__(self, index):
         """

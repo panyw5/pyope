@@ -23,6 +23,7 @@ class BasisOperator(Operator):
         fermionic: Optional[bool] = None,
         indices: Optional[Tuple[Any, ...]] = None,
         base_name: Optional[str] = None,
+        latex_name: Optional[str] = None,
         **assumptions: Any,
     ) -> "BasisOperator": ...
     @overload
@@ -34,6 +35,7 @@ class BasisOperator(Operator):
         conformal_weight: Optional[float] = None,
         indices: Optional[Tuple[Any, ...]] = None,
         base_name: Optional[str] = None,
+        latex_name: Optional[str] = None,
         **assumptions: Any,
     ) -> "BasisOperator": ...
     @property
@@ -48,6 +50,9 @@ class BasisOperator(Operator):
     def indices(self) -> Tuple[Any, ...]: ...
     @property
     def conformal_weight(self) -> Optional[float]: ...
+    @property
+    def latex_name(self) -> Optional[str]: ...
+    def with_latex(self, latex_name: str) -> "BasisOperator": ...
 
 class DerivativeOperator(Operator):
     @property
