@@ -61,12 +61,6 @@ class WolframBackendError(RuntimeError):
     """Raised when the Wolfram backend cannot complete a request."""
 
 
-def op_to_wolfram_string(expr: Any) -> str:
-    """Convert an operator expression or container to Mathematica syntax."""
-
-    return _encode_value(expr)
-
-
 def compute_ope(left: Any, right: Any) -> OPEData:
     return _run_operation("OPE", left, right)
 
@@ -156,13 +150,16 @@ def _invoke_wolfram(
 ) -> Any:
 
     result = None
+    payload_text = None
     stdout = ""
     stderr = ""
     with tempfile.TemporaryDirectory(prefix="pyope-wolfram-") as tmpdir:
         payload_paths = _write_wolfram_payload_files(Path(tmpdir), payload)
+        result_path = Path(tmpdir) / "pyope_result.txt"
         env = {
             **os.environ,
             "PYOPE_WL_PAYLOAD_DIR": tmpdir,
+            "PYOPE_WL_RESULT_PATH": str(result_path),
             **payload_paths,
         }
         for _ in range(2):
@@ -179,6 +176,9 @@ def _invoke_wolfram(
             if result.returncode == 0:
                 break
 
+        if result_path.exists():
+            payload_text = result_path.read_text(encoding="utf-8").strip()
+
     if result is None or result.returncode != 0:
         raise WolframBackendError(
             "wolframscript execution failed"
@@ -188,19 +188,24 @@ def _invoke_wolfram(
             f" stderr: {stderr.strip() or '<empty>'}"
         )
 
-    marker = "PYOPE_RESULT:"
-    payload = None
-    for line in stdout.splitlines():
-        if line.startswith(marker):
-            payload = line[len(marker) :].strip()
+    if payload_text is None:
+        marker = "PYOPE_RESULT:"
+        for line in stdout.splitlines():
+            if line.startswith(marker):
+                payload_text = line[len(marker) :].strip()
 
-    if payload is None:
+    if payload_text is None:
         raise WolframBackendError(
-            "wolframscript did not emit a parseable result marker. "
+            "wolframscript did not emit a parseable result. "
+            f"result_path: {result_path}. "
             f"stdout: {stdout.strip() or '<empty>'} stderr: {stderr.strip() or '<empty>'}"
         )
+    if payload_text == "":
+        raise WolframBackendError(
+            f"wolframscript emitted an empty result payload at {result_path}"
+        )
 
-    return _decode_expr(payload, operator_names)
+    return _decode_expr(payload_text, operator_names)
 
 
 def _write_wolfram_payload_files(
@@ -242,15 +247,19 @@ def _encode_ope_data(ope_data: OPEData) -> str:
     poles = []
     max_pole = ope_data.max_pole
     for order in range(max_pole, 0, -1):
-        poles.append(_encode_value(ope_data.pole(order)))
+        poles.append(op_to_wolfram_string(ope_data.pole(order)))
     return "MakeOPE[{" + ", ".join(poles) + "}]"
 
 
-def _encode_value(value: Any) -> str:
+def op_to_wolfram_string(value: Any) -> str:
+    """Convert an operator expression or container to Mathematica syntax."""
+
     if isinstance(value, list):
-        return "{" + ", ".join(_encode_value(item) for item in value) + "}"
+        return "{" + ", ".join(op_to_wolfram_string(item) for item in value) + "}"
     if isinstance(value, tuple):
-        return "PyTuple[{" + ", ".join(_encode_value(item) for item in value) + "}]"
+        return (
+            "PyTuple[{" + ", ".join(op_to_wolfram_string(item) for item in value) + "}]"
+        )
     if isinstance(value, Mapping):
         entries = []
         for key, item in value.items():
@@ -259,7 +268,11 @@ def _encode_value(value: Any) -> str:
                     "Wolfram backend only supports dict containers with string keys"
                 )
             entries.append(
-                "{" + _encode_string_literal(key) + ", " + _encode_value(item) + "}"
+                "{"
+                + _encode_string_literal(key)
+                + ", "
+                + op_to_wolfram_string(item)
+                + "}"
             )
         return "PyDict[{" + ", ".join(entries) + "}]"
     if isinstance(value, OPEData):
@@ -288,9 +301,11 @@ def _encode_expr(expr: Any) -> str:
     if isinstance(expr, BasisOperator):
         return _encode_symbol_name(expr.name)
     if isinstance(expr, DerivativeOperator):
-        return f"Derivative[{expr.order}][{_encode_value(expr.base)}]"
+        return f"Derivative[{expr.order}][{op_to_wolfram_string(expr.base)}]"
     if isinstance(expr, NormalOrderedOperator):
-        return f"NO[{_encode_value(expr.left)}, {_encode_value(expr.right)}]"
+        return (
+            f"NO[{op_to_wolfram_string(expr.left)}, {op_to_wolfram_string(expr.right)}]"
+        )
     if isinstance(expr, sp.Symbol):
         return _encode_symbol_name(expr.name)
     if isinstance(expr, Add):
@@ -314,7 +329,7 @@ def chunk_exprs_for_wolfram(
     current_chars = 2
 
     for expr in exprs:
-        encoded = _encode_value(expr)
+        encoded = op_to_wolfram_string(expr)
         encoded_len = len(encoded)
         if max_chars is not None and encoded_len + 2 > max_chars:
             raise WolframBackendError(
@@ -345,16 +360,16 @@ def chunk_exprs_for_wolfram(
 
 def _encode_mul(expr: Mul) -> str:
     if not expr.has(Operator):
-        return "(" + " * ".join(_encode_value(arg) for arg in expr.args) + ")"
+        return "(" + " * ".join(op_to_wolfram_string(arg) for arg in expr.args) + ")"
 
     assert_no_illegal_operator_mul(expr, context="wolfram_backend.encode")
     coeff, op = extract_scalar_operator(expr)
 
     if op == 1:
-        return _encode_value(coeff)
+        return op_to_wolfram_string(coeff)
     if coeff == 1:
-        return _encode_value(op)
-    return f"({_encode_value(coeff)} * {_encode_value(op)})"
+        return op_to_wolfram_string(op)
+    return f"({op_to_wolfram_string(coeff)} * {op_to_wolfram_string(op)})"
 
 
 def _encode_symbol_name(name: str) -> str:

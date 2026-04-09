@@ -11,6 +11,8 @@ ClearAll[
   PyEncodeAssociation,
   PyEncodeProduct,
   PyProtocolError,
+  PyReadPayload,
+  PyWriteResult,
   PyScalarNormalize,
   PyNonScalarQ,
   PyOperatorSymbolQ,
@@ -30,7 +32,7 @@ PyProtocolError[expr_] := Throw[
 ];
 
 PyRegisteredOperatorQ[expr_] := Module[{raw, names, name},
-  raw = Environment["PYOPE_WL_OPERATORS"];
+  raw = PyReadPayload["PYOPE_WL_OPERATORS"];
   names = If[StringLength[raw] > 0, StringSplit[raw, ","], {}];
   name = ToString[Unevaluated[expr], InputForm];
   MemberQ[names, name]
@@ -97,12 +99,42 @@ PyEncodeProduct[factors_List, original_] := Module[{nonscalar, scalarFactors, no
   "(" <> StringRiffle[Join[PyEncode /@ scalarFactors, {PyEncode[nonscalarFactor]}], " * "] <> ")"
 ];
 
-PyApplyRegistry[] := Module[{code = Environment["PYOPE_WL_REGISTRY"]},
+PyReadPayload[name_String] := Module[{path, stream, text},
+  path = Environment[name <> "_PATH"];
+  If[!StringQ[path], path = ""];
+  If[StringLength[path] == 0,
+    text = Environment[name];
+    If[!StringQ[text], text = ""];
+    Return[text]
+  ];
+  stream = OpenRead[path, BinaryFormat -> False, CharacterEncoding -> "UTF-8"];
+  If[stream === $Failed, PyProtocolError["unable to open payload file for " <> name]];
+  text = ReadString[stream];
+  Close[stream];
+  If[!StringQ[text], text = ""];
+  text
+];
+
+PyWriteResult[text_String] := Module[{path, stream},
+  path = Environment["PYOPE_WL_RESULT_PATH"];
+  If[!StringQ[path], path = ""];
+  If[StringLength[path] == 0,
+    Print["PYOPE_RESULT: " <> text];
+    Return[text]
+  ];
+  stream = OpenWrite[path, BinaryFormat -> False, CharacterEncoding -> "UTF-8"];
+  If[stream === $Failed, PyProtocolError["unable to open result payload file"]];
+  WriteString[stream, text];
+  Close[stream];
+  text
+];
+
+PyApplyRegistry[] := Module[{code = PyReadPayload["PYOPE_WL_REGISTRY"]},
   If[StringLength[code] > 0, ToExpression[code]];
 ];
 
 PyEvalExpr[] := Module[{exprText, expr},
-  exprText = Environment["PYOPE_WL_EXPR"];
+  exprText = PyReadPayload["PYOPE_WL_EXPR"];
   If[StringLength[exprText] == 0, PyProtocolError["missing PYOPE_WL_EXPR"]];
   expr = ToExpression[exprText];
   PyEvaluateValue[expr]
@@ -114,7 +146,7 @@ PyEvaluateValue[PyDict[assoc_Association]] := PyDict[Map[PyEvaluateValue, assoc]
 PyEvaluateValue[expr_] := Expand[expr];
 
 PyEvalExprList[] := Module[{exprText, exprs},
-  exprText = Environment["PYOPE_WL_EXPR_LIST"];
+  exprText = PyReadPayload["PYOPE_WL_EXPR_LIST"];
   If[StringLength[exprText] == 0, PyProtocolError["missing PYOPE_WL_EXPR_LIST"]];
   exprs = ToExpression[exprText];
   If[Head[exprs] =!= List, PyProtocolError["PYOPE_WL_EXPR_LIST must decode to List"]];
@@ -129,7 +161,7 @@ PyCanonicalizeValue[PyDict[assoc_Association]] := PyDict[Map[PyCanonicalizeValue
 PyCanonicalizeValue[expr_] := PyCanonicalizeExpr[expr];
 
 PyCanonicalizeExprList[] := Module[{exprText, exprs},
-  exprText = Environment["PYOPE_WL_EXPR_LIST"];
+  exprText = PyReadPayload["PYOPE_WL_EXPR_LIST"];
   If[StringLength[exprText] == 0, PyProtocolError["missing PYOPE_WL_EXPR_LIST"]];
   exprs = ToExpression[exprText];
   If[Head[exprs] =!= List, PyProtocolError["PYOPE_WL_EXPR_LIST must decode to List"]];
@@ -138,7 +170,7 @@ PyCanonicalizeExprList[] := Module[{exprText, exprs},
 
 PyMain[] := Module[{op, left, right, result, encoded},
   Catch[
-    op = Environment["PYOPE_WL_OPERATION"];
+    op = PyReadPayload["PYOPE_WL_OPERATION"];
     PyApplyRegistry[];
     result = Switch[op,
       "EVAL", PyEvalExpr[],
@@ -146,8 +178,8 @@ PyMain[] := Module[{op, left, right, result, encoded},
       "EXPAND", PyEvalExpr[],
       "CANONICALIZE_LIST", PyCanonicalizeExprList[],
       _,
-      left = ToExpression[Environment["PYOPE_WL_LEFT"]];
-      right = ToExpression[Environment["PYOPE_WL_RIGHT"]];
+      left = ToExpression[PyReadPayload["PYOPE_WL_LEFT"]];
+      right = ToExpression[PyReadPayload["PYOPE_WL_RIGHT"]];
       Switch[op,
       "OPE", OPE[left, right],
       "NO", NO[left, right],
@@ -155,7 +187,7 @@ PyMain[] := Module[{op, left, right, result, encoded},
       ]
     ];
     encoded = PyEncode[result];
-    Print["PYOPE_RESULT: " <> encoded],
+    PyWriteResult[encoded],
     "PYOPE_PROTOCOL_ERROR",
     (Print["PYOPE_PROTOCOL_ERROR: " <> #1]; Exit[3]) &
   ]

@@ -40,14 +40,20 @@ def test_set_compute_backend_rejects_unknown_backend():
         set_compute_backend("unknown")
 
 
+def test_set_compute_backend_rejects_incomplete_wolfram_backend():
+    with pytest.raises(ValueError, match="not ready yet and must not be used"):
+        set_compute_backend("wolfram")
+
+
 def test_supported_backends_include_wolfram():
     assert SUPPORTED_BACKENDS == {"sympy", "wolfram"}
 
 
 def test_compute_backend_context_manager_restores_previous_backend():
     set_compute_backend("sympy")
-    with compute_backend("wolfram"):
-        assert get_compute_backend() == "wolfram"
+    with pytest.raises(ValueError, match="not ready yet and must not be used"):
+        with compute_backend("wolfram"):
+            pass
     assert get_compute_backend() == "sympy"
 
 
@@ -74,45 +80,28 @@ def test_sympy_backend_still_computes_zero_ope():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_backend_computes_registered_binary_ope():
-    T = BasisOperator("T")
-    c = sp.Symbol("c")
-    OPE[T, T] = MakeOPE([c / 2 * One, 0, 2 * T, 0])
-
-    with compute_backend("wolfram"):
-        result = OPE(T, T)
-
-    assert result.pole(4) == c * One / 2
-    assert result.pole(2) == 2 * T
+def test_compute_backend_rejects_wolfram_for_registered_binary_ope_path():
+    with pytest.raises(ValueError, match="not ready yet and must not be used"):
+        with compute_backend("wolfram"):
+            pass
 
 
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_backend_computes_binary_no_node():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
-
-    with compute_backend("wolfram"):
-        result = NO(T, J)
-
-    assert repr(result) == "NO(T, J)"
+def test_compute_backend_rejects_wolfram_for_binary_no_path():
+    with pytest.raises(ValueError, match="not ready yet and must not be used"):
+        with compute_backend("wolfram"):
+            pass
 
 
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_backend_preserves_linear_no_structure():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
-
-    with compute_backend("wolfram"):
-        result = NO(T + J, J)
-
-    expected = NO(T, J) + NO(J, J)
-    assert sorted(map(repr, sp.Add.make_args(result))) == sorted(
-        map(repr, sp.Add.make_args(expected))
-    )
+def test_compute_backend_rejects_wolfram_for_linear_no_path():
+    with pytest.raises(ValueError, match="not ready yet and must not be used"):
+        with compute_backend("wolfram"):
+            pass
 
 
 def test_wolfram_decoder_rejects_illegal_operator_multiplication():
@@ -202,10 +191,11 @@ def test_invoke_wolfram_uses_payload_files(monkeypatch, tmp_path):
         captured["command"] = command
         captured["env"] = env
         captured["encoding"] = encoding
+        (tmp_path / "pyope_result.txt").write_text("42", encoding="utf-8")
         return subprocess.CompletedProcess(
             command,
             0,
-            stdout="PYOPE_RESULT: 42\n",
+            stdout="",
             stderr="",
         )
 
@@ -232,7 +222,46 @@ def test_invoke_wolfram_uses_payload_files(monkeypatch, tmp_path):
     assert captured["env"]["PYOPE_WL_OPERATION_PATH"] == str(
         tmp_path / "pyope_wl_operation.txt"
     )
+    assert captured["env"]["PYOPE_WL_RESULT_PATH"] == str(tmp_path / "pyope_result.txt")
     assert "PYOPE_WL_EXPR" not in captured["env"]
+
+
+def test_invoke_wolfram_falls_back_to_stdout_marker(monkeypatch, tmp_path):
+    def fake_tempdir(prefix):
+        class _TempDir:
+            def __enter__(self_inner):
+                return str(tmp_path)
+
+            def __exit__(self_inner, exc_type, exc, tb):
+                return False
+
+        return _TempDir()
+
+    def fake_run(command, capture_output, text, encoding, check, env):
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="PYOPE_RESULT: 42\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(
+        "pyope.wolfram_backend.tempfile.TemporaryDirectory", fake_tempdir
+    )
+    monkeypatch.setattr("pyope.wolfram_backend.subprocess.run", fake_run)
+
+    result = _invoke_wolfram(
+        "dummy.wls",
+        {
+            "PYOPE_WL_OPERATION": "EVAL",
+            "PYOPE_WL_EXPR": "42",
+            "PYOPE_WL_OPERATORS": "",
+            "PYOPE_WL_REGISTRY": "",
+        },
+        set(),
+    )
+
+    assert result == 42
 
 
 def test_decode_expr_supports_unicode_operator_names():
@@ -441,37 +470,19 @@ def test_simplify_with_wolfram_reorders_normal_products_in_lists():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_backend_round_trips_derivative_payloads():
-    T = BasisOperator("T")
-
-    with compute_backend("wolfram"):
-        result = NO(sp.Rational(3, 2) * T, dn(2, T))
-
-    assert result == sp.Rational(3, 2) * NO(T, dn(2, T))
+def test_compute_backend_rejects_wolfram_for_derivative_payload_path():
+    with pytest.raises(ValueError, match="not ready yet and must not be used"):
+        with compute_backend("wolfram"):
+            pass
 
 
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_wolfram_backend_round_trips_nested_no_protocol_shape():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
-
-    expr = (
-        -sp.Rational(8, 9) * NO(T, NO(T, NO(T, NO(J, J))))
-        + sp.Rational(4, 9) * NO(T, NO(T, NO(T, dn(1, J))))
-        + sp.Rational(2, 3) * NO(T, NO(T, NO(dn(1, T), J)))
-    )
-
-    with compute_backend("wolfram"):
-        result = NO(T, expr)
-
-    expected = (
-        -sp.Rational(8, 9) * NO(T, NO(T, NO(T, NO(T, NO(J, J)))))
-        + sp.Rational(4, 9) * NO(T, NO(T, NO(T, NO(T, dn(1, J)))))
-        + sp.Rational(2, 3) * NO(T, NO(T, NO(T, NO(dn(1, T), J))))
-    )
-    assert result == expected
+def test_compute_backend_rejects_wolfram_for_nested_no_path():
+    with pytest.raises(ValueError, match="not ready yet and must not be used"):
+        with compute_backend("wolfram"):
+            pass
 
 
 @pytest.mark.skipif(
