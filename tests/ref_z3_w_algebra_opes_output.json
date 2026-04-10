@@ -1,0 +1,21 @@
+{
+	"j0_j0":{
+		"pole2":"GetCoefficient[MakeOPE[{-5*One, 0}], 2]"
+	},
+	"t_t":{
+		"pole4":"GetCoefficient[MakeOPE[{(-15*One)\/2, 0, -4*NO[b1, Derivative[1][c1]] - 3*NO[β1, Derivative[1][γ1]] - 2*NO[Derivative[1][b1], c1] - NO[Derivative[1][β1], γ1], 4*(-NO[b1, Derivative[2][c1]] - NO[Derivative[1][b1], Derivative[1][c1]]) + NO[Derivative[1][b1], Derivative[1][c1]] + 2*(NO[b1, Derivative[2][c1]] + NO[Derivative[1][b1], Derivative[1][c1]]) + (9*(-NO[β1, Derivative[2][γ1]] - NO[Derivative[1][β1], Derivative[1][γ1]]))\/4 + (3*(NO[β1, Derivative[2][γ1]] + NO[Derivative[1][β1], Derivative[1][γ1]]))\/4 + NO[Derivative[2][b1], c1] - 2*(NO[Derivative[1][b1], Derivative[1][c1]] + NO[Derivative[2][b1], c1]) + (-NO[Derivative[1][β1], Derivative[1][γ1]] - NO[Derivative[2][β1], γ1])\/2}], 4]",
+		"pole2":"GetCoefficient[MakeOPE[{(-15*One)\/2, 0, -4*NO[b1, Derivative[1][c1]] - 3*NO[β1, Derivative[1][γ1]] - 2*NO[Derivative[1][b1], c1] - NO[Derivative[1][β1], γ1], 4*(-NO[b1, Derivative[2][c1]] - NO[Derivative[1][b1], Derivative[1][c1]]) + NO[Derivative[1][b1], Derivative[1][c1]] + 2*(NO[b1, Derivative[2][c1]] + NO[Derivative[1][b1], Derivative[1][c1]]) + (9*(-NO[β1, Derivative[2][γ1]] - NO[Derivative[1][β1], Derivative[1][γ1]]))\/4 + (3*(NO[β1, Derivative[2][γ1]] + NO[Derivative[1][β1], Derivative[1][γ1]]))\/4 + NO[Derivative[2][b1], c1] - 2*(NO[Derivative[1][b1], Derivative[1][c1]] + NO[Derivative[2][b1], c1]) + (-NO[Derivative[1][β1], Derivative[1][γ1]] - NO[Derivative[2][β1], γ1])\/2}], 2]"
+	},
+	"t_j0":{
+		"pole2":"GetCoefficient[MakeOPE[{2*NO[b1, c1] + 3*NO[β1, γ1], -4*(-NO[b1, Derivative[1][c1]] - NO[Derivative[1][b1], c1]) - 2*(NO[b1, Derivative[1][c1]] + NO[Derivative[1][b1], c1]) - (9*(-NO[β1, Derivative[1][γ1]] - NO[Derivative[1][β1], γ1]))\/2 - (3*(NO[β1, Derivative[1][γ1]] + NO[Derivative[1][β1], γ1]))\/2}], 2]",
+		"pole1":"GetCoefficient[MakeOPE[{2*NO[b1, c1] + 3*NO[β1, γ1], -4*(-NO[b1, Derivative[1][c1]] - NO[Derivative[1][b1], c1]) - 2*(NO[b1, Derivative[1][c1]] + NO[Derivative[1][b1], c1]) - (9*(-NO[β1, Derivative[1][γ1]] - NO[Derivative[1][β1], γ1]))\/2 - (3*(NO[β1, Derivative[1][γ1]] + NO[Derivative[1][β1], γ1]))\/2}], 1]"
+	},
+	"t_w":{
+		"pole2":"GetCoefficient[MakeOPE[{(3*β1)\/2, Derivative[1][β1]}], 2]",
+		"pole1":"GetCoefficient[MakeOPE[{(3*β1)\/2, Derivative[1][β1]}], 1]"
+	},
+	"t_g":{
+		"pole2":"GetCoefficient[MakeOPE[{(3*NO[γ1, b1])\/2, NO[γ1, Derivative[1][b1]] + NO[Derivative[1][γ1], b1]}], 2]",
+		"pole1":"GetCoefficient[MakeOPE[{(3*NO[γ1, b1])\/2, NO[γ1, Derivative[1][b1]] + NO[Derivative[1][γ1], b1]}], 1]"
+	}
+}

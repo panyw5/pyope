@@ -1,10 +1,45 @@
-"""Operator-space utilities for fixed-weight and sparse local-operator computations."""
+"""
+├─ Module-level entry points
+│   ├─ make_realized()
+│   ├─ realize()
+│   ├─ realize_and_simplify()
+│   ├─ realized_coordinates()
+│   ├─ list_independent_ops()
+│   ├─ list_independent_op_indices()
+│   ├─ list_zero_relations()
+│   └─ clear_realize_cache()
+└─ Key classes
+    ├─ RealizedGenerator
+    │  ├─ property: realization
+    │  └─ method: set_latex()
+    ├─ SparseLinearContext
+    │  ├─ methods: sparse_terms(), reduce_vector(), insert_expr()
+    │  └─ methods: independent_subset(), zero_relations()
+    ├─ LocalOperatorBasis
+    │  ├─ attributes: generators, stress_tensor, gradings, max_occurence
+    │  ├─ methods: canonicalize(), sparse_terms(), list(), coordinates()
+    │  ├─ methods: realized_coordinates()
+    │  └─ methods: list_independent_ops(), list_independent_op_indices(),
+                   list_zero_relations()
+    ├─ C2Space (experimental)
+    │  ├─ role: construct and query the fixed-weight C2 subspace
+    │  ├─ attribute: basis_builder
+    │  ├─ methods: generators(), basis(), contains(), is_zero_mod_c2()
+    │  └─ methods: reducer(), quotient_normal_form(), solve_c2_witness()
+    └─ LegacyC2NullSearcher (experimental)
+        ├─ role: compatibility wrapper over the newer quotient-based null search
+        ├─ attributes: basis_builder, descendants, c2_space, stress_tensor, c2_reducer
+        ├─ methods: quotient_precheck(), search_from_sources()
+        └─ method: search_stress_tensor_nilpotency()
+"""
 
 from __future__ import annotations
 
 import inspect
 import shutil
+from concurrent.futures import ThreadPoolExecutor
 from functools import cmp_to_key, lru_cache
+import os
 from typing import Any, Iterable, MutableMapping, Optional, cast
 
 import sympy as sp
@@ -23,7 +58,12 @@ from .simplify import simplify
 
 
 class RealizedGenerator(BasicOperator):
-    """Named strong generator with an optional composite realization."""
+    """Generator symbol paired with an explicit composite realization.
+
+    The object behaves like an ordinary ``BasicOperator`` in abstract operator
+    manipulations, but also carries a concrete expression used by ``realize()``
+    and related helpers.
+    """
 
     def __new__(
         cls,
@@ -57,10 +97,11 @@ class RealizedGenerator(BasicOperator):
 
     @property
     def realization(self) -> Any:
+        """Return the concrete expression represented by this generator."""
         return getattr(self, "_realization")
 
     def set_latex(self, latex: str):
-        """返回带自定义 LaTeX 显示名称的 realized generator。"""
+        """Return a copy with the same realization and a custom LaTeX label."""
         return RealizedGenerator(
             self.name,
             realization=self.realization,
@@ -71,6 +112,7 @@ class RealizedGenerator(BasicOperator):
 
 
 def _resolve_calling_namespace() -> MutableMapping[str, Any]:
+    """Return the caller namespace used by ``make_realized()`` name inference."""
     frame = inspect.currentframe()
     if frame is None or frame.f_back is None or frame.f_back.f_back is None:
         raise RuntimeError("Could not access calling frame for make_realized")
@@ -81,6 +123,7 @@ def _resolve_calling_namespace() -> MutableMapping[str, Any]:
 
 
 def _lookup_binding_name(namespace: MutableMapping[str, Any], expr: Any) -> str:
+    """Find the most recent variable name bound to ``expr`` in ``namespace``."""
     matches = [name for name, value in namespace.items() if value is expr]
     if not matches:
         raise ValueError(
@@ -156,7 +199,24 @@ def _normalize_max_occurence(value: Any) -> int | None:
 
 
 def _ordered_unique_expressions(expressions: Iterable[Any]) -> list[Any]:
+    """Deduplicate expressions and sort them deterministically by SymPy form."""
     return sorted(set(expressions), key=sp.srepr)
+
+
+def _get_zero_relations_max_workers() -> int:
+    """Read the optional thread count for relation-vector construction."""
+    raw = os.environ.get("PYOPE_ZERO_RELATIONS_MAX_WORKERS", "").strip()
+    if not raw:
+        return 1
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ValueError(
+            "PYOPE_ZERO_RELATIONS_MAX_WORKERS must be a positive integer"
+        ) from exc
+    if value <= 0:
+        raise ValueError("PYOPE_ZERO_RELATIONS_MAX_WORKERS must be a positive integer")
+    return value
 
 
 def _should_simplify_with_wolfram() -> bool:
@@ -170,8 +230,58 @@ def _canonicalization_mode() -> str:
         return "wolfram-simplify"
     return get_compute_backend()
 
+@lru_cache(maxsize=None)
+def _canonicalize_and_cache(
+    expr: Any, registry_version: int, canonicalization_mode: str
+) -> Any:
+    """
+    expr: operators or list/dict of operators ->
+    - right nesting NO
+    - reorder operators based on their canonical ordering
+    - expand derivative using Leibniz, expressed as `d(A, n)`
+    - collect/combine terms
+
+    cache the computed results
+    """
+    del registry_version
+
+    # 走 wolfram 路线
+    if canonicalization_mode == "wolfram-simplify":
+        from .wolfram_backend import simplify_with_wolfram
+
+        simplified = simplify_with_wolfram(
+            list(expr) if isinstance(expr, tuple) else expr
+        )
+        if isinstance(expr, tuple) and not isinstance(simplified, list):
+            raise TypeError(
+                "Wolfram canonicalization must return a list for list inputs"
+            )
+        if isinstance(simplified, list):
+            return tuple(
+                _combine_like_terms_preserving_metadata(item) if item != 0 else Zero
+                for item in simplified
+            )
+
+        combined = _combine_like_terms_preserving_metadata(simplified)
+        if combined == 0:
+            return Zero
+        return combined
+
+    # 不走 wolfram 路线
+    if isinstance(expr, tuple):
+        return tuple(
+            _canonicalize_and_cache(item, ope_registry.version, canonicalization_mode)
+            for item in expr
+        )
+
+    combined = _combine_like_terms_preserving_metadata(simplify(expr))
+    if combined == 0:
+        return Zero
+    return combined
+
 
 def _terms_from_canonical_expression(expr: Any) -> dict[Any, sp.Expr]:
+    """Extract sparse monomial coefficients from an already-canonical expression."""
     if expr == 0 or expr == Zero:
         return {}
 
@@ -193,6 +303,11 @@ def _coordinates_from_canonical_expression(
     weight: Any,
     max_occurence: Any = None,
 ) -> sp.Matrix:
+    """Convert a canonical expression directly into basis coordinates.
+
+    This avoids re-canonicalizing ``expr`` when a caller has already done that
+    work, for example after batch simplification through the Wolfram backend.
+    """
     normalized_max_occurence = basis_builder._resolve_max_occurence(max_occurence)
     target_weight = _normalize_weight(weight)
 
@@ -225,6 +340,12 @@ def _coordinates_from_canonical_expression(
 def _independent_from_vectors(
     expressions: Iterable[Any], vector_getter: Any
 ) -> list[Any]:
+    """Return a deterministic independent subset from vectors or sparse vectors.
+
+    ``vector_getter`` may return either dense SymPy column matrices or sparse
+    dictionaries keyed by canonical monomials. Sparse inputs use incremental
+    elimination to avoid repeatedly materializing large dense matrices.
+    """
     ordered = _ordered_unique_expressions(expressions)
     independent = []
 
@@ -273,6 +394,7 @@ def _independent_from_vectors(
 def _independent_indices_from_vectors(
     expressions: Iterable[Any], vector_getter: Any
 ) -> list[int]:
+    """Return original input indices of vectors that increase the span."""
     ordered = list(expressions)
     independent_indices: list[int] = []
 
@@ -319,7 +441,13 @@ def _independent_indices_from_vectors(
 
 
 class _SparseIndependentEliminator:
-    """Incremental sparse elimination for independence checks."""
+    """Incrementally maintain a sparse pivot basis.
+
+    The eliminator stores normalized pivot vectors keyed by their leading
+    monomial. This lets the surrounding code test independence and construct
+    compressed coordinate systems without converting every sparse vector to a
+    dense matrix first.
+    """
 
     def __init__(self) -> None:
         self._pivot_vectors: dict[Any, dict[Any, sp.Expr]] = {}
@@ -341,6 +469,7 @@ class _SparseIndependentEliminator:
     def reduce_with_coefficients(
         self, vector: dict[Any, sp.Expr]
     ) -> tuple[dict[Any, sp.Expr], dict[Any, sp.Expr]]:
+        """Reduce ``vector`` against current pivots and track reduction factors."""
         reduced = {
             monomial: sp.sympify(coeff)
             for monomial, coeff in vector.items()
@@ -398,13 +527,19 @@ class _SparseIndependentEliminator:
 
 
 class SparseLinearContext:
-    """On-demand sparse linear algebra over canonical monomial supports."""
+    """Lazy sparse linear-algebra facade over a canonicalizer or basis builder.
+
+    The context centralizes the common workflow used across basis comparisons:
+    canonicalize an expression, extract sparse monomial coefficients, and feed
+    those coefficients into incremental elimination or nullspace computation.
+    """
 
     def __init__(self, canonicalizer: Any):
         self.canonicalizer = canonicalizer
         self._eliminator = _SparseIndependentEliminator()
 
     def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
+        """Return sparse canonical coefficients for `expri`."""
         sparse_terms = getattr(self.canonicalizer, "sparse_terms", None)
         if callable(sparse_terms):
             return cast(dict[Any, sp.Expr], sparse_terms(expr))
@@ -413,12 +548,15 @@ class SparseLinearContext:
     def reduce_vector(
         self, sparse_terms: dict[Any, sp.Expr]
     ) -> tuple[dict[Any, sp.Expr], dict[Any, sp.Expr]]:
+        """Reduce a sparse coefficient dictionary against cached pivots."""
         return self._eliminator.reduce_with_coefficients(sparse_terms)
 
     def insert_expr(self, expr: Any) -> bool:
+        """Insert ``expr`` into the pivot basis if it is linearly independent."""
         return self._eliminator.insert(self.sparse_terms(expr))
 
     def independent_subset(self, expressions: Iterable[Any]) -> list[Any]:
+        """Return a deterministic independent subset of ``expressions``."""
         ordered = _ordered_unique_expressions(expressions)
         eliminator = _SparseIndependentEliminator()
         independent = []
@@ -430,6 +568,7 @@ class SparseLinearContext:
         return independent
 
     def zero_relations(self, expressions: Iterable[Any]) -> list[dict[str, Any]]:
+        """Compute a basis of linear relations among ``expressions``."""
         return _zero_relations_from_vectors(expressions, self.sparse_terms)
 
 
@@ -478,7 +617,12 @@ def _matrix_from_sparse_vectors(
 def _compressed_matrix_from_sparse_vectors(
     vectors: Iterable[dict[Any, sp.Expr]],
 ) -> tuple[sp.Matrix, list[Any]]:
-    """Build a compressed coordinate matrix using incremental sparse pivots."""
+    """Build coordinates in the pivot basis discovered during sparse elimination.
+
+    Instead of using every monomial as a row, the resulting matrix uses only the
+    pivot monomials discovered while scanning the input vectors. That is enough
+    for rank and nullspace computations while keeping the dense matrix smaller.
+    """
     vector_list = list(vectors)
     if not vector_list:
         return sp.zeros(0, 0), []
@@ -490,6 +634,9 @@ def _compressed_matrix_from_sparse_vectors(
         reduced, coefficients = eliminator.reduce_with_coefficients(vector)
         leading = eliminator._leading_term(reduced)
 
+        # ``column`` records the coordinates of the current vector in the pivot
+        # basis accumulated so far, plus a new pivot entry if reduction leaves a
+        # nonzero remainder.
         column = dict(coefficients)
         if leading is not None:
             pivot_monomial, pivot_coeff = leading
@@ -518,11 +665,22 @@ def _compressed_matrix_from_sparse_vectors(
 def _zero_relations_from_vectors(
     expressions: Iterable[Any], vector_getter: Any
 ) -> list[dict[str, Any]]:
+    """Compute nullspace relations for expressions after vectorization.
+
+    The returned dictionaries keep both the raw nullspace vector and a readable
+    operator relation so callers can use the result either programmatically or
+    for diagnostics.
+    """
     ordered = list(expressions)
     if not ordered:
         return []
 
-    columns = [vector_getter(expr) for expr in ordered]
+    max_workers = min(_get_zero_relations_max_workers(), len(ordered))
+    if max_workers == 1:
+        columns = [vector_getter(expr) for expr in ordered]
+    else:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            columns = list(executor.map(vector_getter, ordered))
     if not columns:
         return []
 
@@ -690,7 +848,7 @@ def _is_negative_single_letter_fermion_sector(expr: Any) -> bool:
 
 
 def _combine_like_terms_preserving_metadata(expr: Any) -> Any:
-    """Combine like terms without rebuilding operators from stripped keys."""
+    """Combine terms based on the operators, simplify coefficients"""
     terms = collect_operators_coefficients(expr)
     rebuilt_terms = []
 
@@ -764,6 +922,8 @@ def _realize_expr(expr: Any) -> Any:
         right = getattr(expr, "right", None)
 
         if base is not None and order is not None:
+            # Derivatives preserve the abstract derivative structure; only the
+            # underlying base operator is recursively realized.
             return d(_realize_expr(base), order)
         if left is not None and right is not None:
             # P0: combine like terms immediately after normal ordering
@@ -775,18 +935,12 @@ def _realize_expr(expr: Any) -> Any:
 
 
 def realize(expr: Any) -> Any:
-    """Expand realized generators in an operator expression."""
+    """Expand every ``RealizedGenerator`` appearing in ``expr``.
+
+    This delegates to the expression protocol implemented by operator objects,
+    which eventually calls ``_realize_expr()`` on the relevant subexpressions.
+    """
     return expr.realize()
-
-
-def realize_and_simplify(expr: Any) -> Any:
-    """Expand realized generators and canonicalize the resulting expression."""
-    realized = realize(expr)
-    if _should_simplify_with_wolfram():
-        from .wolfram_backend import simplify_with_wolfram
-
-        return _combine_like_terms_preserving_metadata(simplify_with_wolfram(realized))
-    return _combine_like_terms_preserving_metadata(simplify(realized))
 
 
 def realized_coordinates(
@@ -795,9 +949,16 @@ def realized_coordinates(
     weight: Any = None,
     max_occurence: Any = None,
 ) -> sp.Matrix:
-    """Project an expression to coordinates after realization expansion."""
+    """Project ``expr`` to a free-field basis after realization expansion."""
+    realized = realize(expr)
+    canonical = _canonicalize_and_cache(
+        realized,
+        ope_registry.version,
+        _canonicalization_mode(),
+    )
+
     return free_field_basis.coordinates(
-        realize_and_simplify(expr),
+        canonical,
         weight=weight,
         max_occurence=max_occurence,
     )
@@ -809,29 +970,25 @@ def list_independent_ops(
     weight: Any = None,
     max_occurence: Any = None,
 ) -> list[Any]:
-    """Return a linearly independent subset via local canonical expansions."""
+    """Return a deterministic linearly independent subset of ``expressions``.
 
-    context = SparseLinearContext(basis_builder)
-    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
-    processed_lookup: dict[Any, Any] = {}
-    if use_wolfram_precanonicalization:
-        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
+    The expressions are compared after canonicalization in ``basis_builder``'s
+    monomial basis. Canonicalization is always performed: using Wolfram backend
+    when available, otherwise using SymPy simplify.
+    """
 
-        ordered = _ordered_unique_expressions(expressions)
-        canonicalized: list[Any] = []
-        for chunk in chunk_exprs_for_wolfram(ordered):
-            simplified_chunk = simplify_with_wolfram(chunk)
-            if not isinstance(simplified_chunk, list):
-                raise TypeError(
-                    "simplify_with_wolfram must return a list for list inputs"
-                )
-            canonicalized.extend(simplified_chunk)
-        processed_lookup = dict(zip(ordered, canonicalized, strict=True))
+    ordered = _ordered_unique_expressions(expressions)
+    canonicalized = _canonicalize_and_cache(
+        tuple(ordered),
+        ope_registry.version,
+        _canonicalization_mode(),
+    )
+    if not isinstance(canonicalized, (list, tuple)):
+        raise TypeError("Canonicalization must return a sequence for sequence inputs")
+    processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
-        if not use_wolfram_precanonicalization:
-            return context.sparse_terms(expr)
         return _terms_from_canonical_expression(processed_lookup[expr])
 
     return _independent_from_vectors(expressions, vector_getter)
@@ -843,29 +1000,20 @@ def list_independent_op_indices(
     weight: Any = None,
     max_occurence: Any = None,
 ) -> list[int]:
-    """Return original input indices whose expressions are linearly independent."""
+    """Return input positions whose expressions enlarge the canonical span."""
 
-    context = SparseLinearContext(basis_builder)
-    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
-    processed_lookup: dict[Any, Any] = {}
     ordered = list(expressions)
-    if use_wolfram_precanonicalization:
-        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
-
-        canonicalized: list[Any] = []
-        for chunk in chunk_exprs_for_wolfram(ordered):
-            simplified_chunk = simplify_with_wolfram(chunk)
-            if not isinstance(simplified_chunk, list):
-                raise TypeError(
-                    "simplify_with_wolfram must return a list for list inputs"
-                )
-            canonicalized.extend(simplified_chunk)
-        processed_lookup = dict(zip(ordered, canonicalized, strict=True))
+    canonicalized = _canonicalize_and_cache(
+        tuple(ordered),
+        ope_registry.version,
+        _canonicalization_mode(),
+    )
+    if not isinstance(canonicalized, (list, tuple)):
+        raise TypeError("Canonicalization must return a sequence for sequence inputs")
+    processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
-        if not use_wolfram_precanonicalization:
-            return context.sparse_terms(expr)
         return _terms_from_canonical_expression(processed_lookup[expr])
 
     return _independent_indices_from_vectors(ordered, vector_getter)
@@ -877,89 +1025,37 @@ def list_zero_relations(
     weight: Any = None,
     max_occurence: Any = None,
 ) -> list[dict[str, Any]]:
-    """Return a basis of linear relations via local canonical expansions."""
+    """Return a basis of linear relations among ``expressions``.
 
-    context = SparseLinearContext(basis_builder)
-    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
-    processed_lookup: dict[Any, Any] = {}
-    if use_wolfram_precanonicalization:
-        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
+    Each relation is represented both as coefficient data and as an unevaluated
+    linear combination of the original expressions.
+    """
 
-        ordered = list(expressions)
-        canonicalized: list[Any] = []
-        for chunk in chunk_exprs_for_wolfram(ordered):
-            simplified_chunk = simplify_with_wolfram(chunk)
-            if not isinstance(simplified_chunk, list):
-                raise TypeError(
-                    "simplify_with_wolfram must return a list for list inputs"
-                )
-            canonicalized.extend(simplified_chunk)
-        processed_lookup = dict(zip(ordered, canonicalized, strict=True))
+    ordered = list(expressions)
+    canonicalized = _canonicalize_and_cache(
+        tuple(ordered),
+        ope_registry.version,
+        _canonicalization_mode(),
+    )
+    if not isinstance(canonicalized, (list, tuple)):
+        raise TypeError("Canonicalization must return a sequence for sequence inputs")
+    processed_lookup = dict(zip(ordered, canonicalized, strict=True))
 
     def vector_getter(expr: Any) -> dict[Any, sp.Expr]:
         _validate_expression_weight(expr, weight)
-        if not use_wolfram_precanonicalization:
-            return context.sparse_terms(expr)
         return _terms_from_canonical_expression(processed_lookup[expr])
 
-    return _zero_relations_from_vectors(expressions, vector_getter)
-
-
-def independent_under_realization(
-    expressions: Iterable[Any],
-    free_field_basis: "LocalOperatorBasis",
-    weight: Any = None,
-    max_occurence: Any = None,
-) -> list[Any]:
-    """Return expressions that stay linearly independent after realization."""
-
-    ordered = _ordered_unique_expressions(expressions)
-    use_wolfram_precanonicalization = _should_simplify_with_wolfram()
-    processed_lookup: dict[Any, Any] = {}
-
-    if use_wolfram_precanonicalization and ordered:
-        from .wolfram_backend import chunk_exprs_for_wolfram, simplify_with_wolfram
-
-        realized_exprs = [realize(expr) for expr in ordered]
-        canonicalized: list[Any] = []
-        for chunk in chunk_exprs_for_wolfram(realized_exprs):
-            simplified_chunk = simplify_with_wolfram(chunk)
-            if not isinstance(simplified_chunk, list):
-                raise TypeError(
-                    "simplify_with_wolfram must return a list for list inputs"
-                )
-            canonicalized.extend(simplified_chunk)
-        processed_lookup = dict(zip(ordered, canonicalized, strict=True))
-
-    def vector_getter(expr: Any) -> sp.Matrix:
-        target_weight = weight
-        if target_weight is None:
-            target_weight = _get_conformal_weight(expr)
-            if target_weight is None:
-                raise ValueError(
-                    "Could not infer conformal weight under realization; provide weight"
-                )
-
-        if not use_wolfram_precanonicalization:
-            return realized_coordinates(
-                expr,
-                free_field_basis,
-                weight=target_weight,
-                max_occurence=max_occurence,
-            )
-
-        return _coordinates_from_canonical_expression(
-            processed_lookup[expr],
-            free_field_basis,
-            weight=target_weight,
-            max_occurence=max_occurence,
-        )
-
-    return _independent_from_vectors(expressions, vector_getter)
+    return _zero_relations_from_vectors(ordered, vector_getter)
 
 
 class LocalOperatorBasis:
-    """Build canonical fixed-weight bases of local operators."""
+    """Enumerate canonical fixed-weight bases of local operators.
+
+    The basis is generated from the supplied strong generators and their
+    derivatives, then filtered to monomials with the requested conformal weight.
+    Nonpositive bosonic generators require ``max_occurence`` so enumeration stays
+    finite.
+    """
 
     def __init__(
         self,
@@ -1002,37 +1098,21 @@ class LocalOperatorBasis:
         )
 
     def _resolve_max_occurence(self, value: Any = None) -> int | None:
+        """Resolve a per-call occurrence bound against the instance default."""
         normalized = _normalize_max_occurence(value)
         if normalized is None:
             return self.max_occurence
         return normalized
 
     def canonicalize(self, expr: Any) -> Any:
-        """Canonicalize an operator expression for basis comparisons."""
-        simplified = self._canonicalize_cached(
+        return _canonicalize_and_cache(
             expr,
             ope_registry.version,
             _canonicalization_mode(),
         )
-        combined = _combine_like_terms_preserving_metadata(simplified)
-        if combined == 0:
-            return Zero
-        return combined
-
-    @staticmethod
-    @lru_cache(maxsize=None)
-    def _canonicalize_cached(
-        expr: Any, registry_version: int, canonicalization_mode: str
-    ) -> Any:
-        del registry_version
-        if canonicalization_mode == "wolfram-simplify":
-            from .wolfram_backend import simplify_with_wolfram
-
-            return simplify_with_wolfram(expr)
-        return simplify(expr)
 
     def sparse_terms(self, expr: Any) -> dict[Any, sp.Expr]:
-        """Return sparse canonical coordinates without fixed-weight basis enumeration."""
+        """Return sparse canonical coordinates without enumerating a full basis."""
         return _canonical_terms(expr, self.canonicalize)
 
     def basis(self, weight: Any, max_occurence: Any = None) -> list[Any]:
@@ -1040,7 +1120,7 @@ class LocalOperatorBasis:
         return self.list(weight, max_occurence=max_occurence)
 
     def sector_of(self, expr: Any) -> dict[str, Any]:
-        """Return the conformal-weight/parity sector of an expression."""
+        """Return the conformal-weight/parity sector inferred from ``expr``."""
         weight = _get_conformal_weight(expr)
         parity = get_operator_parity(expr)
         return {"weight": weight, "parity": parity}
@@ -1054,7 +1134,7 @@ class LocalOperatorBasis:
         return self.canonicalize(normal_product(*([self.stress_tensor] * n)))
 
     def enumerate_candidates(self, weight: Any) -> list[Any]:
-        """Enumerate raw canonical candidate expressions of fixed weight."""
+        """Enumerate raw fixed-weight candidates before external postprocessing."""
         normalized_weight = _normalize_weight(weight)
         basis_terms = self._basis_terms(
             normalized_weight, self._resolve_max_occurence()
@@ -1062,7 +1142,7 @@ class LocalOperatorBasis:
         return list(basis_terms)
 
     def list(self, weight: Any, max_occurence: Any = None) -> list[Any]:
-        """Return a canonical basis of operator monomials at fixed weight."""
+        """Return the cached canonical basis of monomials at fixed weight."""
         normalized_weight = _normalize_weight(weight)
         normalized_max_occurence = self._resolve_max_occurence(max_occurence)
         return list(self._basis_terms(normalized_weight, normalized_max_occurence))
@@ -1070,7 +1150,12 @@ class LocalOperatorBasis:
     def coordinates(
         self, expr: Any, weight: Any = None, max_occurence: Any = None
     ) -> sp.Matrix:
-        """Return basis coordinates of an operator expression as a column vector."""
+        """Return basis coordinates of ``expr`` as a dense column vector.
+
+        ``weight`` is optional when it can be inferred from the canonicalized
+        expression. It becomes mandatory for the zero expression, whose weight is
+        otherwise ambiguous.
+        """
         canonical = self.canonicalize(expr)
         normalized_max_occurence = self._resolve_max_occurence(max_occurence)
 
@@ -1123,21 +1208,6 @@ class LocalOperatorBasis:
             max_occurence=max_occurence,
         )
 
-    def independent_under_realization(
-        self,
-        expressions: Iterable[Any],
-        free_field_basis: "LocalOperatorBasis",
-        weight: Any = None,
-        max_occurence: Any = None,
-    ) -> list[Any]:
-        """Filter expressions by linear independence after realization."""
-        return independent_under_realization(
-            expressions,
-            free_field_basis,
-            weight=weight,
-            max_occurence=max_occurence,
-        )
-
     def list_independent_ops(
         self,
         expressions: Iterable[Any],
@@ -1184,6 +1254,7 @@ class LocalOperatorBasis:
     def _basis_terms(
         self, weight: sp.Expr, max_occurence: int | None = None
     ) -> tuple[Any, ...]:
+        """Enumerate and cache canonical monomials of a given conformal weight."""
         atomic_operators = self._atomic_operators(weight, max_occurence)
         nonpositive_bosonic_counts = tuple(0 for _ in atomic_operators)
         basis_terms: list[Any] = []
@@ -1196,6 +1267,8 @@ class LocalOperatorBasis:
             max_occurence=max_occurence,
             nonpositive_bosonic_counts=nonpositive_bosonic_counts,
         ):
+            # ``_factor_tuples`` already enforces ordering and truncation rules;
+            # this final pass filters only the sector-specific edge cases.
             monomial = _build_canonical_basis_monomial(factors)
             operator_weight = _get_conformal_weight(monomial)
             if operator_weight is None or not _weights_equal(operator_weight, weight):
@@ -1212,6 +1285,7 @@ class LocalOperatorBasis:
     def _atomic_operators(
         self, target_weight: sp.Expr, max_occurence: int | None = None
     ) -> list[tuple[Operator, sp.Expr, bool]]:
+        """List derivative-decorated atomic operators that can appear in a basis."""
         atoms = []
         min_fermionic_compensation = self._min_fermionic_compensation()
         max_atomic_weight = sp.simplify(target_weight - min_fermionic_compensation)
@@ -1250,6 +1324,7 @@ class LocalOperatorBasis:
         return atoms
 
     def _min_fermionic_compensation(self) -> sp.Expr:
+        """Return the most negative weight contribution forced by fermionic atoms."""
         compensation = sp.Integer(0)
 
         for generator in self.generators:
@@ -1277,6 +1352,12 @@ class LocalOperatorBasis:
         max_occurence: int | None = None,
         nonpositive_bosonic_counts: tuple[int, ...] = (),
     ) -> list[tuple[Operator, ...]]:
+        """Enumerate ordered tuples of atomic operators with the target weight.
+
+        The recursion preserves canonical ordering by only revisiting the current
+        atom for bosons; fermions advance the start index so the same fermionic
+        atom cannot appear twice in one monomial.
+        """
         atomic_ops = tuple(atomic_operators)
 
         @lru_cache(maxsize=None)
@@ -1303,6 +1384,8 @@ class LocalOperatorBasis:
                     mutable_counts[index] += 1
                     next_counts = tuple(mutable_counts)
 
+                # If even the most negative tail available from the remaining
+                # atoms cannot reach ``next_remaining``, this branch is hopeless.
                 min_future_compensation = self._min_suffix_compensation(
                     next_start,
                     atomic_operators,
@@ -1326,6 +1409,7 @@ class LocalOperatorBasis:
         max_occurence: int | None = None,
         nonpositive_bosonic_counts: tuple[int, ...] = (),
     ) -> sp.Expr:
+        """Lower bound on weight contributed by the remaining atomic operators."""
         compensation = sp.Integer(0)
 
         for index in range(start_index, len(atomic_operators)):
@@ -1381,14 +1465,14 @@ def _c2_weight_step(generators: Any) -> sp.Expr:
 
 
 class C2Space:
-    """Construct the fixed-weight C2 subspace."""
+    """Construct and query the fixed-weight C2 subspace inside a basis builder."""
 
     def __init__(self, basis_builder: LocalOperatorBasis):
         self.basis_builder = basis_builder
         self._compat_reducer = None
 
     def reducer(self):
-        """Return a compatibility reducer backed by the new sparse C2 API."""
+        """Return a memoized reducer backed by the newer sparse C2 implementation."""
         if self._compat_reducer is None:
             from .c2 import GenericC2Reducer
 
@@ -1433,7 +1517,7 @@ class C2Space:
         return sorted(generated, key=sp.srepr)
 
     def basis(self, weight: Any) -> list[Any]:
-        """Return a linearly independent basis for the fixed-weight C2 subspace."""
+        """Return a linearly independent spanning set for ``C2(V)_weight``."""
         normalized_weight = _normalize_weight(weight)
         independent = []
         columns = []
@@ -1527,7 +1611,7 @@ class LegacyC2NullSearcher:
         self.c2_reducer = c2_reducer or self.c2_space.reducer()
 
     def quotient_precheck(self, target_expr: Any) -> Any:
-        """Bridge legacy searcher to the new reducer-based precheck API."""
+        """Run the modern quotient precheck through the legacy wrapper."""
         from .null_search import C2NullSearcher as QuotientC2NullSearcher
 
         canonicalizer = LocalOperatorBasis(
@@ -1550,7 +1634,7 @@ class LegacyC2NullSearcher:
         sources: Iterable[Any],
         target_expr: Any,
     ) -> Optional[dict[str, Any]]:
-        """Solve descendant lift via the new sparse quotient core."""
+        """Search for a descendant combination matching ``target_expr`` mod C2."""
         from .null_search import C2NullSearcher as QuotientC2NullSearcher
 
         normalized_weight = _normalize_weight(target_weight)
@@ -1583,7 +1667,7 @@ class LegacyC2NullSearcher:
     def search_stress_tensor_nilpotency(
         self, n: int, sources: Iterable[Any], stress_tensor: Any = None
     ) -> Optional[dict[str, Any]]:
-        """Search for a descendant congruent to T^(n) modulo C2."""
+        """Search for a descendant congruent to the ``n``-fold stress tensor product."""
         tensor = stress_tensor if stress_tensor is not None else self.stress_tensor
         if tensor is None:
             raise ValueError("stress_tensor must be provided")

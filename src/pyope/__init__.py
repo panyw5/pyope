@@ -63,12 +63,10 @@ from .operator_spaces import (
     SparseLinearContext,
     clear_realize_cache,
     list_independent_op_indices,
-    independent_under_realization,
     list_independent_ops,
     list_zero_relations,
     make_realized,
     realize,
-    realize_and_simplify,
     realized_coordinates,
 )
 from .operators import (
@@ -172,10 +170,8 @@ __all__ = [
     "RealizedGenerator",
     "SingularVectorAnalyzer",
     "realize",
-    "realize_and_simplify",
     "realized_coordinates",
     "clear_realize_cache",
-    "independent_under_realization",
     "zhu_circle_product",
     "zhu_star_product",
     # Registry

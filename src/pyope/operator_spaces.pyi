@@ -2,9 +2,9 @@ from typing import Any, Dict, Iterable, List, Optional
 
 import sympy as sp
 
-from .operators import BasisOperator, Operator
+from .operators import BasicOperator, Operator
 
-class RealizedGenerator(BasisOperator):
+class RealizedGenerator(BasicOperator):
     def __new__(
         cls,
         name: str,
@@ -19,16 +19,10 @@ class RealizedGenerator(BasisOperator):
 
 def make_realized(expressions: Any, **assumptions: Any) -> list[RealizedGenerator]: ...
 def realize(expr: Any) -> Any: ...
-def realize_and_simplify(expr: Any) -> Any: ...
 def clear_realize_cache() -> None: ...
 def realized_coordinates(
     expr: Any, free_field_basis: "LocalOperatorBasis", weight: Any = None
 ) -> sp.Matrix: ...
-def independent_under_realization(
-    expressions: Iterable[Any],
-    free_field_basis: "LocalOperatorBasis",
-    weight: Any = None,
-) -> list[Any]: ...
 def list_independent_ops(
     expressions: Iterable[Any],
     basis: "LocalOperatorBasis",
@@ -91,13 +85,6 @@ class LocalOperatorBasis:
         weight: Any = None,
         max_occurence: Any = None,
     ) -> sp.Matrix: ...
-    def independent_under_realization(
-        self,
-        expressions: Iterable[Any],
-        free_field_basis: "LocalOperatorBasis",
-        weight: Any = None,
-        max_occurence: Any = None,
-    ) -> list[Any]: ...
     def list_independent_ops(
         self,
         expressions: Iterable[Any],
