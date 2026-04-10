@@ -476,9 +476,23 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
         with compute_backend("sympy"):
             return NO(normalize_protocol_value(left), normalize_protocol_value(right))
 
+    def decoded_no_chain(items: Any) -> Any:
+        if not isinstance(items, list) or len(items) < 2:
+            raise WolframBackendError(
+                "PyNOChain payload must contain at least two items"
+            )
+
+        normalized_items = [normalize_protocol_value(item) for item in items]
+        result = normalized_items[-1]
+        with compute_backend("sympy"):
+            for item in reversed(normalized_items[:-1]):
+                result = NO(item, result)
+        return result
+
     names: Dict[str, Any] = {
         "MakeOPE": MakeOPE,
         "NO": decoded_no,
+        "PyNOChain": decoded_no_chain,
         "One": One,
         "PyDict": lambda items: dict(items),
         "PyTuple": lambda items: tuple(items),
@@ -502,7 +516,16 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
     for name in protocol_operator_names:
         names.setdefault(name, BasicOperator(name))
 
-    reserved = {"MakeOPE", "NO", "One", "PyDict", "PyTuple", "Zero", "dn"}
+    reserved = {
+        "MakeOPE",
+        "NO",
+        "One",
+        "PyDict",
+        "PyNOChain",
+        "PyTuple",
+        "Zero",
+        "dn",
+    }
     for token in set(re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", payload)):
         if token not in names and token not in reserved:
             names[token] = sp.Symbol(token)
@@ -613,30 +636,57 @@ def _eval_protocol_ast(node: ast.AST, names: Dict[str, Any], payload: str) -> An
         return -_eval_protocol_ast(node.operand, names, payload)
 
     if isinstance(node, ast.BinOp):
+        if isinstance(node.op, ast.Add):
+            values = _eval_left_associative_binop_chain(node, ast.Add, names, payload)
+            result = values[0]
+            for value in values[1:]:
+                result = result + value
+            return result
+
+        if isinstance(node.op, ast.Mult):
+            values = _eval_left_associative_binop_chain(node, ast.Mult, names, payload)
+            operator_like_count = sum(1 for value in values if _is_operator_like(value))
+            if operator_like_count > 1:
+                raise WolframBackendError(
+                    f"Illegal operator multiplication in Wolfram payload: {payload}"
+                )
+
+            result = values[0]
+            for value in values[1:]:
+                result = result * value
+            if isinstance(result, sp.Expr):
+                assert_no_illegal_operator_mul(result, context="wolfram_backend.decode")
+            return result
+
         left = _eval_protocol_ast(node.left, names, payload)
         right = _eval_protocol_ast(node.right, names, payload)
 
-        if isinstance(node.op, ast.Add):
-            return left + right
         if isinstance(node.op, ast.Sub):
             return left - right
         if isinstance(node.op, ast.Div):
             if isinstance(left, int) and isinstance(right, int):
                 return sp.Rational(left, right)
             return left / right
-        if isinstance(node.op, ast.Mult):
-            if _is_operator_like(left) and _is_operator_like(right):
-                raise WolframBackendError(
-                    f"Illegal operator multiplication in Wolfram payload: {payload}"
-                )
-            product = left * right
-            if isinstance(product, sp.Expr):
-                assert_no_illegal_operator_mul(
-                    product, context="wolfram_backend.decode"
-                )
-            return product
 
     raise WolframBackendError(f"Unsupported Wolfram payload syntax: {payload}")
+
+
+def _eval_left_associative_binop_chain(
+    node: ast.BinOp,
+    op_type: type[ast.operator],
+    names: Dict[str, Any],
+    payload: str,
+) -> list[Any]:
+    values: list[Any] = []
+    current: ast.AST = node
+
+    while isinstance(current, ast.BinOp) and isinstance(current.op, op_type):
+        values.append(_eval_protocol_ast(current.right, names, payload))
+        current = current.left
+
+    values.append(_eval_protocol_ast(current, names, payload))
+    values.reverse()
+    return values
 
 
 def _is_operator_like(value: Any) -> bool:
