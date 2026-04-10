@@ -10,7 +10,7 @@ import sympy as sp
 
 from .api import NO, bracket
 from .constants import One, Zero
-from .local_operator import collect_operator_terms
+from .local_operator import collect_operators_coefficients
 from .operator_spaces import (
     LocalOperatorBasis,
     SparseLinearContext,
@@ -36,7 +36,7 @@ def _homogeneous_components(
         return {}
 
     grouped: dict[sp.Expr, list[Any]] = {}
-    for operator, coeff in collect_operator_terms(canonical).items():
+    for operator, coeff in collect_operators_coefficients(canonical).items():
         monomial = One if operator == 1 else operator
         weight = _get_conformal_weight(monomial)
         if weight is None:

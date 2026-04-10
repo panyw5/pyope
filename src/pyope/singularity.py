@@ -8,7 +8,7 @@ import sympy as sp
 
 from .api import OPE
 from .constants import Zero
-from .local_operator import collect_operator_terms
+from .local_operator import collect_operators_coefficients
 from .operator_spaces import (
     LocalOperatorBasis,
     _get_conformal_weight,
@@ -99,7 +99,7 @@ class SingularVectorAnalyzer:
                 if coeff == Zero:
                     continue
 
-                coeff_terms = collect_operator_terms(coeff)
+                coeff_terms = collect_operators_coefficients(coeff)
                 for operator_coeff in coeff_terms.values():
                     equations.append(sp.sympify(operator_coeff))
 

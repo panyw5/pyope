@@ -1,5 +1,8 @@
+import os
 import shutil
 import subprocess
+import threading
+import time
 
 import pytest
 import sympy as sp
@@ -21,6 +24,7 @@ from pyope import (
 from pyope.backend import SUPPORTED_BACKENDS
 from pyope.wolfram_backend import (
     WolframBackendError,
+    _get_wolfram_max_workers,
     _decode_chunked_list_payload,
     _decode_expr,
     _decode_payload,
@@ -42,21 +46,53 @@ def test_set_compute_backend_rejects_unknown_backend():
         set_compute_backend("unknown")
 
 
-def test_set_compute_backend_rejects_incomplete_wolfram_backend():
-    with pytest.raises(ValueError, match="not ready yet and must not be used"):
-        set_compute_backend("wolfram")
+def test_set_compute_backend_accepts_wolfram_backend():
+    set_compute_backend("wolfram")
+
+    assert get_compute_backend() == "wolfram"
 
 
 def test_supported_backends_include_wolfram():
     assert SUPPORTED_BACKENDS == {"sympy", "wolfram"}
 
 
+def test_set_compute_backend_sets_default_wolfram_worker_count(monkeypatch):
+    monkeypatch.delenv("PYOPE_WL_MAX_WORKERS", raising=False)
+
+    set_compute_backend("wolfram")
+
+    assert os.environ["PYOPE_WL_MAX_WORKERS"] == "1"
+
+
+def test_set_compute_backend_sets_custom_wolfram_worker_count(monkeypatch):
+    monkeypatch.delenv("PYOPE_WL_MAX_WORKERS", raising=False)
+
+    set_compute_backend("wolfram", max_worker_number=4)
+
+    assert os.environ["PYOPE_WL_MAX_WORKERS"] == "4"
+
+
+def test_set_compute_backend_rejects_invalid_worker_count():
+    with pytest.raises(
+        ValueError, match="max_worker_number must be a positive integer"
+    ):
+        set_compute_backend("wolfram", max_worker_number=0)
+
+
 def test_compute_backend_context_manager_restores_previous_backend():
     set_compute_backend("sympy")
-    with pytest.raises(ValueError, match="not ready yet and must not be used"):
-        with compute_backend("wolfram"):
-            pass
+    with compute_backend("wolfram"):
+        assert get_compute_backend() == "wolfram"
     assert get_compute_backend() == "sympy"
+
+
+def test_compute_backend_context_manager_restores_previous_worker_count(monkeypatch):
+    monkeypatch.setenv("PYOPE_WL_MAX_WORKERS", "2")
+
+    with compute_backend("wolfram", max_worker_number=5):
+        assert os.environ["PYOPE_WL_MAX_WORKERS"] == "5"
+
+    assert os.environ["PYOPE_WL_MAX_WORKERS"] == "2"
 
 
 def test_sympy_backend_still_computes_normal_ordered_product():
@@ -82,28 +118,25 @@ def test_sympy_backend_still_computes_zero_ope():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_compute_backend_rejects_wolfram_for_registered_binary_ope_path():
-    with pytest.raises(ValueError, match="not ready yet and must not be used"):
-        with compute_backend("wolfram"):
-            pass
+def test_compute_backend_accepts_wolfram_for_registered_binary_ope_path():
+    with compute_backend("wolfram"):
+        assert get_compute_backend() == "wolfram"
 
 
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_compute_backend_rejects_wolfram_for_binary_no_path():
-    with pytest.raises(ValueError, match="not ready yet and must not be used"):
-        with compute_backend("wolfram"):
-            pass
+def test_compute_backend_accepts_wolfram_for_binary_no_path():
+    with compute_backend("wolfram"):
+        assert get_compute_backend() == "wolfram"
 
 
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_compute_backend_rejects_wolfram_for_linear_no_path():
-    with pytest.raises(ValueError, match="not ready yet and must not be used"):
-        with compute_backend("wolfram"):
-            pass
+def test_compute_backend_accepts_wolfram_for_linear_no_path():
+    with compute_backend("wolfram"):
+        assert get_compute_backend() == "wolfram"
 
 
 def test_wolfram_decoder_rejects_illegal_operator_multiplication():
@@ -464,7 +497,7 @@ def test_op_to_wolfram_string_uses_single_backslashes_for_to_expression():
     assert "\\\\[Beta]" not in result
 
 
-def test_run_eval_uses_public_wolfram_string_encoder(monkeypatch):
+def test_eval_expr_with_wolfram_uses_public_wolfram_string_encoder(monkeypatch):
     beta = BasicOperator("β")
     gamma = BasicOperator("γ")
     expr = NO(gamma, dn(2, beta))
@@ -484,7 +517,7 @@ def test_run_eval_uses_public_wolfram_string_encoder(monkeypatch):
     assert captured["payload"]["PYOPE_WL_EXPR"] == op_to_wolfram_string(expr)
 
 
-def test_run_eval_list_uses_public_wolfram_string_encoder(monkeypatch):
+def test_eval_list_with_wolfram_uses_public_wolfram_string_encoder(monkeypatch):
     beta = BasicOperator("β")
     gamma = BasicOperator("γ")
     exprs = [beta, [NO(gamma, dn(2, beta))]]
@@ -517,14 +550,17 @@ def test_simplify_with_wolfram_auto_chunks_large_lists(monkeypatch):
         assert list(values) == exprs
         return [exprs[:2], exprs[2:4], exprs[4:]]
 
-    def fake_run_eval_list(values, operation):
+    def fake_eval_list_with_wolfram(values, operation):
         calls.append((list(values), operation))
         return list(values)
 
     monkeypatch.setattr(
         "pyope.wolfram_backend.chunk_exprs_for_wolfram", fake_chunk_exprs
     )
-    monkeypatch.setattr("pyope.wolfram_backend._run_eval_list", fake_run_eval_list)
+    monkeypatch.setattr(
+        "pyope.wolfram_backend._eval_list_with_wolfram",
+        fake_eval_list_with_wolfram,
+    )
 
     result = simplify_with_wolfram(exprs)
 
@@ -534,6 +570,79 @@ def test_simplify_with_wolfram_auto_chunks_large_lists(monkeypatch):
         ([2, 3], "CANONICALIZE_LIST"),
         ([4], "CANONICALIZE_LIST"),
     ]
+
+
+def test_get_wolfram_max_workers_defaults_to_one(monkeypatch):
+    monkeypatch.delenv("PYOPE_WL_MAX_WORKERS", raising=False)
+
+    assert _get_wolfram_max_workers() == 1
+
+
+def test_get_wolfram_max_workers_rejects_invalid_values(monkeypatch):
+    monkeypatch.setenv("PYOPE_WL_MAX_WORKERS", "0")
+
+    with pytest.raises(
+        WolframBackendError, match="PYOPE_WL_MAX_WORKERS must be a positive integer"
+    ):
+        _get_wolfram_max_workers()
+
+
+def test_simplify_with_wolfram_parallelizes_chunk_execution(monkeypatch):
+    exprs = [sp.Integer(i) for i in range(5)]
+    started = threading.Event()
+    release = threading.Event()
+    active = 0
+    peak_active = 0
+    lock = threading.Lock()
+
+    def fake_chunk_exprs(values, max_items=32, max_chars=100_000):
+        assert list(values) == exprs
+        return [exprs[:2], exprs[2:4], exprs[4:]]
+
+    def fake_eval_list_with_wolfram(values, operation):
+        nonlocal active, peak_active
+        assert operation == "CANONICALIZE_LIST"
+        with lock:
+            active += 1
+            peak_active = max(peak_active, active)
+            if active >= 2:
+                started.set()
+        if not started.wait(timeout=1):
+            raise AssertionError("expected chunk calls to overlap")
+        if not release.wait(timeout=1):
+            raise AssertionError("timed out waiting to release fake chunk work")
+        time.sleep(0.01)
+        with lock:
+            active -= 1
+        return list(values)
+
+    monkeypatch.setattr(
+        "pyope.wolfram_backend.chunk_exprs_for_wolfram", fake_chunk_exprs
+    )
+    monkeypatch.setattr(
+        "pyope.wolfram_backend._eval_list_with_wolfram",
+        fake_eval_list_with_wolfram,
+    )
+    monkeypatch.setenv("PYOPE_WL_MAX_WORKERS", "3")
+
+    result_holder = {}
+    error_holder = []
+
+    def run_simplify():
+        try:
+            result_holder["result"] = simplify_with_wolfram(exprs)
+        except Exception as exc:  # pragma: no cover - test helper path
+            error_holder.append(exc)
+
+    worker = threading.Thread(target=run_simplify)
+    worker.start()
+    assert started.wait(timeout=1), "expected parallel chunk execution to begin"
+    release.set()
+    worker.join(timeout=2)
+
+    assert not error_holder
+    assert result_holder["result"] == exprs
+    assert peak_active >= 2
 
 
 @pytest.mark.skipif(
@@ -611,19 +720,17 @@ def test_simplify_with_wolfram_reorders_normal_products_in_lists():
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_compute_backend_rejects_wolfram_for_derivative_payload_path():
-    with pytest.raises(ValueError, match="not ready yet and must not be used"):
-        with compute_backend("wolfram"):
-            pass
+def test_compute_backend_accepts_wolfram_for_derivative_payload_path():
+    with compute_backend("wolfram"):
+        assert get_compute_backend() == "wolfram"
 
 
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_compute_backend_rejects_wolfram_for_nested_no_path():
-    with pytest.raises(ValueError, match="not ready yet and must not be used"):
-        with compute_backend("wolfram"):
-            pass
+def test_compute_backend_accepts_wolfram_for_nested_no_path():
+    with compute_backend("wolfram"):
+        assert get_compute_backend() == "wolfram"
 
 
 @pytest.mark.skipif(

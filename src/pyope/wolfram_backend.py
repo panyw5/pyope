@@ -1,8 +1,9 @@
-"""Wolfram-backed compute helpers for pyope."""
+"""Wolfram backend helpers"""
 
 from __future__ import annotations
 
 import ast
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 import re
@@ -65,7 +66,7 @@ _CHUNKED_LIST_PREFIX = "PYOPE_CHUNKED_LIST"
 
 
 def compute_ope(left: Any, right: Any) -> OPEData:
-    return _run_operation("OPE", left, right)
+    return _eval_binary_function_with_wolfram("OPE", left, right)
 
 
 def compute_no(left: Any, right: Any) -> Any:
@@ -75,13 +76,13 @@ def compute_no(left: Any, right: Any) -> Any:
 
         with compute_backend("sympy"):
             return NO(left, right)
-    return _run_operation("NO", left, right)
+    return _eval_binary_function_with_wolfram("NO", left, right)
 
 
 def simplify_with_wolfram(expr: Any) -> Any:
     if isinstance(expr, list):
-        return _run_eval_list_chunked(expr)
-    return _run_eval(expr)
+        return _eval_chunked_list_with_wolfram(expr)
+    return _eval_expr_with_wolfram(expr)
 
 
 def _get_result_chunk_size() -> int:
@@ -101,7 +102,22 @@ def _get_result_chunk_size() -> int:
     return value
 
 
-def _run_operation(operation: str, left: Any, right: Any) -> Any:
+def _get_wolfram_max_workers() -> int:
+    raw = os.environ.get("PYOPE_WL_MAX_WORKERS", "").strip()
+    if not raw:
+        return 1
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise WolframBackendError(
+            "PYOPE_WL_MAX_WORKERS must be a positive integer"
+        ) from exc
+    if value <= 0:
+        raise WolframBackendError("PYOPE_WL_MAX_WORKERS must be a positive integer")
+    return value
+
+
+def _eval_binary_function_with_wolfram(operation: str, left: Any, right: Any) -> Any:
     script_path = str(_WOLFRAM_WRAPPER)
     operator_names = _collect_protocol_operator_names((left, right))
     payload = {
@@ -116,7 +132,12 @@ def _run_operation(operation: str, left: Any, right: Any) -> Any:
     return _invoke_wolfram(script_path, payload, operator_names)
 
 
-def _run_eval(expr: Any) -> Any:
+def _eval_expr_with_wolfram(expr: Any) -> Any:
+    """
+    把任意算符表达式发到 wolfram 计算，其中 `op_to_wolfram_string` 提供了将任意结构转换为可由 `wolfram` 的 `ToExpression` 处理的结构，但性能上无法保证
+
+    list/dict of operators 一般交给 `_eval_list_with_wolfram` 和 `_eval_chunked_list_with_wolfram` 完成，承载更加复杂的性能优化逻辑
+    """
     script_path = str(_WOLFRAM_WRAPPER)
     operator_names = _collect_protocol_operator_names((expr,))
     payload = {
@@ -130,7 +151,10 @@ def _run_eval(expr: Any) -> Any:
     return _invoke_wolfram(script_path, payload, operator_names)
 
 
-def _run_eval_list(exprs: Sequence[Any], operation: str) -> list[Any]:
+def _eval_list_with_wolfram(exprs: Sequence[Any], operation: str) -> list[Any]:
+    """
+    整个列表发到 wolfram 计算
+    """
     script_path = str(_WOLFRAM_WRAPPER)
     expr_list = list(exprs)
     operator_names = _collect_protocol_operator_names(expr_list)
@@ -150,25 +174,46 @@ def _run_eval_list(exprs: Sequence[Any], operation: str) -> list[Any]:
     return result
 
 
-def _run_eval_list_chunked(exprs: Sequence[Any]) -> list[Any]:
+def _eval_chunked_list_with_wolfram(exprs: Sequence[Any]) -> list[Any]:
+    """
+    把列表分块 (chunk) 发到 wolfram 计算
+
+    chunking 可以增大每次 wolfram 处理的数据量，降低 wolfram 实例数量和 overhead
+    """
     expr_list = list(exprs)
     if not expr_list:
         return []
 
     chunks = chunk_exprs_for_wolfram(expr_list)
     if len(chunks) == 1:
-        return _run_eval_list(expr_list, "CANONICALIZE_LIST")
+        return _eval_list_with_wolfram(expr_list, "CANONICALIZE_LIST")
 
-    simplified: list[Any] = []
-    for chunk in chunks:
-        simplified.extend(_run_eval_list(chunk, "CANONICALIZE_LIST"))
+    max_workers = min(_get_wolfram_max_workers(), len(chunks))
+    if max_workers == 1:
+        simplified: list[Any] = []
+        for chunk in chunks:
+            simplified.extend(_eval_list_with_wolfram(chunk, "CANONICALIZE_LIST"))
+        return simplified
+
+    simplified = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        chunk_results = list(
+            executor.map(
+                lambda chunk: _eval_list_with_wolfram(chunk, "CANONICALIZE_LIST"),
+                chunks,
+            )
+        )
+    for chunk_result in chunk_results:
+        simplified.extend(chunk_result)
     return simplified
 
 
 def _invoke_wolfram(
     script_path: str, payload: Dict[str, str], operator_names: Set[str]
 ) -> Any:
-
+    """
+    启用 wolfram 计算。数据传输由临时文件实现
+    """
     result = None
     payload_text = None
     stdout = ""
@@ -210,17 +255,19 @@ def _invoke_wolfram(
         )
 
     if payload_text is None:
+        # 先做第一层回传问题处理
         marker = "PYOPE_RESULT:"
         for line in stdout.splitlines():
             if line.startswith(marker):
                 payload_text = line[len(marker) :].strip()
-
-    if payload_text is None:
-        raise WolframBackendError(
-            "wolframscript did not emit a parseable result. "
-            f"result_path: {result_path}. "
-            f"stdout: {stdout.strip() or '<empty>'} stderr: {stderr.strip() or '<empty>'}"
-        )
+                break
+        # 做第二层错误处理
+        if payload_text is None:
+            raise WolframBackendError(
+                "wolframscript did not emit a parseable result. "
+                f"result_path: {result_path}. "
+                f"stdout: {stdout.strip() or '<empty>'} stderr: {stderr.strip() or '<empty>'}"
+            )
     if payload_text == "":
         raise WolframBackendError(
             f"wolframscript emitted an empty result payload at {result_path}"

@@ -9,8 +9,13 @@ import sympy as sp
 
 from .api import normal_product
 from .constants import Zero
-from .operator_spaces import realize_and_simplify
+from .operator_spaces import (
+    _combine_like_terms_preserving_metadata,
+    _should_simplify_with_wolfram,
+    realize,
+)
 from .operators import DerivativeOperator, NormalOrderedOperator, Operator
+from .simplify import simplify
 
 
 class RealizationBackend(ABC):
@@ -49,7 +54,14 @@ class DerivativeKillingRealizationBackend(IdentityRealizationBackend):
     """First free-field-style quotient rule: all derivative factors vanish."""
 
     def realize(self, expr: Any) -> Any:
-        return realize_and_simplify(expr)
+        realized = realize(expr)
+        if _should_simplify_with_wolfram():
+            from .wolfram_backend import simplify_with_wolfram
+
+            return _combine_like_terms_preserving_metadata(
+                simplify_with_wolfram(realized)
+            )
+        return _combine_like_terms_preserving_metadata(simplify(realized))
 
     def quotient_normal_form(self, expr: Any) -> Any:
         realized = self.realize(expr)

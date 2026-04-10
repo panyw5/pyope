@@ -18,7 +18,6 @@ from pyope import (
     RealizedGenerator,
     d,
     realize,
-    realize_and_simplify,
     realized_coordinates,
 )
 
@@ -286,47 +285,6 @@ def test_linear_combination_realize_method_expands_realized_generator_recursivel
     realize_method = getattr(expr, "realize")
 
     assert realize_method() == 2 * NO(J, J) + d(NO(J, J))
-
-
-def test_realize_and_simplify_produces_free_field_expression():
-    J = BasicOperator("J_realize_simplify", conformal_weight=1)
-    Bosonic(J)
-
-    W = RealizedGenerator("W_realize_simplify", realization=NO(J, J))
-
-    realized = realize_and_simplify(d(W))
-
-    assert realized == 2 * NO(d(J), J)
-
-
-def test_realize_and_simplify_uses_wolfram_precanonicalization_when_available(
-    monkeypatch,
-):
-    J = BasicOperator("J_realize_simplify_wolfram_pre", conformal_weight=1)
-    Bosonic(J)
-
-    W = RealizedGenerator("W_realize_simplify_wolfram_pre", realization=NO(J, J))
-
-    monkeypatch.setattr(
-        operator_spaces_module,
-        "_should_simplify_with_wolfram",
-        lambda: True,
-    )
-
-    expand_calls: list[object] = []
-
-    import pyope.wolfram_backend as wolfram_backend_module
-
-    monkeypatch.setattr(
-        wolfram_backend_module,
-        "simplify_with_wolfram",
-        lambda expr: expand_calls.append(expr) or 2 * NO(d(J), J),
-    )
-
-    realized = realize_and_simplify(d(W))
-
-    assert expand_calls == [d(NO(J, J))]
-    assert realized == 2 * NO(d(J), J)
 
 
 def test_list_independent_ops_uses_expand_then_simplify_when_available(monkeypatch):

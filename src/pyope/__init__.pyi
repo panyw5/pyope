@@ -55,9 +55,7 @@ from .operator_spaces import (
     list_zero_relations,
     make_realized,
     RealizedGenerator,
-    independent_under_realization,
     realize,
-    realize_and_simplify,
     realized_coordinates,
     clear_realize_cache,
 )
