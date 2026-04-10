@@ -6,7 +6,7 @@ This file covers the modules that define the pyope object model and the minimal 
 
 | Module | Why it matters | Key exports |
 | --- | --- | --- |
-| `operators.py` | Defines the symbolic operator classes used everywhere else | `Operator`, `BasisOperator`, `DerivativeOperator`, `NormalOrderedOperator`, `d`, `dn` |
+| `operators.py` | Defines the symbolic operator classes used everywhere else | `Operator`, `BasicOperator`, `DerivativeOperator`, `NormalOrderedOperator`, `d`, `dn` |
 | `constants.py` | Provides the vacuum-like constants and special formal symbols | `One`, `Zero`, `Delta` |
 | `local_operator.py` | Tells you what counts as a valid local operator and how to split scalar vs operator parts | `is_local_operator`, `extract_scalar_operator`, `collect_operator_terms` |
 | `registry.py` | Stores parity and OPE definitions for generators | `OPERegistry`, `ope_registry`, `Bosonic`, `Fermionic`, `clear_registry` |
@@ -16,7 +16,7 @@ This file covers the modules that define the pyope object model and the minimal 
 
 The package is built around symbolic operator expressions backed by SymPy.
 
-- `BasisOperator("T", conformal_weight=2)` creates a named generator.
+- `BasicOperator("T", conformal_weight=2)` creates a named generator.
 - `Bosonic(T)` or `Fermionic(G)` records parity in the global registry.
 - `OPE[T, T] = MakeOPE([...])` stores the singular part of an OPE.
 - `OPE(T, T)` computes and returns an `OPEData` object.
@@ -27,10 +27,10 @@ The package is built around symbolic operator expressions backed by SymPy.
 ```python
 import sympy as sp
 
-from pyope import BasisOperator, Bosonic, MakeOPE, OPE
+from pyope import BasicOperator, Bosonic, MakeOPE, OPE
 from pyope import One, Zero, d
 
-T = BasisOperator("T", conformal_weight=2)
+T = BasicOperator("T", conformal_weight=2)
 Bosonic(T)
 
 c = sp.Symbol("c")
@@ -80,9 +80,9 @@ clear_registry()
 Use these files when you need canonical examples for the core runtime:
 
 - `README.md`
-- `tests/test_virasoro_voa.py`
-- `tests/test_registry.py`
-- `tests/test_illegal_operator_mul.py`
+- `tests/algebras/test_virasoro_voa.py`
+- `tests/foundation/test_registry.py`
+- `tests/foundation/test_illegal_operator_mul.py`
 - `demo/pyope_basic_demo.ipynb`
 
 ## Skill Routing Notes

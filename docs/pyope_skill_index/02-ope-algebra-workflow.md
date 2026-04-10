@@ -16,7 +16,7 @@ This file covers the modules that most directly support day-to-day symbolic OPE 
 
 For most interactive usage, the path is:
 
-1. Create generators with `BasisOperator`.
+1. Create generators with `BasicOperator`.
 2. Declare parity with `Bosonic(...)` or `Fermionic(...)`.
 3. Register basic OPEs with `OPE[A, B] = MakeOPE([...])`.
 4. Compute derived OPEs with `OPE(expr1, expr2)`.
@@ -29,10 +29,10 @@ For most interactive usage, the path is:
 ```python
 import sympy as sp
 
-from pyope import BasisOperator, Bosonic, MakeOPE, OPE
+from pyope import BasicOperator, Bosonic, MakeOPE, OPE
 from pyope import One, Zero, NO, bracket, d, simplify
 
-T = BasisOperator("T", conformal_weight=2)
+T = BasicOperator("T", conformal_weight=2)
 Bosonic(T)
 
 c = sp.Symbol("c")
@@ -64,14 +64,14 @@ ok = verify_jacobi_identity(T, T, T)
 print(ok)
 ```
 
-The normalization behavior is covered by `tests/test_jacobi.py`, which is a good retrieval source when users ask why a Jacobi result is represented by `Zero` rather than `0`.
+The normalization behavior is covered by `tests/core/test_jacobi.py`, which is a good retrieval source when users ask why a Jacobi result is represented by `Zero` rather than `0`.
 
 ## Example: quasiprimary completion
 
 ```python
-from pyope import BasisOperator, Bosonic, MakeOPE, OPE, qp, d
+from pyope import BasicOperator, Bosonic, MakeOPE, OPE, qp, d
 
-J = BasisOperator("J", conformal_weight=1)
+J = BasicOperator("J", conformal_weight=1)
 Bosonic(J)
 
 OPE[T, J] = MakeOPE([J, d(J)])
@@ -99,10 +99,10 @@ For a future skill, answer with `from pyope import ...` unless the user explicit
 ## Best Evidence Files
 
 - `README.md`
-- `tests/test_normal_product.py`
-- `tests/test_simplify.py`
-- `tests/test_jacobi.py`
-- `tests/test_quasiprimary.py`
+- `tests/core/test_normal_product.py`
+- `tests/core/test_simplify.py`
+- `tests/core/test_jacobi.py`
+- `tests/core/test_quasiprimary.py`
 - `demo/normal_product_demo.ipynb`
 - `demo/jacobi_identity_demo.ipynb`
 - `demo/pyope_ope_demo.ipynb`

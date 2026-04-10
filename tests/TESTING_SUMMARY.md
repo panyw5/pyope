@@ -27,11 +27,11 @@
   - Markers 定义
 
 ### 3. 测试文件
-- **`tests/test_sl2_nested_no.py`** (422 行) - SL(2) 嵌套正规序测试
+- **`tests/algebras/test_sl2_nested_no.py`** (422 行) - SL(2) 嵌套正规序测试
   - 22 个测试用例，分 5 个类别
   - 覆盖简单/三重嵌套 NO、导数、Sugawara 构造、复杂结构
   
-- **`tests/test_w3_algebra_ref.py`** (330 行) - W3 代数测试
+- **`tests/algebras/test_w3_algebra_ref.py`** (330 行) - W3 代数测试
   - 10 个测试用例，分 4 个类别
   - 覆盖基本 OPE、导数算符、复合正规序、数值验证
 
@@ -213,13 +213,13 @@ if isinstance(actual_val, complex) or isinstance(expected_val, complex):
 
 ```bash
 # 运行所有新测试
-pytest tests/test_sl2_nested_no.py tests/test_w3_algebra_ref.py -v
+pytest tests/algebras/test_sl2_nested_no.py tests/algebras/test_w3_algebra_ref.py -v
 
 # 运行特定测试类
-pytest tests/test_sl2_nested_no.py::TestSimpleNestedNO -v
+pytest tests/algebras/test_sl2_nested_no.py::TestSimpleNestedNO -v
 
 # 运行特定测试
-pytest tests/test_sl2_nested_no.py::TestSimpleNestedNO::test_1_1__NO_NO_Jplus_Jzero_Jminus -v
+pytest tests/algebras/test_sl2_nested_no.py::TestSimpleNestedNO::test_1_1__NO_NO_Jplus_Jzero_Jminus -v
 
 # 跳过慢速测试
 pytest -m "not slow"
@@ -255,8 +255,8 @@ pytest -v -s
 |------|------|------|
 | `tests/utils/comparison.py` | 430 | 表达式比较工具 |
 | `tests/conftest.py` | 260 | Pytest 配置和 fixtures |
-| `tests/test_sl2_nested_no.py` | 422 | SL(2) 测试（22 个用例） |
-| `tests/test_w3_algebra_ref.py` | 330 | W3 测试（10 个用例） |
+| `tests/algebras/test_sl2_nested_no.py` | 422 | SL(2) 测试（22 个用例） |
+| `tests/algebras/test_w3_algebra_ref.py` | 330 | W3 测试（10 个用例） |
 | `tests/TEST_FRAMEWORK.md` | 600+ | 测试框架文档 |
 | `pytest.ini` | 40 | Pytest 配置 |
 | **总计** | **~2100** | **6 个文件** |

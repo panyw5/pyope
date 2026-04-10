@@ -1,7 +1,7 @@
 from fractions import Fraction
 
 from pyope import (
-    BasisOperator,
+    BasicOperator,
     Bosonic,
     Fermionic,
     MakeOPE,
@@ -18,10 +18,10 @@ from pyope import (
 
 def build_p4_data():
     p = 4
-    b = BasisOperator("b_p4_cmp", fermionic=True, conformal_weight=Fraction(p + 1, 2))
-    c = BasisOperator("c_p4_cmp", fermionic=True, conformal_weight=Fraction(1 - p, 2))
-    beta = BasisOperator("beta_p4_cmp", conformal_weight=Fraction(p, 2))
-    gamma = BasisOperator("gamma_p4_cmp", conformal_weight=Fraction(2 - p, 2))
+    b = BasicOperator("b_p4_cmp", fermionic=True, conformal_weight=Fraction(p + 1, 2))
+    c = BasicOperator("c_p4_cmp", fermionic=True, conformal_weight=Fraction(1 - p, 2))
+    beta = BasicOperator("beta_p4_cmp", conformal_weight=Fraction(p, 2))
+    gamma = BasicOperator("gamma_p4_cmp", conformal_weight=Fraction(2 - p, 2))
 
     Bosonic(beta, gamma)
     Fermionic(b, c)

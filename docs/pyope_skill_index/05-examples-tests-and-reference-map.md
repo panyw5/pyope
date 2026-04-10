@@ -10,10 +10,10 @@ These files best represent intended user-facing behavior:
 
 - `README.md`
 - `src/pyope/__init__.py`
-- `tests/test_virasoro_voa.py`
-- `tests/test_normal_product.py`
-- `tests/test_operator_spaces.py`
-- `tests/test_sparse_c2_api.py`
+- `tests/algebras/test_virasoro_voa.py`
+- `tests/core/test_normal_product.py`
+- `tests/research/test_operator_spaces.py`
+- `tests/research/test_sparse_c2_api.py`
 
 ### Second priority
 
@@ -51,16 +51,16 @@ These files are important for historical fidelity and validation against the Mat
 
 | Topic | Best tests |
 | --- | --- |
-| Generator declaration and Virasoro OPE | `tests/test_virasoro_voa.py` |
-| OPE registry behavior | `tests/test_registry.py` |
-| Illegal operator products | `tests/test_illegal_operator_mul.py` |
-| Normal products and simplification | `tests/test_normal_product.py`, `tests/test_simplify.py` |
-| Jacobi identity normalization | `tests/test_jacobi.py` |
-| Quasiprimary helpers | `tests/test_quasiprimary.py` |
-| Fixed-weight operator spaces | `tests/test_operator_spaces.py` |
-| Descendant generation | `tests/test_descendant_space.py`, `tests/test_descendants.py` |
-| Sparse `C_2` and quotient search | `tests/test_sparse_c2_api.py`, `tests/test_c2_null_searcher.py` |
-| Singularity and primary constraints | `tests/test_singular_vector_analyzer.py`, `tests/test_singularity.py` |
+| Generator declaration and Virasoro OPE | `tests/algebras/test_virasoro_voa.py` |
+| OPE registry behavior | `tests/foundation/test_registry.py` |
+| Illegal operator products | `tests/foundation/test_illegal_operator_mul.py` |
+| Normal products and simplification | `tests/core/test_normal_product.py`, `tests/core/test_simplify.py` |
+| Jacobi identity normalization | `tests/core/test_jacobi.py` |
+| Quasiprimary helpers | `tests/core/test_quasiprimary.py` |
+| Fixed-weight operator spaces | `tests/research/test_operator_spaces.py` |
+| Descendant generation | `tests/research/test_descendant_space.py`, `tests/research/test_descendants.py` |
+| Sparse `C_2` and quotient search | `tests/research/test_sparse_c2_api.py`, `tests/research/test_c2_null_searcher.py` |
+| Singularity and primary constraints | `tests/research/test_singular_vector_analyzer.py`, `tests/research/test_singularity.py` |
 
 ## Suggested Retrieval Recipes For The Skill
 
@@ -70,7 +70,7 @@ Retrieve:
 
 1. `README.md`
 2. `src/pyope/__init__.py`
-3. `tests/test_virasoro_voa.py`
+3. `tests/algebras/test_virasoro_voa.py`
 
 ### Recipe 2: user asks about normal ordering or why multiplication fails
 
@@ -78,15 +78,15 @@ Retrieve:
 
 1. `src/pyope/api.py`
 2. `src/pyope/simplify.py`
-3. `tests/test_normal_product.py`
-4. `tests/test_illegal_operator_mul.py`
+3. `tests/core/test_normal_product.py`
+4. `tests/foundation/test_illegal_operator_mul.py`
 
 ### Recipe 3: user asks about fixed-weight basis enumeration
 
 Retrieve:
 
 1. `src/pyope/operator_spaces.py`
-2. `tests/test_operator_spaces.py`
+2. `tests/research/test_operator_spaces.py`
 3. `demo/operator_spaces_demo.ipynb`
 
 ### Recipe 4: user asks about null states or `C_2`
@@ -96,8 +96,8 @@ Retrieve:
 1. `src/pyope/c2.py`
 2. `src/pyope/null_search.py`
 3. `src/pyope/singularity.py`
-4. `tests/test_sparse_c2_api.py`
-5. `tests/test_singular_vector_analyzer.py`
+4. `tests/research/test_sparse_c2_api.py`
+5. `tests/research/test_singular_vector_analyzer.py`
 
 ## What Not To Use As Primary Skill Context
 

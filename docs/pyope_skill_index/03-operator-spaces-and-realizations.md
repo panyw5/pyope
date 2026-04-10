@@ -25,10 +25,10 @@ The typical use cases are:
 ## Example: fixed-weight basis and coordinates
 
 ```python
-from pyope import BasisOperator, Bosonic, LocalOperatorBasis, NO, d
+from pyope import BasicOperator, Bosonic, LocalOperatorBasis, NO, d
 
-T = BasisOperator("T", conformal_weight=2)
-J = BasisOperator("J", conformal_weight=1)
+T = BasicOperator("T", conformal_weight=2)
+J = BasicOperator("J", conformal_weight=1)
 Bosonic(T, J)
 
 basis = LocalOperatorBasis([T, J], max_weight=3)
@@ -48,9 +48,9 @@ The tests show that `LocalOperatorBasis` is not just a pretty wrapper. It provid
 ```python
 import sympy as sp
 
-from pyope import BasisOperator, Bosonic, NO, RealizedGenerator, d, realize
+from pyope import BasicOperator, Bosonic, NO, RealizedGenerator, d, realize
 
-J = BasisOperator("J", conformal_weight=1)
+J = BasicOperator("J", conformal_weight=1)
 Bosonic(J)
 
 W = RealizedGenerator("W", realization=NO(J, J))
@@ -69,10 +69,10 @@ The realization layer is especially important for a future skill because users m
 `make_realized(...)` promotes already-bound expressions into same-named `RealizedGenerator` objects by inspecting the caller namespace.
 
 ```python
-from pyope import BasisOperator, Bosonic, NO, make_realized, d
+from pyope import BasicOperator, Bosonic, NO, make_realized, d
 
-b = BasisOperator("b", fermionic=True, conformal_weight=2)
-c = BasisOperator("c", fermionic=True, conformal_weight=-1)
+b = BasicOperator("b", fermionic=True, conformal_weight=2)
+c = BasicOperator("c", fermionic=True, conformal_weight=-1)
 Bosonic(b, c)
 
 J0 = NO(b, c)
@@ -87,9 +87,9 @@ This behavior is convenient, but it also means a skill should explain that names
 ## Example: descendant spaces
 
 ```python
-from pyope import BasisOperator, Bosonic, DescendantSpace, LocalOperatorBasis
+from pyope import BasicOperator, Bosonic, DescendantSpace, LocalOperatorBasis
 
-T = BasisOperator("T", conformal_weight=2)
+T = BasicOperator("T", conformal_weight=2)
 Bosonic(T)
 
 basis = LocalOperatorBasis([T], max_weight=4)
@@ -109,13 +109,13 @@ print(descendants.basis(T, 4))
 - finding zero relations among expressions
 - avoiding full basis enumeration for local dependence checks
 
-That makes `tests/test_operator_spaces.py` and `tests/test_sparse_c2_api.py` especially good sources for skill retrieval.
+That makes `tests/research/test_operator_spaces.py` and `tests/research/test_sparse_c2_api.py` especially good sources for skill retrieval.
 
 ## Best Evidence Files
 
-- `tests/test_operator_spaces.py`
-- `tests/test_descendant_space.py`
-- `tests/test_descendants.py`
+- `tests/research/test_operator_spaces.py`
+- `tests/research/test_descendant_space.py`
+- `tests/research/test_descendants.py`
 - `demo/operator_spaces_demo.ipynb`
 - `demo/null_states_case.py`
 

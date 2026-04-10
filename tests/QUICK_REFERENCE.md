@@ -6,13 +6,13 @@
 
 ```bash
 # 运行所有新测试（32个）
-pytest tests/test_sl2_nested_no.py tests/test_w3_algebra_ref.py -v
+pytest tests/algebras/test_sl2_nested_no.py tests/algebras/test_w3_algebra_ref.py -v
 
 # 只运行 SL(2) 测试（22个）
-pytest tests/test_sl2_nested_no.py -v
+pytest tests/algebras/test_sl2_nested_no.py -v
 
 # 只运行 W3 测试（10个）
-pytest tests/test_w3_algebra_ref.py -v
+pytest tests/algebras/test_w3_algebra_ref.py -v
 ```
 
 ### 测试结果
@@ -26,8 +26,8 @@ pytest tests/test_w3_algebra_ref.py -v
 |------|------|------|
 | `tests/utils/comparison.py` | 表达式比较工具 | 430 |
 | `tests/conftest.py` | Pytest fixtures | 260 |
-| `tests/test_sl2_nested_no.py` | SL(2) 测试 | 422 |
-| `tests/test_w3_algebra_ref.py` | W3 测试 | 330 |
+| `tests/algebras/test_sl2_nested_no.py` | SL(2) 测试 | 422 |
+| `tests/algebras/test_w3_algebra_ref.py` | W3 测试 | 330 |
 | `tests/TEST_FRAMEWORK.md` | 详细文档 | 600+ |
 | `tests/TESTING_SUMMARY.md` | 实施总结 | 400+ |
 | `pytest.ini` | Pytest 配置 | 40 |
@@ -203,7 +203,7 @@ pytest -n auto
 pytest tests/
 
 # 运行新测试
-pytest tests/test_sl2_nested_no.py tests/test_w3_algebra_ref.py -v
+pytest tests/algebras/test_sl2_nested_no.py tests/algebras/test_w3_algebra_ref.py -v
 ```
 
 所有测试应该通过！✅

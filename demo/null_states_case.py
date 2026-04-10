@@ -10,7 +10,7 @@ from fractions import Fraction
 from collections import defaultdict
 import itertools
 
-from pyope.operators import BasisOperator, d
+from pyope.operators import BasicOperator, d
 from pyope.api import NO
 from pyope.simplify import simplify
 from pyope.constants import One
@@ -149,7 +149,7 @@ class FockSpaceBasis:
     枚举给定 level 的所有自由场算符组合
     """
 
-    def __init__(self, free_fields: List[BasisOperator]):
+    def __init__(self, free_fields: List[BasicOperator]):
         """
         Args:
             free_fields: 自由场列表（如 [b, c, beta, gamma]）
@@ -282,7 +282,7 @@ def extract_coefficients(expr) -> Dict[Any, Any]:
 
 
 def enumerate_fock_basis(
-    free_fields: List[BasisOperator], level: Fraction, max_count: int = 1000
+    free_fields: List[BasicOperator], level: Fraction, max_count: int = 1000
 ) -> List[Any]:
     """
     便捷函数：枚举自由场 Fock 空间基
@@ -447,7 +447,7 @@ class NullStatesCalculator:
     5. 计算 null states 数量 = 抽象态数 - 物理态数
     """
 
-    def __init__(self, free_fields: List[BasisOperator]):
+    def __init__(self, free_fields: List[BasicOperator]):
         """
         Args:
             free_fields: 自由场列表（如 [b, c, beta, gamma]）
@@ -532,7 +532,7 @@ class NullStatesCalculator:
 
 
 def calculate_null_states(
-    free_fields: List[BasisOperator],
+    free_fields: List[BasicOperator],
     level: Fraction,
     abstract_operators: List[Any],
     max_fock_basis: int = 1000,
@@ -801,7 +801,7 @@ class GroupedNullStatesCalculator:
 
     def __init__(
         self,
-        free_fields: List[BasisOperator],
+        free_fields: List[BasicOperator],
         quantum_number_map: Dict[Any, Tuple[Fraction, Fraction]],
     ):
         """

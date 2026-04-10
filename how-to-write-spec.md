@@ -304,7 +304,7 @@ Thielemans' OPEdefs.m or published literature.
 ### R1: Register parity before OPE definition
 
 ​```python
-T = BasisOperator("T", conformal_weight=2)
+T = BasicOperator("T", conformal_weight=2)
 Bosonic(T)                              # ← REQUIRED
 OPE[T, T] = MakeOPE([...])
 ​```

@@ -19,7 +19,7 @@ Read the files in this order if you want to build a skill prompt or retrieval pa
 
 These are the safest exports to emphasize in a skill:
 
-- `BasisOperator`, `Operator`, `DerivativeOperator`, `NormalOrderedOperator`
+- `BasicOperator`, `Operator`, `DerivativeOperator`, `NormalOrderedOperator`
 - `Bosonic`, `Fermionic`, `clear_registry`
 - `OPE`, `MakeOPE`, `NO`, `NO_product`, `normal_product`, `bracket`
 - `d`, `dn`
@@ -58,7 +58,7 @@ These should be labeled as evolving if the future skill retrieves them:
 
 | File | Role | Main items |
 | --- | --- | --- |
-| `src/pyope/operators.py` | Symbolic operator classes | `Operator`, `BasisOperator`, `DerivativeOperator`, `NormalOrderedOperator`, `d`, `dn` |
+| `src/pyope/operators.py` | Symbolic operator classes | `Operator`, `BasicOperator`, `DerivativeOperator`, `NormalOrderedOperator`, `d`, `dn` |
 | `src/pyope/constants.py` | Distinguished constants | `One`, `Zero`, `Delta`, `ConstantOperator` |
 | `src/pyope/local_operator.py` | Local-operator typing and decomposition helpers | `LocalOperator`, `is_local_operator`, `extract_scalar_operator`, `collect_operator_terms`, parity helpers |
 | `src/pyope/exceptions.py` | Domain-specific error types | Illegal operator multiplication and related validation errors |
@@ -106,11 +106,11 @@ If a future user asks about these topics, retrieve the following modules first:
 | User intent | Retrieve first | Retrieve second |
 | --- | --- | --- |
 | Define generators and an OPE | `src/pyope/__init__.py`, `src/pyope/api.py` | `src/pyope/operators.py`, `src/pyope/registry.py`, `README.md` |
-| Understand `NO(...)`, derivatives, simplification | `src/pyope/api.py`, `src/pyope/simplify.py` | `tests/test_normal_product.py`, `demo/normal_product_demo.ipynb` |
-| Check Jacobi identities | `src/pyope/jacobi.py` | `tests/test_jacobi.py`, `demo/jacobi_identity_demo.ipynb` |
-| Build fixed-weight bases | `src/pyope/operator_spaces.py` | `tests/test_operator_spaces.py`, `demo/operator_spaces_demo.ipynb` |
-| Search descendants or singular vectors | `src/pyope/descendants.py`, `src/pyope/singularity.py` | `tests/test_descendants.py`, `tests/test_singular_vector_analyzer.py` |
-| Work modulo `C_2` or search null states | `src/pyope/c2.py`, `src/pyope/null_search.py` | `tests/test_sparse_c2_api.py`, `tests/test_c2_null_searcher.py`, `tests/test_free_field_c2.py` |
+| Understand `NO(...)`, derivatives, simplification | `src/pyope/api.py`, `src/pyope/simplify.py` | `tests/core/test_normal_product.py`, `demo/normal_product_demo.ipynb` |
+| Check Jacobi identities | `src/pyope/jacobi.py` | `tests/core/test_jacobi.py`, `demo/jacobi_identity_demo.ipynb` |
+| Build fixed-weight bases | `src/pyope/operator_spaces.py` | `tests/research/test_operator_spaces.py`, `demo/operator_spaces_demo.ipynb` |
+| Search descendants or singular vectors | `src/pyope/descendants.py`, `src/pyope/singularity.py` | `tests/research/test_descendants.py`, `tests/research/test_singular_vector_analyzer.py` |
+| Work modulo `C_2` or search null states | `src/pyope/c2.py`, `src/pyope/null_search.py` | `tests/research/test_sparse_c2_api.py`, `tests/research/test_c2_null_searcher.py`, `tests/research/test_free_field_c2.py` |
 | Compare with Mathematica or original package behavior | `OPEdefs/OPEdefs.m`, `tests/*mathematica*.wls` | `demo/mathematica_comparison.ipynb`, README notes |
 
 ## What To Ignore Or De-prioritize

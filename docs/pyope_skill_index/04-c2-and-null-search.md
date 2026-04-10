@@ -24,9 +24,9 @@ The current implementation emphasizes local operators, normal products, derivati
 ## Example: generic `C_2` reduction
 
 ```python
-from pyope import BasisOperator, Bosonic, GenericC2Reducer, LocalOperatorBasis, NO, d
+from pyope import BasicOperator, Bosonic, GenericC2Reducer, LocalOperatorBasis, NO, d
 
-T = BasisOperator("T", conformal_weight=2)
+T = BasicOperator("T", conformal_weight=2)
 Bosonic(T)
 
 basis = LocalOperatorBasis([T], max_weight=5)
@@ -42,7 +42,7 @@ The most important user-facing idea here is that the reducer returns a normal fo
 
 ```python
 from pyope import (
-    BasisOperator,
+    BasicOperator,
     Bosonic,
     DescendantSpace,
     GenericC2Reducer,
@@ -51,7 +51,7 @@ from pyope import (
     QuotientC2NullSearcher,
 )
 
-T = BasisOperator("T", conformal_weight=2)
+T = BasicOperator("T", conformal_weight=2)
 Bosonic(T)
 
 canonicalizer = LocalOperatorCanonicalizer([T], stress_tensor=T, max_weight=5)
@@ -73,7 +73,7 @@ The structured result type is central here. `NullSearchResult` stores status, qu
 
 ```python
 from pyope import (
-    BasisOperator,
+    BasicOperator,
     Bosonic,
     LocalOperatorBasis,
     MakeOPE,
@@ -82,8 +82,8 @@ from pyope import (
     d,
 )
 
-T = BasisOperator("T", conformal_weight=2)
-J = BasisOperator("J", conformal_weight=1)
+T = BasicOperator("T", conformal_weight=2)
+J = BasicOperator("J", conformal_weight=1)
 Bosonic(T, J)
 
 OPE[T, J] = MakeOPE([J, d(J)])
@@ -107,12 +107,12 @@ When retrieving these APIs, the future skill should explicitly note:
 
 ## Best Evidence Files
 
-- `tests/test_sparse_c2_api.py`
-- `tests/test_c2_null_searcher.py`
-- `tests/test_c2_space.py`
-- `tests/test_free_field_c2.py`
-- `tests/test_singular_vector_analyzer.py`
-- `tests/test_singularity.py`
+- `tests/research/test_sparse_c2_api.py`
+- `tests/research/test_c2_null_searcher.py`
+- `tests/research/test_c2_space.py`
+- `tests/research/test_free_field_c2.py`
+- `tests/research/test_singular_vector_analyzer.py`
+- `tests/research/test_singularity.py`
 - `demo/w_algebra_null_states_demo.ipynb`
 - `demo/virasoro_c2_algebra_demo.ipynb`
 
