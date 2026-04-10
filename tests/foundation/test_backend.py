@@ -5,7 +5,7 @@ import pytest
 import sympy as sp
 
 from pyope import (
-    BasisOperator,
+    BasicOperator,
     Bosonic,
     MakeOPE,
     NO,
@@ -21,7 +21,9 @@ from pyope import (
 from pyope.backend import SUPPORTED_BACKENDS
 from pyope.wolfram_backend import (
     WolframBackendError,
+    _decode_chunked_list_payload,
     _decode_expr,
+    _decode_payload,
     _decode_symbol_name,
     _encode_symbol_name,
     _invoke_wolfram,
@@ -58,8 +60,8 @@ def test_compute_backend_context_manager_restores_previous_backend():
 
 
 def test_sympy_backend_still_computes_normal_ordered_product():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
+    T = BasicOperator("T")
+    J = BasicOperator("J")
     set_compute_backend("sympy")
 
     result = NO(T, J)
@@ -68,8 +70,8 @@ def test_sympy_backend_still_computes_normal_ordered_product():
 
 
 def test_sympy_backend_still_computes_zero_ope():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
+    T = BasicOperator("T")
+    J = BasicOperator("J")
     set_compute_backend("sympy")
 
     result = OPE(T, J)
@@ -105,15 +107,15 @@ def test_compute_backend_rejects_wolfram_for_linear_no_path():
 
 
 def test_wolfram_decoder_rejects_illegal_operator_multiplication():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
+    T = BasicOperator("T")
+    J = BasicOperator("J")
 
     with pytest.raises(WolframBackendError, match="Illegal operator multiplication"):
         _decode_expr("(T * J)", {"T", "J"})
 
 
 def test_wolfram_decoder_preserves_derivative_protocol_shape():
-    T = BasisOperator("T")
+    T = BasicOperator("T")
 
     result = _decode_expr("dn(2, T)", {"T"})
 
@@ -121,8 +123,8 @@ def test_wolfram_decoder_preserves_derivative_protocol_shape():
 
 
 def test_wolfram_decoder_supports_nested_container_payloads():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
+    T = BasicOperator("T")
+    J = BasicOperator("J")
 
     result = _decode_expr(
         'PyDict([("ops", [NO(T, J), PyTuple([dn(1, T), "tag"])])])',
@@ -130,6 +132,24 @@ def test_wolfram_decoder_supports_nested_container_payloads():
     )
 
     assert result == {"ops": [NO(T, J), (dn(1, T), "tag")]}
+
+
+def test_decode_payload_supports_chunked_list_protocol():
+    T = BasicOperator("T")
+    J = BasicOperator("J")
+
+    result = _decode_payload(
+        "PYOPE_CHUNKED_LIST\n[NO(T, J)]\n[dn(1, T), J]", {"T", "J"}
+    )
+
+    assert result == [NO(T, J), dn(1, T), J]
+
+
+def test_decode_chunked_list_payload_rejects_non_list_chunks():
+    T = BasicOperator("T")
+
+    with pytest.raises(WolframBackendError, match="must decode each chunk to a list"):
+        _decode_chunked_list_payload("PYOPE_CHUNKED_LIST\nT", {"T"})
 
 
 def test_chunk_exprs_for_wolfram_respects_item_limit():
@@ -223,7 +243,63 @@ def test_invoke_wolfram_uses_payload_files(monkeypatch, tmp_path):
         tmp_path / "pyope_wl_operation.txt"
     )
     assert captured["env"]["PYOPE_WL_RESULT_PATH"] == str(tmp_path / "pyope_result.txt")
+    assert captured["env"]["PYOPE_WL_RESULT_CHUNK_SIZE"] == "64"
     assert "PYOPE_WL_EXPR" not in captured["env"]
+
+
+def test_invoke_wolfram_passes_custom_result_chunk_size(monkeypatch, tmp_path):
+    captured = {}
+
+    def fake_tempdir(prefix):
+        class _TempDir:
+            def __enter__(self_inner):
+                return str(tmp_path)
+
+            def __exit__(self_inner, exc_type, exc, tb):
+                return False
+
+        return _TempDir()
+
+    def fake_run(command, capture_output, text, encoding, check, env):
+        captured["env"] = env
+        (tmp_path / "pyope_result.txt").write_text("42", encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+    monkeypatch.setenv("PYOPE_WL_RESULT_CHUNK_SIZE", "7")
+    monkeypatch.setattr(
+        "pyope.wolfram_backend.tempfile.TemporaryDirectory", fake_tempdir
+    )
+    monkeypatch.setattr("pyope.wolfram_backend.subprocess.run", fake_run)
+
+    result = _invoke_wolfram(
+        "dummy.wls",
+        {
+            "PYOPE_WL_OPERATION": "EVAL",
+            "PYOPE_WL_EXPR": "42",
+            "PYOPE_WL_OPERATORS": "",
+            "PYOPE_WL_REGISTRY": "",
+        },
+        set(),
+    )
+
+    assert result == 42
+    assert captured["env"]["PYOPE_WL_RESULT_CHUNK_SIZE"] == "7"
+
+
+def test_invoke_wolfram_rejects_invalid_result_chunk_size(monkeypatch):
+    monkeypatch.setenv("PYOPE_WL_RESULT_CHUNK_SIZE", "0")
+
+    with pytest.raises(WolframBackendError, match="positive integer"):
+        _invoke_wolfram(
+            "dummy.wls",
+            {
+                "PYOPE_WL_OPERATION": "EVAL",
+                "PYOPE_WL_EXPR": "42",
+                "PYOPE_WL_OPERATORS": "",
+                "PYOPE_WL_REGISTRY": "",
+            },
+            set(),
+        )
 
 
 def test_invoke_wolfram_falls_back_to_stdout_marker(monkeypatch, tmp_path):
@@ -264,8 +340,49 @@ def test_invoke_wolfram_falls_back_to_stdout_marker(monkeypatch, tmp_path):
     assert result == 42
 
 
+def test_invoke_wolfram_decodes_chunked_result_file(monkeypatch, tmp_path):
+    def fake_tempdir(prefix):
+        class _TempDir:
+            def __enter__(self_inner):
+                return str(tmp_path)
+
+            def __exit__(self_inner, exc_type, exc, tb):
+                return False
+
+        return _TempDir()
+
+    def fake_run(command, capture_output, text, encoding, check, env):
+        (tmp_path / "pyope_result.txt").write_text(
+            "PYOPE_CHUNKED_LIST\n[1, 2]\n[3]", encoding="utf-8"
+        )
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="",
+            stderr="",
+        )
+
+    monkeypatch.setattr(
+        "pyope.wolfram_backend.tempfile.TemporaryDirectory", fake_tempdir
+    )
+    monkeypatch.setattr("pyope.wolfram_backend.subprocess.run", fake_run)
+
+    result = _invoke_wolfram(
+        "dummy.wls",
+        {
+            "PYOPE_WL_OPERATION": "CANONICALIZE_LIST",
+            "PYOPE_WL_EXPR_LIST": "{1, 2, 3}",
+            "PYOPE_WL_OPERATORS": "",
+            "PYOPE_WL_REGISTRY": "",
+        },
+        set(),
+    )
+
+    assert result == [1, 2, 3]
+
+
 def test_decode_expr_supports_unicode_operator_names():
-    beta = BasisOperator("β")
+    beta = BasicOperator("β")
 
     result = _decode_expr("NO(β, β)", {"β"})
 
@@ -282,8 +399,8 @@ def test_decode_symbol_name_restores_mathematica_greek_form():
 
 
 def test_op_to_wolfram_string_formats_operator_tree():
-    beta = BasisOperator("β")
-    gamma = BasisOperator("γ")
+    beta = BasicOperator("β")
+    gamma = BasicOperator("γ")
 
     assert op_to_wolfram_string(NO(gamma, dn(2, beta))) == (
         r"NO[\[Gamma], Derivative[2][\[Beta]]]"
@@ -291,8 +408,8 @@ def test_op_to_wolfram_string_formats_operator_tree():
 
 
 def test_op_to_wolfram_string_formats_linear_combinations():
-    beta = BasisOperator("β")
-    gamma = BasisOperator("γ")
+    beta = BasicOperator("β")
+    gamma = BasicOperator("γ")
 
     assert op_to_wolfram_string(2 * NO(gamma, beta) + dn(3, beta)) == (
         r"((2 * NO[\[Gamma], \[Beta]]) + Derivative[3][\[Beta]])"
@@ -300,10 +417,10 @@ def test_op_to_wolfram_string_formats_linear_combinations():
 
 
 def test_op_to_wolfram_string_formats_nested_lists():
-    alpha = BasisOperator("α")
-    beta = BasisOperator("β")
-    gamma = BasisOperator("γ")
-    delta = BasisOperator("δ")
+    alpha = BasicOperator("α")
+    beta = BasicOperator("β")
+    gamma = BasicOperator("γ")
+    delta = BasicOperator("δ")
 
     assert op_to_wolfram_string(
         [alpha, dn(1, beta), [NO(gamma, delta), dn(2, alpha)]]
@@ -313,8 +430,8 @@ def test_op_to_wolfram_string_formats_nested_lists():
 
 
 def test_op_to_wolfram_string_uses_single_backslashes_for_to_expression():
-    beta = BasisOperator("β")
-    gamma = BasisOperator("γ")
+    beta = BasicOperator("β")
+    gamma = BasicOperator("γ")
 
     result = op_to_wolfram_string(NO(gamma, dn(2, beta)))
 
@@ -324,8 +441,8 @@ def test_op_to_wolfram_string_uses_single_backslashes_for_to_expression():
 
 
 def test_run_eval_uses_public_wolfram_string_encoder(monkeypatch):
-    beta = BasisOperator("β")
-    gamma = BasisOperator("γ")
+    beta = BasicOperator("β")
+    gamma = BasicOperator("γ")
     expr = NO(gamma, dn(2, beta))
     captured = {}
 
@@ -344,8 +461,8 @@ def test_run_eval_uses_public_wolfram_string_encoder(monkeypatch):
 
 
 def test_run_eval_list_uses_public_wolfram_string_encoder(monkeypatch):
-    beta = BasisOperator("β")
-    gamma = BasisOperator("γ")
+    beta = BasicOperator("β")
+    gamma = BasicOperator("γ")
     exprs = [beta, [NO(gamma, dn(2, beta))]]
     captured = {}
 
@@ -399,8 +516,8 @@ def test_simplify_with_wolfram_auto_chunks_large_lists(monkeypatch):
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
 def test_simplify_with_wolfram_round_trips_expression_lists():
-    T = BasisOperator("Tbatcheval")
-    J = BasisOperator("Jbatcheval")
+    T = BasicOperator("Tbatcheval")
+    J = BasicOperator("Jbatcheval")
 
     exprs = [NO(T, J), dn(1, T) + J]
 
@@ -416,8 +533,8 @@ def test_simplify_with_wolfram_round_trips_expression_lists():
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
 def test_simplify_with_wolfram_round_trips_nested_containers():
-    T = BasisOperator("Tnested")
-    J = BasisOperator("Jnested")
+    T = BasicOperator("Tnested")
+    J = BasicOperator("Jnested")
 
     payload = {
         "ops": [NO(T, J), (dn(1, T), J + dn(1, T))],
@@ -435,8 +552,8 @@ def test_simplify_with_wolfram_round_trips_nested_containers():
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
 def test_simplify_with_wolfram_round_trips_nested_containers_in_canonical_form():
-    T = BasisOperator("Tsimplify_nested")
-    J = BasisOperator("Jsimplify_nested")
+    T = BasicOperator("Tsimplify_nested")
+    J = BasicOperator("Jsimplify_nested")
     Bosonic(T, J)
 
     payload = {
@@ -456,8 +573,8 @@ def test_simplify_with_wolfram_round_trips_nested_containers_in_canonical_form()
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
 def test_simplify_with_wolfram_reorders_normal_products_in_lists():
-    A = BasisOperator("Abatchcanon", conformal_weight=1)
-    B = BasisOperator("Bbatchcanon", conformal_weight=1)
+    A = BasicOperator("Abatchcanon", conformal_weight=1)
+    B = BasicOperator("Bbatchcanon", conformal_weight=1)
     Bosonic(A, B)
 
     result = simplify_with_wolfram([NO(B, A), NO(A, B)])
@@ -489,8 +606,8 @@ def test_compute_backend_rejects_wolfram_for_nested_no_path():
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
 def test_wolfram_whole_expression_eval_preserves_nested_no_shape():
-    T = BasisOperator("T")
-    J = BasisOperator("J")
+    T = BasicOperator("T")
+    J = BasicOperator("J")
 
     expr = (
         -sp.Rational(8, 9) * NO(T, NO(T, NO(T, NO(J, J))))
@@ -508,10 +625,10 @@ def test_wolfram_whole_expression_eval_preserves_nested_no_shape():
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
 def test_simplify_with_wolfram_handles_null_state_style_expr():
-    b = BasisOperator("b")
-    c = BasisOperator("c")
-    beta = BasisOperator("β")
-    gamma = BasisOperator("γ")
+    b = BasicOperator("b")
+    c = BasicOperator("c")
+    beta = BasicOperator("β")
+    gamma = BasicOperator("γ")
 
     from pyope import Bosonic, Fermionic, clear_registry
 

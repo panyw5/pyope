@@ -8,10 +8,12 @@ Quiet[
 ClearAll[
   PySymbolName,
   PyEncode,
+  PyEncodeChunkedList,
   PyEncodeAssociation,
   PyEncodeProduct,
   PyProtocolError,
   PyReadPayload,
+  PyReadPositiveIntegerPayload,
   PyWriteResult,
   PyScalarNormalize,
   PyNonScalarQ,
@@ -79,6 +81,14 @@ PyEncode[expr_ /; PyOperatorSymbolQ[Unevaluated[expr]]] := PySymbolName[Unevalua
 PyEncode[expr_Symbol] := PySymbolName[expr];
 PyEncode[expr_] := PyProtocolError[expr];
 
+PyEncodeChunkedList[list_List, chunkSize_Integer:64] := Module[
+  {safeChunkSize, chunks, encodedChunks},
+  safeChunkSize = Max[1, chunkSize];
+  chunks = Partition[list, UpTo[safeChunkSize]];
+  encodedChunks = PyEncode /@ chunks;
+  "PYOPE_CHUNKED_LIST\n" <> StringRiffle[encodedChunks, "\n"]
+];
+
 PyEncodeAssociation[assoc_Association] := Module[{items},
   items = KeyValueMap[
     "(" <> PyEncode[#1] <> ", " <> PyEncode[#2] <> ")" &,
@@ -113,6 +123,13 @@ PyReadPayload[name_String] := Module[{path, stream, text},
   Close[stream];
   If[!StringQ[text], text = ""];
   text
+];
+
+PyReadPositiveIntegerPayload[name_String, default_Integer] := Module[{raw, parsed},
+  raw = StringTrim[PyReadPayload[name]];
+  If[StringLength[raw] == 0, Return[default]];
+  parsed = Quiet[Check[ToExpression[raw], $Failed]];
+  If[IntegerQ[parsed] && parsed > 0, parsed, default]
 ];
 
 PyWriteResult[text_String] := Module[{path, stream},
@@ -186,7 +203,14 @@ PyMain[] := Module[{op, left, right, result, encoded},
       _, $Failed
       ]
     ];
-    encoded = PyEncode[result];
+    encoded = If[
+      StringMatchQ[op, "*_LIST"] && Head[result] === List,
+      PyEncodeChunkedList[
+        result,
+        PyReadPositiveIntegerPayload["PYOPE_WL_RESULT_CHUNK_SIZE", 64]
+      ],
+      PyEncode[result]
+    ];
     PyWriteResult[encoded],
     "PYOPE_PROTOCOL_ERROR",
     (Print["PYOPE_PROTOCOL_ERROR: " <> #1]; Exit[3]) &

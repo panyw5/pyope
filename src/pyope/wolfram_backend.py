@@ -19,7 +19,7 @@ from .constants import One, Zero
 from .local_operator import assert_no_illegal_operator_mul, extract_scalar_operator
 from .ope_data import OPEData
 from .operators import (
-    BasisOperator,
+    BasicOperator,
     DerivativeOperator,
     NormalOrderedOperator,
     Operator,
@@ -61,12 +61,15 @@ class WolframBackendError(RuntimeError):
     """Raised when the Wolfram backend cannot complete a request."""
 
 
+_CHUNKED_LIST_PREFIX = "PYOPE_CHUNKED_LIST"
+
+
 def compute_ope(left: Any, right: Any) -> OPEData:
     return _run_operation("OPE", left, right)
 
 
 def compute_no(left: Any, right: Any) -> Any:
-    if not isinstance(left, BasisOperator) or not isinstance(right, BasisOperator):
+    if not isinstance(left, BasicOperator) or not isinstance(right, BasicOperator):
         from .api import NO
         from .backend import compute_backend
 
@@ -79,6 +82,23 @@ def simplify_with_wolfram(expr: Any) -> Any:
     if isinstance(expr, list):
         return _run_eval_list_chunked(expr)
     return _run_eval(expr)
+
+
+def _get_result_chunk_size() -> int:
+    raw = os.environ.get("PYOPE_WL_RESULT_CHUNK_SIZE", "").strip()
+    if not raw:
+        return 64
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise WolframBackendError(
+            "PYOPE_WL_RESULT_CHUNK_SIZE must be a positive integer"
+        ) from exc
+    if value <= 0:
+        raise WolframBackendError(
+            "PYOPE_WL_RESULT_CHUNK_SIZE must be a positive integer"
+        )
+    return value
 
 
 def _run_operation(operation: str, left: Any, right: Any) -> Any:
@@ -160,6 +180,7 @@ def _invoke_wolfram(
             **os.environ,
             "PYOPE_WL_PAYLOAD_DIR": tmpdir,
             "PYOPE_WL_RESULT_PATH": str(result_path),
+            "PYOPE_WL_RESULT_CHUNK_SIZE": str(_get_result_chunk_size()),
             **payload_paths,
         }
         for _ in range(2):
@@ -205,7 +226,38 @@ def _invoke_wolfram(
             f"wolframscript emitted an empty result payload at {result_path}"
         )
 
-    return _decode_expr(payload_text, operator_names)
+    return _decode_payload(payload_text, operator_names)
+
+
+def _decode_payload(payload: str, operator_names: Iterable[str] = ()) -> Any:
+    if payload == _CHUNKED_LIST_PREFIX:
+        return []
+
+    if payload.startswith(_CHUNKED_LIST_PREFIX + "\n"):
+        return _decode_chunked_list_payload(payload, operator_names)
+
+    return _decode_expr(payload, operator_names)
+
+
+def _decode_chunked_list_payload(
+    payload: str, operator_names: Iterable[str] = ()
+) -> list[Any]:
+    lines = payload.splitlines()
+    if not lines or lines[0] != _CHUNKED_LIST_PREFIX:
+        raise WolframBackendError("Invalid chunked Wolfram payload header")
+
+    decoded: list[Any] = []
+    for index, chunk_payload in enumerate(lines[1:], start=1):
+        if not chunk_payload.strip():
+            continue
+        chunk_value = _decode_expr(chunk_payload, operator_names)
+        if not isinstance(chunk_value, list):
+            raise WolframBackendError(
+                "Chunked Wolfram payload must decode each chunk to a list "
+                f"(chunk {index} produced {type(chunk_value)!r})"
+            )
+        decoded.extend(chunk_value)
+    return decoded
 
 
 def _write_wolfram_payload_files(
@@ -228,7 +280,7 @@ def _write_wolfram_payload_files(
 def _encode_registry_state() -> str:
     declarations = []
     for operator, parity in ope_registry._parities.items():
-        if not isinstance(operator, BasisOperator):
+        if not isinstance(operator, BasicOperator):
             continue
         decl = "Bosonic" if parity == 0 else "Fermionic"
         declarations.append(f"{decl}[{_encode_symbol_name(operator.name)}]")
@@ -298,7 +350,7 @@ def _encode_expr(expr: Any) -> str:
         return f"({expr.p}/{expr.q})"
     if isinstance(expr, (int, float)):
         return repr(expr)
-    if isinstance(expr, BasisOperator):
+    if isinstance(expr, BasicOperator):
         return _encode_symbol_name(expr.name)
     if isinstance(expr, DerivativeOperator):
         return f"Derivative[{expr.order}][{op_to_wolfram_string(expr.base)}]"
@@ -401,7 +453,7 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
 
     def normalize_protocol_value(value: Any) -> Any:
         if isinstance(value, sp.Symbol) and value.name in protocol_operator_names:
-            return BasisOperator(value.name)
+            return BasicOperator(value.name)
         if isinstance(value, NormalOrderedOperator):
             left = normalize_protocol_value(value.left)
             right = normalize_protocol_value(value.right)
@@ -435,20 +487,20 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
     }
 
     for operator in ope_registry._parities.keys():
-        if isinstance(operator, BasisOperator):
+        if isinstance(operator, BasicOperator):
             names[operator.name] = operator
             protocol_operator_names.add(operator.name)
 
     for left_name, right_name in ope_registry._opes.keys():
         if left_name not in names:
-            names[left_name] = BasisOperator(left_name)
+            names[left_name] = BasicOperator(left_name)
         if right_name not in names:
-            names[right_name] = BasisOperator(right_name)
+            names[right_name] = BasicOperator(right_name)
         protocol_operator_names.add(left_name)
         protocol_operator_names.add(right_name)
 
     for name in protocol_operator_names:
-        names.setdefault(name, BasisOperator(name))
+        names.setdefault(name, BasicOperator(name))
 
     reserved = {"MakeOPE", "NO", "One", "PyDict", "PyTuple", "Zero", "dn"}
     for token in set(re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", payload)):
@@ -478,7 +530,7 @@ def _collect_protocol_operator_names(exprs: Iterable[Any]) -> Set[str]:
             for item in expr.values():
                 visit(item)
             return
-        if isinstance(expr, BasisOperator):
+        if isinstance(expr, BasicOperator):
             names.add(expr.name)
             return
         if isinstance(expr, DerivativeOperator):
@@ -490,7 +542,7 @@ def _collect_protocol_operator_names(exprs: Iterable[Any]) -> Set[str]:
             return
         if isinstance(expr, sp.Expr):
             for operator in expr.atoms(Operator):
-                if isinstance(operator, BasisOperator):
+                if isinstance(operator, BasicOperator):
                     names.add(operator.name)
                 elif isinstance(operator, DerivativeOperator):
                     visit(operator.base)
@@ -502,7 +554,7 @@ def _collect_protocol_operator_names(exprs: Iterable[Any]) -> Set[str]:
         visit(expr)
 
     for operator in ope_registry._parities.keys():
-        if isinstance(operator, BasisOperator):
+        if isinstance(operator, BasicOperator):
             names.add(operator.name)
 
     for left_name, right_name in ope_registry._opes.keys():
