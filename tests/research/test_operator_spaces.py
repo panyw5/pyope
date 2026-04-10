@@ -7,7 +7,6 @@ from pyope import (
     BasicOperator,
     Bosonic,
     compute_backend,
-    independent_under_realization,
     LocalOperatorBasis,
     list_independent_op_indices,
     list_independent_ops,
@@ -653,42 +652,6 @@ def test_list_zero_relations_uses_wolfram_precanonicalization_when_available(
     assert relations[0]["coefficients"] == [-1, 1, 0]
 
 
-def test_independent_under_realization_uses_wolfram_precanonicalization_when_available(
-    monkeypatch,
-):
-    J = BasicOperator("J_realize_indep_wolfram_pre", conformal_weight=1)
-    Bosonic(J)
-
-    W = RealizedGenerator("W_realize_indep_wolfram_pre", realization=NO(J, J))
-    free_field_basis = LocalOperatorBasis([J])
-    expressions = [W, NO(J, J)]
-
-    monkeypatch.setattr(
-        operator_spaces_module,
-        "_should_simplify_with_wolfram",
-        lambda: True,
-    )
-
-    import pyope.wolfram_backend as wolfram_backend_module
-
-    expand_calls: list[list[object]] = []
-
-    monkeypatch.setattr(
-        wolfram_backend_module,
-        "simplify_with_wolfram",
-        lambda value: expand_calls.append(list(value)) or [NO(J, J), NO(J, J)],
-    )
-
-    independent = independent_under_realization(
-        expressions,
-        free_field_basis=free_field_basis,
-        weight=2,
-    )
-
-    assert expand_calls == [[NO(J, J), NO(J, J)]]
-    assert len(independent) == 1
-
-
 def test_sparse_terms_distributes_symbolic_scalars_over_operator_sums():
     b = BasicOperator("b_sparse_expand", fermionic=True, conformal_weight=sp.Integer(2))
     c = BasicOperator(
@@ -726,24 +689,6 @@ def test_local_operator_basis_list_zero_relations_uses_default_max_occurence():
     assert relation["operators"] == expressions
     assert relation["coefficients"] == [0, -2, 1]
     assert basis.canonicalize(relation["relation"]) == 0
-
-
-def test_independent_under_realization_filters_dependent_abstract_basis():
-    J = BasicOperator("J_realize_indep", conformal_weight=1)
-    Bosonic(J)
-
-    W = RealizedGenerator("W_realize_indep", realization=NO(J, J))
-    free_field_basis = LocalOperatorBasis([J])
-
-    expressions = [W, NO(J, J)]
-    independent = independent_under_realization(
-        expressions,
-        free_field_basis=free_field_basis,
-        weight=2,
-    )
-
-    assert len(independent) == 1
-    assert independent[0] in expressions
 
 
 def test_local_operator_basis_allows_nonpositive_fermionic_atoms_without_recursion():
