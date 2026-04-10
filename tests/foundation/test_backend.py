@@ -134,6 +134,30 @@ def test_wolfram_decoder_supports_nested_container_payloads():
     assert result == {"ops": [NO(T, J), (dn(1, T), "tag")]}
 
 
+def test_wolfram_decoder_supports_deep_no_chain_payloads():
+    T = BasicOperator("T")
+
+    payload = "PyNOChain([" + ", ".join("T" for _ in range(400)) + "])"
+
+    result = _decode_expr(payload, {"T"})
+
+    expected = T
+    for _ in range(399):
+        expected = NO(T, expected)
+
+    assert result == expected
+
+
+def test_wolfram_decoder_supports_deep_flat_addition_payloads():
+    T = BasicOperator("T")
+
+    payload = "(" + " + ".join("T" for _ in range(1200)) + ")"
+
+    result = _decode_expr(payload, {"T"})
+
+    assert result == 1200 * T
+
+
 def test_decode_payload_supports_chunked_list_protocol():
     T = BasicOperator("T")
     J = BasicOperator("J")
