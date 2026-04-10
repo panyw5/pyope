@@ -1,3 +1,23 @@
+"""W_{Z3} algebra 测试辅助模块。
+
+测试对象:
+- `pyope` 对 `W_{Z3}` 代数的 OPE 恢复、Jacobi 检查和 weight-8 null-state 化零。
+- 与 `pyope` 并行的 Wolfram 参考链路，确保抽象代数关系和 free-field realization
+    在 `OPEdefs.m` / `OPEdefs.wls` 中也能被一致复现。
+
+测试方法与验证渠道:
+- Python 渠道: 直接调用 `pyope` 的 `OPE`、`check_jacobi_identity`、`simplify` 等接口。
+- Wolfram 渠道: 通过 `wolframscript` 调用 `OPEdefs.m` / `OPEdefs.wls` 做参考验证。
+- 文档渠道: 从 `tests/W_Z3-algebra.md` 提取 strong generator 顺序、OPE、Jacobi
+    residual/null-expression 以及选定的 weight-8 null states，作为 ground truth。
+
+测试数据来源:
+- `tests/W_Z3-algebra.md`: 用户提供的 `W_{Z3}` 文档，是主要的 OPE 与 null-state 数据源。
+- `OPEdefs/OPEdefs.m` 与 `OPEdefs/OPEdefs.wls`: Mathematica / Wolfram 参考实现。
+- 本文件中的 ground-truth 常量: 对文档和 Wolfram 输入的结构化转录，供多个 pytest
+    文件共享，避免测试里重复声明同一份代数数据。
+"""
+
 import itertools
 import json
 import re
@@ -32,9 +52,10 @@ from pyope.operators import DerivativeOperator, NormalOrderedOperator
 ROOT = Path(__file__).resolve().parents[2]
 W_Z3_MD = ROOT / "tests" / "W_Z3-algebra.md"
 
-# `OPEdefs.m` 里 OPE 声明要严格按照算符声明顺序
-# 我们选择的算符声明顺序是 T, J, W, Wbar, G, Gbar, GW, GbarWbar
-# 所以 OPE 用的是 `OPE[W,G] = - GW` 而不是 `OPE[G, W] = GW`
+# 这份 OPE ground truth 是 `tests/W_Z3-algebra.md` 中文档数据的结构化转录。
+# `OPEdefs.m` 里 OPE 声明要严格按照算符声明顺序。
+# 我们选择的算符声明顺序是 T, J, W, Wbar, G, Gbar, GW, GbarWbar。
+# 所以 OPE 用的是 `OPE[W,G] = - GW` 而不是 `OPE[G, W] = GW`。
 W_Z3_OPE_GROUND_TRUTH = {
     "T_T": {"4": "-15/2 * One", "2": "2 * T", "1": "Derivative[1][T]"},
     "T_J": {"2": "J", "1": "Derivative[1][J]"},
@@ -86,6 +107,7 @@ W_Z3_OPE_GROUND_TRUTH = {
 }
 
 
+# 选取文档中已经人工筛出的 weight-8 null-state 条目，供 Python/Wolfram 双渠道复用。
 W_Z3_NULL_GROUND_TRUTH = {
     "basis_ids": [0, 1, 2, 3, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
     "special_relations": ["Particular T4 Relation"],
@@ -93,6 +115,7 @@ W_Z3_NULL_GROUND_TRUTH = {
 }
 
 
+# 记录抽象 Jacobi 检查时的生成元顺序和可直接比较的三元组集合。
 _JACOBI_GENERATOR_ORDER = ["T", "J", "W", "Wbar", "G", "Gbar", "GW", "GbarWbar"]
 
 
@@ -150,6 +173,8 @@ W_Z3_JACOBI_NULL_EXPRESSIONS_CANONICAL = [
 
 
 class _WLParser:
+    """Parse the limited Wolfram syntax used by the documented ground-truth strings."""
+
     def __init__(self, text, symbols):
         self.tokens = re.findall(
             r"Derivative|NO|One|[A-Za-z][A-Za-z0-9]*|\d+/\d+|\d+|\[|\]|\(|\)|,|\+|-|\*",
@@ -231,6 +256,8 @@ class _WLParser:
 
 
 def parse_wl_expr(text, symbols):
+    """Convert a Wolfram-style reference expression into the SymPy/pyope form used in tests."""
+
     return _WLParser(text, symbols).parse()
 
 
@@ -242,6 +269,12 @@ def _safe_op_name(base, prefix):
 
 
 def make_z3_free_field_data(prefix="wz3ff"):
+    """Build the `bc beta-gamma` free-field realization used by the computation tests.
+
+    This is the concrete test object for the OPE recovery and null-state checks in both the
+    pure-`pyope` and Wolfram-backed test files.
+    """
+
     clear_registry()
     b = BasicOperator(
         _safe_op_name("b", prefix), fermionic=True, conformal_weight=Fraction(2)
@@ -299,6 +332,12 @@ def make_z3_free_field_data(prefix="wz3ff"):
 
 
 def make_z3_realization_target_data(prefix="wz3real"):
+    """Create abstract generators together with their free-field realization map.
+
+    The separate target symbols let tests realize abstract Jacobi residuals into concrete
+    free fields without reusing the same operator objects from the source algebra.
+    """
+
     clear_registry()
 
     b = BasicOperator(
@@ -394,6 +433,12 @@ def _pair_to_expr(left, right, pole_map, ops):
 
 
 def make_z3_abstract_data(prefix="wz3abs"):
+    """Declare the abstract strong generators and load the documented OPE ground truth.
+
+    This is the abstract test object used when the tests intentionally forget the free-field
+    realization and only keep the generator list plus the OPE table.
+    """
+
     clear_registry()
     T = BasicOperator(_safe_op_name("T", prefix), conformal_weight=2)
     J = BasicOperator(_safe_op_name("J", prefix), conformal_weight=1)
@@ -429,6 +474,8 @@ def make_z3_abstract_data(prefix="wz3abs"):
 
 
 def expected_ope_expr_map(ops):
+    """Parse the documented OPE table into exact `pyope` expressions for assertion use."""
+
     parsed = {}
     symbols = {**ops, "One": One}
     for key, pole_map in W_Z3_OPE_GROUND_TRUTH.items():
@@ -440,6 +487,8 @@ def expected_ope_expr_map(ops):
 
 
 def load_selected_null_relation_sources():
+    """Extract the selected weight-8 null-state source text from `tests/W_Z3-algebra.md`."""
+
     text = W_Z3_MD.read_text(encoding="utf-8")
     results = {}
     for basis_id in W_Z3_NULL_GROUND_TRUTH["basis_ids"]:
@@ -463,6 +512,12 @@ def load_selected_null_relation_sources():
 
 
 def build_null_relations(ops):
+    """Parse and normalize the selected null relations for Python and Wolfram checks.
+
+    The relation bodies come from the markdown document, then pass through Wolfram-backed
+    simplification so downstream tests compare canonicalized expressions instead of raw text.
+    """
+
     symbols = {**ops, "One": One}
     parsed = {
         name: parse_wl_expr(source, symbols)
@@ -482,6 +537,8 @@ def assert_zero_jacobi_matrix(matrix):
 
 
 def compute_python_jacobi_summary():
+    """Summarize directly supported abstract Jacobi triples that vanish inside `pyope`."""
+
     ops = make_z3_abstract_data()
     summary = {}
     for triple in W_Z3_JACOBI_GROUND_TRUTH["triples"]:
@@ -496,6 +553,8 @@ def compute_python_jacobi_summary():
 
 
 def collect_python_jacobi_residuals(ops=None, include_zero=False):
+    """Collect nonzero abstract Jacobi residuals for comparison with documented null expressions."""
+
     if ops is None:
         ops = make_z3_abstract_data()
     residuals = []
@@ -510,6 +569,8 @@ def collect_python_jacobi_residuals(ops=None, include_zero=False):
 
 
 def expected_jacobi_null_expressions(ops):
+    """Parse the full Jacobi null-expression list transcribed from the reference document."""
+
     symbols = {**ops, "One": One}
     return [
         simplify(parse_wl_expr(expr, symbols)) for expr in W_Z3_JACOBI_NULL_EXPRESSIONS
@@ -517,6 +578,8 @@ def expected_jacobi_null_expressions(ops):
 
 
 def expected_jacobi_null_expressions_canonical(ops):
+    """Parse the deduplicated Jacobi null-expression set used for sign-insensitive comparison."""
+
     symbols = {**ops, "One": One}
     return [
         simplify(parse_wl_expr(expr, symbols))
@@ -534,6 +597,8 @@ def canonicalize_up_to_sign(expr):
 
 
 def realize_exprs_with_free_fields(exprs, abstract_ops=None):
+    """Realize abstract expressions in the free-field model before Wolfram/Python simplification."""
+
     if abstract_ops is None:
         abstract_ops = make_z3_abstract_data("abstractrealize")
     target_ops = make_z3_realization_target_data("realizetarget")
@@ -578,10 +643,14 @@ def _recursive_realize_once(expr, realization_map):
 
 
 def wolframscript_available():
+    """Return whether the external Wolfram validation channel is available in the environment."""
+
     return shutil.which("wolframscript") is not None
 
 
 def run_wolfram_jacobi_summary():
+    """Run an `OPEdefs.m` Jacobi summary script through `wolframscript` and decode its JSON output."""
+
     triples = W_Z3_JACOBI_GROUND_TRUTH["triples"]
     triple_code = ", ".join(
         "{" + ", ".join(f'"{name}"' for name in triple) + "}" for triple in triples
