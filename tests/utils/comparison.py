@@ -15,7 +15,7 @@ from pyope import (
     Zero,
     One,
     Operator,
-    BasisOperator,
+    BasicOperator,
     DerivativeOperator,
     NormalOrderedOperator,
 )
@@ -35,7 +35,7 @@ def canonicalize(expr: Any, *, expand: bool = True) -> Any:
         规范化后的表达式
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> expr = NO(T, T) + 2*T - T
         >>> canonicalize(expr)  # 返回 NO(T, T) + T
     """
@@ -143,7 +143,7 @@ def _term_key(term: Any) -> tuple:
     # 1. 算符类型优先级
     if op is None:
         key_parts.append(0)  # 纯标量
-    elif isinstance(op, BasisOperator):
+    elif isinstance(op, BasicOperator):
         key_parts.append(1)
     elif isinstance(op, DerivativeOperator):
         key_parts.append(2)
@@ -187,7 +187,7 @@ def compare_expressions(
         是否相等
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> expr1 = T + 2*T
         >>> expr2 = 3*T
         >>> compare_expressions(expr1, expr2)  # True
@@ -253,7 +253,7 @@ def assert_voa_equal(
         AssertionError: 如果表达式不相等
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> actual = simplify(NO(T, T))
         >>> expected = NO(T, T)
         >>> assert_voa_equal(actual, expected)
@@ -338,7 +338,7 @@ def assert_voa_numeric_equal(
     Examples:
         >>> import sympy as sp
         >>> c = sp.Symbol('c')
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> actual = c * T
         >>> expected = 100 * T
         >>> assert_voa_numeric_equal(actual, expected, subs={c: 100})

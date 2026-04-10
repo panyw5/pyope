@@ -15,7 +15,7 @@ from sympy import Add, Mul, Number, Symbol
 
 from .operators import (
     Operator,
-    BasisOperator,
+    BasicOperator,
     DerivativeOperator,
     NormalOrderedOperator,
 )
@@ -32,7 +32,7 @@ class LocalOperator:
 
     这是一个标记类，用于表示 VOA 中的局域算符。
     实际的局域算符可以是：
-    - BasisOperator 实例
+    - BasicOperator 实例
     - DerivativeOperator 实例
     - NormalOrderedOperator 实例
     - sympy 表达式（包含上述算符的线性组合）
@@ -80,7 +80,7 @@ def is_local_operator(expr: Any) -> bool:
         True 如果表达式是局域算符，否则 False
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> is_local_operator(T)  # True
         >>> is_local_operator(T + T)  # True
         >>> is_local_operator(2 * T)  # True
@@ -155,7 +155,7 @@ def extract_scalar_operator(expr: sp.Expr) -> Tuple[sp.Expr, Union[Operator, sp.
         (scalar, operator) 元组
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> extract_scalar_operator(2 * T)
         (2, T)
         >>> extract_scalar_operator(T)
@@ -285,7 +285,7 @@ def simplify_with_sympy(expr: LocalOperatorType) -> LocalOperatorType:
     return expr
 
 
-def collect_operator_terms(expr: LocalOperatorType) -> dict:
+def collect_operators_coefficients(expr: LocalOperatorType) -> dict:
     """
     收集算符表达式中的同类项
 

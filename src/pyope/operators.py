@@ -3,7 +3,7 @@
 
 本模块定义了 VOA 计算中使用的各种算符类型：
 - Operator: 算符基类
-- BasisOperator: 基本算符（用户定义的基础局域算符）
+- BasicOperator: 基本算符（用户定义的基础局域算符）
 - DerivativeOperator: 导数算符
 - NormalOrderedOperator: 正规序算符
 """
@@ -115,7 +115,7 @@ class Operator(Symbol):
         return super().__rmul__(other)
 
 
-class BasisOperator(Operator):
+class BasicOperator(Operator):
     """
     基本算符类
 
@@ -134,7 +134,7 @@ class BasisOperator(Operator):
     _conformal_weight: Optional[float]
     _indices: Tuple
     _base_name: str
-    _latex_name: Optional[str]
+    _latex_repr: Optional[str]
 
     def __new__(
         cls,
@@ -144,7 +144,7 @@ class BasisOperator(Operator):
         conformal_weight: Optional[Any] = None,
         indices: Optional[Tuple] = None,
         base_name: Optional[str] = None,
-        latex_name: Optional[str] = None,
+        latex: Optional[str] = None,
         **assumptions,
     ):
         """
@@ -161,8 +161,8 @@ class BasisOperator(Operator):
         Note:
             - 如果 fermionic 未指定，默认为玻色子
             - 推荐用法：不指定参数（玻色子）或 fermionic=True（费米子）
-            - 向后兼容：`BasisOperator("T", 2)` 会被解释为
-              `BasisOperator("T", conformal_weight=2)`
+            - 向后兼容：`BasicOperator("T", 2)` 会被解释为
+              `BasicOperator("T", conformal_weight=2)`
         """
         if (
             conformal_weight is None
@@ -184,7 +184,7 @@ class BasisOperator(Operator):
         obj._conformal_weight = conformal_weight
         obj._indices = indices if indices is not None else ()
         obj._base_name = base_name if base_name is not None else name
-        obj._latex_name = latex_name
+        obj._latex_repr = latex
         return obj
 
     @property
@@ -224,11 +224,11 @@ class BasisOperator(Operator):
         return self._conformal_weight
 
     @property
-    def latex_name(self) -> Optional[str]:
+    def latex(self) -> Optional[str]:
         """自定义 LaTeX 显示名称。"""
-        return self._latex_name
+        return self._latex_repr
 
-    def with_latex(self, latex_name: str):
+    def set_latex(self, latex: str):
         """返回带自定义 LaTeX 显示名称的同名算符。"""
         return self.__class__(
             self.name,
@@ -237,12 +237,12 @@ class BasisOperator(Operator):
             conformal_weight=self._conformal_weight,
             indices=self._indices,
             base_name=self._base_name,
-            latex_name=latex_name,
+            latex=latex,
         )
 
     def _latex(self, printer=None):
-        if self._latex_name is not None:
-            return self._latex_name
+        if self._latex_repr is not None:
+            return self._latex_repr
         return self.name
 
     def __getitem__(self, index):
@@ -253,7 +253,7 @@ class BasisOperator(Operator):
             index: 索引（可以是 sympy Symbol 或其他类型）
 
         Returns:
-            带索引的新 BasisOperator 实例
+            带索引的新 BasicOperator 实例
         """
         if isinstance(index, int):
             raise IndexError(f"Operator {self.name} does not support integer indexing")
@@ -267,7 +267,7 @@ class BasisOperator(Operator):
 
         # 创建新的索引算符
         indexed_name = f"{self._base_name}_{index}"
-        return BasisOperator(
+        return BasicOperator(
             indexed_name,
             fermionic=not self._bosonic,
             indexed=True,
@@ -278,7 +278,7 @@ class BasisOperator(Operator):
 
     def __eq__(self, other):
         """相等性比较"""
-        if not isinstance(other, BasisOperator):
+        if not isinstance(other, BasicOperator):
             return False
         return (
             self._base_name == other._base_name
@@ -295,9 +295,9 @@ class BasisOperator(Operator):
         if self._indices:
             indices_str = ",".join(str(i) for i in self._indices)
             fermionic_str = f", fermionic=True" if not self._bosonic else ""
-            return f"BasisOperator('{self._base_name}'[{indices_str}]{fermionic_str})"
+            return f"BasicOperator('{self._base_name}'[{indices_str}]{fermionic_str})"
         fermionic_str = f", fermionic=True" if not self._bosonic else ""
-        return f"BasisOperator('{self.name}'{fermionic_str})"
+        return f"BasicOperator('{self.name}'{fermionic_str})"
 
 
 class DerivativeOperator(Operator):
@@ -582,7 +582,7 @@ def d(operator: Any, order: int = 1):
         DerivativeOperator 实例或 sympy 表达式
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> dT = d(T)  # 一阶导数
         >>> d2T = d(T, 2)  # 二阶导数
         >>> d(d(T))  # 等价于 d(T, 2)
@@ -657,7 +657,7 @@ def dn(order: int, operator: Any):
         DerivativeOperator 实例或 sympy 表达式
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> d3T = dn(3, T)  # 三阶导数
         >>> dn(2, d(T))  # 等价于 dn(3, T)
         >>> dn(2, 2 * T)  # 2 * dn(2, T)

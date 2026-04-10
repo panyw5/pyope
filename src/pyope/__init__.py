@@ -72,7 +72,7 @@ from .operator_spaces import (
     realized_coordinates,
 )
 from .operators import (
-    BasisOperator,
+    BasicOperator,
     DerivativeOperator,
     NormalOrderedOperator,
     Operator,
@@ -112,7 +112,7 @@ __all__ = [
     "__author__",
     # Operators
     "Operator",
-    "BasisOperator",
+    "BasicOperator",
     "DerivativeOperator",
     "NormalOrderedOperator",
     "d",

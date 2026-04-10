@@ -17,12 +17,12 @@ from .local_operator import (
     extract_scalar_operator,
     get_operator_parity,
 )
-from .operators import BasisOperator, NormalOrderedOperator, Operator, d
+from .operators import BasicOperator, NormalOrderedOperator, Operator, d
 from .registry import ope_registry
 from .simplify import simplify
 
 
-class RealizedGenerator(BasisOperator):
+class RealizedGenerator(BasicOperator):
     """Named strong generator with an optional composite realization."""
 
     def __new__(
@@ -31,7 +31,7 @@ class RealizedGenerator(BasisOperator):
         realization: Any,
         conformal_weight: Optional[Any] = None,
         fermionic: Optional[bool] = None,
-        latex_name: Optional[str] = None,
+        latex: Optional[str] = None,
         **assumptions,
     ):
         if conformal_weight is None:
@@ -44,12 +44,12 @@ class RealizedGenerator(BasisOperator):
         if fermionic is None:
             fermionic = bool(get_operator_parity(realization))
 
-        obj = BasisOperator.__new__(
+        obj = BasicOperator.__new__(
             cls,
             name,
             fermionic=fermionic,
             conformal_weight=conformal_weight,
-            latex_name=latex_name,
+            latex=latex,
             **assumptions,
         )
         object.__setattr__(obj, "_realization", realization)
@@ -59,14 +59,14 @@ class RealizedGenerator(BasisOperator):
     def realization(self) -> Any:
         return getattr(self, "_realization")
 
-    def with_latex(self, latex_name: str):
+    def set_latex(self, latex: str):
         """返回带自定义 LaTeX 显示名称的 realized generator。"""
         return RealizedGenerator(
             self.name,
             realization=self.realization,
             conformal_weight=self.conformal_weight,
             fermionic=self.is_fermionic,
-            latex_name=latex_name,
+            latex=latex,
         )
 
 

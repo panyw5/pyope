@@ -11,7 +11,7 @@ class RealizedGenerator(BasisOperator):
         realization: Any,
         conformal_weight: Optional[Any] = None,
         fermionic: Optional[bool] = None,
-        latex_name: Optional[str] = None,
+        latex: Optional[str] = None,
         **assumptions: Any,
     ) -> "RealizedGenerator": ...
     @property

@@ -75,10 +75,10 @@ def check_jacobi_identity(
         如果恒等式成立，所有元素应该为 Zero（零算符）
 
     Examples:
-        >>> from pyope import BasisOperator, check_jacobi_identity
+        >>> from pyope import BasicOperator, check_jacobi_identity
         >>> import sympy as sp
         >>> c = sp.Symbol('c')
-        >>> T = BasisOperator("T", conformal_weight=2)
+        >>> T = BasicOperator("T", conformal_weight=2)
         >>> OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])
         >>> result = check_jacobi_identity(T, T, T)
         >>> # result 应该是全零矩阵
@@ -192,10 +192,10 @@ def verify_jacobi_identity(A: Any, B: Any, C: Any, simplify_func=None) -> bool:
         True 如果 Jacobi 恒等式成立（所有项为 Zero），否则 False
 
     Examples:
-        >>> from pyope import BasisOperator, verify_jacobi_identity
+        >>> from pyope import BasicOperator, verify_jacobi_identity
         >>> import sympy as sp
         >>> c = sp.Symbol('c')
-        >>> T = BasisOperator("T", conformal_weight=2)
+        >>> T = BasicOperator("T", conformal_weight=2)
         >>> OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])
         >>> verify_jacobi_identity(T, T, T)
         True

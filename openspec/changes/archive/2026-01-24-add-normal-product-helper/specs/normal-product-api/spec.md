@@ -29,9 +29,9 @@ assert result == One
 
 **Example**:
 ```python
-from pyope import BasisOperator, normal_product
+from pyope import BasicOperator, normal_product
 
-T = BasisOperator("T", 2)
+T = BasicOperator("T", 2)
 result = normal_product(T)
 assert result == T
 ```
@@ -45,10 +45,10 @@ assert result == T
 
 **Example**:
 ```python
-from pyope import BasisOperator, normal_product, NO
+from pyope import BasicOperator, normal_product, NO
 
-A = BasisOperator("A", 1)
-B = BasisOperator("B", 1)
+A = BasicOperator("A", 1)
+B = BasicOperator("B", 1)
 result = normal_product(A, B)
 expected = NO(A, B)
 assert result == expected
@@ -63,11 +63,11 @@ assert result == expected
 
 **Example**:
 ```python
-from pyope import BasisOperator, normal_product, NO
+from pyope import BasicOperator, normal_product, NO
 
-T = BasisOperator("T", 2)
-J = BasisOperator("J", 1)
-W = BasisOperator("W", 3)
+T = BasicOperator("T", 2)
+J = BasicOperator("J", 1)
+W = BasicOperator("W", 3)
 result = normal_product(T, J, W)
 expected = NO(T, NO(J, W))
 assert result == expected
@@ -82,12 +82,12 @@ assert result == expected
 
 **Example**:
 ```python
-from pyope import BasisOperator, normal_product, NO
+from pyope import BasicOperator, normal_product, NO
 
-T = BasisOperator("T", 2)
-J = BasisOperator("J", 1)
-W = BasisOperator("W", 3)
-L = BasisOperator("L", 1)
+T = BasicOperator("T", 2)
+J = BasicOperator("J", 1)
+W = BasicOperator("W", 3)
+L = BasicOperator("L", 1)
 result = normal_product(T, J, W, L)
 expected = NO(T, NO(J, NO(W, L)))
 assert result == expected
@@ -102,9 +102,9 @@ assert result == expected
 
 **Example**:
 ```python
-from pyope import BasisOperator, normal_product, Zero
+from pyope import BasicOperator, normal_product, Zero
 
-T = BasisOperator("T", 2)
+T = BasicOperator("T", 2)
 result1 = normal_product(T, Zero)
 result2 = normal_product(Zero, T)
 assert result1 == Zero
@@ -120,10 +120,10 @@ assert result2 == Zero
 
 **Example**:
 ```python
-from pyope import BasisOperator, normal_product, NO, One
+from pyope import BasicOperator, normal_product, NO, One
 
-T = BasisOperator("T", 2)
-J = BasisOperator("J", 1)
+T = BasicOperator("T", 2)
+J = BasicOperator("J", 1)
 result = normal_product(T, One, J)
 expected = NO(T, J)
 assert result == expected
@@ -138,10 +138,10 @@ assert result == expected
 
 **Example**:
 ```python
-from pyope import BasisOperator, normal_product, NO, d
+from pyope import BasicOperator, normal_product, NO, d
 
-T = BasisOperator("T", 2)
-J = BasisOperator("J", 1)
+T = BasicOperator("T", 2)
+J = BasicOperator("J", 1)
 result = normal_product(d(T), J, T)
 expected = NO(d(T), NO(J, T))
 assert result == expected
@@ -157,12 +157,12 @@ assert result == expected
 **Example**:
 ```python
 import sympy as sp
-from pyope import BasisOperator, normal_product
+from pyope import BasicOperator, normal_product
 
 c = sp.Symbol("c")
 k = sp.Symbol("k")
-T = BasisOperator("T", 2)
-J = BasisOperator("J", 1)
+T = BasicOperator("T", 2)
+J = BasicOperator("J", 1)
 
 result = normal_product(c * T, k * J)
 # Result should be c*k*NO(T, J) (scalars automatically factored out)
@@ -227,7 +227,7 @@ help(normal_product)
 ### Dependencies
 - **NO() function** (existing): `normal_product` uses `NO()` internally
 - **One, Zero constants** (existing): For handling special cases
-- **BasisOperator class** (existing): For creating test operators
+- **BasicOperator class** (existing): For creating test operators
 
 ### Cross-References
 - This requirement extends the public API defined in `src/pyope/api.py`

@@ -15,11 +15,12 @@ PyOPE 测试框架基于 pytest，用于验证 Python 实现与 Mathematica 参�
 ```
 tests/
 ├── conftest.py                    # pytest 配置和共享 fixtures
+├── algebras/
+│   ├── test_sl2_nested_no.py      # SL(2) 嵌套 NO 测试（22个用例）
+│   └── test_w3_algebra_ref.py     # W3 代数测试（8个用例）
 ├── utils/                         # 测试工具模块
 │   ├── __init__.py
 │   └── comparison.py              # 表达式比较工具
-├── test_sl2_nested_no.py          # SL(2) 嵌套 NO 测试（22个用例）
-├── test_w3_algebra_ref.py         # W3 代数测试（8个用例）
 ├── w3_algebra_test.wls            # Mathematica 参考实现（W3）
 ├── test_sl2_mathematica.wls       # Mathematica 参考实现（SL2）
 └── TEST_FRAMEWORK.md              # 本文档
@@ -99,7 +100,7 @@ def test_example(w3_algebra):
 ```python
 from tests.utils.comparison import canonicalize
 
-T = BasisOperator("T")
+T = BasicOperator("T")
 expr = NO(T, T) + 2*T - T
 result = canonicalize(expr)  # 返回 NO(T, T) + T
 ```
@@ -157,7 +158,7 @@ assert compare_expressions(expr1, expr2)  # True
 
 ## 测试用例组织
 
-### SL(2) 测试 (`test_sl2_nested_no.py`)
+### SL(2) 测试 (`algebras/test_sl2_nested_no.py`)
 
 **22个测试用例**，分为5个类别：
 
@@ -182,7 +183,7 @@ assert compare_expressions(expr1, expr2)  # True
    - `test_5_1__NO_NO_NO_Jplus_Jminus_Jzero_Jplus`
    - 等等...
 
-### W3 测试 (`test_w3_algebra_ref.py`)
+### W3 测试 (`algebras/test_w3_algebra_ref.py`)
 
 **8个测试用例**，分为4个类别：
 
@@ -244,13 +245,13 @@ pytest -m "not requires_derivative"
 pytest
 
 # 运行特定文件
-pytest tests/test_sl2_nested_no.py
+pytest tests/algebras/test_sl2_nested_no.py
 
 # 运行特定测试类
-pytest tests/test_sl2_nested_no.py::TestSimpleNestedNO
+pytest tests/algebras/test_sl2_nested_no.py::TestSimpleNestedNO
 
 # 运行特定测试
-pytest tests/test_sl2_nested_no.py::TestSimpleNestedNO::test_1_1__NO_NO_Jplus_Jzero_Jminus
+pytest tests/algebras/test_sl2_nested_no.py::TestSimpleNestedNO::test_1_1__NO_NO_Jplus_Jzero_Jminus
 
 # 详细输出
 pytest -v
@@ -315,9 +316,9 @@ Print["Test 1: ", result1];
 def new_algebra():
     """新代数 fixture"""
     # 定义算符
-    A = BasisOperator("A")
-    B = BasisOperator("B")
-    C = BasisOperator("C")
+    A = BasicOperator("A")
+    B = BasicOperator("B")
+    C = BasicOperator("C")
     
     Bosonic(A, B, C)
     
@@ -339,7 +340,7 @@ def new_algebra():
 ### 步骤 3：创建测试文件
 
 ```python
-# tests/test_new_algebra.py
+# tests/algebras/test_new_algebra.py
 
 import pytest
 from pyope import NO, simplify
@@ -364,7 +365,7 @@ class TestNewAlgebra:
 
 ```bash
 # 运行新测试
-pytest tests/test_new_algebra.py -v
+pytest tests/algebras/test_new_algebra.py -v
 
 # 与 Mathematica 结果对比
 wolframscript tests/new_algebra_test.wls > mathematica_output.txt
@@ -389,7 +390,7 @@ def test_debug(sl2_algebra):
     assert result is not None
 ```
 
-运行：`pytest -s tests/test_sl2_nested_no.py::test_debug`
+运行：`pytest -s tests/algebras/test_sl2_nested_no.py::test_debug`
 
 ### 2. 使用 pytest 调试器
 

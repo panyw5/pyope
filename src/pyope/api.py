@@ -30,7 +30,7 @@ from .local_operator import (
 )
 from .ope_data import OPEData
 from .operators import (
-    BasisOperator,
+    BasicOperator,
     DerivativeOperator,
     NormalOrderedOperator,
     Operator,
@@ -98,7 +98,7 @@ OPE = OPEComputer(ope_registry)
 3. 创建 OPEData: OPE.make([...])
 
 Examples:
-    >>> T = BasisOperator("T")
+    >>> T = BasicOperator("T")
     >>> OPE[T, T] = OPE.make([c/2*One, 0, 2*T, d(T)])
     >>> ope_result = OPE(T, T)
 """
@@ -119,7 +119,7 @@ def MakeOPE(data: Union[List, OPEData]) -> OPEData:
         OPEData 实例
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> c = sp.Symbol("c")
         >>> ope = MakeOPE([c/2*One, 0, 2*T, d(T)])
         >>> # 等价于 OPEData({4: c/2*One, 2: 2*T, 1: d(T)})
@@ -252,7 +252,7 @@ def _compute_ope_sympy(left: Any, right: Any) -> OPEData:
 
     # 规则 8: 查询注册表
     # 对于基本算符，从注册表查询 OPE
-    if left_type is BasisOperator and right_type is BasisOperator:
+    if left_type is BasicOperator and right_type is BasicOperator:
         # 首先检查算符顺序
         order = ope_registry.compare_operators(left, right)
 
@@ -768,7 +768,7 @@ def bracket(
         第 n 阶极点的系数（LocalOperator）或对易子/反对易子
 
     Examples:
-        >>> T = BasisOperator("T")
+        >>> T = BasicOperator("T")
         >>> OPE[T, T] = MakeOPE([c/2*One, 0, 2*T, d(T)])
         >>> bracket(T, T, 2)  # 返回 2*T
         >>> bracket(T, T, 0)  # 返回 NO(T, T)
@@ -822,8 +822,8 @@ def _NO_binary_sympy(left: Any, right: Any) -> Any:
         NormalOrderedOperator 或简化后的表达式
 
     Examples:
-        >>> T = BasisOperator("T")
-        >>> J = BasisOperator("J")
+        >>> T = BasicOperator("T")
+        >>> J = BasicOperator("J")
         >>> NO(T, J)  # 返回 NormalOrderedOperator(T, J)
     """
     # 处理零算符和整数 0
@@ -1037,8 +1037,8 @@ def NO_product(*operators: Any) -> Any:
         嵌套的正规序算符或简化后的表达式
 
     Examples:
-        >>> T = BasisOperator("T")
-        >>> J = BasisOperator("J")
+        >>> T = BasicOperator("T")
+        >>> J = BasicOperator("J")
         >>> NO_product(T, J, T)  # 返回 NO(T, NO(J, T))
         >>> NO_product(T)  # 返回 T
         >>> NO_product()  # 返回 One

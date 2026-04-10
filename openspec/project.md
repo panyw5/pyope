@@ -83,7 +83,7 @@ OPEdefs/           # Mathematica 原始代码（参考）
 #### 算符类层次结构
 ```
 Operator (抽象基类)
-├── BasisOperator          # 基本算符 a(z)
+├── BasicOperator          # 基本算符 a(z)
 ├── DerivativeOperator     # 导数算符 ∂A
 ├── NormalOrderedOperator  # 正规序算符 (AB)
 └── ConstantOperator       # 常数算符 (One, Zero)

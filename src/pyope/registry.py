@@ -12,7 +12,7 @@ from functools import lru_cache
 from typing import Dict, Tuple, Optional, Any, Union
 import sympy as sp
 
-from .operators import Operator, BasisOperator
+from .operators import Operator, BasicOperator
 from .ope_data import OPEData
 
 
@@ -140,7 +140,7 @@ class OPERegistry:
             < 0 如果 left 和 right 需要交换
         """
         # 处理正规序算符：NO 总是排在最后
-        from .operators import NormalOrderedOperator, DerivativeOperator, BasisOperator
+        from .operators import NormalOrderedOperator, DerivativeOperator, BasicOperator
 
         if isinstance(right, NormalOrderedOperator):
             return 1  # left < right（left 应该在前）
@@ -201,13 +201,13 @@ class OPERegistry:
             ope_data: OPE 数据
 
         Examples:
-            >>> T = BasisOperator("T")
+            >>> T = BasicOperator("T")
             >>> registry.define_ope(T, T, OPEData({2: 2*T, 1: d(T)}))
         """
-        # 自动注册算符（如果它们是 BasisOperator 且未注册）
-        if isinstance(left, BasisOperator) and not self.is_registered(left):
+        # 自动注册算符（如果它们是 BasicOperator 且未注册）
+        if isinstance(left, BasicOperator) and not self.is_registered(left):
             self.register_operator(left, left.parity)
-        if isinstance(right, BasisOperator) and not self.is_registered(right):
+        if isinstance(right, BasicOperator) and not self.is_registered(right):
             self.register_operator(right, right.parity)
 
         # 创建规范化的键（使用算符的字符串表示）
@@ -312,8 +312,8 @@ def Bosonic(*operators) -> None:
         *operators: 要声明的算符
 
     Examples:
-        >>> T = BasisOperator("T")
-        >>> J = BasisOperator("J")
+        >>> T = BasicOperator("T")
+        >>> J = BasicOperator("J")
         >>> Bosonic(T, J)
     """
     for op in operators:
@@ -330,8 +330,8 @@ def Fermionic(*operators) -> None:
         *operators: 要声明的算符
 
     Examples:
-        >>> psi = BasisOperator("ψ")
-        >>> chi = BasisOperator("χ")
+        >>> psi = BasicOperator("ψ")
+        >>> chi = BasicOperator("χ")
         >>> Fermionic(psi, chi)
     """
     for op in operators:
@@ -347,8 +347,8 @@ def clear_registry() -> None:
     避免残留的注册状态触发重复注册警告。
 
     Examples:
-        >>> from pyope import BasisOperator, Fermionic, clear_registry
-        >>> b = BasisOperator("b", fermionic=True)
+        >>> from pyope import BasicOperator, Fermionic, clear_registry
+        >>> b = BasicOperator("b", fermionic=True)
         >>> Fermionic(b)
         >>> clear_registry()
         >>> Fermionic(b)

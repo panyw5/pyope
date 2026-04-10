@@ -16,7 +16,7 @@ from sympy import Add, Mul
 
 # 延迟导入的类型引用（避免循环导入，只导入一次）
 _types_loaded = False
-_BasisOperator = None
+_BasicOperator = None
 _DerivativeOperator = None
 _NormalOrderedOperator = None
 _ConstantOperator = None
@@ -25,14 +25,14 @@ _extract_scalar_operator = None
 
 def _ensure_types_loaded():
     """确保类型引用已加载（延迟导入，只执行一次）"""
-    global _types_loaded, _BasisOperator, _DerivativeOperator, _NormalOrderedOperator
+    global _types_loaded, _BasicOperator, _DerivativeOperator, _NormalOrderedOperator
     global _ConstantOperator, _extract_scalar_operator
     if not _types_loaded:
-        from .operators import BasisOperator, DerivativeOperator, NormalOrderedOperator
+        from .operators import BasicOperator, DerivativeOperator, NormalOrderedOperator
         from .constants import ConstantOperator
         from .local_operator import extract_scalar_operator
 
-        _BasisOperator = BasisOperator
+        _BasicOperator = BasicOperator
         _DerivativeOperator = DerivativeOperator
         _NormalOrderedOperator = NormalOrderedOperator
         _ConstantOperator = ConstantOperator
@@ -54,8 +54,8 @@ def make_operator_key(expr: Any) -> Hashable:
         可哈希的元组键
 
     Examples:
-        >>> from pyope import BasisOperator
-        >>> T = BasisOperator("T")
+        >>> from pyope import BasicOperator
+        >>> T = BasicOperator("T")
         >>> key = make_operator_key(T)
         >>> isinstance(key, tuple)
         True
@@ -67,8 +67,8 @@ def make_operator_key(expr: Any) -> Hashable:
     if expr is None or expr == 0:
         return ("zero",)
 
-    # BasisOperator
-    if isinstance(expr, _BasisOperator):
+    # BasicOperator
+    if isinstance(expr, _BasicOperator):
         return ("basis", expr.name, expr.is_bosonic, expr._conformal_weight)
 
     # DerivativeOperator

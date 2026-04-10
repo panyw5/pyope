@@ -61,10 +61,10 @@ Here is a minimal Virasoro example defining the OPE of $T(z)T(w)$:
 ```python
 import sympy as sp
 
-from pyope import BasisOperator, Bosonic, MakeOPE, OPE
+from pyope import BasicOperator, Bosonic, MakeOPE, OPE
 from pyope import One, Zero, NO, bracket, d
 
-T = BasisOperator("T", conformal_weight=2)
+T = BasicOperator("T", conformal_weight=2)
 Bosonic(T)
 
 c = sp.Symbol("c")
@@ -102,9 +102,9 @@ In the example above, the list corresponds to:
 In typical usage, you first define generators and then declare their statistics:
 
 ```python
-from pyope import BasisOperator, Bosonic
+from pyope import BasicOperator, Bosonic
 
-J = BasisOperator("J", conformal_weight=1)
+J = BasicOperator("J", conformal_weight=1)
 Bosonic(J)
 ```
 
@@ -136,10 +136,10 @@ Use one of the following instead:
 Example:
 
 ```python
-from pyope import BasisOperator, Bosonic, normal_product, simplify
+from pyope import BasicOperator, Bosonic, normal_product, simplify
 
-A = BasisOperator("A")
-B = BasisOperator("B")
+A = BasicOperator("A")
+B = BasicOperator("B")
 Bosonic(A, B)
 
 expr = normal_product(B, A, B)
@@ -173,7 +173,7 @@ print(verify_jacobi_identity(T, T, T))
 Frequently used public interfaces include:
 
 - `OPE`, `MakeOPE`, `NO`, `NO_product`, `normal_product`, `bracket`
-- `BasisOperator`, `Operator`, `d`, `dn`
+- `BasicOperator`, `Operator`, `d`, `dn`
 - `One`, `Zero`, `Delta`
 - `simplify`
 - `check_jacobi_identity`, `verify_jacobi_identity`

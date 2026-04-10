@@ -15,14 +15,14 @@ from sympy import Add, Mul, Pow
 from .backend import get_compute_backend
 from .operators import (
     Operator,
-    BasisOperator,
+    BasicOperator,
     DerivativeOperator,
     NormalOrderedOperator,
 )
 from .local_operator import (
     is_local_operator,
     extract_scalar_operator,
-    collect_operator_terms,
+    collect_operators_coefficients,
 )
 from .constants import Zero, One
 from .registry import ope_registry
@@ -58,8 +58,8 @@ def simplify(
         化简后的表达式
 
     Examples:
-        >>> T = BasisOperator("T")
-        >>> J = BasisOperator("J")
+        >>> T = BasicOperator("T")
+        >>> J = BasicOperator("J")
         >>> expr = NO(NO(T,J), J)
         >>> simplified = simplify(expr)  # 默认展开为右嵌套并排序
 
@@ -275,8 +275,8 @@ def _simplify_operator(
             return DerivativeOperator(simplified_base, n)
         return op
 
-    # BasisOperator 和 DerivativeOperator（未展开）已经是最简形式
-    if isinstance(op, (BasisOperator, DerivativeOperator)):
+    # BasicOperator 和 DerivativeOperator（未展开）已经是最简形式
+    if isinstance(op, (BasicOperator, DerivativeOperator)):
         return op
 
     # 处理 NormalOrderedOperator
@@ -491,10 +491,10 @@ def _simplify_normal_ordered(
         return NO(left, right)
 
     # 检查算符顺序
-    # 只有当左右都是 BasisOperator 或 DerivativeOperator 时才进行交换
+    # 只有当左右都是 BasicOperator 或 DerivativeOperator 时才进行交换
     # 嵌套的 NO 已经在上面处理过了（虽然目前是 pass）
-    if isinstance(left, (BasisOperator, DerivativeOperator)) and isinstance(
-        right, (BasisOperator, DerivativeOperator)
+    if isinstance(left, (BasicOperator, DerivativeOperator)) and isinstance(
+        right, (BasicOperator, DerivativeOperator)
     ):
         order = ope_registry.compare_operators(left, right)
         if order < 0:
@@ -665,7 +665,7 @@ def _operator_to_key(op: Any) -> Tuple:
     Returns:
         元组键
     """
-    if isinstance(op, BasisOperator):
+    if isinstance(op, BasicOperator):
         return ("Basis", op.name, op.is_bosonic)
     elif isinstance(op, DerivativeOperator):
         return ("Deriv", _operator_to_key(op.base), op.order)
@@ -685,7 +685,7 @@ def _key_to_expr(key: Tuple) -> Any:
         return NO(_key_to_expr(key[1]), _key_to_expr(key[2]))
     if key_type == "Basis":
         name, is_bosonic = key[1], key[2]
-        return BasisOperator(name, fermionic=not is_bosonic)
+        return BasicOperator(name, fermionic=not is_bosonic)
     if key_type == "Deriv":
         return DerivativeOperator(_key_to_expr(key[1]), key[2])
     if key_type in {"Other", "other"}:
@@ -951,7 +951,7 @@ def _operators_equal(op1: Any, op2: Any) -> bool:
     if type(op1) != type(op2):
         return False
 
-    if isinstance(op1, BasisOperator):
+    if isinstance(op1, BasicOperator):
         return op1.name == op2.name and op1.is_bosonic == op2.is_bosonic
     elif isinstance(op1, DerivativeOperator):
         return op1.order == op2.order and _operators_equal(op1.base, op2.base)
@@ -985,9 +985,9 @@ def expand_nested_no(
         展开后的表达式
 
     Examples:
-        >>> J_plus = BasisOperator("J⁺", conformal_weight=1)
-        >>> J_zero = BasisOperator("J⁰", conformal_weight=1)
-        >>> J_minus = BasisOperator("J⁻", conformal_weight=1)
+        >>> J_plus = BasicOperator("J⁺", conformal_weight=1)
+        >>> J_zero = BasicOperator("J⁰", conformal_weight=1)
+        >>> J_minus = BasicOperator("J⁻", conformal_weight=1)
         >>> # 设置 OPE...
         >>> expr = NO(J_minus, NO(J_plus, J_zero))
         >>> result = expand_nested_no(expr)
@@ -1083,7 +1083,7 @@ def _expand_nested_no_operator(
                 return DerivativeOperator(expanded_base, op.order)
             return op
 
-    if isinstance(op, BasisOperator):
+    if isinstance(op, BasicOperator):
         return op
 
     # 处理 NormalOrderedOperator

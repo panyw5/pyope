@@ -10,7 +10,7 @@ import pytest
 import sympy as sp
 
 from pyope import (
-    BasisOperator,
+    BasicOperator,
     Bosonic,
     Fermionic,
     OPE,
@@ -102,9 +102,9 @@ def sl2_algebra():
         ...     sl2_algebra['clear']()  # 清理 OPE 定义
     """
     # 定义算符
-    Jplus = BasisOperator("Jplus")
-    Jzero = BasisOperator("Jzero")
-    Jminus = BasisOperator("Jminus")
+    Jplus = BasicOperator("Jplus")
+    Jzero = BasicOperator("Jzero")
+    Jminus = BasicOperator("Jminus")
 
     # 声明为玻色算符
     Bosonic(Jplus, Jzero, Jminus)
@@ -197,8 +197,8 @@ def w3_algebra():
         ...     w3_algebra['clear']()  # 清理 OPE 定义
     """
     # 定义算符
-    T = BasisOperator("T")
-    W = BasisOperator("W")
+    T = BasicOperator("T")
+    W = BasicOperator("W")
 
     # 声明为玻色算符
     Bosonic(T, W)
