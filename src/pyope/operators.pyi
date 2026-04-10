@@ -12,7 +12,7 @@ class Operator(Symbol):
         self, expand_derivatives: bool = True, preserve_nested_structure: bool = False
     ) -> Any: ...
 
-class BasisOperator(Operator):
+class BasicOperator(Operator):
     @overload
     def __new__(
         cls,
@@ -25,7 +25,7 @@ class BasisOperator(Operator):
         base_name: Optional[str] = None,
         latex: Optional[str] = None,
         **assumptions: Any,
-    ) -> "BasisOperator": ...
+    ) -> "BasicOperator": ...
     @overload
     def __new__(
         cls,
@@ -37,7 +37,7 @@ class BasisOperator(Operator):
         base_name: Optional[str] = None,
         latex: Optional[str] = None,
         **assumptions: Any,
-    ) -> "BasisOperator": ...
+    ) -> "BasicOperator": ...
     @property
     def is_bosonic(self) -> bool: ...
     @property
@@ -52,7 +52,7 @@ class BasisOperator(Operator):
     def conformal_weight(self) -> Optional[float]: ...
     @property
     def latex(self) -> Optional[str]: ...
-    def set_latex(self, latex: str) -> "BasisOperator": ...
+    def set_latex(self, latex: str) -> "BasicOperator": ...
 
 class DerivativeOperator(Operator):
     @property

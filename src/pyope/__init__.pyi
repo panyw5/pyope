@@ -6,7 +6,7 @@ from .local_operator import (
     LocalOperator,
     OperatorProduct,
     OperatorSum,
-    collect_operator_terms,
+    collect_operators_coefficients,
     extract_scalar_operator,
     get_operator_parity,
     is_local_operator,
@@ -60,7 +60,7 @@ from .operator_spaces import (
     clear_realize_cache,
 )
 from .operators import (
-    BasisOperator,
+    BasicOperator,
     DerivativeOperator,
     NormalOrderedOperator,
     Operator,
