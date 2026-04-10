@@ -10,6 +10,7 @@ ClearAll[
   PyEncode,
   PyEncodeChunkedList,
   PyEncodeAssociation,
+  PyEncodeNOChain,
   PyEncodeProduct,
   PyProtocolError,
   PyReadPayload,
@@ -59,7 +60,18 @@ PyScalarNormalize[expr_] := FixedPoint[
 PySymbolName[expr_] := ToString[Unevaluated[expr], InputForm];
 
 PyEncode[Derivative[n_Integer][x_]] := "dn(" <> ToString[n, InputForm] <> ", " <> PyEncode[x] <> ")";
-PyEncode[NO[a_, b_]] := "NO(" <> PyEncode[a] <> ", " <> PyEncode[b] <> ")";
+PyEncodeNOChain[expr_NO] := Module[{items = {}, current = expr},
+  While[Head[current] === NO,
+    AppendTo[items, current[[1]]];
+    current = current[[2]];
+  ];
+  AppendTo[items, current];
+  If[Length[items] >= 3,
+    "PyNOChain([" <> StringRiffle[PyEncode /@ items, ", "] <> "])",
+    "NO(" <> PyEncode[expr[[1]]] <> ", " <> PyEncode[expr[[2]]] <> ")"
+  ]
+];
+PyEncode[NO[a_, b_]] := PyEncodeNOChain[NO[a, b]];
 PyEncode[OPEData[a_List]] := "MakeOPE([" <> StringRiffle[PyEncode /@ a, ", "] <> "])";
 PyEncode[PyTuple[list_List]] := "PyTuple([" <> StringRiffle[PyEncode /@ list, ", "] <> "])";
 PyEncode[PyDict[assoc_Association]] := PyEncodeAssociation[assoc];
