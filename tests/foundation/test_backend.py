@@ -37,6 +37,13 @@ from pyope.wolfram_backend import (
 )
 
 
+def _mock_wolframscript_available(monkeypatch):
+    monkeypatch.setattr(
+        "pyope.wolfram_dependency.shutil.which",
+        lambda command: "/mock/wolframscript" if command == "wolframscript" else None,
+    )
+
+
 def test_default_backend_is_sympy():
     assert get_compute_backend() == "sympy"
 
@@ -46,7 +53,8 @@ def test_set_compute_backend_rejects_unknown_backend():
         set_compute_backend("unknown")
 
 
-def test_set_compute_backend_accepts_wolfram_backend():
+def test_set_compute_backend_accepts_wolfram_backend(monkeypatch):
+    _mock_wolframscript_available(monkeypatch)
     set_compute_backend("wolfram")
 
     assert get_compute_backend() == "wolfram"
@@ -57,6 +65,7 @@ def test_supported_backends_include_wolfram():
 
 
 def test_set_compute_backend_sets_default_wolfram_worker_count(monkeypatch):
+    _mock_wolframscript_available(monkeypatch)
     monkeypatch.delenv("PYOPE_WL_MAX_WORKERS", raising=False)
 
     set_compute_backend("wolfram")
@@ -65,6 +74,7 @@ def test_set_compute_backend_sets_default_wolfram_worker_count(monkeypatch):
 
 
 def test_set_compute_backend_sets_custom_wolfram_worker_count(monkeypatch):
+    _mock_wolframscript_available(monkeypatch)
     monkeypatch.delenv("PYOPE_WL_MAX_WORKERS", raising=False)
 
     set_compute_backend("wolfram", max_worker_number=4)
@@ -79,7 +89,8 @@ def test_set_compute_backend_rejects_invalid_worker_count():
         set_compute_backend("wolfram", max_worker_number=0)
 
 
-def test_compute_backend_context_manager_restores_previous_backend():
+def test_compute_backend_context_manager_restores_previous_backend(monkeypatch):
+    _mock_wolframscript_available(monkeypatch)
     set_compute_backend("sympy")
     with compute_backend("wolfram"):
         assert get_compute_backend() == "wolfram"
@@ -87,6 +98,7 @@ def test_compute_backend_context_manager_restores_previous_backend():
 
 
 def test_compute_backend_context_manager_restores_previous_worker_count(monkeypatch):
+    _mock_wolframscript_available(monkeypatch)
     monkeypatch.setenv("PYOPE_WL_MAX_WORKERS", "2")
 
     with compute_backend("wolfram", max_worker_number=5):
@@ -115,26 +127,38 @@ def test_sympy_backend_still_computes_zero_ope():
     assert result.max_pole == 0
 
 
-@pytest.mark.skipif(
-    shutil.which("wolframscript") is None, reason="wolframscript not installed"
-)
-def test_compute_backend_accepts_wolfram_for_registered_binary_ope_path():
-    with compute_backend("wolfram"):
-        assert get_compute_backend() == "wolfram"
+def test_set_compute_backend_guides_install_when_wolframscript_is_missing(monkeypatch):
+    monkeypatch.setattr("pyope.wolfram_dependency.shutil.which", lambda command: None)
+
+    with pytest.raises(ValueError, match="set_compute_backend") as exc_info:
+        set_compute_backend("wolfram")
+
+    message = str(exc_info.value)
+    assert "Install Wolfram Engine or Mathematica" in message
+    assert "https://www.wolfram.com/wolframscript/" in message
+    assert "wolframscript -version" in message
+    assert 'set_compute_backend("sympy")' in message
+
+
+def test_simplify_with_wolfram_guides_install_when_wolframscript_is_missing(
+    monkeypatch,
+):
+    monkeypatch.setattr("pyope.wolfram_dependency.shutil.which", lambda command: None)
+
+    with pytest.raises(WolframBackendError, match="simplify_with_wolfram") as exc_info:
+        simplify_with_wolfram(sp.Integer(1))
+
+    message = str(exc_info.value)
+    assert "Install Wolfram Engine or Mathematica" in message
+    assert "https://www.wolfram.com/wolframscript/" in message
+    assert "wolframscript -version" in message
+    assert 'set_compute_backend("sympy")' in message
 
 
 @pytest.mark.skipif(
     shutil.which("wolframscript") is None, reason="wolframscript not installed"
 )
-def test_compute_backend_accepts_wolfram_for_binary_no_path():
-    with compute_backend("wolfram"):
-        assert get_compute_backend() == "wolfram"
-
-
-@pytest.mark.skipif(
-    shutil.which("wolframscript") is None, reason="wolframscript not installed"
-)
-def test_compute_backend_accepts_wolfram_for_linear_no_path():
+def test_compute_backend_accepts_wolfram():
     with compute_backend("wolfram"):
         assert get_compute_backend() == "wolfram"
 
@@ -252,6 +276,7 @@ def test_write_wolfram_payload_files_creates_files(tmp_path):
 
 
 def test_invoke_wolfram_uses_payload_files(monkeypatch, tmp_path):
+    _mock_wolframscript_available(monkeypatch)
     captured = {}
 
     def fake_tempdir(prefix):
@@ -293,7 +318,7 @@ def test_invoke_wolfram_uses_payload_files(monkeypatch, tmp_path):
     )
 
     assert result == 42
-    assert captured["command"] == ["wolframscript", "-file", "dummy.wls"]
+    assert captured["command"] == ["/mock/wolframscript", "-file", "dummy.wls"]
     assert captured["encoding"] == "utf-8"
     assert captured["env"]["PYOPE_WL_EXPR_PATH"] == str(tmp_path / "pyope_wl_expr.txt")
     assert captured["env"]["PYOPE_WL_OPERATION_PATH"] == str(
@@ -305,6 +330,7 @@ def test_invoke_wolfram_uses_payload_files(monkeypatch, tmp_path):
 
 
 def test_invoke_wolfram_passes_custom_result_chunk_size(monkeypatch, tmp_path):
+    _mock_wolframscript_available(monkeypatch)
     captured = {}
 
     def fake_tempdir(prefix):
@@ -344,6 +370,7 @@ def test_invoke_wolfram_passes_custom_result_chunk_size(monkeypatch, tmp_path):
 
 
 def test_invoke_wolfram_rejects_invalid_result_chunk_size(monkeypatch):
+    _mock_wolframscript_available(monkeypatch)
     monkeypatch.setenv("PYOPE_WL_RESULT_CHUNK_SIZE", "0")
 
     with pytest.raises(WolframBackendError, match="positive integer"):
@@ -360,6 +387,8 @@ def test_invoke_wolfram_rejects_invalid_result_chunk_size(monkeypatch):
 
 
 def test_invoke_wolfram_falls_back_to_stdout_marker(monkeypatch, tmp_path):
+    _mock_wolframscript_available(monkeypatch)
+
     def fake_tempdir(prefix):
         class _TempDir:
             def __enter__(self_inner):
@@ -398,6 +427,8 @@ def test_invoke_wolfram_falls_back_to_stdout_marker(monkeypatch, tmp_path):
 
 
 def test_invoke_wolfram_decodes_chunked_result_file(monkeypatch, tmp_path):
+    _mock_wolframscript_available(monkeypatch)
+
     def fake_tempdir(prefix):
         class _TempDir:
             def __enter__(self_inner):

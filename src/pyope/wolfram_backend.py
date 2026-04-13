@@ -26,6 +26,7 @@ from .operators import (
     Operator,
 )
 from .registry import ope_registry
+from .wolfram_dependency import get_missing_wolframscript_message, require_wolframscript
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _WOLFRAM_WRAPPER = _REPO_ROOT / "OPEdefs" / "OPEdefs.wls"
@@ -80,6 +81,12 @@ def compute_no(left: Any, right: Any) -> Any:
 
 
 def simplify_with_wolfram(expr: Any) -> Any:
+    try:
+        require_wolframscript("`simplify_with_wolfram`")
+    except FileNotFoundError as exc:
+        raise WolframBackendError(
+            get_missing_wolframscript_message("`simplify_with_wolfram`")
+        ) from exc
     if isinstance(expr, list):
         return _eval_chunked_list_with_wolfram(expr)
     return _eval_expr_with_wolfram(expr)
@@ -114,6 +121,21 @@ def _get_wolfram_max_workers() -> int:
         ) from exc
     if value <= 0:
         raise WolframBackendError("PYOPE_WL_MAX_WORKERS must be a positive integer")
+    return value
+
+
+def _get_chunk_max_items() -> int:
+    raw = os.environ.get("PYOPE_WL_CHUNK_MAX_ITEMS", "").strip()
+    if not raw:
+        return 32
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise WolframBackendError(
+            "PYOPE_WL_CHUNK_MAX_ITEMS must be a positive integer"
+        ) from exc
+    if value <= 0:
+        raise WolframBackendError("PYOPE_WL_CHUNK_MAX_ITEMS must be a positive integer")
     return value
 
 
@@ -184,7 +206,7 @@ def _eval_chunked_list_with_wolfram(exprs: Sequence[Any]) -> list[Any]:
     if not expr_list:
         return []
 
-    chunks = chunk_exprs_for_wolfram(expr_list)
+    chunks = chunk_exprs_for_wolfram(expr_list, max_items=_get_chunk_max_items())
     if len(chunks) == 1:
         return _eval_list_with_wolfram(expr_list, "CANONICALIZE_LIST")
 
@@ -218,6 +240,12 @@ def _invoke_wolfram(
     payload_text = None
     stdout = ""
     stderr = ""
+    try:
+        wolframscript_path = require_wolframscript("the `wolfram` compute backend")
+    except FileNotFoundError as exc:
+        raise WolframBackendError(
+            get_missing_wolframscript_message("the `wolfram` compute backend")
+        ) from exc
     with tempfile.TemporaryDirectory(prefix="pyope-wolfram-") as tmpdir:
         payload_paths = _write_wolfram_payload_files(Path(tmpdir), payload)
         result_path = Path(tmpdir) / "pyope_result.txt"
@@ -229,14 +257,19 @@ def _invoke_wolfram(
             **payload_paths,
         }
         for _ in range(2):
-            result = subprocess.run(
-                ["wolframscript", "-file", script_path],
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                check=False,
-                env=env,
-            )
+            try:
+                result = subprocess.run(
+                    [wolframscript_path, "-file", script_path],
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    check=False,
+                    env=env,
+                )
+            except FileNotFoundError as exc:
+                raise WolframBackendError(
+                    get_missing_wolframscript_message("the `wolfram` compute backend")
+                ) from exc
             stdout = result.stdout or ""
             stderr = result.stderr or ""
             if result.returncode == 0:

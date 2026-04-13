@@ -4,6 +4,8 @@ import os
 from contextlib import contextmanager
 from typing import Iterator
 
+from .wolfram_dependency import get_missing_wolframscript_message, require_wolframscript
+
 
 SUPPORTED_BACKENDS = {"sympy", "wolfram"}
 
@@ -25,6 +27,13 @@ def set_compute_backend(name: str, max_worker_number: int = 1) -> None:
         )
     if not isinstance(max_worker_number, int) or max_worker_number <= 0:
         raise ValueError("max_worker_number must be a positive integer")
+    if normalized == "wolfram":
+        try:
+            require_wolframscript('`set_compute_backend("wolfram")`')
+        except FileNotFoundError as exc:
+            raise ValueError(
+                get_missing_wolframscript_message('`set_compute_backend("wolfram")`')
+            ) from exc
 
     global _current_backend
     _current_backend = normalized
