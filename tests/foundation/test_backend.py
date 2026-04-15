@@ -6,6 +6,7 @@ import time
 
 import pytest
 import sympy as sp
+from fractions import Fraction
 
 from pyope import (
     BasicOperator,
@@ -189,6 +190,22 @@ def test_wolfram_decoder_supports_nested_container_payloads():
     )
 
     assert result == {"ops": [NO(T, J), (dn(1, T), "tag")]}
+
+
+def test_wolfram_decoder_preserves_registered_basic_operator_metadata():
+    b = BasicOperator("b_decoder_weight", fermionic=True, conformal_weight=Fraction(2))
+    c = BasicOperator("c_decoder_weight", fermionic=True, conformal_weight=Fraction(-1))
+    OPE[b, c] = MakeOPE([One])
+
+    original_id = id(b)
+    original_weight = b.conformal_weight
+
+    decoded = _decode_expr("b_decoder_weight", {"b_decoder_weight"})
+
+    assert decoded is b
+    assert id(decoded) == original_id
+    assert b.conformal_weight == original_weight
+    assert decoded.conformal_weight == Fraction(2)
 
 
 def test_wolfram_decoder_supports_deep_no_chain_payloads():

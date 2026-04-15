@@ -229,8 +229,8 @@ class TestVirasoroComputations:
         # 验证 pole(4) 不是纯 Zero
         assert pole_4 != Zero
         # 其他极点
-        assert simplify(result.pole(3)) != 0
-        assert simplify(result.pole(2)) != 0
+        assert simplify(result.pole(3)) != Zero
+        assert simplify(result.pole(2)) != Zero
         assert simplify(result.pole(1) - d(T, 3)) == 0
 
         print("✓ OPE[T, ∂²T] 计算完成")

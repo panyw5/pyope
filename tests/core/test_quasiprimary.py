@@ -221,12 +221,12 @@ def test_p4_wbar_matches_free_field_constraints_and_leading_ope_data():
     W = data["W"]
     Wbar = data["Wbar"]
 
-    assert simplify(bracket(G, Wbar, 3)) == 0
-    assert simplify(bracket(G, Wbar, 2)) == 0
-    assert simplify(bracket(G, Wbar, 1)) == 0
+    assert simplify(bracket(G, Wbar, 3)) == Zero
+    assert simplify(bracket(G, Wbar, 2)) == Zero
+    assert simplify(bracket(G, Wbar, 1)) == Zero
 
     for pole in [5, 4, 3, 2, 1]:
-        assert simplify(bracket(Wbar, Wbar, pole)) == 0
+        assert simplify(bracket(Wbar, Wbar, pole)) == Zero
 
     assert OPE(W, Wbar).pole(4) == Fraction(105, 32) * One
     assert simplify(bracket(W, Wbar, 3) + Fraction(15, 4) * J) == Zero

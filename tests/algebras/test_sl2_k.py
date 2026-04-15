@@ -147,7 +147,7 @@ class TestSL2KDefinition:
         # 验证 J⁺-J⁻ OPE
         result_pm = OPE(J_plus, J_minus)
         assert result_pm.max_pole == 2
-        assert pyope_simplify(result_pm.pole(2) - One) == 0
+        assert pyope_simplify(result_pm.pole(2) - One) == Zero
         assert result_pm.pole(1) == J_zero
 
         # 验证 J⁰-J⁺ OPE
@@ -163,8 +163,8 @@ class TestSL2KDefinition:
         # 验证 J⁰-J⁰ OPE（2k 归一化）
         result_00 = OPE(J_zero, J_zero)
         assert result_00.max_pole == 2
-        assert pyope_simplify(result_00.pole(2) - 2 * One) == 0  # 2k, k=1
-        assert pyope_simplify(result_00.pole(1)) == 0
+        assert pyope_simplify(result_00.pole(2) - 2 * One) == Zero  # 2k, k=1
+        assert pyope_simplify(result_00.pole(1)) == Zero
 
         print("✓ sl(2)_k OPE 定义正确")
 

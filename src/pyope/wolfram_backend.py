@@ -531,9 +531,15 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
         _decode_symbol_name(name) for name in operator_names
     }
 
+    def resolve_basic_operator(name: str) -> BasicOperator:
+        for operator in ope_registry._parities.keys():
+            if isinstance(operator, BasicOperator) and operator.name == name:
+                return operator
+        return BasicOperator(name)
+
     def normalize_protocol_value(value: Any) -> Any:
         if isinstance(value, sp.Symbol) and value.name in protocol_operator_names:
-            return BasicOperator(value.name)
+            return resolve_basic_operator(value.name)
         if isinstance(value, NormalOrderedOperator):
             left = normalize_protocol_value(value.left)
             right = normalize_protocol_value(value.right)
@@ -587,14 +593,15 @@ def _decode_expr(payload: str, operator_names: Iterable[str] = ()) -> Any:
 
     for left_name, right_name in ope_registry._opes.keys():
         if left_name not in names:
-            names[left_name] = BasicOperator(left_name)
+            names[left_name] = resolve_basic_operator(left_name)
         if right_name not in names:
-            names[right_name] = BasicOperator(right_name)
+            names[right_name] = resolve_basic_operator(right_name)
         protocol_operator_names.add(left_name)
         protocol_operator_names.add(right_name)
 
     for name in protocol_operator_names:
-        names.setdefault(name, BasicOperator(name))
+        if name not in names:
+            names[name] = resolve_basic_operator(name)
 
     reserved = {
         "MakeOPE",

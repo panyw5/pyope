@@ -393,7 +393,7 @@ class TestU1KProperties:
 
         # 2-pole 应该是 2*T
         pole_2 = simplify(result.pole(2) - 2 * T)
-        assert pole_2 == 0
+        assert pole_2 == Zero
 
         print("✓ Sugawara 构造的 Virasoro 代数验证通过")
 

@@ -99,7 +99,10 @@ def simplify(
             return Zero
         if len(non_zero_terms) == 1:
             return non_zero_terms[0]
-        return sp.Add(*non_zero_terms)
+        result = sp.Add(*non_zero_terms)
+        if result == 0:
+            return Zero
+        return result
 
     # 处理幂运算：Operator**n -> 嵌套的 NO（必须在 Mul 之前处理）
     if isinstance(expr, Pow):
@@ -166,6 +169,8 @@ def simplify(
         return result
 
     # 其他情况：直接返回
+    if expr == 0:
+        return Zero
     return expr
 
 

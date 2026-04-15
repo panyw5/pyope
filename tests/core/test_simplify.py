@@ -36,8 +36,8 @@ class TestSimplifyBasic:
 
     def test_simplify_zero(self):
         """测试零的化简"""
-        assert simplify(0) == 0
-        assert simplify(Zero) == 0
+        assert simplify(0) == Zero
+        assert simplify(Zero) == Zero
 
     def test_simplify_one(self):
         """测试单位的化简"""
@@ -86,6 +86,10 @@ class TestSimplifyBasic:
         result = simplify(expr)
         # 应该保持原样
         assert result == T + J
+
+
+class TestZeroOperator:
+    """测试 Zero（零元）算符的代数性质"""
 
     def test_zero_addition_identity(self):
         """测试 Zero 在加法中作为零元"""
@@ -588,7 +592,7 @@ class TestNestedNOSignRegression:
         expr = -NO(d(NO(gamma, c)), c) - NO(d(c), NO(gamma, c))
         expected = -2 * NO(d(c), NO(c, gamma))
 
-        assert simplify(simplify(expr) - expected) == 0
+        assert simplify(simplify(expr) - expected) == Zero
 
     def test_two_d_n4_small_sca_sign_matches_opedefs(self):
         """
