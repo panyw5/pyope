@@ -273,6 +273,25 @@ def test_chunk_exprs_for_wolfram_allows_large_expression_without_char_limit():
     assert chunks == [[x]]
 
 
+def test_get_chunk_max_items_defaults_to_thirty_two(monkeypatch):
+    monkeypatch.delenv("PYOPE_WL_CHUNK_MAX_ITEMS", raising=False)
+
+    from pyope.wolfram_backend import _get_chunk_max_items
+
+    assert _get_chunk_max_items() == 32
+
+
+def test_get_chunk_max_items_rejects_invalid_values(monkeypatch):
+    monkeypatch.setenv("PYOPE_WL_CHUNK_MAX_ITEMS", "0")
+
+    from pyope.wolfram_backend import _get_chunk_max_items
+
+    with pytest.raises(
+        WolframBackendError, match="PYOPE_WL_CHUNK_MAX_ITEMS must be a positive integer"
+    ):
+        _get_chunk_max_items()
+
+
 def test_write_wolfram_payload_files_creates_files(tmp_path):
     payload_paths = _write_wolfram_payload_files(
         tmp_path,
