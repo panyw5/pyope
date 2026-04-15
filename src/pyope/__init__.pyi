@@ -50,6 +50,7 @@ from .operator_spaces import (
     LocalOperatorBasis,
     LocalOperatorCanonicalizer,
     SparseLinearContext,
+    independent_under_realization,
     list_independent_op_indices,
     list_independent_ops,
     list_zero_relations,

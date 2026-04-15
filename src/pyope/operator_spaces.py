@@ -964,6 +964,42 @@ def realized_coordinates(
     )
 
 
+def independent_under_realization(
+    expressions: Iterable[Any],
+    free_field_basis: "LocalOperatorBasis",
+    weight: Any = None,
+    max_occurence: Any = None,
+) -> list[Any]:
+    """Return expressions that remain independent after realization."""
+
+    ordered = _ordered_unique_expressions(expressions)
+    realized_lookup = {expr: realize(expr) for expr in ordered}
+    canonicalized = _canonicalize_and_cache(
+        tuple(realized_lookup[expr] for expr in ordered),
+        ope_registry.version,
+        _canonicalization_mode(),
+    )
+    if not isinstance(canonicalized, (list, tuple)):
+        raise TypeError("Canonicalization must return a sequence for sequence inputs")
+    processed_lookup = dict(zip(ordered, canonicalized, strict=True))
+
+    def vector_getter(expr: Any) -> sp.Matrix:
+        realized_expr = realized_lookup[expr]
+        target_weight = (
+            weight if weight is not None else _get_conformal_weight(realized_expr)
+        )
+        if target_weight is None:
+            raise ValueError("Weight is required for the zero expression")
+        return _coordinates_from_canonical_expression(
+            processed_lookup[expr],
+            free_field_basis,
+            target_weight,
+            max_occurence=max_occurence,
+        )
+
+    return _independent_from_vectors(expressions, vector_getter)
+
+
 def list_independent_ops(
     expressions: Iterable[Any],
     basis_builder: "LocalOperatorBasis",

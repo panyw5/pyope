@@ -23,6 +23,12 @@ def clear_realize_cache() -> None: ...
 def realized_coordinates(
     expr: Any, free_field_basis: "LocalOperatorBasis", weight: Any = None
 ) -> sp.Matrix: ...
+def independent_under_realization(
+    expressions: Iterable[Any],
+    free_field_basis: "LocalOperatorBasis",
+    weight: Any = None,
+    max_occurence: Any = None,
+) -> list[Any]: ...
 def list_independent_ops(
     expressions: Iterable[Any],
     basis: "LocalOperatorBasis",
