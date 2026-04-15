@@ -6,7 +6,7 @@ It is built on top of Python and SymPy, with the goal of providing a programmabl
 
 ## Status
 
-- Version: `0.1.0.post1`
+- Version: `0.2.0`
 - Development status: **Alpha**
 - Python: `>=3.8`
 - Main dependencies: `sympy`, `numpy`

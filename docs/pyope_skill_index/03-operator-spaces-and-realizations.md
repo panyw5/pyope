@@ -6,7 +6,7 @@ This file covers the modules that move beyond direct OPE computation into fixed-
 
 | Module | Why it matters | Key exports |
 | --- | --- | --- |
-| `operator_spaces.py` | Fixed-weight basis enumeration, coordinates, sparse linear algebra, realization helpers | `LocalOperatorBasis`, `LocalOperatorCanonicalizer`, `SparseLinearContext`, `RealizedGenerator`, `make_realized`, `realize`, `realize_and_simplify`, `realized_coordinates` |
+| `operator_spaces.py` | Fixed-weight basis enumeration, coordinates, sparse linear algebra, realization helpers | `LocalOperatorBasis`, `LocalOperatorCanonicalizer`, `SparseLinearContext`, `RealizedGenerator`, `make_realized`, `realize`, `realized_coordinates` |
 | `descendants.py` | Descendant generation from sources to target weight | `DescendantSpace` |
 | `realizations.py` | Optional backends for realization-aware quotient computations | `RealizationBackend`, `IdentityRealizationBackend`, `DerivativeKillingRealizationBackend` |
 

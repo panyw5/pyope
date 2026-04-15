@@ -30,7 +30,7 @@ These are the safest exports to emphasize in a skill:
 ### Tier 2: Advanced but teachable research helpers
 
 - `LocalOperatorBasis`, `LocalOperatorCanonicalizer`, `SparseLinearContext`
-- `RealizedGenerator`, `make_realized`, `realize`, `realize_and_simplify`
+- `RealizedGenerator`, `make_realized`, `realize`
 - `DescendantSpace`
 - `compact_family_poles`
 - `qp`, `quasiprimary_product`
