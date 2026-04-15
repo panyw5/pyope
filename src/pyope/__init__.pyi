@@ -1,4 +1,4 @@
-from .api import MakeOPE, NO, NO_product, OPE, bracket, normal_product
+from .api import MakeOPE, NO, NO_product, OPE, bracket
 from .cache import get_ope_cache
 from .constants import ConstantOperator, Delta, One, Zero
 from .jacobi import check_jacobi_identity, verify_jacobi_identity

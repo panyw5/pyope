@@ -7,7 +7,7 @@ from typing import Any
 
 import sympy as sp
 
-from .api import normal_product
+from .api import NO_product
 from .constants import Zero
 from .operator_spaces import (
     _combine_like_terms_preserving_metadata,
@@ -78,7 +78,7 @@ class DerivativeKillingRealizationBackend(IdentityRealizationBackend):
             right = self._kill_derivatives(expr.right)
             if left == Zero or right == Zero:
                 return Zero
-            return normal_product(left, right)
+            return NO_product(left, right)
         if isinstance(expr, Operator):
             return expr
         if isinstance(expr, sp.Add):

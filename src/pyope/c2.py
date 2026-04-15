@@ -8,7 +8,7 @@ from typing import Any, Iterable
 
 import sympy as sp
 
-from .api import normal_product
+from .api import NO_product
 from .constants import Zero
 from .operator_spaces import (
     LocalOperatorBasis,
@@ -86,7 +86,7 @@ class GenericC2Reducer(AbstractC2Reducer):
                     continue
                 for phi in self.canonicalizer.list(phi_weight):
                     candidate = self.canonicalizer.canonicalize(
-                        normal_product(d(generator), phi)
+                        NO_product(d(generator), phi)
                     )
                     if candidate == Zero:
                         continue
@@ -105,7 +105,7 @@ class GenericC2Reducer(AbstractC2Reducer):
                 for a in a_list:
                     for phi in phi_list:
                         candidate = self.canonicalizer.canonicalize(
-                            normal_product(d(a), phi)
+                            NO_product(d(a), phi)
                         )
                         if candidate == Zero:
                             continue

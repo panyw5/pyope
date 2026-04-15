@@ -1,5 +1,5 @@
 """
-测试 normal_product 函数
+测试 NO_product 函数
 """
 
 import pytest
@@ -12,30 +12,29 @@ from pyope import (
     NormalOrderedOperator,
     One,
     Zero,
-    normal_product,
     d,
 )
 
 
-def test_normal_product_empty():
+def test_no_product_empty():
     """测试空参数列表"""
-    result = normal_product()
+    result = NO_product()
     assert result == One
 
 
-def test_normal_product_single():
+def test_no_product_single():
     """测试单个算符"""
     T = BasicOperator("T", 2)
-    result = normal_product(T)
+    result = NO_product(T)
     assert result == T
 
 
-def test_normal_product_two_operators():
+def test_no_product_two_operators():
     """测试两个算符"""
     T = BasicOperator("T", 2)
     J = BasicOperator("J", 1)
 
-    result = normal_product(T, J)
+    result = NO_product(T, J)
     expected = NO(T, J)
 
     assert result == expected
@@ -50,83 +49,83 @@ def test_no_binary_returns_normal_ordered_operator_instance():
     assert isinstance(result, NormalOrderedOperator)
 
 
-def test_normal_product_three_operators():
+def test_no_product_three_operators():
     """测试三个算符"""
     T = BasicOperator("T", 2)
     J = BasicOperator("J", 1)
     W = BasicOperator("W", 3)
 
-    result = normal_product(T, J, W)
+    result = NO_product(T, J, W)
     expected = NO(T, NO(J, W))
 
     assert result == expected
 
 
-def test_normal_product_four_operators():
+def test_no_product_four_operators():
     """测试四个算符"""
     T = BasicOperator("T", 2)
     J = BasicOperator("J", 1)
     W = BasicOperator("W", 3)
     L = BasicOperator("L", 1)
 
-    result = normal_product(T, J, W, L)
+    result = NO_product(T, J, W, L)
     expected = NO(T, NO(J, NO(W, L)))
 
     assert result == expected
 
 
-def test_normal_product_with_derivatives():
+def test_no_product_with_derivatives():
     """测试包含导数的算符"""
     T = BasicOperator("T", 2)
     J = BasicOperator("J", 1)
 
-    result = normal_product(d(T), J, T)
+    result = NO_product(d(T), J, T)
     expected = NO(d(T), NO(J, T))
 
     assert result == expected
 
 
-def test_normal_product_with_zero():
+def test_no_product_with_zero():
     """测试包含零算符"""
     T = BasicOperator("T", 2)
 
-    result = normal_product(T, Zero)
+    result = NO_product(T, Zero)
     assert result == Zero
 
-    result = normal_product(Zero, T)
+    result = NO_product(Zero, T)
     assert result == Zero
 
 
-def test_normal_product_with_one():
+def test_no_product_with_one():
     """测试包含单位算符"""
     T = BasicOperator("T", 2)
     J = BasicOperator("J", 1)
 
-    result = normal_product(T, One, J)
+    result = NO_product(T, One, J)
     expected = NO(T, J)
     assert result == expected
 
 
-def test_normal_product_with_scalars():
+def test_no_product_with_scalars():
     """测试包含标量系数"""
     T = BasicOperator("T", 2)
     J = BasicOperator("J", 1)
     c = sp.Symbol("c")
 
-    result = normal_product(c * T, J)
+    result = NO_product(c * T, J)
     expected = c * NO(T, J)
 
     assert result == expected
 
 
-def test_normal_product_nested_structure():
+def test_no_product_nested_structure():
     """验证嵌套结构的正确性"""
     A = BasicOperator("A", 1)
     B = BasicOperator("B", 1)
     C = BasicOperator("C", 1)
     D = BasicOperator("D", 1)
 
-    result = normal_product(A, B, C, D)
+    result = NO_product(A, B, C, D)
 
     # 验证最外层是 NO(A, ...)
     assert isinstance(result, type(NO(A, B)))
@@ -136,23 +135,23 @@ def test_normal_product_nested_structure():
     assert result == expected
 
 
-def test_normal_product_comparison_with_manual():
-    """对比 normal_product 和手动构建的结果"""
+def test_no_product_comparison_with_manual():
+    """对比 NO_product 和手动构建的结果"""
     T = BasicOperator("T", 2)
     J = BasicOperator("J", 1)
     W = BasicOperator("W", 3)
 
-    auto_result = normal_product(T, J, W)
+    auto_result = NO_product(T, J, W)
     manual_result = NO(T, NO(J, W))
 
     assert auto_result == manual_result
 
 
-def test_normal_product_many_operators():
+def test_no_product_many_operators():
     """测试多个算符（5个以上）"""
     ops = [BasicOperator(f"O{i}", 1) for i in range(6)]
 
-    result = normal_product(*ops)
+    result = NO_product(*ops)
 
     # 手动构建预期结果
     expected = ops[-1]
@@ -184,12 +183,11 @@ def test_no_accepts_operator_list():
     assert result == NO(X, NO(Y, NO(Z, U)))
 
 
-def test_no_product_matches_backward_compatible_alias():
+def test_no_product_matches_no_variadic_form():
     T = BasicOperator("T_no_product", 2)
     J = BasicOperator("J_no_product", 1)
     W = BasicOperator("W_no_product", 3)
 
-    assert NO_product(T, J, W) == normal_product(T, J, W)
     assert NO_product(T, J, W) == NO(T, J, W)
 
 

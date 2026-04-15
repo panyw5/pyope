@@ -6,7 +6,7 @@ from typing import Any, Iterable
 
 import sympy as sp
 
-from .api import normal_product
+from .api import NO_product
 from .constants import Zero
 from .operators import d
 from .operator_spaces import (
@@ -60,7 +60,7 @@ class DescendantSpace:
 
             for generator in self.basis_builder.generators:
                 product_descendant = self.basis_builder.canonicalize(
-                    normal_product(generator, current)
+                    NO_product(generator, current)
                 )
                 self._enqueue_if_relevant(
                     product_descendant,

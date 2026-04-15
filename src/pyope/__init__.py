@@ -7,11 +7,11 @@ in Vertex Operator Algebras (VOA).
 基于 Mathematica 包 OPEdefs 的 Python 实现。
 """
 
-__version__ = "0.1.0.post1"
+__version__ = "0.2.0"
 __author__ = "PyOPE Contributors"
 
 # 已实现的模块
-from .api import NO, NO_product, OPE, MakeOPE, bracket, normal_product
+from .api import NO, NO_product, OPE, MakeOPE, bracket
 from .backend import compute_backend, get_compute_backend, set_compute_backend
 from .wolfram_backend import op_to_wolfram_string, simplify_with_wolfram
 from .c2 import AbstractC2Reducer, C2ReductionWitness, GenericC2Reducer
@@ -186,7 +186,6 @@ __all__ = [
     "NO_product",
     "bracket",
     "MakeOPE",
-    "normal_product",
     "get_compute_backend",
     "set_compute_backend",
     "compute_backend",

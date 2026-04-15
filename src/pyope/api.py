@@ -1056,8 +1056,3 @@ def NO_product(*operators: Any) -> Any:
         result = _NO_binary(op, result)
 
     return result
-
-
-def normal_product(*operators: Any) -> Any:
-    """Backward-compatible alias of `NO_product`."""
-    return NO_product(*operators)

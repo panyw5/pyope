@@ -2,7 +2,6 @@
 ├─ Module-level entry points
 │   ├─ make_realized()
 │   ├─ realize()
-│   ├─ realize_and_simplify()
 │   ├─ realized_coordinates()
 │   ├─ list_independent_ops()
 │   ├─ list_independent_op_indices()
@@ -45,7 +44,7 @@ from typing import Any, Iterable, MutableMapping, Optional, cast
 import sympy as sp
 
 from .backend import get_compute_backend
-from .api import normal_product
+from .api import NO_product
 from .constants import One, Zero
 from .local_operator import (
     collect_operators_coefficients,
@@ -229,6 +228,7 @@ def _canonicalization_mode() -> str:
     if _should_simplify_with_wolfram():
         return "wolfram-simplify"
     return get_compute_backend()
+
 
 @lru_cache(maxsize=None)
 def _canonicalize_and_cache(
@@ -883,7 +883,7 @@ def _realize_expr(expr: Any) -> Any:
     """Recursively expand realized generators into their underlying expressions.
 
     Optimizations over naive recursive expansion:
-    - **P0 – incremental simplification**: after each ``normal_product`` call the
+    - **P0 – incremental simplification**: after each ``NO_product`` call the
       result is immediately combined (like terms merged) so that intermediate
       expression sizes stay small instead of snowballing.
     - **P1 – RealizedGenerator caching**: each ``RealizedGenerator`` is expanded
@@ -927,7 +927,7 @@ def _realize_expr(expr: Any) -> Any:
             return d(_realize_expr(base), order)
         if left is not None and right is not None:
             # P0: combine like terms immediately after normal ordering
-            result = normal_product(_realize_expr(left), _realize_expr(right))
+            result = NO_product(_realize_expr(left), _realize_expr(right))
             return _combine_like_terms_preserving_metadata(result)
         return expr
 
@@ -1131,7 +1131,7 @@ class LocalOperatorBasis:
             raise ValueError("stress_tensor must be provided")
         if n <= 0:
             raise ValueError("n must be positive")
-        return self.canonicalize(normal_product(*([self.stress_tensor] * n)))
+        return self.canonicalize(NO_product(*([self.stress_tensor] * n)))
 
     def enumerate_candidates(self, weight: Any) -> list[Any]:
         """Enumerate raw fixed-weight candidates before external postprocessing."""
@@ -1498,9 +1498,7 @@ class C2Space:
 
             for a in a_list:
                 for phi in phi_list:
-                    candidate = self.basis_builder.canonicalize(
-                        normal_product(d(a), phi)
-                    )
+                    candidate = self.basis_builder.canonicalize(NO_product(d(a), phi))
                     if candidate == Zero:
                         continue
 
