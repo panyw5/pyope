@@ -47,6 +47,7 @@ def clear_registry():
 # bc 系统测试 (Fermionic)
 # ============================================================================
 
+
 class TestBCSystem:
     """
     bc ghost 系统测试
@@ -85,7 +86,7 @@ class TestBCSystem:
 
         result = OPE(T_bc, T_bc)
         c_over_2 = result.pole(4)
-        
+
         # λ=2 时, c = -2(6*4 - 6*2 + 1) = -2(13) = -26, 所以 c/2 = -13
         expected = -13 * One
         assert simplify(c_over_2 - expected) == 0
@@ -114,6 +115,7 @@ class TestBCSystem:
 # βγ 系统测试 (Bosonic)
 # ============================================================================
 
+
 class TestBetaGammaSystem:
     """
     βγ twisted ghost 系统测试 (玻色子)
@@ -124,7 +126,7 @@ class TestBetaGammaSystem:
         # βγ 系统是玻色子
         beta = BasicOperator("β", conformal_weight=lam_val, fermionic=False)
         gamma = BasicOperator("γ", conformal_weight=1 - lam_val, fermionic=False)
-        
+
         # OPE 负号约定 (与 VOA.wls 一致)
         OPE[beta, gamma] = MakeOPE([-One])
 
@@ -164,6 +166,7 @@ class TestBetaGammaSystem:
         res_gamma = OPE(T_bg, gamma)
         assert res_gamma.pole(2) == (1 - lam_val) * gamma
         assert res_gamma.pole(1) == d(gamma)
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
