@@ -19,6 +19,7 @@ The project currently supports:
 - Extraction of pole coefficients via `bracket(A, B, n)`
 - Jacobi identity checks
 - A set of experimental tools for C2 spaces, realizations, and null-state searches
+- **Wolfram backend** with parallel computation support
 
 The C2, null-state, and realization-related interfaces are still evolving and may change in later releases.
 
@@ -167,6 +168,90 @@ from pyope import verify_jacobi_identity
 
 print(verify_jacobi_identity(T, T, T))
 ```
+
+### 6. Realization system
+
+The realization system connects abstract VOA generators to concrete free-field implementations:
+
+```python
+from pyope import make_realized, RealizedGenerator, LocalOperatorBasis
+
+# Define realized generators (e.g., free-field realization)
+T_expr = ...  # Expression for stress tensor
+J_expr = ...  # Expression for current
+
+gens = make_realized([T_expr, J_expr])
+basis = LocalOperatorBasis(gens)
+
+# List all operators at a given weight
+ops = basis.list(weight=6)
+```
+
+**Realization backends:**
+- `IdentityRealizationBackend`: Direct canonicalization
+- `DerivativeKillingRealizationBackend`: Free-field quotient (derivative factors vanish)
+
+## Wolfram Backend
+
+PyOPE supports a **dual-backend architecture**: the default SymPy backend (pure Python) and an optional Wolfram backend that bridges to Mathematica's `OPEdefs.m` reference implementation.
+
+### Why Use the Wolfram Backend?
+
+- **Performance**: Complex expressions (especially in higher-weight calculations) can be significantly faster in Mathematica
+- **Reference implementation**: Direct access to the original `OPEdefs.m` algorithms
+- **Parallel computation**: Support for multi-threaded Wolfram processes
+
+### Usage
+
+**Global backend switch:**
+```python
+from pyope import set_compute_backend
+
+# Use Wolfram with 4 parallel workers
+set_compute_backend("wolfram", max_worker_number=4)
+```
+
+**Context manager for temporary switch:**
+```python
+from pyope import compute_backend
+
+with compute_backend("wolfram"):
+    result = OPE(A, B)  # Uses Wolfram for this computation
+```
+
+**Direct Wolfram simplification:**
+```python
+from pyope import simplify_with_wolfram
+
+# Use Wolfram for simplification even in SymPy mode
+simplified = simplify_with_wolfram(complex_expr)
+```
+
+### Configuration
+
+| Environment Variable | Default | Description |
+|---------------------|---------|-------------|
+| `PYOPE_WL_MAX_WORKERS` | 1 | Maximum parallel Wolfram processes |
+| `PYOPE_WL_CHUNK_MAX_ITEMS` | 32 | Maximum expressions per chunk |
+| `PYOPE_WL_RESULT_CHUNK_SIZE` | 64 | Maximum items per result sub-chunk |
+
+### Performance
+
+Benchmark results for W_Z3 algebra (weight=6, 305 expressions):
+
+| Workers | Time | Speedup | Efficiency |
+|---------|------|---------|------------|
+| 1 | 146.02s | 1.00x | 100% |
+| 2 | 88.17s | 1.66x | 83% |
+| 4 | 55.30s | 2.64x | 66% |
+| 8 | 50.08s | 2.92x | 36% |
+
+**Recommendation**: Use 2-4 workers for optimal speedup/efficiency balance.
+
+### Requirements
+
+- Wolfram Engine or Mathematica installed
+- `wolframscript` available in PATH
 
 ## Available API
 

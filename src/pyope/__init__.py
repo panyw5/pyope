@@ -7,7 +7,7 @@ in Vertex Operator Algebras (VOA).
 基于 Mathematica 包 OPEdefs 的 Python 实现。
 """
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __author__ = "PyOPE Contributors"
 
 # 已实现的模块
