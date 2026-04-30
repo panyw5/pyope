@@ -1,0 +1,60 @@
+wing: pyope
+rooms:
+- name: demo
+  description: Files from demo/
+  keywords:
+  - demo
+  - demo
+- name: scripts
+  description: Files from tools/
+  keywords:
+  - scripts
+  - tools
+- name: research
+  description: Files from papers/
+  keywords:
+  - research
+  - papers
+- name: testing
+  description: Files from tests/
+  keywords:
+  - testing
+  - tests
+- name: opedefs
+  description: Files from OPEdefs/
+  keywords:
+  - opedefs
+  - opedefs
+- name: documentation
+  description: Files from docs/
+  keywords:
+  - documentation
+  - docs
+- name: user_complaints
+  description: Files from user-complaints/
+  keywords:
+  - user_complaints
+  - user-complaints
+- name: pyope.egg_info
+  description: Files from pyope.egg-info/
+  keywords:
+  - pyope.egg_info
+  - pyope.egg-info
+- name: openspec
+  description: Files from openspec/
+  keywords:
+  - openspec
+  - openspec
+- name: src
+  description: Files from src/
+  keywords:
+  - src
+  - src
+- name: planning
+  description: Files from specs/
+  keywords:
+  - planning
+  - specs
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []
